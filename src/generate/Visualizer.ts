@@ -14,7 +14,7 @@ export class Visualizer {
   snapshots: Snapshot[] = []
 
   // playback
-  animate = false
+  animate = true
   animating = false
   index = 0
   speed = 250
@@ -101,7 +101,7 @@ export class Visualizer {
 
   render(index = this.index) {
     const display = this.display
-    const { level, color, msg, speed } = this.snapshots[index]
+    const { level, color, msg } = this.snapshots[index]
     display.clear()
 
     level.forEach((row, yi) => {

@@ -7,7 +7,6 @@ import * as ROT from 'rot-js'
 // import { HandlePlayer, HandleNPCs, UpdateFOV } from './Systems'
 // import { World, activeLevel } from './_World'
 import { World } from './World'
-import { Dungeon1 } from './generate/Dungeon1'
 import { CONFIG } from './config'
 
 // new implementation
@@ -27,7 +26,7 @@ let world: World
 const keys = new Keys()
 keys.add(newWorld)
 
-export function Game(d: ROT.Display, dungeon1?: Dungeon1) {
+export function Game(d: ROT.Display) {
   // console.log('Game init')
   display = d
 
