@@ -1,5 +1,5 @@
 import * as ROT from 'rot-js'
-import { Pt, Point, Rect2, Rect2C, Rect2Grow, Rect2Intersect, Rect2IntersectPt, Rect2RndPt } from './Shapes'
+import { Pt, Point, Rect2, Rect2C, Rect2Grow, Rect2Intersect, Rect2IntersectPt, Rect2RndPt } from './Shapes3'
 import { Visualizer } from './Visualizer'
 
 // TODO Move "paint/visual" into Visualizer
@@ -152,6 +152,23 @@ export class Dungeon2v2 {
       p.y > this.edgeBoundary &&
       p.y < this.levelHeight - this.edgeBoundary
     )
+  }
+
+  private generateCorridors() {
+    // Initialize
+    //
+    // Corridor object?
+    // Return Rooms, Corridors, connected info?
+    // Nodes?
+    // Flexible, allow different strategies, eg. connect closest or random?
+    // Detect bad placements, ie corridors that scrap along rooms or other corridors
+    // Avoid confusing nested loops
+    // Traverse rooms to find groups, or (probably) store and update that info live
+    //
+    // connectClosest(from[], to[]) - Iterates through nodes, connecting node to closest unconnected.
+    // connectRandom()?
+
+    const nodes: Room[][] = []
   }
 
   // ========== Corridors ==========
