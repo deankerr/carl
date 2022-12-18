@@ -7,8 +7,8 @@ const CONFIG = {
   marginTop: 2,
   marginBot: 2,
   initLevel: 'arena',
-  levelW: 80,
-  levelH: 20,
+  levelWidth: 80,
+  levelHeight: 20,
 }
 
 export { CONFIG }

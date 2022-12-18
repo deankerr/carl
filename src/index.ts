@@ -1,7 +1,7 @@
 import fontURL from '../assets/Inconsolata.otf'
 import * as ROT from 'rot-js'
-// import { Game } from './game'
-import { visgen } from './generate/visgen'
+import { Game } from './game'
+// import { visgen } from './generate/visgen'
 import { CONFIG } from './config'
 console.log('it begins')
 const font = new FontFace('Inconsolata', `url(${fontURL})`)
@@ -30,17 +30,26 @@ function init() {
   resize()
   window.addEventListener('resize', resize)
 
+  const ctx = display.getContainer()
+  if (ctx) {
+    ctx.addEventListener('mousedown', (event) => {
+      const ev = display.eventToPosition(event)
+      ev[1] = ev[1] - 2
+      console.log(ev)
+    })
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   document.body.appendChild(display.getContainer()!)
 
-  // Game(display)
-  visgen(display)
+  Game(display)
+  // visgen(display)
 
   function resize() {
     const screenW = document.documentElement.clientWidth
     const screenH = document.documentElement.clientHeight
     const compSize = display.computeFontSize(screenW, screenH)
-    console.log(`Display size:`, compSize)
+    // console.log(`Display size:`, compSize)
     display.setOptions({ fontSize: compSize - 1 })
   }
 }
