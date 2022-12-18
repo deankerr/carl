@@ -1,5 +1,6 @@
 import { Dungeon2 } from './generate/Dungeon2'
 import { Dungeon2v2 } from './generate/Dungeon2v2'
+import { Dungeon3 } from './generate/Dungeon3'
 import { Visualizer } from './generate/Visualizer'
 
 export class World {
@@ -11,10 +12,10 @@ export class World {
   activeLevel: string[] = []
 
   // TEMP?
-  activeLevelGenerator: Dungeon2 | Dungeon2v2 | null = null
+  activeLevelGenerator: Dungeon2 | Dungeon2v2 | Dungeon3 | null = null
 
   constructor() {
-    console.log('new World')
+    // console.log('new World')
     // TODO ?????
   }
 
@@ -36,6 +37,9 @@ export class World {
         break
       case 'dungeon2v2':
         this.activeLevelGenerator = new Dungeon2v2(levelWidth, levelHeight, visualizer)
+        break
+      case 'dungeon3':
+        this.activeLevelGenerator = new Dungeon3(levelWidth, levelHeight, visualizer)
         break
     }
 

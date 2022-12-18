@@ -7,7 +7,7 @@ import { Visualizer } from './Visualizer'
 export class Dungeon2v2 {
   // config
   roomsMin = 6
-  roomsTarget = 9
+  roomsTarget = 8
   maxRoomAttempts = 200
   maxCorridorAttempts = 20
 

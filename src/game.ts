@@ -28,7 +28,7 @@ const keys = new Keys()
 keys.add(newWorld)
 
 export function Game(d: ROT.Display, dungeon1?: Dungeon1) {
-  console.log('Game init')
+  // console.log('Game init')
   display = d
 
   newWorld('Space')
@@ -39,8 +39,9 @@ function newWorld(code?: string) {
   world = new World()
 
   const visualizer = new Visualizer(display)
-  // world.createLevel(CONFIG.levelWidth, CONFIG.levelHeight, 'dungeon2', visualizer)
-  world.createLevel(CONFIG.levelWidth, CONFIG.levelHeight, 'dungeon2v2', visualizer)
+  // world.createLevel(CONFIG.levelWidth, CONFIG.levelHeight, 'dungeon2v2', visualizer)
+
+  world.createLevel(CONFIG.levelWidth, CONFIG.levelHeight, 'dungeon3', visualizer)
 
   visualizer.active()
   visualizer.play()

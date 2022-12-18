@@ -6,7 +6,9 @@ import { Dungeon1 } from './Dungeon1'
 export function visgen(display: ROT.Display) {
   console.log('visgen init')
 
-  const { levelW, levelH } = CONFIG
+  const levelW = 60
+  const levelH = 20
+
   const playbackSpeed = 250
   const animate = true
 

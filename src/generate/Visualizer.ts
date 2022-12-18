@@ -14,7 +14,7 @@ export class Visualizer {
   snapshots: Snapshot[] = []
 
   // playback
-  animate = true
+  animate = false
   animating = false
   index = 0
   speed = 250
@@ -22,7 +22,7 @@ export class Visualizer {
   speedPause = 400
 
   constructor(display: ROT.Display) {
-    console.log('new Visualizer')
+    // console.log('new Visualizer')
     this.display = display
   }
 
@@ -114,6 +114,7 @@ export class Visualizer {
       })
 
       display.drawText(0, display.getOptions().height - 2, `[${index}] ${msg}`)
+      // display.drawText(0, display.getOptions().height - 1, `%c{blue}Dungeon3`)
       // display.drawText(origin.x, origin.y + index, row)
     })
   }

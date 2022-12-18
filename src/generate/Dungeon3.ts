@@ -1,10 +1,20 @@
 import * as ROT from 'rot-js'
-import { Pt, Point, Rect2, Rect2C, Rect2Grow, Rect2Intersect, Rect2IntersectPt, Rect2RndPt } from './Shapes3'
+import {
+  Pt,
+  Point,
+  PtNeighbours,
+  Rect2,
+  Rect2C,
+  Rect2Grow,
+  Rect2Intersect,
+  Rect2IntersectPt,
+  Rect2RndPt,
+} from './Shapes3'
 import { Visualizer } from './Visualizer'
 
 // TODO Move "paint/visual" into Visualizer
 
-export class Dungeon2v2 {
+export class Dungeon3 {
   // config
   roomsMin = 6
   roomsTarget = 9
@@ -43,10 +53,13 @@ export class Dungeon2v2 {
   corridors: Point[][] = []
   connected: Room[] = []
   unconnected: Room[] = []
-  nodes: Set<Set<Room>> = new Set<Set<Room>>()
+  nodes: Room[][] = []
+
+  // Create a 2D array of level to check corridor valid
+  charMap: string[][]
 
   constructor(levelWidth = 80, levelHeight = 20, visualizer: Visualizer | null) {
-    console.log('Dungeon2v2')
+    console.log('%cDungeon3', 'background-color: purple')
 
     this.levelWidth = levelWidth
     this.levelHeight = levelHeight
@@ -57,20 +70,23 @@ export class Dungeon2v2 {
 
     this.createEmptyLevel()
 
+    this.charMap = [...new Array(this.levelHeight)].map(() => new Array(this.levelWidth).fill(' '))
+
     if (visualizer) this.visualizer = visualizer
     else console.log('no Visualizer attached')
   }
 
-  SEED = 5678
+  SEED = 21449
 
   create() {
     console.log('create()')
-    // ROT.RNG.setSeed(this.SEED)
+    ROT.RNG.setSeed(this.SEED)
 
     this.generateRooms()
-    this.generateCorridors2()
+    // this.generateCorridors2()
+    this.generateCorridors()
 
-    this.paintFinal()
+    // this.paintFinal()
     console.log('=== Dungeon 2v2 Complete === ', this.rooms)
   }
 
@@ -91,7 +107,6 @@ export class Dungeon2v2 {
       // check level bounds
       const oob = this.roomInBounds(room)
       if (!oob) {
-        //!
         // this.paintAll('(Rooms) Out of bounds', room, 'r')
         continue
       }
@@ -101,17 +116,13 @@ export class Dungeon2v2 {
       if (blocked.length > 0) {
         // blocked
 
-        // !
         // this.paintAll('(Rooms) Blocked', room, 'r')
         continue
       }
 
       // success
-      // !
       // this.paintAll(`(Rooms) Room ${this.rooms.length}`, room, 'c')
       this.rooms.push(room)
-      // TODO moving this to corridors()
-      // this.unconnected.push(room)
     }
 
     this.showBoundaries = false
@@ -120,11 +131,23 @@ export class Dungeon2v2 {
       label += this.rooms.length >= this.roomsMin ? ' (acceptable)' : ' (UNACCEPTABLE)'
     }
     this.paintAll(label)
+
+    // Dig the room walls
+    this.rooms.forEach((r) => {
+      if (!r.rect.outer) throw new Error('No outer on room rect')
+      for (let y = r.rect.outer.ly; y <= r.rect.outer.ry; y++) {
+        for (let x = r.rect.outer.lx; x <= r.rect.outer.rx; x++) {
+          Rect2IntersectPt(r.rect, Pt(x, y)) ? (this.charMap[y][x] = 'r') : (this.charMap[y][x] = 'w')
+        }
+      }
+    })
+    logLevelArr(this.charMap)
   }
 
   // === Rooms ===
 
   private createRoom(rect: Rect2): Room {
+    rect.outer = Rect2Grow(rect)
     return { id: this.rooms.length, rect, connectedTo: [] }
   }
 
@@ -155,7 +178,6 @@ export class Dungeon2v2 {
   }
 
   private generateCorridors() {
-    // Initialize
     //
     // Corridor object?
     // Return Rooms, Corridors, connected info?
@@ -164,11 +186,160 @@ export class Dungeon2v2 {
     // Detect bad placements, ie corridors that scrap along rooms or other corridors
     // Avoid confusing nested loops
     // Traverse rooms to find groups, or (probably) store and update that info live
+    // Outer loop: handles nodes, Inner loop: connects supplied nodes
+    //
+    //  Visualizer? Prefer to keep data encapsualted/functional
     //
     // connectClosest(from[], to[]) - Iterates through nodes, connecting node to closest unconnected.
     // connectRandom()?
+    //
 
-    const nodes: Room[][] = []
+    // Initialize
+    const maxAttempts = 1
+    let attempts = 0
+
+    // Add each room as a node
+    this.nodes = this.rooms.map((r) => [r])
+
+    while (this.nodes.length > 1) {
+      if (attempts >= maxAttempts) {
+        console.error(`generateCorridors max attempts exceeded ${attempts}/${maxAttempts}`)
+        break
+      }
+      attempts++
+
+      console.log(`%c generateCorridors ${attempts} `, 'background-color: orange')
+      console.groupCollapsed('nodes:', this.nodes.length)
+      console.log(this.nodes)
+      console.groupEnd()
+
+      let connect: Room[] = []
+      if (this.nodes.length === this.rooms.length) {
+        // First run, supply all nodes
+        connect = this.nodes.flat()
+      } else {
+        console.error('not implemented')
+      }
+
+      this.connectRooms(connect)
+      // this.paintAll('outer')
+    }
+  }
+
+  // Connects rooms to closest unconnected rooms.
+  private connectRooms(rooms: Room[]) {
+    let unconnected = [...rooms]
+
+    let atmp = 0
+    const max = 20
+
+    const nodes = []
+
+    while (unconnected.length > 1) {
+      console.groupCollapsed(`%cConnect Rooms ${atmp++}`, 'color: blue')
+      const origin = unconnected[0]
+      // Find closest unconnected room/s
+      const targets = this.floodFindClosest(origin, unconnected)
+      const target = ROT.RNG.getItem(targets)
+
+      if (!target) throw new Error('Could not get corridor target')
+
+      const corridor: Point[] = []
+      const connectedRooms = new Set<Room>()
+      let lastPointWasInWall = false
+      const tempCharMap = JSON.parse(JSON.stringify(this.charMap))
+
+      let valid = true
+
+      console.groupCollapsed('pathing')
+      this.pathCorridor(origin, target, (x, y) => {
+        corridor.push(Pt(x, y)) // TODO adding for visual only, remove this
+        if (!valid) return
+
+        logLevelArr(tempCharMap, 'path')
+        if (this.charMap[y][x] == 'w' && lastPointWasInWall) {
+          // Fail!
+          console.log('wall fail!!!')
+          valid = false
+          return
+        }
+
+        // OK
+        lastPointWasInWall = this.charMap[y][x] == 'w'
+        // corridor.push(Pt(x, y)) // !
+        const room = this.roomAt(Pt(x, y))
+        if (room) connectedRooms.add(room)
+        this.charMap[y][x] != 'r' ? (tempCharMap[y][x] = 'c') : ''
+      })
+      console.groupEnd()
+      console.log('valid:', valid)
+
+      if (!valid) {
+        this.corridors.push(corridor) // TODO Visual only
+        this.paintAll('Invalid corridor!')
+        this.corridors.pop()
+      } else {
+        this.corridors.push(corridor)
+        this.charMap = tempCharMap
+
+        // Remove connected rooms from list
+        // ? remove extra rooms connected?
+        unconnected = unconnected.filter((r) => r !== origin && r !== target)
+
+        // Nodes time
+        console.log(
+          'connectedRooms before noding',
+          [...connectedRooms].map((e) => e.id)
+        )
+        const newNode = new Set<Room>([...connectedRooms])
+
+        // Loop through existing nodes
+        // find any new connected rooms
+        // add them all to new node
+        // delete existing node
+        // add new node
+        const matching = this.nodes.filter((node) => node.includes)
+        // nodes.push(connectedRooms)
+
+        logLevelArr(this.charMap)
+        this.paintAll(`New corridor ${origin.id} to ${target.id}`)
+      }
+      console.groupEnd()
+
+      if (atmp >= max) {
+        console.error('connectRooms() max')
+        break
+      }
+    }
+    // Outer
+    console.log('nodes:', nodes)
+  }
+
+  private pathCorridor(from: Room, to: Room, callback: cCallBack) {
+    // A* path random points in each room
+    const fromPt = Rect2RndPt(from.rect)
+    const toPt = Rect2RndPt(to.rect)
+    const path = new ROT.Path.AStar(toPt.x, toPt.y, () => true, { topology: 4 })
+
+    path.compute(fromPt.x, fromPt.y, callback)
+  }
+
+  private floodFindClosest(origin: Room, others: Room[]) {
+    let flood = { ...origin.rect }
+    // Remove origin and excluded rooms
+    const targets = others.filter((r) => r !== origin)
+
+    const found: Room[] = []
+    while (found.length < this.rooms.length - 1 && flood.w < this.levelWidth * 2) {
+      flood = Rect2Grow(flood)
+      const hit = targets.filter((r) => Rect2Intersect(flood, r.rect) && !found.includes(r))
+
+      if (hit.length > 0) {
+        found.push(...hit)
+      }
+      // this.paintAll('Flood', flood)
+    }
+    return found
   }
 
   // ========== Corridors ==========
@@ -257,7 +428,7 @@ export class Dungeon2v2 {
 
         // Get a list of rooms in order of distance
         console.log('Find close rooms for:', origin.id)
-        const allRooms = this.floodFindClosest(origin)
+        const allRooms = this.floodFindAllClosest(origin)
 
         // Select a destination
         let target: Room
@@ -319,7 +490,7 @@ export class Dungeon2v2 {
     console.log('generateCorridors() end', outerAttempts)
   } // generateCorridors()
 
-  private floodFindClosest(origin: Room) {
+  private floodFindAllClosest(origin: Room) {
     let flood = { ...origin.rect }
     const others = this.rooms.filter((r) => r !== origin)
     const found: Room[] = []
@@ -440,6 +611,11 @@ export class Dungeon2v2 {
       }
     }
 
+    // new Corridor
+    if (this.corridors.length > 0) {
+      this.corridors.at(-1)?.forEach((c) => this.paint(c, 'c', 'c'))
+    }
+
     this.visual(label)
   }
 
@@ -558,8 +734,52 @@ function oRnd(from: number, to: number) {
   return num
 }
 
+function logLevelArr(level: string[][], msg = 'map') {
+  console.groupCollapsed(msg)
+  level.forEach((e, i) => {
+    console.log((i % 2 ? '.' : ',') + e.join(''))
+  })
+  console.groupEnd()
+}
+type cCallBack = (x: number, y: number) => void
+
 // "command"/"action" pattern?
 //   this.visual() // (snap)
 //   this.visual('msg', 1000) // message, time
 //   this.visual('pause', 'look at this', 1000) // visual command, message, time
 // }
+
+// ? original valid corridor appraoch
+// console.groupCollapsed('Check valid corridor')
+// const valid = corridor.every((point) => {
+//   console.log('Checking pt', point, lastPointWasInBoundary)
+//   // If point is in a room, add it and return
+//   const room = this.roomAt(point)
+//   if (room) {
+//     connectedRooms.add(room)
+//     console.log('in room! (ok)', room)
+//     lastPointWasInBoundary = false
+//     return true
+//   }
+
+//   // If point is in a room boundary
+//   if (Rect2IntersectPt(roomBoundaries, point)) {
+//     console.log('in boundary!')
+//     if (lastPointWasInBoundary) {
+//       console.log('Two boundaries, invalid')
+//       return false
+//     }
+//     lastPointWasInBoundary = true
+//     // ! probably shouldnt exit here
+//     return true
+//   }
+
+//   console.log('seems fine')
+//   lastPointWasInBoundary = false
+//   return true
+//   // Get neighbouring points
+//   // const nPts = PtNeighbours(point)
+//   // console.log(`nPts: ${point.x}, ${point.y}`, nPts)
+// })
+// console.groupEnd()
+// console.log('valid:', valid)

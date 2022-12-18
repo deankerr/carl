@@ -10,6 +10,16 @@ export function Pt(x: number, y: number): Point {
   return { x, y }
 }
 
+export function PtNeighbours(p: Point) {
+  const pts: Point[] = []
+  for (let y = -1; y < 2; y++) {
+    for (let x = -1; x < 2; x++) {
+      if (!(y == 0 && x == 0)) pts.push(Pt(p.x + x, p.y + y))
+    }
+  }
+  return pts
+}
+
 // export class Point {
 //   x: number
 //   y: number
@@ -37,6 +47,12 @@ export interface Rect2 {
   h: number // height
   inner: Rect2 | null
   outer: Rect2 | null
+  diag: {
+    tl: Point // diagonal points
+    tr: Point
+    bl: Point
+    br: Point
+  }
 }
 
 // export function Rect(fromA: number[], toA: number[]): Rect
@@ -52,37 +68,50 @@ export function Rect(from: Point | number[], to: Point | number[]): Rect {
   throw new Error('Rect: invalid dimensions' + from + to)
 }
 
-// Rect2 into class / static methods ?
+// TODO Rect2 into class with these methods
 export function Rect2(lx: number, ly: number, rx: number, ry: number): Rect2 {
+  const w = rx - lx + 1
+  const h = ry - ly + 1
+  const tl = Pt(lx, ly)
+  const tr = Pt(rx, ly)
+  const bl = Pt(lx, ry)
+  const br = Pt(rx, ry)
   return {
     lx,
     ly,
-    cx: lx + Math.floor(rx - lx),
-    cy: ly + Math.floor(ry - ly),
+    cx: lx + Math.floor((rx - lx) / 2),
+    cy: ly + Math.floor((ry - ly) / 2),
     rx,
     ry,
-    w: rx - lx + 1,
-    h: ry - ly + 1,
+    w,
+    h,
     inner: null,
     outer: null,
+    diag: {
+      tl,
+      tr,
+      bl,
+      br,
+    },
   }
 }
 
 export function Rect2C(c: Point, w: number, h: number): Rect2 {
   const l = Pt(c.x - Math.floor(w / 2), c.y - Math.floor(h / 2))
   const r = Pt(l.x + w - 1, l.y + h - 1)
-  return {
-    cx: c.x,
-    cy: c.y,
-    lx: l.x,
-    ly: l.y,
-    rx: r.x,
-    ry: r.y,
-    w,
-    h,
-    inner: null,
-    outer: null,
-  }
+  // return {
+  //   cx: c.x,
+  //   cy: c.y,
+  //   lx: l.x,
+  //   ly: l.y,
+  //   rx: r.x,
+  //   ry: r.y,
+  //   w,
+  //   h,
+  //   inner: null,
+  //   outer: null,
+  // }
+  return Rect2(l.x, l.y, r.x, r.y)
 }
 
 export function Rect2Grow(r: Rect2, n = 1): Rect2 {
@@ -111,13 +140,10 @@ export function Rect2Intersect(r1: Rect2, r2: Rect2) {
   return hit
 }
 
-export function Rect2IntersectPt(r: Rect2, p: Point) {
-  // console.log('Rect2IPt', r, p, r.lx <= p.x && r.ly <= p.y && r.rx >= p.x && r.ry >= p.y)
-  // console.log(r.lx >= p.x)
-  // console.log(r.ly >= p.y)
-  // console.log(r.rx <= p.x)
-  // console.log(r.ry <= p.y)
-  return r.lx <= p.x && r.ly <= p.y && r.rx >= p.x && r.ry >= p.y
+// Should we return the pt/rect if true instead of boolean?
+export function Rect2IntersectPt(r: Rect2 | Rect2[], p: Point): boolean {
+  if ('inner' in r) return r.lx <= p.x && r.ly <= p.y && r.rx >= p.x && r.ry >= p.y
+  return r.some((e) => Rect2IntersectPt(e, p))
 }
 
 export function Rect2RndPt(r: Rect2) {
