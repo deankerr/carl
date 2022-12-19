@@ -37,7 +37,19 @@
   "X Y Arguments": {
     "prefix": "xynumber",
     "body": ["x: number, y: number"],
-    "description": "x and y number argument coords"
+    "description": "x/y: number arguement"
+  },
+
+  "xywh Args": {
+    "prefix": "xywhnumber",
+    "body": ["x: number, y: number, width: number, height: number"],
+    "description": "x/y/width/height: number arguement "
+  },
+
+  "wh argrs": {
+    "prefix": "wh:number",
+    "body": ["width: number, height: number"],
+    "description": "w/h: number"
   },
 
   "2D XY For loop": {
