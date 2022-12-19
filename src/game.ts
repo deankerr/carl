@@ -28,6 +28,8 @@ keys.add(newWorld)
 
 export function Game(d: ROT.Display) {
   // console.log('Game init')
+  // ROT.RNG.setSeed(seed)
+
   display = d
 
   newWorld('Space')

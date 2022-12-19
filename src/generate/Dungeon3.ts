@@ -9,10 +9,6 @@ export class Dungeon3 {
   maxRoomAttempts = 200
   maxCorridorAttempts = 20
 
-  emptyChar = ' '
-  boundChar = '·'
-  boundColor = '#444'
-  showBoundaries = true
   showRoomLabels = true
 
   // rooms
@@ -30,12 +26,6 @@ export class Dungeon3 {
   levelHeight: number
 
   visualizer: Visualizer | null = null
-  color: string[] = []
-  highlight: Room[] = []
-
-  level: string[] = []
-  saved: string[] = []
-  savedColor: string[] = []
 
   rooms: Room[] = []
   corridors: Point[][] = []
@@ -44,10 +34,12 @@ export class Dungeon3 {
   nodes: Room[][] = []
 
   // Create a 2D array of level to check corridor valid
-  charMap: string[][]
+  cMap: string[][]
+  msgPrefix = '!!No Prefix!!'
+  loglog = false
 
-  // Every charMap for visualizer playback
-  history: string[][][] = []
+  // cMap backup
+  tempcMap: string[][] | null = null
 
   constructor(levelWidth = 80, levelHeight = 20, visualizer: Visualizer | null) {
     console.log('%c Dungeon3 ', 'background-color: pink')
@@ -57,7 +49,7 @@ export class Dungeon3 {
 
     this.createEmptyLevel()
 
-    this.charMap = [...new Array(this.levelHeight)].map(() => new Array(this.levelWidth).fill(' '))
+    this.cMap = [...new Array(this.levelHeight)].map(() => new Array(this.levelWidth).fill(' '))
 
     if (visualizer) this.visualizer = visualizer
     else console.log('no Visualizer attached')
@@ -66,25 +58,92 @@ export class Dungeon3 {
   create() {
     const time = Date.now()
 
-    // eslint-disable-next-line prefer-const
-    let seed = ROT.RNG.getUniformInt(1000, 9999)
-    // seed = 21449
-
-    ROT.RNG.setSeed(seed)
-    console.log('create() seed:', seed)
-
     this.generateRooms()
     this.generateCorridors()
+    this.makeFinal()
 
-    this.paintFinal()
     console.log('=== Dungeon 2v2 Complete === ', this.rooms)
     console.log(`Time: ${Date.now() - time}ms`)
+    this.clog('FINAL')
+    this.log('FINAL')
   }
 
+  private digRectIn(cmap: string[][], rect: Rect2, rectChar: string, inner = 0, innerChar = '', innerSkip = '') {
+    let innerRect
+    if (inner) innerRect = Rect2Grow(rect, inner * -1)
+
+    console.groupCollapsed('digrect')
+    console.log(rect, innerRect)
+    for (let yi = rect.ly; yi <= rect.ry; yi++) {
+      for (let xi = rect.lx; xi <= rect.rx; xi++) {
+        if (!this.ptInLevel(Pt(xi, yi))) continue
+        // Not in inner
+        if (!innerRect || !Rect2IntersectPt(innerRect, Pt(xi, yi))) {
+          cmap[yi][xi] = rectChar
+          console.log(xi, yi, rectChar)
+          continue
+        }
+
+        if (!innerChar) continue
+
+        if (!innerSkip?.split('').includes(cmap[yi][xi])) {
+          cmap[yi][xi] = innerChar[0]
+          console.log(xi, yi, innerChar[0])
+        }
+      }
+    }
+    console.groupEnd()
+  }
+
+  private digRect(rect: Rect2, rectChar: string, inner = 0, innerChar = '', innerSkip = '') {
+    this.digRectIn(this.cMap, rect, rectChar, inner, innerChar, innerSkip)
+  }
+
+  private clog(msg = '', cmap?: string[][]) {
+    const write = cmap ?? this.cMap
+    console.groupCollapsed('CLOG ' + msg)
+    write.forEach((e, i) => {
+      console.log((i % 2 ? ' ' : '>') + e.join('') + (i % 2 ? '<' : ' '))
+    })
+    console.groupEnd()
+  }
+
+  private log(msg = 'blank', speed = 0) {
+    if (!this.visualizer) return
+    const hist = this.copy()
+    hist.push([this.msgPrefix + msg, speed])
+    this.visualizer.history.push(hist)
+
+    if (this.loglog) this.clog(msg)
+    this.utemp()
+  }
+
+  private copy() {
+    return JSON.parse(JSON.stringify(this.cMap))
+  }
+
+  private temp() {
+    this.tempcMap = this.copy()
+  }
+
+  private utemp() {
+    if (this.tempcMap) {
+      this.cMap = this.tempcMap
+      this.tempcMap = null
+      // console.log('map restored')
+    }
+  }
+  // TODO Relax map edge check?
   // === Generation ===
   private generateRooms() {
     console.log('generateRooms()')
     let attempts = 0
+    this.msgPrefix = `Generate Rooms ${this.rooms.length}/${this.roomsTarget}: `
+    // Dig map border
+    const border = 1
+    const bRect = Rect2(border, border, this.levelWidth - border, this.levelHeight - border)
+    this.digRect(bRect, 'b', 1)
+    this.log('border')
 
     while (this.rooms.length < this.roomsTarget) {
       attempts++
@@ -98,7 +157,10 @@ export class Dungeon3 {
       // check level bounds
       const oob = this.roomInBounds(room)
       if (!oob) {
-        this.paintAll('(Rooms) Out of bounds', room, 'r')
+        this.temp()
+        this.digRect(room.rect, 'R')
+        this.log('Failed - Level edge')
+
         continue
       }
 
@@ -106,33 +168,31 @@ export class Dungeon3 {
       const blocked = this.rooms.filter((r) => Rect2Intersect(Rect2Grow(r.rect, this.roomBoundary), room.rect))
       if (blocked.length > 0) {
         // blocked
+        this.temp()
+        this.digRect(room.rect, 'R')
+        this.log('Failed - Overlaps room')
 
-        this.paintAll('(Rooms) Blocked', room, 'r')
         continue
       }
 
       // success
-      this.paintAll(`(Rooms) Room ${this.rooms.length}`, room, 'c')
+      this.digRect(room.rect, 'r')
+      this.log('Room ' + this.rooms.length)
       this.rooms.push(room)
     }
-
-    this.showBoundaries = false
-    let label = `0(Rooms) Room gen complete ${this.rooms.length}/${this.roomsTarget}`
-    if (this.rooms.length < this.roomsTarget) {
-      label += this.rooms.length >= this.roomsMin ? ' (acceptable)' : ' (UNACCEPTABLE)'
-    }
-    this.paintAll(label)
 
     // Dig the room walls
     this.rooms.forEach((r) => {
       if (!r.rect.outer) throw new Error('No outer on room rect')
       for (let y = r.rect.outer.ly; y <= r.rect.outer.ry; y++) {
         for (let x = r.rect.outer.lx; x <= r.rect.outer.rx; x++) {
-          Rect2IntersectPt(r.rect, Pt(x, y)) ? (this.charMap[y][x] = 'r') : (this.charMap[y][x] = 'w')
+          Rect2IntersectPt(r.rect, Pt(x, y)) ? (this.cMap[y][x] = 'r') : (this.cMap[y][x] = 'w')
         }
       }
     })
-    logLevelArr(this.charMap)
+
+    this.log(`Complete ${this.rooms.length}/${this.roomsTarget}`)
+    this.clog('Room gen complete')
   }
 
   // === Rooms ===
@@ -150,8 +210,7 @@ export class Dungeon3 {
       h = this.rndH()
     } while (h > w || w > h * 2.5)
 
-    const room = this.createRoom(Rect2C(this.rndP(this.edgeBoundary), w, h))
-    // console.log('createRandomRoom:', room.rect.w, room.rect.h)
+    const room = this.createRoom(Rect2C(this.rndP(), w, h))
     return room
   }
 
@@ -159,6 +218,7 @@ export class Dungeon3 {
     return this.ptInBounds(Pt(room.rect.lx, room.rect.ly)) && this.ptInBounds(Pt(room.rect.rx, room.rect.ry))
   }
 
+  // TODO rename
   private ptInBounds(p: Point) {
     return (
       p.x > this.edgeBoundary &&
@@ -168,13 +228,20 @@ export class Dungeon3 {
     )
   }
 
+  private ptInLevel(p: Point) {
+    return p.x > 0 && p.x < this.cMap[0].length && p.y > 0 && p.y < this.cMap.length
+  }
+
+  // === Corridors ===
   private generateCorridors() {
+    this.msgPrefix = 'Generate Corridors: '
+    this.loglog = true
     const maxAttempts = 1
     let attempts = 0
 
     this.unconnected = this.rooms.map((r) => r)
 
-    while (this.unconnected.length > 1) {
+    while (this.unconnected.length > 5) {
       if (attempts >= maxAttempts) {
         console.error(`generateCorridors max attempts exceeded ${attempts}/${maxAttempts}`)
         break
@@ -188,8 +255,9 @@ export class Dungeon3 {
 
       this.connectRooms()
       // this.paintAll('outer')
-      logLevelArr(this.charMap, 'final')
     }
+    console.log('final', this.unconnected)
+    this.log('gen Cor done?')
   }
 
   // Connects rooms to closest unconnected rooms.
@@ -217,64 +285,62 @@ export class Dungeon3 {
       console.groupCollapsed(`%cConnect Rooms ${origin.id} to ${target.id} (${atmpt++})`, 'color: blue')
       console.log('Unconnected: ', this.unconnected)
 
-      const corridor: Point[] = []
       const newConnectedRooms = new Set<Room>()
       let lastPointWasInWall = false
-      const tempCharMap = JSON.parse(JSON.stringify(this.charMap))
+      const corridorDigMap = this.copy()
 
+      // ===== PATH CORRIDOR =====
       let valid = true
-
       console.groupCollapsed('pathing')
       this.pathCorridor(origin, target, (x, y) => {
-        corridor.push(Pt(x, y)) // TODO adding for visual only, remove this
         if (!valid) return
-
-        // logLevelArr(tempCharMap, 'path')
-        if (this.charMap[y][x] == 'w' && lastPointWasInWall) {
+        if (this.cMap[y][x] == 'w' && lastPointWasInWall) {
           // Fail!
-          console.log('wall fail!!!')
+          this.temp()
+          this.cMap = corridorDigMap
+          this.log(`Failed ${origin.id} to ${target?.id}`)
           valid = false
           return
         }
 
         // OK
-        lastPointWasInWall = this.charMap[y][x] == 'w'
-        // corridor.push(Pt(x, y)) // !
+        lastPointWasInWall = this.cMap[y][x] == 'w'
         const room = this.roomAt(Pt(x, y))
         if (room) newConnectedRooms.add(room)
 
+        // TODO move/use dig
         // Dig the corridor into the charMap
+
+        console.log('start dig', x, y)
+        // this.digRectIn(corridorDigMap, Rect2C(Pt(x, y), 3, 3), 'w', 1, 'c', 'r')
+
         for (let yi = y - 1; yi <= y + 1; yi++) {
           for (let xi = x - 1; xi <= x + 1; xi++) {
-            const cur = tempCharMap[yi][xi]
+            const cur = corridorDigMap[yi][xi]
+            console.log(x, y, xi, yi, cur)
             if (cur === 'r' || cur === 'c') continue // don't overwrite rooms or corridors
-            tempCharMap[yi][xi] = 'w'
-            if (yi == y && xi == x) tempCharMap[yi][xi] = 'c'
+            console.log('dig')
+            corridorDigMap[yi][xi] = 'w'
+            if (yi == y && xi == x) corridorDigMap[yi][xi] = 'c'
           }
         }
       })
       console.groupEnd()
+      // ===== END PATH CORRIDOR =====
+
       console.log('valid:', valid)
 
-      if (!valid) {
-        this.corridors.push(corridor) // TODO Visual only
-        this.paintAll('Invalid corridor!')
-        this.corridors.pop()
-        logLevelArr(tempCharMap)
-      } else {
-        this.corridors.push(corridor)
-        this.charMap = tempCharMap
+      if (valid) {
+        this.cMap = corridorDigMap
 
         // Remove all connect rooms
         this.unconnected = this.unconnected.filter((r) => ![...newConnectedRooms].includes(r))
 
         next = target
-
-        logLevelArr(this.charMap)
-        this.paintAll(`New corridor ${origin.id} to ${target.id}`)
       }
-      console.groupEnd()
 
+      console.groupEnd()
+      this.log(`New corridor ${origin.id} to ${target.id}`)
       if (atmpt >= max) {
         console.error('connectRooms() max')
         break
@@ -304,7 +370,6 @@ export class Dungeon3 {
       if (hit.length > 0) {
         found.push(...hit)
       }
-      // this.paintAll('Flood', flood)
     }
     return found
   }
@@ -315,161 +380,20 @@ export class Dungeon3 {
     return result.length > 0 ? result[0] : null
   }
 
-  // ========== Paint ==========
-  private paintFinal() {
-    // cor walls
-    this.corridors.forEach((corrs) =>
-      corrs.forEach((c) => {
-        this.paintRect(Rect2C(c, 3, 3), '#')
+  private makeFinal() {
+    this.cMap = this.cMap.map((row) =>
+      row.map((e) => {
+        if (e === 'r' || e === 'c') return '.'
+        if (e === 'w') return '#'
+        return ' '
       })
     )
-
-    // room walls
-    this.rooms.forEach((room) => {
-      this.paintRect(Rect2Grow(room.rect, 1), '#')
-    })
-
-    // cor paths
-    this.corridors.forEach((corrs) =>
-      corrs.forEach((c) => {
-        this.paint(c, '.')
-      })
-    )
-
-    // room paths
-    this.rooms.forEach((room) => {
-      this.paintRect(room.rect, '.')
-    })
-
-    this.visual('Complete?')
-  }
-
-  private paintAll(label = '(no label)', item?: Room | Rect2 | Point[], color?: string) {
-    this.createEmptyLevel()
-
-    // Flood
-    if (item && !('rect' in item) && !('length' in item)) {
-      this.paintRect(item, 'f', color)
-    }
-
-    // Corridor
-    if (this.corridors.length > 0) {
-      this.corridors.forEach((corrs) => corrs.forEach((c) => this.paint(c, 'c')))
-    }
-
-    // Rooms
-    this.rooms.forEach((r, i) => {
-      if (this.showBoundaries) this.paintRect(Rect2Grow(r.rect, 3), this.boundChar, this.boundColor) // boundary
-      // this.paintRect(Rect2Grow(r.rect, 1), '#') // wall
-      let rColor
-      // if (this.connected.includes(r)) rColor = 'u' // lowlight connected rooms
-      this.paintRect(r.rect, 'R', rColor) // floor
-      this.paint(Pt(r.rect.cx, r.rect.cy), `${i}`, 'o')
-    })
-
-    // edge boundary
-    // top/bottom
-    if (this.showBoundaries) {
-      for (let i = 0; i < this.edgeBoundary; i++) {
-        this.paint(Pt(0, i), this.boundChar.repeat(this.levelWidth), this.boundColor.repeat(this.levelWidth))
-        this.paint(
-          Pt(0, this.levelHeight - 1 - i),
-          this.boundChar.repeat(this.levelWidth),
-          this.boundColor.repeat(this.levelWidth)
-        )
-      }
-      // left/right
-      for (let i = 0; i < this.levelHeight; i++) {
-        this.paint(Pt(0, 0 + i), this.boundChar.repeat(this.edgeBoundary), this.boundColor.repeat(this.edgeBoundary))
-        this.paint(
-          Pt(this.levelWidth - this.edgeBoundary, 0 + i),
-          this.boundChar.repeat(this.edgeBoundary),
-          this.boundColor.repeat(this.edgeBoundary)
-        )
-      }
-    }
-
-    if (item) {
-      // New Room
-      if ('rect' in item) {
-        this.paintRect(item.rect, 'R', color)
-      }
-
-      // New corridor
-      if ('length' in item) {
-        const newC = item.slice(1, -1)
-
-        newC.forEach((c) => this.paint(c, 'c', color))
-      }
-    }
-
-    // new Corridor
-    if (this.corridors.length > 0) {
-      this.corridors.at(-1)?.forEach((c) => this.paint(c, 'c', 'c'))
-    }
-
-    this.visual(label)
-  }
-
-  private paintRect(rect: Rect2, value: string, color: string = this.emptyChar, exclude?: Rect2) {
-    for (let yi = rect.ly; yi <= rect.ry; yi++) {
-      // console.log('paintRect', rect, value, color)
-      this.paint(Pt(rect.lx, yi), value.repeat(rect.w), color[0].repeat(rect.w), exclude)
-    }
-  }
-
-  // ? seperate color function?
-  private paint(p: Point, value: string, color: string = this.emptyChar, exclude?: Rect2) {
-    if (p.y < 0 || p.y >= this.level.length) return
-
-    if (exclude) {
-      // mini rect to exclude the char line
-      const horzRect = Rect2(p.x, p.y, p.x + value.length - 1, p.y)
-      console.log('horzRect:', horzRect)
-      if (Rect2IntersectPt(horzRect, p)) {
-        console.log('exlude!')
-        return
-      }
-    }
-
-    function slicer(data: string[], p: Point, val: string) {
-      let x = p.x
-      if (x < 0) {
-        val = val.slice(x * -1)
-        x = 0
-      }
-
-      const row = data[p.y]
-      const prev = row.slice(0, x)
-      const next = row.slice(x + val.length, row.length)
-      const newRow = (prev + val + next).slice(0, row.length)
-
-      return newRow
-    }
-
-    const newRow = slicer(this.level, p, value)
-    const newColor = slicer(this.color, p, color)
-
-    if (newRow.length > this.levelWidth)
-      throw new Error(
-        `paint: level row string too big - newRow: ${newRow.length}, levelWidth: ${this.levelWidth}, p: ${p.x},${p.y}, value: ${value}, value.length: ${value.length}`
-      )
-
-    this.level[p.y] = newRow
-    this.color[p.y] = newColor
   }
 
   private createEmptyLevel() {
-    const row = this.emptyChar.repeat(this.levelWidth)
-    const level = new Array(this.levelHeight).fill(row)
-
-    this.level = level
-    this.color = [...level]
-
     // ? from ts style
     // [0, 0, 0, 0, 0]
     //Array.from<number>({ length: 5 }).fill(0);
-
     // ts deep dive
     // https://basarat.gitbook.io/typescript/main-1/create-arrays
   }
@@ -478,8 +402,8 @@ export class Dungeon3 {
   //   return this.rooms.findIndex((r) => r === room)
   // }
 
-  private rndP(edge = 1): Point {
-    return Pt(rnd(edge, this.levelWidth - 1 - edge), rnd(edge, this.levelHeight - 1 - edge))
+  private rndP(): Point {
+    return Pt(rnd(1, this.levelWidth - 1), rnd(1, this.levelHeight))
   }
 
   private rndW() {
@@ -496,15 +420,15 @@ export class Dungeon3 {
   // }
 
   // ? "level" param could be a level with visual only changes to illustrate something
-  private visual(msg = '(no message)') {
-    // ? should this just have a totally seperate copy for visual info only?
-    // ? i dont feel i need actual level data just yet but i might
+  // private visual(msg = '(no message)') {
+  //   // ? should this just have a totally seperate copy for visual info only?
+  //   // ? i dont feel i need actual level data just yet but i might
 
-    if (this.visualizer) {
-      // console.log('visualizer:', this.visualizer)
-      this.visualizer.snapshot([...this.level], [...this.color], msg)
-    }
-  }
+  //   if (this.visualizer) {
+  //     // console.log('visualizer:', this.visualizer)
+  //     this.visualizer.snapshot([...this.level], [...this.color], msg)
+  //   }
+  // }
 }
 interface Room {
   id: number
@@ -525,13 +449,6 @@ function oRnd(from: number, to: number) {
   return num
 }
 
-function logLevelArr(level: string[][], msg = 'map') {
-  console.groupCollapsed(msg)
-  level.forEach((e, i) => {
-    console.log((i % 2 ? '.' : ',') + e.join(''))
-  })
-  console.groupEnd()
-}
 type cCallBack = (x: number, y: number) => void
 
 // "command"/"action" pattern?

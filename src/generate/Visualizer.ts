@@ -11,36 +11,23 @@ export interface Snapshot {
 }
 export class Visualizer {
   display: ROT.Display
-  snapshots: Snapshot[] = []
+
+  // New version
+  history: string[][][] = []
 
   // playback
-  animate = true
+  animate = false
   animating = false
   index = 0
-  speed = 250
+  speed = 200
   speedFast = 50
-  speedPause = 400
+  speedPause = 500
+  cMode = true
 
   constructor(display: ROT.Display) {
     // console.log('new Visualizer')
     this.display = display
   }
-
-  // msg, speed
-  snapshot(level: string[], color: string[], msg: string) {
-    // console.log('Visualizer THIS!!', level)
-    let speed = this.speed
-    if (msg[0] === `0`) speed = this.speedPause
-    this.snapshots.push({ level, color, msg, speed })
-  }
-
-  // last() {
-  //   return this.snapshots[this.snapshots.length - 1]
-  // }
-
-  // lastColor() {
-  //   return this.colorSnapShots[this.colorSnapShots.length - 1]
-  // }
 
   active() {
     const keys = new Keys()
@@ -54,7 +41,7 @@ export class Visualizer {
         this.render(--this.index)
         break
       case 'ArrowRight':
-        if (this.index >= this.snapshots.length - 1 || this.animating) return
+        if (this.index >= this.history.length - 1 || this.animating) return
         this.render(++this.index)
         break
       // case 'Space':
@@ -64,23 +51,21 @@ export class Visualizer {
         console.log('stop!')
         this.animating = false
         break
-      case 'KeyQ':
-        console.log(this.snapshots.at(-1)?.level)
-        console.log(this.snapshots.at(-1)?.color)
-        break
+
+      case 'KeyM':
+        console.log('mode')
+        this.cMode = !this.cMode
+        this.render(this.index)
     }
   }
 
   play() {
-    // console.log('Viz: play() len: ', this.snapshots.length)
-    // console.log(this.snapshots)
     if (!this.animate) {
       this.renderFinal()
       return
     }
     if (this.animating) return
 
-    if (this.snapshots.length == 0) throw new Error('Tried to play but theres no snaps')
     this.index = 0
     this.animating = true
     this.nextSnap()
@@ -88,49 +73,47 @@ export class Visualizer {
 
   nextSnap() {
     this.render(this.index)
-    if (!this.animating || this.index + 1 >= this.snapshots.length) {
+    if (!this.animating || this.index + 1 >= this.history.length) {
       this.animating = false
-      this.index = this.snapshots.length - 1
+      this.index = this.history.length - 1
       this.render(this.index)
       return
     }
-    // console.log(`Anim: ${this.animating}, index: ${this.index}, len: ${this.snapshots.length}`)
+
     this.index++
     setTimeout(this.nextSnap.bind(this), this.speed)
   }
 
   render(index = this.index) {
     const display = this.display
-    const { level, color, msg } = this.snapshots[index]
     display.clear()
 
-    level.forEach((row, yi) => {
-      const r = [...row]
-      const c = [...color[yi]]
+    const cMap = this.history[index]
+    const last = cMap[cMap.length - 1]
+    const [msg] = last
 
-      r.forEach((t, xi) => {
-        // console.log(colors[c[xi]])
-        display.draw(xi, yi + CONFIG.marginTop, t, colors[c[xi]] || '#777', null)
+    cMap.forEach((row, y) =>
+      row.forEach((c, x) => {
+        if (row !== last) display.draw(x, y + CONFIG.marginTop, c, '#777', null)
       })
-
-      display.drawText(0, display.getOptions().height - 2, `[${index}] ${msg}`)
-      // display.drawText(0, display.getOptions().height - 1, `%c{blue}Dungeon3`)
-      // display.drawText(origin.x, origin.y + index, row)
-    })
+    )
+    // console.log('test:', msg, speed)
+    display.drawText(0, display.getOptions().height - 2, `[${index}] ${msg}`)
+    return
   }
 
   renderFinal() {
-    this.index = this.snapshots.length - 1
+    this.index = this.history.length - 1
     this.render()
   }
 }
 
-const colors: { [key: string]: string } = {
-  r: 'red',
-  b: 'blue',
-  g: 'green',
-  c: 'cyan',
-  y: 'yellow',
-  o: 'orange',
-  u: '#333',
-}
+// const colors: { [key: string]: string } = {
+//   r: 'red',
+//   b: 'blue',
+//   g: 'green',
+//   c: 'cyan',
+//   y: 'yellow',
+//   o: 'orange',
+//   u: '#333',
+// }
