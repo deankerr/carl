@@ -40,7 +40,8 @@ export class Dungeon3 {
 
   // cMap backup
   tempcMap: string[][] | null = null
-
+  // TODO Stop using global cMap, its weird and confusing
+  // TODO drawRect takes array of { rect, char, exclude? }
   constructor(levelWidth = 80, levelHeight = 20, visualizer: Visualizer | null) {
     console.log('%c Dungeon3 ', 'background-color: pink')
 
@@ -72,15 +73,15 @@ export class Dungeon3 {
     let innerRect
     if (inner) innerRect = Rect2Grow(rect, inner * -1)
 
-    console.groupCollapsed('digrect')
-    console.log(rect, innerRect)
+    // console.groupCollapsed('digrect')
+    // console.log(rect, innerRect)
     for (let yi = rect.ly; yi <= rect.ry; yi++) {
       for (let xi = rect.lx; xi <= rect.rx; xi++) {
         if (!this.ptInLevel(Pt(xi, yi))) continue
         // Not in inner
         if (!innerRect || !Rect2IntersectPt(innerRect, Pt(xi, yi))) {
           cmap[yi][xi] = rectChar
-          console.log(xi, yi, rectChar)
+          // console.log(xi, yi, rectChar)
           continue
         }
 
@@ -88,11 +89,11 @@ export class Dungeon3 {
 
         if (!innerSkip?.split('').includes(cmap[yi][xi])) {
           cmap[yi][xi] = innerChar[0]
-          console.log(xi, yi, innerChar[0])
+          // console.log(xi, yi, innerChar[0])
         }
       }
     }
-    console.groupEnd()
+    // console.groupEnd()
   }
 
   private digRect(rect: Rect2, rectChar: string, inner = 0, innerChar = '', innerSkip = '') {
