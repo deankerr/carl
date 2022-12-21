@@ -35,6 +35,42 @@ export class Rect {
     }
   }
 
+  // Find any rects this intersects, return such rects and {pts?}
+  // return null or [] if false?
+  // TODO static method?
+  intersects(rect: Rect | Rect[]) {
+    console.log('Rect intersects')
+
+    let targets = []
+
+    // Convert single rect to arr
+    Array.isArray(rect) ? (targets = rect) : (targets = [rect])
+
+    // Find matching
+    const match = targets.filter((r) => {
+      return Rect.intersects(r, this)
+    })
+
+    // Create pts list
+    const rectPts = match.map((r) => {
+      const pts: { x: number; y: number }[] = []
+
+      r.traverse((x, y) => {
+        console.log('ints traverse')
+        if (Rect.intersectsPt(r, { x, y })) pts.push({ x, y })
+      })
+
+      return [r, pts]
+    })
+
+    console.log('rectPts', rect, match, rectPts)
+    // return match.length > 0 ? match : null
+    return match.length > 0 ? match : null
+    // return [ [rect, [pt, pt, pt, ...] ], [rect, [pt, pt, pt, ...] ] ]
+  }
+
+  // ? within(pt) ?
+
   static at(x: number, y: number, width: number, height: number) {
     return new Rect(x, y, width, height)
   }
@@ -46,6 +82,17 @@ export class Rect {
     const y1 = y - Math.floor(height / 2)
 
     return new Rect(x1, y1, width, height)
+  }
+
+  // TODO do main checking here?
+  static intersects(rect1: Rect, rect2: Rect) {
+    if (rect1 === rect2) console.warn('Did you mean to check if a rect intersects itself?', rect1, rect2)
+    return !(rect1.x2 < rect2.x || rect1.y2 < rect2.y || rect1.x > rect2.x2 || rect1.y > rect2.y2)
+  }
+
+  // TODO naming? "pt"? overload with rect:rect function?
+  static intersectsPt(rect: Rect, pt: { x: number; y: number }) {
+    return pt.x >= rect.x && pt.y >= rect.y && pt.x <= rect.x2 && pt.y <= rect.y2
   }
 }
 

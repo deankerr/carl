@@ -34,7 +34,9 @@ export function Game(d: ROT.Display) {
   // ROT.RNG.setSeed(seed)
 
   display = d
-  Dungeon4(CONFIG.levelWidth, CONFIG.levelHeight)
+  const d4 = Dungeon4(CONFIG.levelWidth, CONFIG.levelHeight)
+  d4.create()
+  // console.log(d4.history)
   // newWorld('Space')
 }
 

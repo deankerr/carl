@@ -10,61 +10,82 @@ const roomSize = 3 // TODO vary
 
 // --- Globals ---
 const history: CharMap[] = []
+let level: CharMap = []
+let width: number
+let height: number
 
-export function Dungeon4(width: number, height: number) {
+export function Dungeon4(w: number, h: number) {
   console.log('welcome... to dung4')
+  width = w
+  height = h
 
-  let level: CharMap = [...new Array(height)].map(() => new Array(width).fill(' '))
-
+  level = [...new Array(height)].map(() => new Array(width).fill(' '))
   history.push(copy(level))
 
   consoleLogMap(level, true)
 
-  const rooms = generateRooms()
-  console.log(rooms)
-  history.push(copy(level))
-
-  rooms.forEach((r) => (level = digRect(level, r, 'r')))
-  consoleLogMap(level)
+  return { create, history }
 
   // ========== End of main ==========
 
   // ======== Rooms ========
-  function generateRooms(): Room[] {
-    let attempts = 0
-    const rooms: Room[] = []
-    while (++attempts < maxRoomAttempts && rooms.length < maxRooms) {
-      const room = Room.scaled(rnd(0, width - 1), rnd(0, height - 1), roomSize, roomSize)
-      room.label = rooms.length.toString()
-      if (roomInBounds(room)) {
-        rooms.push(room)
-      }
-    }
-    return rooms
-  }
-
-  function roomInBounds(room: Room) {
-    return rectInBounds(level, room.rect)
-  }
 }
 
-// function createRooms(map: CharMap, rooms: Room[], attempts = 0) {
-//   console.log('attempts', attempts)
-//   const room = createRoom(map)
+function create() {
+  console.log('create()', width, height)
 
-//   if (roomInBounds(map, room)) {
-//     room.label = rooms.length.toString()
-//     rooms = [room, ...rooms]
-//   }
+  const rooms = generateRooms()
+  // console.log(rooms)
+  // history.push(copy(level))
 
-//   if (attempts < maxRoomAttempts && rooms.length < maxRooms) createRooms(map, rooms, ++attempts)
-// }
+  // rooms.forEach((r) => (level = digRect(level, r, 'r')))
+  // consoleLogMap(level)
 
-// function cr2(max: number[], attempts = 0) {
-//   console.log('cr2', attempts)
-//   const room = createRoom(map)
+  // ! intersects test
+  const r1 = Rect.at(1, 1, 4, 4)
+  const r2 = Rect.at(10, 10, 4, 4)
+  level = digRect(level, r1, '1')
+  level = digRect(level, r2, '2')
+  consoleLogMap(level)
 
-// }
+  console.log('r1 i r2', r1.intersects(r2))
+  console.log('r2 i r1', r2.intersects(r1))
+
+  // const r3 = Rect.at(2, 2, 4, 4)
+  // level = digRect(level, r3, '3')
+
+  // const r4 = Rect.at(6, 2, 4, 4)
+  // level = digRect(level, r4, '4')
+  // consoleLogMap(level)
+
+  // console.log('r3 i r1', r3.intersects(r1))
+  // console.assert(r3.intersects(r1) != null)
+
+  // console.log('r3 i r2', r3.intersects(r2))
+  // console.assert(r3.intersects(r2) == null)
+
+  // console.log('r3 i r4', r3.intersects(r4))
+
+  // console.log('r3 i [r1, r2, r4]', r3.intersects([r1, r2, r4]))
+}
+
+function generateRooms(): Room[] {
+  let attempts = 0
+  const rooms: Room[] = []
+  while (++attempts < maxRoomAttempts && rooms.length < maxRooms) {
+    const room = Room.scaled(rnd(0, width - 1), rnd(0, height - 1), roomSize, roomSize)
+    room.label = rooms.length.toString()
+
+    if (roomInBounds(room)) {
+      rooms.push(room)
+    }
+  }
+  return rooms
+}
+
+function roomInBounds(room: Room) {
+  return rectInBounds(level, room.rect)
+}
 
 class Room {
   label: string | undefined // ? do we need this
@@ -82,6 +103,7 @@ class Room {
 }
 
 function digRect(map: CharMap, e: Rect | Room, char: string) {
+  console.log('digRect')
   const newLevel = copy(map)
   const rect = e instanceof Room ? e.rect : e
 
