@@ -27,7 +27,7 @@ export class Rect {
 
   // Travels through the x/y coords
   traverse(callback: (x: number, y: number) => unknown) {
-    console.log('rect traverse')
+    // console.log('rect traverse')
     for (let yi = this.y; yi < this.y + this.height - 1; yi++) {
       for (let xi = this.x; xi <= this.x + this.width - 1; xi++) {
         if (callback(xi, yi) === false) return // exit loop if false?
@@ -38,8 +38,9 @@ export class Rect {
   // Find any rects this intersects, return such rects and {pts?}
   // return null or [] if false?
   // TODO static method?
+  // TODO ts generic
   intersects(rect: Rect | Rect[]) {
-    console.log('Rect intersects')
+    console.log('RectI.intersects()')
 
     let targets = []
 
@@ -47,25 +48,40 @@ export class Rect {
     Array.isArray(rect) ? (targets = rect) : (targets = [rect])
 
     // Find matching
-    const match = targets.filter((r) => {
+    const targetsMatch = targets.filter((r) => {
       return Rect.intersects(r, this)
     })
 
+    // Return if no match
+    if (targetsMatch.length === 0) return null
+
+    // targetsMatch = [rect, rect, rect, ... ]
+
+    // targetMatchPts = [ [rect, [pt, pt, pt, ... ]], [rect, [pt, pt, pt, ... ]], ...]
     // Create pts list
-    const rectPts = match.map((r) => {
+    const targetsMatchPts = targetsMatch.map((targetRect) => {
       const pts: { x: number; y: number }[] = []
 
-      r.traverse((x, y) => {
-        console.log('ints traverse')
-        if (Rect.intersectsPt(r, { x, y })) pts.push({ x, y })
+      targetRect.traverse((x, y) => {
+        // console.log('ints traverse')
+        if (Rect.intersectsPt(this, { x, y })) pts.push({ x, y })
       })
 
-      return [r, pts]
+      return [targetRect, pts]
     })
 
-    console.log('rectPts', rect, match, rectPts)
+    console.assert(
+      targetsMatchPts.length > 0,
+      "No points found after match check, this shouldn't happen",
+      rect,
+      targetsMatchPts
+    )
+
+    return targetsMatchPts.length === 1 ? targetsMatchPts[0] : targetsMatchPts
+
+    // console.log('rectPts', rect, match, rectPts)
     // return match.length > 0 ? match : null
-    return match.length > 0 ? match : null
+
     // return [ [rect, [pt, pt, pt, ...] ], [rect, [pt, pt, pt, ...] ] ]
   }
 

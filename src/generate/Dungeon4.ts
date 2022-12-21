@@ -46,13 +46,25 @@ function create() {
   const r2 = Rect.at(10, 10, 4, 4)
   level = digRect(level, r1, '1')
   level = digRect(level, r2, '2')
-  consoleLogMap(level)
 
-  console.log('r1 i r2', r1.intersects(r2))
-  console.log('r2 i r1', r2.intersects(r1))
+  console.log('r1 i r2')
+  console.log(r1.intersects(r2))
+  console.log('r2 i r1')
+  console.log(r2.intersects(r1))
 
-  // const r3 = Rect.at(2, 2, 4, 4)
-  // level = digRect(level, r3, '3')
+  const r3 = Rect.at(2, 2, 4, 4)
+  console.log('r3:', r3)
+  level = digRect(level, r3, '3')
+
+  console.log('r3 i r1')
+  console.log(r3.intersects(r1))
+
+  const r4 = Rect.at(4, 2, 4, 4)
+  // level = digRect(level, r4, '4')
+
+  console.log('r3 i [r1, r2, r4]')
+  console.log(r3.intersects([r1, r2, r4]))
+  // console.log('r3 i r1', r3.intersects(r1))
 
   // const r4 = Rect.at(6, 2, 4, 4)
   // level = digRect(level, r4, '4')
@@ -67,6 +79,7 @@ function create() {
   // console.log('r3 i r4', r3.intersects(r4))
 
   // console.log('r3 i [r1, r2, r4]', r3.intersects([r1, r2, r4]))
+  consoleLogMap(level)
 }
 
 function generateRooms(): Room[] {
@@ -103,7 +116,7 @@ class Room {
 }
 
 function digRect(map: CharMap, e: Rect | Room, char: string) {
-  console.log('digRect')
+  // console.log('digRect')
   const newLevel = copy(map)
   const rect = e instanceof Room ? e.rect : e
 
