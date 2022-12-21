@@ -12,12 +12,15 @@ import { CONFIG } from './config'
 // new implementation
 import { Visualizer } from './generate/Visualizer'
 import { Keys } from './keys'
+import { Dungeon4 } from './generate/Dungeon4'
 
 // TODO Rethink using component fn names as keys, doesn't work with default minifier options
 
 let display: ROT.Display
+
 // let mouse = [0, 0]
 // let lightsOn = false
+
 let world: World
 // let smiley = false
 // let msg: string[] = ['You decide to exist, for a time.']
@@ -31,8 +34,8 @@ export function Game(d: ROT.Display) {
   // ROT.RNG.setSeed(seed)
 
   display = d
-
-  newWorld('Space')
+  Dungeon4(CONFIG.levelWidth, CONFIG.levelHeight)
+  // newWorld('Space')
 }
 
 function newWorld(code?: string) {
