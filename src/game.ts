@@ -13,6 +13,7 @@ import { CONFIG } from './config'
 import { Visualizer } from './generate/Visualizer'
 import { Keys } from './keys'
 import { Dungeon4 } from './generate/Dungeon4'
+import { Visualizer4 } from './generate/Visualizer4'
 
 // TODO Rethink using component fn names as keys, doesn't work with default minifier options
 
@@ -27,16 +28,37 @@ let world: World
 // let oldMsg: string[] = []
 
 const keys = new Keys()
-keys.add(newWorld)
+// keys.add(newWorld)
 
 export function Game(d: ROT.Display) {
   // console.log('Game init')
   // ROT.RNG.setSeed(seed)
 
   display = d
-  const d4 = Dungeon4(CONFIG.levelWidth, CONFIG.levelHeight)
-  d4.create()
-  // console.log(d4.history)
+  keys.add(readkeys)
+  d4()
+
+  function d4() {
+    const d4 = Dungeon4(CONFIG.levelWidth, CONFIG.levelHeight)
+
+    try {
+      d4.create()
+    } finally {
+      console.groupCollapsed('History')
+      console.log('hist:', d4.history)
+      d4.history.forEach((h) => {
+        d4.consoleLogMap(h, true)
+      })
+      console.groupEnd()
+
+      Visualizer4(display, d4.history, new Keys())
+    }
+  }
+
+  function readkeys(key: string) {
+    if (key === 'KeyN') d4()
+  }
+
   // newWorld('Space')
 }
 

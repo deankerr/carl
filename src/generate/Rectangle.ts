@@ -1,10 +1,9 @@
-// export const Point = (x: number, y: number) => {
-//   return { x, y }
-// }
+import * as ROT from 'rot-js'
 
-// export interface Rect {}
+type Point = { x: number; y: number }
 
 export class Rect {
+  // Top left to bottom right
   readonly x: number
   readonly y: number
   readonly x2: number
@@ -12,6 +11,10 @@ export class Rect {
 
   readonly width: number
   readonly height: number
+
+  // Center
+  readonly cx: number
+  readonly cy: number
 
   constructor(x: number, y: number, width: number, height: number) {
     // top left
@@ -23,69 +26,64 @@ export class Rect {
 
     this.width = width
     this.height = height
+
+    // center
+    this.cx = this.x2 - Math.floor(this.width / 2)
+    this.cy = this.y2 - Math.floor(this.height / 2)
   }
 
   // Travels through the x/y coords
   traverse(callback: (x: number, y: number) => unknown) {
     // console.log('rect traverse')
-    for (let yi = this.y; yi < this.y + this.height - 1; yi++) {
-      for (let xi = this.x; xi <= this.x + this.width - 1; xi++) {
+    for (let yi = this.y; yi <= this.y2; yi++) {
+      for (let xi = this.x; xi <= this.x2; xi++) {
         if (callback(xi, yi) === false) return // exit loop if false?
       }
     }
   }
 
-  // Find any rects this intersects, return such rects and {pts?}
-  // return null or [] if false?
-  // TODO static method?
-  // TODO ts generic
-  intersects(rect: Rect | Rect[]) {
-    console.log('RectI.intersects()')
+  // TODO push most of this into static method?
+  // TODO handle arrays, ts generic
+  // TODO handle empty rect?
+  intersects(rect: Rect) {
+    // console.log('RectI.intersects() for', rect)
 
-    let targets = []
+    // Doesn't intersect
+    if (!Rect.intersects(this, rect)) return null
 
-    // Convert single rect to arr
-    Array.isArray(rect) ? (targets = rect) : (targets = [rect])
-
-    // Find matching
-    const targetsMatch = targets.filter((r) => {
-      return Rect.intersects(r, this)
+    // Otherwise, find pts that do
+    const pts: { x: number; y: number }[] = []
+    rect.traverse((x, y) => {
+      if (Rect.intersectsPt(this, { x, y })) pts.push({ x, y })
     })
 
-    // Return if no match
-    if (targetsMatch.length === 0) return null
-
-    // targetsMatch = [rect, rect, rect, ... ]
-
-    // targetMatchPts = [ [rect, [pt, pt, pt, ... ]], [rect, [pt, pt, pt, ... ]], ...]
-    // Create pts list
-    const targetsMatchPts = targetsMatch.map((targetRect) => {
-      const pts: { x: number; y: number }[] = []
-
-      targetRect.traverse((x, y) => {
-        // console.log('ints traverse')
-        if (Rect.intersectsPt(this, { x, y })) pts.push({ x, y })
-      })
-
-      return [targetRect, pts]
-    })
-
-    console.assert(
-      targetsMatchPts.length > 0,
-      "No points found after match check, this shouldn't happen",
-      rect,
-      targetsMatchPts
-    )
-
-    return targetsMatchPts.length === 1 ? targetsMatchPts[0] : targetsMatchPts
-
-    // console.log('rectPts', rect, match, rectPts)
-    // return match.length > 0 ? match : null
-
-    // return [ [rect, [pt, pt, pt, ...] ], [rect, [pt, pt, pt, ...] ] ]
+    return pts
   }
 
-  // ? within(pt) ?
+  intersectsPt(pt: { x: number; y: number }) {
+    return Rect.intersectsPt(this, pt)
+  }
+
+  // clone() {
+  //   return new Rect(this.x, this.y, this.width, this.height)
+  // }
+
+  scale(by: number) {
+    // const cx = this.x2 - Math.floor(this.width / 2)
+    // const cy = this.y2 - Math.floor(this.height / 2)
+    // const xScale = this.width + by * 2
+    // const yScale = this.height + by * 2
+    // const x =
+    const x = this.x - by
+    const y = this.y - by
+    const width = this.width + by * 2
+    const height = this.height + by * 2
+    return Rect.at(x, y, width, height)
+  }
+
+  rndPt(): Point {
+    return { x: ROT.RNG.getUniformInt(this.x, this.x2), y: ROT.RNG.getUniformInt(this.y, this.y2) }
+  }
 
   static at(x: number, y: number, width: number, height: number) {
     return new Rect(x, y, width, height)
