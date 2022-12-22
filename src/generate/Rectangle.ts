@@ -1,10 +1,9 @@
-// export const Point = (x: number, y: number) => {
-//   return { x, y }
-// }
+import * as ROT from 'rot-js'
 
-// export interface Rect {}
+type Point = { x: number; y: number }
 
 export class Rect {
+  // Top left to bottom right
   readonly x: number
   readonly y: number
   readonly x2: number
@@ -12,6 +11,10 @@ export class Rect {
 
   readonly width: number
   readonly height: number
+
+  // Center
+  readonly cx: number
+  readonly cy: number
 
   constructor(x: number, y: number, width: number, height: number) {
     // top left
@@ -23,16 +26,70 @@ export class Rect {
 
     this.width = width
     this.height = height
+
+    // center
+    this.cx = this.x2 - Math.floor(this.width / 2)
+    this.cy = this.y2 - Math.floor(this.height / 2)
   }
 
   // Travels through the x/y coords
   traverse(callback: (x: number, y: number) => unknown) {
-    console.log('rect traverse')
-    for (let yi = this.y; yi < this.y + this.height - 1; yi++) {
-      for (let xi = this.x; xi <= this.x + this.width - 1; xi++) {
+    // console.log('rect traverse')
+    for (let yi = this.y; yi <= this.y2; yi++) {
+      for (let xi = this.x; xi <= this.x2; xi++) {
         if (callback(xi, yi) === false) return // exit loop if false?
       }
     }
+  }
+
+  // TODO push most of this into static method?
+  // TODO handle arrays, ts generic
+  // TODO handle empty rect?
+  intersects(rect: Rect) {
+    // console.log('RectI.intersects() for', rect)
+
+    // Doesn't intersect
+    if (!Rect.intersects(this, rect)) return null
+
+    // Otherwise, find pts that do
+    const pts: { x: number; y: number }[] = []
+    rect.traverse((x, y) => {
+      if (Rect.intersectsPt(this, { x, y })) pts.push({ x, y })
+    })
+
+    return pts
+  }
+
+  intersectsPt(pt: { x: number; y: number }) {
+    return Rect.intersectsPt(this, pt)
+  }
+
+  scale(by: number) {
+    // const cx = this.x2 - Math.floor(this.width / 2)
+    // const cy = this.y2 - Math.floor(this.height / 2)
+    // const xScale = this.width + by * 2
+    // const yScale = this.height + by * 2
+    // const x =
+    const x = this.x - by
+    const y = this.y - by
+    const width = this.width + by * 2
+    const height = this.height + by * 2
+    return Rect.at(x, y, width, height)
+  }
+
+  // Return list of each pt in the rect. outer = outermost edge only
+  toPts(outer = false): Point[] {
+    const result: Point[] = []
+    this.traverse((x, y) => {
+      if (!outer) result.push({ x, y })
+      else if (x == this.x || x == this.x2 || y == this.y || y == this.y2) result.push({ x, y })
+    })
+
+    return result
+  }
+
+  rndPt(): Point {
+    return { x: ROT.RNG.getUniformInt(this.x, this.x2), y: ROT.RNG.getUniformInt(this.y, this.y2) }
   }
 
   static at(x: number, y: number, width: number, height: number) {
@@ -46,6 +103,17 @@ export class Rect {
     const y1 = y - Math.floor(height / 2)
 
     return new Rect(x1, y1, width, height)
+  }
+
+  // TODO do main checking here?
+  static intersects(rect1: Rect, rect2: Rect) {
+    if (rect1 === rect2) console.warn('Did you mean to check if a rect intersects itself?', rect1, rect2)
+    return !(rect1.x2 < rect2.x || rect1.y2 < rect2.y || rect1.x > rect2.x2 || rect1.y > rect2.y2)
+  }
+
+  // TODO naming? "pt"? overload with rect:rect function?
+  static intersectsPt(rect: Rect, pt: { x: number; y: number }) {
+    return pt.x >= rect.x && pt.y >= rect.y && pt.x <= rect.x2 && pt.y <= rect.y2
   }
 }
 
