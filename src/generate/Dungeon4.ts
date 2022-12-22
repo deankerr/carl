@@ -1,7 +1,7 @@
 // TODO clean up duplicate functions/functionality, add later improvements to earlier stages
 // TODO improve room gen (larger, flatter, more distrubted rooms)
 // TODO -> BSP? 'grow rooms' at empty points?
-// TODO Dungeon4 class? use more globals(rooms/corridors)? (so much is read by and passed around to everything, Object.freeze etc.?)
+// TODO use more globals(rooms/corridors)? (so much is read by and passed around to everything, Object.freeze etc.?)
 // TODO (but also ?) break into multiple files ? easier to switch/try out new methods
 // TODO reduce excess CharMap copies
 // TODO smarter corridors
@@ -29,18 +29,13 @@ const maxRoomYSize = 4
 const maxCorridorAttempts = 50
 
 // --- Globals ---
-let history: CharMap[] = []
+export const history: CharMap[] = []
 let current: CharMap = []
 let width: number
 let height: number
 
-export function Dungeon4() {
+export function Dungeon4(w: number, h: number) {
   console.log('welcome... to dung4')
-
-  return { create, consoleLogMap, getHistory }
-}
-
-function create(w: number, h: number) {
   const time = Date.now()
 
   // set up
@@ -52,11 +47,9 @@ function create(w: number, h: number) {
   current = digRect(current, Rect.at(1, 1, width - 2, height - 2), ' ')
 
   // wipe old history (store this?)
-  history = []
+  // history = []
 
   snapshot(current, 'New', 'new')
-
-  consoleLogMap(current, true, 'New')
 
   const seed = ROT.RNG.getUniformInt(1000, 9999)
   ROT.RNG.setSeed(seed)
@@ -188,7 +181,7 @@ function generateCorridors(rooms: Room[]) {
   const corridors: Corridor[] = []
 
   let level = createBlankMap()
-  level = digRoom(level, rooms, '.', 'w', true, 'W')
+  level = digRoom(level, rooms, '.', 'w', true, 'c')
   snapshot(level, 'Generate Corridors', 'corrstart')
 
   let unconnected = [...rooms]
@@ -234,9 +227,7 @@ function generateCorridors(rooms: Room[]) {
       console.log('unconnected is now:', unconnected)
 
       level = digCorridor(level, corridor, '.')
-      consoleLogMap(level, true, 'new corridor')
       snapshot(level, 'Corridor created', 'corrsuccess')
-
       // set up next round
       next = unconnected[0]
       targets = rooms.filter((r) => !unconnected.includes(r))
@@ -276,7 +267,6 @@ function generateCorridors(rooms: Room[]) {
 function connectRooms(level: CharMap, origin: Room, target: Room) {
   console.groupCollapsed(`Connect ${origin.label} to ${target.label}`)
   const currentMap = copy(level)
-  // consoleLogMap(level, true, 'connectrooms()')
   const bannedOrigins: string[] = []
 
   const innerMax = 6
@@ -313,7 +303,7 @@ function connectRooms(level: CharMap, origin: Room, target: Room) {
       console.log('path pt:', pt)
       const prev = i > 0 ? path[i - 1] : pt
 
-      if ((currentMap[pt.y][pt.x] === 'w' && currentMap[prev.y][prev.x] === 'w') || currentMap[pt.y][pt.x] === 'W') {
+      if ((currentMap[pt.y][pt.x] === 'w' && currentMap[prev.y][prev.x] === 'w') || currentMap[pt.y][pt.x] === 'c') {
         if (currentMap[pt.y][pt.x] === 'W') {
           console.log('Corner fail')
           corrMap = digPts(corrMap, [pt], 'x')
@@ -584,7 +574,8 @@ function transposeLevelY(level: CharMap, dir: number) {
 
 // #region ===== Digging =====
 
-function digCorridor(map: CharMap, corridor: Corridor | Corridor[], char = 'c', borderChar = 'w') {
+function digCorridor(map: CharMap, corridor: Corridor | Corridor[], char = '.', borderChar = 'w') {
+  // ? a shorter list would be only overwrite blank or wall?
   const wallIgnore = 'crp0123456789.#W'
   const pIgnore = 'crp0123456789.W'
   let newMap = copy(map)
@@ -712,15 +703,14 @@ function rnd(min: number, max: number) {
 
 function snapshot(map: CharMap, label = '(no label!)', group = '') {
   const snap = copy(map)
-  const h = getHistory()
-  h.push([[label, group], ...snap])
+  // const h = getHistory()
+  history.push([[label, group], ...snap])
 }
 
-function getHistory() {
-  return history
-}
+// function getHistory() {
+//   return history
+// }
 
 function createBlankMap(): CharMap {
   return [...new Array(height)].map(() => new Array(width).fill(' '))
 }
-// function rndPt(map)

@@ -12,7 +12,7 @@ import { CONFIG } from './config'
 // new implementation
 // import { Visualizer } from './generate/Visualizer'
 import { Keys } from './keys'
-import { Dungeon4, CharMap } from './generate/Dungeon4'
+import { Dungeon4, CharMap, history } from './generate/Dungeon4'
 import { Visualizer4 } from './generate/Visualizer4'
 
 // TODO Rethink using component fn names as keys, doesn't work with default minifier options
@@ -41,12 +41,10 @@ export function Game(d: ROT.Display) {
   d4()
 
   function d4() {
-    const d4 = Dungeon4()
-
     try {
-      d4.create(CONFIG.levelWidth, CONFIG.levelHeight)
+      Dungeon4(CONFIG.levelWidth, CONFIG.levelHeight)
     } finally {
-      vis.start(d4.getHistory())
+      vis.start(history)
     }
   }
 

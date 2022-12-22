@@ -1,4 +1,3 @@
-// TODO finalize structure - class? how to create then destroy object easily
 // TODO speed presets?
 import * as ROT from 'rot-js'
 import { CharMap } from './Dungeon4'
@@ -82,15 +81,10 @@ function render(index: number) {
     if (yi !== 0) {
       row.forEach((char, xi) => {
         let color = '#888'
-        if (char === 'x') color = 'red'
+        if (colorMap[char]) color = colorMap[char]
         if ('0123456789'.includes(char)) color = 'orange'
-        if (char === 'f') color = 'cyan'
-        if (char === 'F') color = 'lime'
-        if (char === 'C') color = 'cyan'
-        if (char === 'p') color = 'yellow'
-        if (char === '+') color = 'saddlebrown'
-        if (char === 'W') color = 'firebrick'
-        d?.draw(xi, yi + 1, char, color, null)
+
+        d.draw(xi, yi + 1, char, color, null)
       })
     }
   })
@@ -98,6 +92,16 @@ function render(index: number) {
   const msg = map[0][0]
   const group = map[0][1]
   d?.drawText(0, d.getOptions().height - 2, `[${index}-${group}] ${msg}`)
+}
+
+const colorMap: { [key: string]: string } = {
+  x: 'red',
+  f: 'cyan',
+  F: 'lime',
+  C: 'cyan',
+  p: 'yellow',
+  '+': 'saddlebrown',
+  c: 'orange',
 }
 
 function control(key: string) {
@@ -149,6 +153,12 @@ function control(key: string) {
 function mouse(event: MouseEvent) {
   const dis = d
   const ev = dis.eventToPosition(event)
-  d?.drawText(0, 0, '......')
-  d?.drawText(0, 0, `${ev[0]}, ${ev[1] - 2}`)
+  d.draw(6, 0, ' ', 'black', null)
+  d.draw(5, 0, ' ', 'black', null)
+  d.draw(4, 0, ' ', 'black', null)
+  d.draw(3, 0, ' ', 'black', null)
+  d.draw(2, 0, ' ', 'black', null)
+  d.draw(1, 0, ' ', 'black', null)
+  d.draw(0, 0, ' ', 'black', null)
+  d.drawText(0, 0, `${ev[0]}, ${ev[1] - 2}`)
 }
