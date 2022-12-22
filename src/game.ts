@@ -44,12 +44,12 @@ export function Game(d: ROT.Display) {
     try {
       d4.create()
     } finally {
-      console.groupCollapsed('History')
-      console.log('hist:', d4.history)
-      d4.history.forEach((h) => {
-        d4.consoleLogMap(h, true)
-      })
-      console.groupEnd()
+      // console.groupCollapsed('History')
+      // console.log('hist:', d4.history)
+      // d4.history.forEach((h) => {
+      //   d4.consoleLogMap(h, true)
+      // })
+      // console.groupEnd()
 
       Visualizer4(display, d4.history, new Keys())
     }

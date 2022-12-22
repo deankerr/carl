@@ -5,7 +5,7 @@ export type CharMap = string[][]
 type Point = { x: number; y: number }
 
 // --- Config ---
-const maxRooms = 8
+const maxRooms = 7
 const maxRoomAttempts = 200
 const levelEdge = 1
 const roomBorderSize = 3
@@ -41,15 +41,17 @@ export function Dungeon4(w: number, h: number) {
 }
 
 function create() {
-  // ROT.RNG.setSeed(1671676757256)
+  // ROT.RNG.setSeed(1671690113846)
   console.log('create()', width, height, ROT.RNG.getSeed())
 
+  // TODO priorities bigger rooms, smarter placement?
   const rooms = generateRooms()
   console.log('Done rooms:', rooms)
 
   const corridors = generateCorridors(rooms)
   console.log('Done corridors:', corridors)
 
+  console.log(rooms)
   let final = digFinal(rooms, corridors)
 
   snapshot(final, 'Generation complete')
@@ -145,127 +147,144 @@ function generateCorridors(rooms: Room[]) {
   console.group('%c  generateCorridors()  ', 'background-color: cyan')
   const corridors: Corridor[] = []
 
-  let unconnected = rooms
-
   // new level map
-  let current = createBlankMap()
-  rooms.forEach((r) => (current = digRoom(current, r, '.', 'w')))
-  snapshot(current, 'Generate corridors', 'corrstart')
+  let level = createBlankMap()
+  rooms.forEach((r) => (level = digRoom(level, r, '.', 'w')))
+  snapshot(level, 'Generate Corridors', 'corrstart')
 
-  let origin = unconnected[0]
+  // populated list with [0], it's "connected"
+  let unconnected = [...rooms]
+  const firstTarget = unconnected.shift()
+  if (!firstTarget) throw new Error('There are no initial targets.')
+  let targets: Room[] = [firstTarget]
+  let next = unconnected[0]
 
+  const outerMax = 10
   let attempts = 0
   while (unconnected.length > 0) {
-    if (++attempts >= maxCorridorAttempts) {
-      console.error('generateCorridors attempts exceeded', attempts, maxCorridorAttempts)
+    if (++attempts > outerMax) {
+      console.error('generateCorridors attempts exceeded', attempts, outerMax)
       break
     }
-    console.groupCollapsed(`%cCreate corridor for Room ${origin.label}`, 'background-color: orange')
+    console.groupCollapsed('%c Corridor Outer ' + attempts + ' ', 'background-color: orange')
+    console.log('Next:', next, 'Targets:', targets)
+    const origin = next
+    const target = floodFind(origin, targets, level)
 
-    let targets: Room[]
-
-    if (unconnected.length === 1) {
-      // last room, set origin, targets to any
-      // ? always connect random for more random?
-      origin = unconnected[0]
-      targets = rooms
-    } else {
-      targets = unconnected
+    if (!target) {
+      // TODO ???
+      console.error('No target.')
+      break
     }
 
-    console.log(`Origin: ${origin.label}, Targets: ${targets.length}`)
+    // TODO update corrmap
+    const result = connectRooms(level, origin, target)
 
-    const target = floodFind(origin, targets, current)
-
-    if (!target) throw new Error('We got nothing.')
-
-    const innerMax = 20
-    let innerAttempt = 0
-
-    while (innerAttempt < innerMax) {
-      innerAttempt++
-      const from = origin.rect.rndPt()
-      const to = target.rect.rndPt()
-
-      const path = createPath(from, to)
-      console.log('path:', path)
-      let pathMap = digPts(current, [from, to], 'p')
-      snapshot(pathMap, `Path ${origin.label} to ${target.label} ${innerAttempt}/${innerMax}`)
-
-      // new corridor map for checking valid corridors
-      let corrMap = createBlankMap()
-      corrMap = digRoom(corrMap, rooms, 'r', 'w', false)
-      corrMap = digCorridor(corrMap, corridors, 'c', 'w')
-      // consoleLogMap(corrMap, true, 'corrMap')
-
-      let pathI = 0
-      let prev = path[0]
-      let failed = false
-      const roomsPathed = new Set<Room>()
-      for (const pt of path) {
-        // check for double wall breakage
-        if (corrMap[pt.y][pt.x] === 'w' && corrMap[prev.y][prev.x] === 'w') {
-          console.log('fail!')
-          consoleLogMap(corrMap, true, 'corrMap')
-          failed = true
-          pathMap = digPts(pathMap, [pt, prev], 'x')
-          snapshot(pathMap, 'Path failed - damaged walls', 'pathfail')
-          break
-        } else {
-          prev = pt
-          const room = rooms.find((r) => r.rect.intersectsPt(pt))
-          if (room) roomsPathed.add(room)
-          // visual
-          const wallRect = Rect.scaled(pt.x, pt.y, 2, 2)
-          pathMap = digRect(pathMap, wallRect, 'w', 'crwp0123456789.')
-          pathMap = digPt(pathMap, pt.x, pt.y, 'p')
-
-          snapshot(pathMap, `Path ${origin.label} to ${target.label} ${innerAttempt}/${innerMax}`, 'path')
-          pathI++
-        }
-      }
-
-      if (failed) {
-        if (innerAttempt == innerMax) {
-          // constant failure, choose new origin from connected rooms
-          const newOrigins = rooms.filter((r) => r !== origin && !unconnected.includes(r))
-          console.log('newOrigins:', newOrigins)
-          const pick = ROT.RNG.getItem(newOrigins)
-          if (!pick) throw new Error('I give up.')
-          origin = pick
-        }
-
-        continue
-      }
-
-      // Success
-      const newPath = path.slice(1, -1)
-      const corridor = new Corridor(newPath, corridors.length)
+    if (result) {
+      console.log('corridor created')
+      const corridor = new Corridor(result, corridors.length)
       corridors.push(corridor)
-      // DRY
-      current = digRoom(current, rooms, '.', 'w', true)
-      current = digCorridor(current, corridors, '.')
+      // update rooms
+      const roomsPathed = new Set<Room>()
+      corridor.points.forEach((pt) => {
+        const room = rooms.find((r) => r.rect.intersectsPt(pt))
+        if (room) roomsPathed.add(room)
+      })
 
-      snapshot(current, 'Corridor success!', 'corrsuccess')
+      unconnected = unconnected.filter((r) => ![...roomsPathed].includes(r))
+      console.log('unconnected is now:', unconnected)
 
-      // remove connected from list
-      // TODO rooms on the way
-      console.log('roomsPathed:', roomsPathed)
-      unconnected = unconnected.filter((r) => !roomsPathed.has(r))
-      console.log('new unconnected:', unconnected)
+      level = digCorridor(level, corridor, '.')
+      consoleLogMap(level, true, 'new corridor')
+      snapshot(level, 'Corridor created', 'corrsuccess')
 
-      // draw corridor on maps
-
-      origin = target
-      break
+      // set up next round
+      next = unconnected[0]
+      targets = rooms.filter((r) => !unconnected.includes(r))
+    } else {
+      // TODO handle fail
+      throw new Error('corridor fail')
     }
-
     console.groupEnd()
   }
-
   console.groupEnd()
   return corridors
-  // console.groupEnd()
+}
+
+function connectRooms(level: CharMap, origin: Room, target: Room) {
+  console.groupCollapsed(`Connect ${origin.label} to ${target.label}`)
+  let currentMap = copy(level)
+  // consoleLogMap(level, true, 'connectrooms()')
+  const bannedOrigins: string[] = []
+
+  let valid = false
+  const innerMax = 10
+  let attempts = 0
+
+  while (!valid && attempts++ < innerMax) {
+    console.log('inner', attempts)
+
+    // Select to and from pts
+    let from: Point
+    let froma = 0
+    console.log('bannedOrigins:', bannedOrigins)
+    do {
+      from = origin.rect.rndPt()
+    } while (bannedOrigins.includes(pt2s(from)) && froma++ < 20)
+    // TODO get finite list of rect points?
+    // TODO handle all points banned? currently goes back to just any
+    console.log('froma:', froma)
+    const to = target.rect.rndPt()
+
+    const path = createPath(from, to)
+
+    // draw path start/end + banned origin pts
+    let corrMap = digPts(currentMap, [from, to], 'p')
+    corrMap = digPts(
+      corrMap,
+      bannedOrigins.map((p) => s2pt(p)),
+      'x'
+    )
+    snapshot(corrMap, `Path ${origin.label} to ${target.label} ${attempts}/${innerMax}`)
+
+    const valid = path.every((pt, i) => {
+      console.log('path pt:', pt)
+      const prev = i > 0 ? path[i - 1] : pt
+      // console.log('p', currentMap[pt.y][pt.x], 'prev', currentMap[prev.y][prev.x])
+
+      if (currentMap[pt.y][pt.x] === 'w' && currentMap[prev.y][prev.x] === 'w') {
+        console.log('Wall fail')
+        // consoleLogMap(corrMap, true, 'corrMap')
+        corrMap = digPts(corrMap, [pt, prev], 'x')
+        snapshot(corrMap, 'Path failed - damaged walls', 'pathfail')
+        // ban x and y pts
+        origin.rect.traverse((x, y) => {
+          console.log('traverse', x, y)
+          if (x === from.x || y === from.y) bannedOrigins.push(pt2s({ x, y }))
+        })
+        return false
+      }
+
+      // dig visual
+      corrMap = digRect(corrMap, Rect.scaled(pt.x, pt.y, 2, 2), 'w', 'crwp0123456789.x')
+      corrMap = digPt(corrMap, pt.x, pt.y, 'p')
+      snapshot(corrMap, `Path ${origin.label} to ${target.label} ${attempts}/${innerMax}`, 'path')
+      return true
+    })
+
+    if (valid) {
+      // success
+      console.log('Success')
+      console.groupEnd()
+      return path
+    }
+  }
+
+  if (attempts == innerMax) {
+    console.error(`connectRooms: max attempts exceeded ${attempts}/${innerMax}`)
+  }
+  console.groupEnd()
+  return null
 }
 
 class Corridor {
@@ -278,15 +297,16 @@ class Corridor {
 }
 
 function createPath(from: Point, to: Point) {
-  console.log(`createPath: {${from.x}, ${from.y}} to {${to.x}, ${to.y}}`)
+  console.log(`createPath: (${from.x}, ${from.y}) to (${to.x}, ${to.y})`)
   const trailblazer = new ROT.Path.AStar(to.x, to.y, () => true, { topology: 4 })
   const path: Point[] = []
   trailblazer.compute(from.x, from.y, (x, y) => path.push({ x, y }))
   return path
 }
 
+// TODO start from wall instead of center point
 function floodFind(origin: Room, targets: Room[], map: CharMap) {
-  console.groupCollapsed(`%c Flood find from ${origin.label} `, 'background-color: orange')
+  console.groupCollapsed(`Flood find from ${origin.label}`)
   const useONeighbours = false
   const t = Date.now()
   const start = pt2s({ x: origin.rect.cx, y: origin.rect.cy })
@@ -403,28 +423,27 @@ function s2pt(s: string): Point {
   return { x: parseInt(p[0]), y: parseInt(p[1]) }
 }
 
-// #endregion
+// #endregion == Corridor ==
 
 // #region ===== 3. Center =====
 function centerLevel(level: CharMap) {
   let centeredLevel = level
 
   const xShift = findLevelX(level)
-  if (xShift !== 0) {
-    // duhhhhh
-    if (xShift < 0) {
-      for (let i = xShift; i <= 0; i++) {
-        console.log('centerLevel() left i', i, 'xShift', xShift)
-        centeredLevel = transposeLevel(level, -1)
-        snapshot(centeredLevel, 'Shift left', 'shift')
-      }
-    } else {
-      for (let i = 0; i <= xShift; i++) {
-        console.log('centerLevel() right i', i, 'xShift', xShift)
-        centeredLevel = transposeLevel(level, 1)
-        snapshot(centeredLevel, 'Shift right', 'shift')
-      }
-    }
+  let dir = 0
+
+  if (xShift < 0) {
+    dir = -1
+    console.log('centerLevel(): left', xShift)
+  }
+  if (xShift > 0) {
+    dir = 1
+    console.log('centerLevel(): right', xShift)
+  }
+
+  for (let i = 0; i < Math.abs(xShift); i++) {
+    centeredLevel = transposeLevel(centeredLevel, dir)
+    snapshot(centeredLevel, 'Shift ' + dir, 'shift')
   }
 
   return centeredLevel
@@ -440,14 +459,14 @@ function transposeLevel(level: CharMap, x: number) {
 
   if (x > 0) {
     // move right, pop and unshift
-    console.log('transpose right x:', x)
+    // console.log('transpose right x:', x)
     level.forEach((_, yi) => {
       newLevel[yi].pop()
       newLevel[yi].unshift(' ')
     })
   } else if (x < 0) {
     // move left, shift and push
-    console.log('transpose left x:', x)
+    // console.log('transpose left x:', x)
 
     level.forEach((_, yi) => {
       newLevel[yi].shift()
@@ -459,34 +478,42 @@ function transposeLevel(level: CharMap, x: number) {
 }
 
 function findLevelX(level: CharMap) {
-  let x1: number | undefined
-  let x2: number | undefined
+  let xmin: number | undefined
+  let xmax: number | undefined
   for (let xi = 0; xi < width; xi++) {
     for (let yi = 0; yi < height; yi++) {
-      if (x1 === undefined && level[yi][xi] !== ' ') {
-        console.log('found x1', xi, yi, level[yi][xi])
-        x1 = xi
+      if (xmin === undefined && level[yi][xi] !== ' ') {
+        // console.log('found x1', xi, yi, level[yi][xi])
+        xmin = xi
       }
 
       const rxi = width - xi - 1
       const ryi = height - yi - 1
-      if (x2 === undefined && level[ryi][rxi] !== ' ') {
-        console.log('found x2', rxi, ryi, level[ryi][rxi])
-        x2 = width - rxi - 1
+      if (xmax === undefined && level[ryi][rxi] !== ' ') {
+        // console.log('found x2', rxi, ryi, level[ryi][rxi])
+        xmax = width - rxi - 1
       }
-      if (x1 && x2) break
+      if (xmin && xmax) break
     }
 
-    if (x1 && x2) break
+    if (xmin && xmax) break
   }
 
-  if (x1 === undefined || x2 === undefined) {
-    console.error('findLevelX undefined?', x1, x2)
+  if (xmin === undefined || xmax === undefined) {
+    console.error('findLevelX undefined?', xmin, xmax)
     return 0
   }
 
-  const dx = Math.round((x2 - x1) / 2)
-  console.log('dx:', dx)
+  let dx = 0
+  // console.log('findx', xmin, xmax)
+  if (xmin > xmax) {
+    dx = -Math.floor(xmin / 2)
+    // console.log('left', dx)
+  } else {
+    dx = Math.floor(xmax / 2)
+    // console.log('right:', dx)
+  }
+  console.log('findX', xmin, xmax, dx)
   return dx
 }
 
@@ -496,7 +523,7 @@ function findLevelX(level: CharMap) {
 
 function digCorridor(map: CharMap, corridor: Corridor | Corridor[], char = 'c', borderChar = 'w') {
   const wallIgnore = 'crp0123456789.#'
-  const pIgnore = 'crp0123456789'
+  const pIgnore = 'crp0123456789.'
   let newMap = copy(map)
   const corridors: Corridor[] = Array.isArray(corridor) ? corridor : [corridor]
 

@@ -3,6 +3,7 @@ import { Keys } from '../keys'
 import { CharMap } from './Dungeon4'
 
 let d: ROT.Display
+let keys: Keys | null
 let history: CharMap[]
 let index = -1
 let last: number
@@ -12,22 +13,27 @@ const debugid = ROT.RNG.getUniformInt(1000, 9999)
 
 const speedMap: { [key: string]: number } = {
   default: 200,
-  roomfail: 75,
-  roomsuccess: 200,
-  corrstart: 1000,
+  // roomfail: 75,
+  // roomsuccess: 200,
+  roomfail: 10,
+  roomsuccess: 10,
+  // corrstart: 1000,
+  corrstart: 500,
   corrsuccess: 1000,
-  flood: 75,
-  floodhit: 1000,
-  path: 75,
+  flood: 10,
+  floodhit: 200,
+  path: 100,
   pathfail: 1000,
+  shift: 50,
 }
 
-export function Visualizer4(display: ROT.Display, h: CharMap[], keys: Keys) {
+export function Visualizer4(display: ROT.Display, h: CharMap[], k: Keys) {
   console.log('Visualizer4', debugid)
   d = display
   history = h
   last = history.length - 1
-  keys.add(control)
+  keys = k
+  k.add(control)
 
   // coords viewer
   const ctx = display.getContainer()
@@ -129,5 +135,11 @@ function control(key: string) {
       animating = false
       index = last
       render(index)
+      break
+    case 'KeyN':
+      // die?
+      console.log('Viz ' + debugid + 'dying?')
+      animating = false
+      keys = null
   }
 }
