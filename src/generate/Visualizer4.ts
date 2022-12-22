@@ -1,9 +1,7 @@
 import * as ROT from 'rot-js'
-import { Keys } from '../keys'
 import { CharMap } from './Dungeon4'
 
-let d: ROT.Display
-let keys: Keys | null
+let d: ROT.Display | null
 let history: CharMap[]
 let index = -1
 let last: number
@@ -22,27 +20,22 @@ const speedMap: { [key: string]: number } = {
   corrsuccess: 1000,
   flood: 10,
   floodhit: 200,
-  path: 100,
+  path: 50,
   pathfail: 1000,
+  pathtarget: 1000,
   shift: 50,
 }
 
-export function Visualizer4(display: ROT.Display, h: CharMap[], k: Keys) {
+export function Visualizer4(display: ROT.Display, h: CharMap[]) {
   console.log('Visualizer4', debugid)
   d = display
   history = h
   last = history.length - 1
-  keys = k
-  k.add(control)
 
   // coords viewer
   const ctx = display.getContainer()
   if (ctx) {
-    ctx.addEventListener('mousemove', (event) => {
-      const ev = display.eventToPosition(event)
-      d.drawText(0, 0, '......')
-      d.drawText(0, 0, `${ev[0]}, ${ev[1] - 2}`)
-    })
+    ctx.addEventListener('mousemove', mouse)
   }
 
   if (animating) {
@@ -51,6 +44,8 @@ export function Visualizer4(display: ROT.Display, h: CharMap[], k: Keys) {
     index = last
     render(index)
   }
+
+  return { control, cleanup }
 }
 
 function play() {
@@ -68,7 +63,7 @@ function play() {
 }
 
 function render(index: number) {
-  d.clear()
+  d?.clear()
   const map = history[index]
   map.forEach((row, yi) => {
     if (yi !== 0) {
@@ -80,14 +75,14 @@ function render(index: number) {
         if (char === 'F') color = 'lime'
         if (char === 'C') color = 'cyan'
         if (char === 'p') color = 'yellow'
-        d.draw(xi, yi + 1, char, color, null)
+        d?.draw(xi, yi + 1, char, color, null)
       })
     }
   })
 
   const msg = map[0][0]
   const group = map[0][1]
-  d.drawText(0, d.getOptions().height - 2, `[${index}-${group}] ${msg}`)
+  d?.drawText(0, d.getOptions().height - 2, `[${index}-${group}] ${msg}`)
 }
 
 function control(key: string) {
@@ -136,10 +131,19 @@ function control(key: string) {
       index = last
       render(index)
       break
-    case 'KeyN':
-      // die?
-      console.log('Viz ' + debugid + 'dying?')
-      animating = false
-      keys = null
   }
+}
+
+function mouse(event: MouseEvent) {
+  const dis = d as ROT.Display
+  const ev = dis.eventToPosition(event)
+  d?.drawText(0, 0, '......')
+  d?.drawText(0, 0, `${ev[0]}, ${ev[1] - 2}`)
+}
+
+function cleanup() {
+  animating = false
+  const ctx = d?.getContainer()
+  ctx?.removeEventListener('mousemove', mouse)
+  d = null
 }

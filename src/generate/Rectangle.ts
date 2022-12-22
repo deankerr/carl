@@ -64,10 +64,6 @@ export class Rect {
     return Rect.intersectsPt(this, pt)
   }
 
-  // clone() {
-  //   return new Rect(this.x, this.y, this.width, this.height)
-  // }
-
   scale(by: number) {
     // const cx = this.x2 - Math.floor(this.width / 2)
     // const cy = this.y2 - Math.floor(this.height / 2)
@@ -79,6 +75,17 @@ export class Rect {
     const width = this.width + by * 2
     const height = this.height + by * 2
     return Rect.at(x, y, width, height)
+  }
+
+  // Return list of each pt in the rect. outer = outermost edge only
+  toPts(outer = false): Point[] {
+    const result: Point[] = []
+    this.traverse((x, y) => {
+      if (!outer) result.push({ x, y })
+      else if (x == this.x || x == this.x2 || y == this.y || y == this.y2) result.push({ x, y })
+    })
+
+    return result
   }
 
   rndPt(): Point {

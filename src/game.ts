@@ -6,11 +6,11 @@ import * as ROT from 'rot-js'
 // import { FOV } from './components'
 // import { HandlePlayer, HandleNPCs, UpdateFOV } from './Systems'
 // import { World, activeLevel } from './_World'
-import { World } from './World'
+// import { World } from './World'
 import { CONFIG } from './config'
 
 // new implementation
-import { Visualizer } from './generate/Visualizer'
+// import { Visualizer } from './generate/Visualizer'
 import { Keys } from './keys'
 import { Dungeon4 } from './generate/Dungeon4'
 import { Visualizer4 } from './generate/Visualizer4'
@@ -22,12 +22,13 @@ let display: ROT.Display
 // let mouse = [0, 0]
 // let lightsOn = false
 
-let world: World
+// let world: World
 // let smiley = false
 // let msg: string[] = ['You decide to exist, for a time.']
 // let oldMsg: string[] = []
 
 const keys = new Keys()
+let vis: { control: (key: string) => void; cleanup: () => void }
 // keys.add(newWorld)
 
 export function Game(d: ROT.Display) {
@@ -51,35 +52,38 @@ export function Game(d: ROT.Display) {
       // })
       // console.groupEnd()
 
-      Visualizer4(display, d4.history, new Keys())
+      vis = Visualizer4(display, d4.history)
     }
   }
 
   function readkeys(key: string) {
-    if (key === 'KeyN') d4()
+    if (key === 'KeyN') {
+      vis.cleanup()
+      setTimeout(d4, 10)
+    } else vis.control(key)
   }
 
   // newWorld('Space')
 }
 
-function newWorld(code?: string) {
-  if (code != 'Space') return
-  world = new World()
+// function newWorld(code?: string) {
+//   if (code != 'Space') return
+//   world = new World()
 
-  const visualizer = new Visualizer(display)
-  // world.createLevel(CONFIG.levelWidth, CONFIG.levelHeight, 'dungeon2v2', visualizer)
+//   const visualizer = new Visualizer(display)
+//   // world.createLevel(CONFIG.levelWidth, CONFIG.levelHeight, 'dungeon2v2', visualizer)
 
-  world.createLevel(CONFIG.levelWidth, CONFIG.levelHeight, 'dungeon3', visualizer)
+//   world.createLevel(CONFIG.levelWidth, CONFIG.levelHeight, 'dungeon3', visualizer)
 
-  visualizer.active()
-  visualizer.play()
+//   visualizer.active()
+//   visualizer.play()
 
-  // console.log('a cell?', world.activeLevelGenerator?.get(p(2, 2)))
-  // const last = world.activeLevelGenerator?.visualizer?.last()
+//   // console.log('a cell?', world.activeLevelGenerator?.get(p(2, 2)))
+//   // const last = world.activeLevelGenerator?.visualizer?.last()
 
-  // if (last) renderTerrain(display, last, { x: 0, y: 2 })
-  // else console.log('Game(): no last visual?')
-}
+//   // if (last) renderTerrain(display, last, { x: 0, y: 2 })
+//   // else console.log('Game(): no last visual?')
+// }
 //   const { player } = world
 
 //   UpdateFOV(player, activeLevel)

@@ -16,7 +16,7 @@ const maxRoomXSize = 6
 const minRoomYSize = 2
 const maxRoomYSize = 3
 
-const maxCorridorAttempts = 10
+const maxCorridorAttempts = 50
 
 // --- Globals ---
 const history: CharMap[] = []
@@ -41,8 +41,13 @@ export function Dungeon4(w: number, h: number) {
 }
 
 function create() {
-  // ROT.RNG.setSeed(1671690113846)
+  const time = Date.now()
+  const seed = ROT.RNG.getUniformInt(1000, 9999)
+  ROT.RNG.setSeed(seed)
+  // ! ROT.RNG.setSeed(8109) creates diagonal corner room opening
+  ROT.RNG.setSeed(8109)
   console.log('create()', width, height, ROT.RNG.getSeed())
+  console.log(ROT.RNG.getState())
 
   // TODO priorities bigger rooms, smarter placement?
   const rooms = generateRooms()
@@ -58,7 +63,14 @@ function create() {
 
   final = centerLevel(final)
 
-  snapshot(final, 'Done', 'done')
+  const t = Date.now() - time
+  snapshot(final, 'Done ' + t + 'ms', 'done')
+  console.log('Took ' + t + 'ms')
+
+  /// test
+  const r1 = Rect.at(1, 1, 6, 6)
+  console.log(r1.toPts())
+  console.log(r1.toPts(true))
 }
 
 // #region ===== 1. Rooms =====
@@ -159,11 +171,11 @@ function generateCorridors(rooms: Room[]) {
   let targets: Room[] = [firstTarget]
   let next = unconnected[0]
 
-  const outerMax = 10
+  // const outerMax = 10
   let attempts = 0
   while (unconnected.length > 0) {
-    if (++attempts > outerMax) {
-      console.error('generateCorridors attempts exceeded', attempts, outerMax)
+    if (++attempts > maxCorridorAttempts) {
+      console.error('generateCorridors attempts exceeded', attempts, maxCorridorAttempts)
       break
     }
     console.groupCollapsed('%c Corridor Outer ' + attempts + ' ', 'background-color: orange')
@@ -177,7 +189,6 @@ function generateCorridors(rooms: Room[]) {
       break
     }
 
-    // TODO update corrmap
     const result = connectRooms(level, origin, target)
 
     if (result) {
@@ -202,8 +213,18 @@ function generateCorridors(rooms: Room[]) {
       next = unconnected[0]
       targets = rooms.filter((r) => !unconnected.includes(r))
     } else {
-      // TODO handle fail
-      throw new Error('corridor fail')
+      // ? TODO handle fail
+      // try to set a different origin (/target?)
+      const newNext = ROT.RNG.getItem(unconnected.filter((r) => r !== origin))
+      if (!newNext) {
+        // this is this last origin? try removing the last target
+        targets = targets.filter((r) => r !== target)
+        snapshot(level, "This isn't working. Trying new target.", 'pathtarget')
+      } else {
+        // try random target
+        targets = targets.filter((r) => r !== target)
+        snapshot(level, "This isn't working. Trying new target.", 'pathtarget')
+      }
     }
     console.groupEnd()
   }
@@ -211,17 +232,17 @@ function generateCorridors(rooms: Room[]) {
   return corridors
 }
 
+// TODO try original "connect actual closest first, link rooms later" algorithm for more randomness?
 function connectRooms(level: CharMap, origin: Room, target: Room) {
   console.groupCollapsed(`Connect ${origin.label} to ${target.label}`)
-  let currentMap = copy(level)
+  const currentMap = copy(level)
   // consoleLogMap(level, true, 'connectrooms()')
   const bannedOrigins: string[] = []
 
-  let valid = false
-  const innerMax = 10
+  const innerMax = 6
   let attempts = 0
 
-  while (!valid && attempts++ < innerMax) {
+  while (attempts++ < innerMax) {
     console.log('inner', attempts)
 
     // Select to and from pts
@@ -234,6 +255,7 @@ function connectRooms(level: CharMap, origin: Room, target: Room) {
     // TODO get finite list of rect points?
     // TODO handle all points banned? currently goes back to just any
     console.log('froma:', froma)
+    // target point
     const to = target.rect.rndPt()
 
     const path = createPath(from, to)
@@ -250,11 +272,9 @@ function connectRooms(level: CharMap, origin: Room, target: Room) {
     const valid = path.every((pt, i) => {
       console.log('path pt:', pt)
       const prev = i > 0 ? path[i - 1] : pt
-      // console.log('p', currentMap[pt.y][pt.x], 'prev', currentMap[prev.y][prev.x])
 
       if (currentMap[pt.y][pt.x] === 'w' && currentMap[prev.y][prev.x] === 'w') {
         console.log('Wall fail')
-        // consoleLogMap(corrMap, true, 'corrMap')
         corrMap = digPts(corrMap, [pt, prev], 'x')
         snapshot(corrMap, 'Path failed - damaged walls', 'pathfail')
         // ban x and y pts
@@ -306,14 +326,14 @@ function createPath(from: Point, to: Point) {
 
 // TODO start from wall instead of center point
 function floodFind(origin: Room, targets: Room[], map: CharMap) {
-  console.groupCollapsed(`Flood find from ${origin.label}`)
+  console.groupCollapsed(`flood ${origin.label} to closest target`)
   const useONeighbours = false
   const t = Date.now()
-  const start = pt2s({ x: origin.rect.cx, y: origin.rect.cy })
-  let frontier = new Set<string>([start])
-  const searched = new Set<string>([start])
+  // const start = pt2s({ x: origin.rect.cx, y: origin.rect.cy })
+  const start = origin.border.toPts().map((pt) => pt2s(pt))
+  let frontier = new Set<string>([...start])
+  const searched = new Set<string>([...start])
   const hit: Point[] = []
-  const roomsHit: Room[] = []
 
   let flooda = 0
   const max = 100
@@ -467,7 +487,6 @@ function transposeLevel(level: CharMap, x: number) {
   } else if (x < 0) {
     // move left, shift and push
     // console.log('transpose left x:', x)
-
     level.forEach((_, yi) => {
       newLevel[yi].shift()
       newLevel[yi].push(' ')
@@ -507,13 +526,15 @@ function findLevelX(level: CharMap) {
   let dx = 0
   // console.log('findx', xmin, xmax)
   if (xmin > xmax) {
-    dx = -Math.floor(xmin / 2)
+    dx = -Math.floor(xmin / 4)
     // console.log('left', dx)
   } else {
-    dx = Math.floor(xmax / 2)
+    dx = Math.floor(xmax / 4)
     // console.log('right:', dx)
   }
   console.log('findX', xmin, xmax, dx)
+  console.log('findxnext', Math.floor((xmax - xmin) / 2))
+  dx = Math.floor((xmax - xmin) / 2)
   return dx
 }
 
