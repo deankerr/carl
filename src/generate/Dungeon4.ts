@@ -34,8 +34,16 @@ let current: CharMap = []
 let width: number
 let height: number
 
-export function Dungeon4(w: number, h: number) {
+export function Dungeon4() {
   console.log('welcome... to dung4')
+
+  return { create, history, consoleLogMap }
+}
+
+function create(w: number, h: number) {
+  const time = Date.now()
+
+  // set up
   width = w
   height = h
 
@@ -47,15 +55,10 @@ export function Dungeon4(w: number, h: number) {
 
   consoleLogMap(current, true)
 
-  return { create, history, consoleLogMap }
-}
-
-function create() {
-  const time = Date.now()
   const seed = ROT.RNG.getUniformInt(1000, 9999)
   ROT.RNG.setSeed(seed)
   // ! ROT.RNG.setSeed(8109) creates diagonal corner room opening
-  ROT.RNG.setSeed(8109)
+  // ROT.RNG.setSeed(8109)
   console.log('create()', width, height, ROT.RNG.getSeed())
   console.log(ROT.RNG.getState())
 

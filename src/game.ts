@@ -12,7 +12,7 @@ import { CONFIG } from './config'
 // new implementation
 // import { Visualizer } from './generate/Visualizer'
 import { Keys } from './keys'
-import { Dungeon4 } from './generate/Dungeon4'
+import { Dungeon4, CharMap } from './generate/Dungeon4'
 import { Visualizer4 } from './generate/Visualizer4'
 
 // TODO Rethink using component fn names as keys, doesn't work with default minifier options
@@ -28,7 +28,7 @@ let display: ROT.Display
 // let oldMsg: string[] = []
 
 const keys = new Keys()
-let vis: { control: (key: string) => void; cleanup: () => void }
+let vis: { start: (h: CharMap[]) => void; control: (key: string) => void; cleanup: () => void }
 // keys.add(newWorld)
 
 export function Game(d: ROT.Display) {
@@ -37,29 +37,23 @@ export function Game(d: ROT.Display) {
 
   display = d
   keys.add(readkeys)
+  vis = Visualizer4(display)
   d4()
 
   function d4() {
-    const d4 = Dungeon4(CONFIG.levelWidth, CONFIG.levelHeight)
+    const d4 = Dungeon4()
 
     try {
-      d4.create()
+      d4.create(CONFIG.levelWidth, CONFIG.levelHeight)
     } finally {
-      // console.groupCollapsed('History')
-      // console.log('hist:', d4.history)
-      // d4.history.forEach((h) => {
-      //   d4.consoleLogMap(h, true)
-      // })
-      // console.groupEnd()
-
-      vis = Visualizer4(display, d4.history)
+      vis.start(d4.history)
     }
   }
 
   function readkeys(key: string) {
     if (key === 'KeyN') {
       vis.cleanup()
-      setTimeout(d4, 10)
+      setTimeout(d4, 100)
     } else vis.control(key)
   }
 

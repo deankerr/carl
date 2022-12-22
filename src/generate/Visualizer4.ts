@@ -7,6 +7,7 @@ let history: CharMap[]
 let index = -1
 let last: number
 let animating = true
+const animate = true
 
 const debugid = ROT.RNG.getUniformInt(1000, 9999)
 
@@ -27,11 +28,9 @@ const speedMap: { [key: string]: number } = {
   shift: 50,
 }
 
-export function Visualizer4(display: ROT.Display, h: CharMap[]) {
+export function Visualizer4(display: ROT.Display) {
   console.log('Visualizer4', debugid)
   d = display
-  history = h
-  last = history.length - 1
 
   // coords viewer
   const ctx = display.getContainer()
@@ -39,14 +38,19 @@ export function Visualizer4(display: ROT.Display, h: CharMap[]) {
     ctx.addEventListener('mousemove', mouse)
   }
 
-  if (animating) {
+  return { start, control, cleanup }
+}
+
+function start(h: CharMap[]) {
+  history = h
+  last = history.length - 1
+
+  if (animate) {
     play()
   } else {
     index = last
     render(index)
   }
-
-  return { control, cleanup }
 }
 
 function play() {
@@ -145,7 +149,7 @@ function mouse(event: MouseEvent) {
 
 function cleanup() {
   animating = false
-  const ctx = d?.getContainer()
-  ctx?.removeEventListener('mousemove', mouse)
-  d = null
+  // const ctx = d?.getContainer()
+  // ctx?.removeEventListener('mousemove', mouse)
+  // d = null
 }
