@@ -1,3 +1,4 @@
+// TODO finalize structure - class? how to create then destroy object easily
 import * as ROT from 'rot-js'
 import { CharMap } from './Dungeon4'
 
@@ -75,6 +76,7 @@ function render(index: number) {
         if (char === 'F') color = 'lime'
         if (char === 'C') color = 'cyan'
         if (char === 'p') color = 'yellow'
+        if (char === '+') color = 'saddlebrown'
         d?.draw(xi, yi + 1, char, color, null)
       })
     }

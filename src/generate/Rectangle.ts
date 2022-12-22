@@ -1,3 +1,5 @@
+// TODO finalize structure. static methods rarely (never?) used. hollow rect?
+// TODO Point class? (... level point manager?)
 import * as ROT from 'rot-js'
 
 type Point = { x: number; y: number }
@@ -116,17 +118,3 @@ export class Rect {
     return pt.x >= rect.x && pt.y >= rect.y && pt.x <= rect.x2 && pt.y <= rect.y2
   }
 }
-
-// export function RectXY(x: number, y: number, width: number, height: number) {
-//   return new Rect(x, y, width, height)
-// }
-// // 1 = 1, 2 = 3, 3 = 5, 4 = 7
-// // scale => w/h in odd numbered increments
-// export function RectC(x: number, y: number, xScale: number, yScale: number) {
-//   const width = 2 * xScale - 1
-//   const height = 2 * yScale - 1
-//   const x1 = x - Math.floor(width / 2)
-//   const y1 = y - Math.floor(height / 2)
-
-//   return new Rect(x1, y1, width, height)
-// }

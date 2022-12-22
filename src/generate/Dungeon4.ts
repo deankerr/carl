@@ -1,3 +1,13 @@
+// TODO clean up duplicate functions/functionality, add later improvements to earlier stages
+// TODO improve room gen (larger, flatter, more distrubted rooms)
+// TODO -> BSP? 'grow rooms' at empty points?
+// TODO Dungeon4 class? use more globals(rooms/corridors)? (so much is read by and passed around to everything, Object.freeze etc.?)
+// TODO (but also ?) break into multiple files ? easier to switch/try out new methods
+// TODO reduce excess CharMap copies
+// TODO smarter corridors
+// TODO !!! save RNG state to replicate history as needed? !!!
+// TODO (... basic unit tests?)
+
 import * as ROT from 'rot-js'
 import { Rect } from './Rectangle'
 
@@ -56,21 +66,14 @@ function create() {
   const corridors = generateCorridors(rooms)
   console.log('Done corridors:', corridors)
 
-  console.log(rooms)
   let final = digFinal(rooms, corridors)
+  final = finialize(final, rooms)
 
   snapshot(final, 'Generation complete')
-
-  final = centerLevel(final)
 
   const t = Date.now() - time
   snapshot(final, 'Done ' + t + 'ms', 'done')
   console.log('Took ' + t + 'ms')
-
-  /// test
-  const r1 = Rect.at(1, 1, 6, 6)
-  console.log(r1.toPts())
-  console.log(r1.toPts(true))
 }
 
 // #region ===== 1. Rooms =====
@@ -445,7 +448,34 @@ function s2pt(s: string): Point {
 
 // #endregion == Corridor ==
 
-// #region ===== 3. Center =====
+// #region ===== 3. Finalize =====
+
+// some finishing touches
+function finialize(level: CharMap, rooms: Room[]) {
+  let final = createDoors(level, rooms)
+
+  // TODO center y
+  final = centerLevel(final)
+
+  return final
+}
+
+function createDoors(level: CharMap, rooms: Room[]) {
+  // search room borders for '.', should be doorways
+  consoleLogMap(level, false, 'find doors')
+  const doorPts = rooms.map((room) => {
+    return room.border.toPts(true).filter((pt) => inBoundsG(pt.x, pt.y) && level[pt.y][pt.x] === '.')
+  })
+
+  console.log('doorPts:', doorPts)
+
+  const doorMap = digPts(level, doorPts.flat(), '+')
+  snapshot(doorMap, 'The Doors', 'doors')
+
+  return doorMap
+}
+3
+
 function centerLevel(level: CharMap) {
   let centeredLevel = level
 
@@ -634,6 +664,13 @@ function rectInBounds(map: CharMap, rect: Rect, within = 0) {
 
 function consoleLogMap(map: CharMap, group = false, label = 'CharMap') {
   group ? console.groupCollapsed(label) : console.group(label)
+  // top border
+  let top = '\\*'
+  map[0].forEach((_, i) => {
+    top += `${i % 10}`
+  })
+  console.log(top + '/')
+  // main
   map.forEach((e, i) => {
     // console.log((i % 2 ? '{' : '>') + e.join('') + (i % 2 ? '<' : '}'))
     console.log((i % 10) + '>' + e.join('') + '<')
