@@ -90,6 +90,10 @@ export class Rect {
     return result
   }
 
+  // corners(): Point[] {
+
+  // }
+
   rndPt(): Point {
     return { x: ROT.RNG.getUniformInt(this.x, this.x2), y: ROT.RNG.getUniformInt(this.y, this.y2) }
   }

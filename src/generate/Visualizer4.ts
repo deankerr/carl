@@ -1,4 +1,5 @@
 // TODO finalize structure - class? how to create then destroy object easily
+// TODO speed presets?
 import * as ROT from 'rot-js'
 import { CharMap } from './Dungeon4'
 
@@ -22,7 +23,7 @@ const speedMap: { [key: string]: number } = {
   corrsuccess: 1000,
   flood: 10,
   floodhit: 200,
-  path: 50,
+  path: 30,
   pathfail: 1000,
   pathtarget: 1000,
   shift: 50,
@@ -81,6 +82,7 @@ function render(index: number) {
         if (char === 'C') color = 'cyan'
         if (char === 'p') color = 'yellow'
         if (char === '+') color = 'saddlebrown'
+        if (char === 'W') color = 'darkred'
         d?.draw(xi, yi + 1, char, color, null)
       })
     }
