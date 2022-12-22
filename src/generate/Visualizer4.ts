@@ -38,7 +38,7 @@ export function Visualizer4(display: ROT.Display) {
     ctx.addEventListener('mousemove', mouse)
   }
 
-  return { start, control, cleanup }
+  return { start, control, reset }
 }
 
 function start(h: CharMap[]) {
@@ -73,7 +73,7 @@ function render(index: number) {
   map.forEach((row, yi) => {
     if (yi !== 0) {
       row.forEach((char, xi) => {
-        let color = '#AAA'
+        let color = '#888'
         if (char === 'x') color = 'red'
         if ('0123456789'.includes(char)) color = 'orange'
         if (char === 'f') color = 'cyan'
@@ -147,7 +147,7 @@ function mouse(event: MouseEvent) {
   d?.drawText(0, 0, `${ev[0]}, ${ev[1] - 2}`)
 }
 
-function cleanup() {
+function reset() {
   animating = false
   // const ctx = d?.getContainer()
   // ctx?.removeEventListener('mousemove', mouse)

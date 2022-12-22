@@ -15,21 +15,21 @@ export type CharMap = string[][]
 type Point = { x: number; y: number }
 
 // --- Config ---
-const maxRooms = 7
-const maxRoomAttempts = 200
+const maxRooms = 9
+const maxRoomAttempts = 500
 const levelEdge = 1
 const roomBorderSize = 3
 
 const minRoomXSize = 3
-const maxRoomXSize = 6
+const maxRoomXSize = 7
 
 const minRoomYSize = 2
-const maxRoomYSize = 3
+const maxRoomYSize = 4
 
 const maxCorridorAttempts = 50
 
 // --- Globals ---
-const history: CharMap[] = []
+let history: CharMap[] = []
 let current: CharMap = []
 let width: number
 let height: number
@@ -37,7 +37,7 @@ let height: number
 export function Dungeon4() {
   console.log('welcome... to dung4')
 
-  return { create, history, consoleLogMap }
+  return { create, consoleLogMap, getHistory }
 }
 
 function create(w: number, h: number) {
@@ -50,6 +50,9 @@ function create(w: number, h: number) {
   current = [...new Array(height)].map(() => new Array(width).fill(' '))
   current = digRect(current, Rect.at(0, 0, width, height), '·')
   current = digRect(current, Rect.at(1, 1, width - 2, height - 2), ' ')
+
+  // wipe old history (store this?)
+  history = []
 
   snapshot(current, 'New', 'new')
 
@@ -92,10 +95,21 @@ function generateRooms(): Room[] {
     }
 
     console.log(`%cGenerate room attempt: ${attempts}`, 'background-color: orange')
+    // lazily encourage larger, more horizontal rooms until later
+
+    let xs: number
+    if (attempts / maxRoomAttempts < 0.75) {
+      const xs1 = rnd(minRoomXSize, maxRoomXSize)
+      const xs2 = rnd(minRoomXSize, maxRoomXSize)
+      xs = xs1 > xs2 ? xs1 : xs2
+    } else {
+      xs = rnd(minRoomXSize, maxRoomXSize)
+    }
+
     const room = Room.scaled(
       rnd(0, width - 1),
       rnd(0, height - 1),
-      rnd(minRoomXSize, maxRoomXSize),
+      xs,
       rnd(minRoomYSize, maxRoomYSize),
       rooms.length.toString()
     )
@@ -691,8 +705,13 @@ function rnd(min: number, max: number) {
 
 function snapshot(map: CharMap, label = '(no label!)', group = '') {
   const snap = copy(map)
-  history.push([[label, group], ...snap])
+  const h = getHistory()
+  h.push([[label, group], ...snap])
   // consoleLogMap(map, true)
+}
+
+function getHistory() {
+  return history
 }
 
 function createBlankMap(): CharMap {

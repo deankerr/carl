@@ -28,7 +28,7 @@ let display: ROT.Display
 // let oldMsg: string[] = []
 
 const keys = new Keys()
-let vis: { start: (h: CharMap[]) => void; control: (key: string) => void; cleanup: () => void }
+let vis: { start: (h: CharMap[]) => void; control: (key: string) => void; reset: () => void }
 // keys.add(newWorld)
 
 export function Game(d: ROT.Display) {
@@ -46,13 +46,13 @@ export function Game(d: ROT.Display) {
     try {
       d4.create(CONFIG.levelWidth, CONFIG.levelHeight)
     } finally {
-      vis.start(d4.history)
+      vis.start(d4.getHistory())
     }
   }
 
   function readkeys(key: string) {
     if (key === 'KeyN') {
-      vis.cleanup()
+      vis.reset()
       setTimeout(d4, 100)
     } else vis.control(key)
   }
