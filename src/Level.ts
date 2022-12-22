@@ -2,10 +2,6 @@ import * as ROT from 'rot-js'
 import { BlockMovement, ConsoleRender, Position } from './components'
 import { Entity, qCreateDoggy, qCreateDoorAt, qCreateOrc } from './entity'
 import { Terrain, TerrainDict } from './Terrain'
-import { GenTypes } from './generate'
-import Digger from 'rot-js/lib/map/digger'
-import CellularFixed from './util/cellular'
-import Cellular from 'rot-js/lib/map/cellular'
 
 export type TerrainMap = { [key: string]: number }
 export type SeenMap = { [key: string]: boolean }
@@ -36,16 +32,12 @@ export type Level = {
   entitiesAt: (x: number, y: number) => Entity[]
   getRandomWalkable: () => { x: number; y: number }
   entities: Entity[]
-  gen: GenTypes
-  cellStep: () => void
-  cellConnect: () => void
 }
 
 // this wholte thing is bad
 export function Level({
   terrainMap,
   seen,
-  gen,
   subtype = '',
   doorsAt = [],
 }: {
@@ -53,7 +45,6 @@ export function Level({
   seen: SeenMap
   levelWidth: number
   levelHeight: number
-  gen: GenTypes
   subtype: string
   doorsAt?: number[][]
 }): Level {
@@ -62,15 +53,6 @@ export function Level({
   let entities: Entity[] = []
   const width = 80 // ???? fix this
   const height = 20
-
-  if (gen instanceof Digger) {
-    const rooms = gen.getRooms()
-    rooms.forEach((r) => {
-      r.getDoors((x, y) => {
-        add(qCreateDoorAt(x, y))
-      })
-    })
-  }
 
   // Dung1 doors
   doorsAt.forEach((d) => add(qCreateDoorAt(d[0], d[1])))
@@ -82,6 +64,8 @@ export function Level({
   add(qCreateOrc(getRandomWalkable()))
   add(qCreateOrc(getRandomWalkable()))
   add(qCreateOrc(getRandomWalkable()))
+
+  console.log('level start', entities)
 
   const levelData = { entities, terrainMap, seen, subtype }
 
@@ -100,10 +84,7 @@ export function Level({
     entitiesAt,
     getRandomWalkable,
     entities,
-    gen,
     remove,
-    cellStep,
-    cellConnect,
   }
 
   function add(entity: Entity | Entity[]) {
@@ -206,21 +187,5 @@ export function Level({
 
   function XYtoKey(x: number, y: number) {
     return `${x}-${y}`
-  }
-
-  function cellStep() {
-    if (gen instanceof CellularFixed || gen instanceof Cellular) {
-      gen.create((x, y, contents) => {
-        terrainMap[`${x}-${y}`] = contents
-      })
-    } else throw new Error('cellStep(): This is not a cellular level')
-  }
-
-  function cellConnect() {
-    if (gen instanceof CellularFixed || gen instanceof Cellular) {
-      gen.connect((x, y, contents) => {
-        terrainMap[`${x}-${y}`] = contents
-      }, 0)
-    } else throw new Error('cellConnect(): This is not a cellular level')
   }
 }

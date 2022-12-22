@@ -1,4 +1,3 @@
-// TODO speed presets?
 import * as ROT from 'rot-js'
 import { CharMap } from './Dungeon4'
 
@@ -10,26 +9,10 @@ let animating = false
 let nextFrame: number
 
 const animate = true
-
-const speedMap: { [key: string]: number } = {
-  default: 200,
-  // roomfail: 75,
-  // roomsuccess: 200,
-  roomfail: 10,
-  roomsuccess: 10,
-  // corrstart: 1000,
-  corrstart: 500,
-  corrsuccess: 1000,
-  flood: 10,
-  floodhit: 200,
-  path: 30,
-  pathfail: 1000,
-  pathtarget: 1000,
-  shift: 50,
-}
+const speed = 'demo' // demo | fast
 
 export function Visualizer4(display: ROT.Display) {
-  console.log('Visualizer4')
+  console.log('Visualizer4', speed)
   d = display
 
   // coords display
@@ -38,7 +21,7 @@ export function Visualizer4(display: ROT.Display) {
     ctx.addEventListener('mousemove', mouse)
   }
 
-  return { start, control }
+  return { start, control, cleanup }
 }
 
 function start(h: CharMap[]) {
@@ -64,12 +47,12 @@ function play() {
     animating = false
     return
   }
-  const group = history[index][0][1]
-  const speedTag = speedMap[group]
-  nextFrame = setTimeout(play, speedTag ? speedTag : speedMap['default'])
+  const tag = history[index][0][1]
+  const speedTag = speedMap[speed][tag]
+  nextFrame = setTimeout(play, speedTag ? speedTag : speedMap[speed]['default'])
 }
 
-function stop() {
+export function stop() {
   clearTimeout(nextFrame)
   animating = false
 }
@@ -90,8 +73,13 @@ function render(index: number) {
   })
 
   const msg = map[0][0]
-  const group = map[0][1]
-  d?.drawText(0, d.getOptions().height - 2, `[${index}-${group}] ${msg}`)
+  const tag = map[0][1]
+  d?.drawText(0, 1, `[${index}-${tag}] ${msg}`)
+  d?.drawText(
+    0,
+    d.getOptions().height - 1,
+    '[SPACE]: Play/Pause, [LEFT/RIGHT]: Step, [N] New, [R] Replay [P]: Play this Map'
+  )
 }
 
 const colorMap: { [key: string]: string } = {
@@ -101,13 +89,17 @@ const colorMap: { [key: string]: string } = {
   C: 'cyan',
   p: 'yellow',
   '+': 'saddlebrown',
-  c: 'orange',
+  c: 'crimson',
 }
 
 function control(key: string) {
   switch (key) {
     case 'Space':
-      console.log('Vis4: replay')
+      // stop/replay
+      if (animating) {
+        stop()
+        break
+      }
       index = 0
       animating = true
       play()
@@ -162,3 +154,38 @@ function mouse(event: MouseEvent) {
   d.draw(0, 0, ' ', 'black', null)
   d.drawText(0, 0, `${ev[0]}, ${ev[1] - 2}`)
 }
+
+function cleanup() {
+  stop()
+  d = new ROT.Display()
+}
+
+const fast: { [key: string]: number } = {
+  default: 200,
+  roomfail: 30,
+  roomsuccess: 100,
+  corrstart: 500,
+  corrsuccess: 1000,
+  flood: 10,
+  floodhit: 200,
+  path: 30,
+  pathfail: 1000,
+  pathtarget: 1000,
+  shift: 50,
+}
+
+const demo: { [key: string]: number } = {
+  default: 200,
+  roomfail: 40,
+  roomsuccess: 150,
+  corrstart: 1250,
+  corrsuccess: 1500,
+  flood: 100,
+  floodhit: 1000,
+  path: 100,
+  pathfail: 1500,
+  pathtarget: 1500,
+  shift: 75,
+}
+
+const speedMap = { fast, demo }

@@ -19,24 +19,21 @@ export class Rect {
   readonly cy: number
 
   constructor(x: number, y: number, width: number, height: number) {
-    // top left
     this.x = x
     this.y = y
-    // bottom right
+
     this.x2 = x + width - 1
     this.y2 = y + height - 1
 
     this.width = width
     this.height = height
 
-    // center
     this.cx = this.x2 - Math.floor(this.width / 2)
     this.cy = this.y2 - Math.floor(this.height / 2)
   }
 
   // Travels through the x/y coords
   traverse(callback: (x: number, y: number) => unknown) {
-    // console.log('rect traverse')
     for (let yi = this.y; yi <= this.y2; yi++) {
       for (let xi = this.x; xi <= this.x2; xi++) {
         if (callback(xi, yi) === false) return // exit loop if false?
@@ -48,12 +45,8 @@ export class Rect {
   // TODO handle arrays, ts generic
   // TODO handle empty rect?
   intersects(rect: Rect) {
-    // console.log('RectI.intersects() for', rect)
-
-    // Doesn't intersect
     if (!Rect.intersects(this, rect)) return null
 
-    // Otherwise, find pts that do
     const pts: { x: number; y: number }[] = []
     rect.traverse((x, y) => {
       if (Rect.intersectsPt(this, { x, y })) pts.push({ x, y })
@@ -67,11 +60,6 @@ export class Rect {
   }
 
   scale(by: number) {
-    // const cx = this.x2 - Math.floor(this.width / 2)
-    // const cy = this.y2 - Math.floor(this.height / 2)
-    // const xScale = this.width + by * 2
-    // const yScale = this.height + by * 2
-    // const x =
     const x = this.x - by
     const y = this.y - by
     const width = this.width + by * 2
@@ -90,9 +78,7 @@ export class Rect {
     return result
   }
 
-  // corners(): Point[] {
-
-  // }
+  // corners(): Point[] {} ?
 
   rndPt(): Point {
     return { x: ROT.RNG.getUniformInt(this.x, this.x2), y: ROT.RNG.getUniformInt(this.y, this.y2) }
@@ -111,6 +97,7 @@ export class Rect {
     return new Rect(x1, y1, width, height)
   }
 
+  // ? will i ever use these
   // TODO do main checking here?
   static intersects(rect1: Rect, rect2: Rect) {
     if (rect1 === rect2) console.warn('Did you mean to check if a rect intersects itself?', rect1, rect2)

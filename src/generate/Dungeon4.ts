@@ -1,5 +1,5 @@
 // TODO clean up duplicate functions/functionality, add later improvements to earlier stages
-// TODO improve room gen (larger, flatter, more distrubted rooms)
+// TODO improve room gen (flatter, more distrubted rooms)
 // TODO -> BSP? 'grow rooms' at empty points?
 // TODO use more globals(rooms/corridors)? (so much is read by and passed around to everything, Object.freeze etc.?)
 // TODO (but also ?) break into multiple files ? easier to switch/try out new methods
@@ -12,7 +12,7 @@ import * as ROT from 'rot-js'
 import { Rect } from './Rectangle'
 
 export type CharMap = string[][]
-type Point = { x: number; y: number }
+export type Point = { x: number; y: number }
 
 // --- Config ---
 const maxRooms = 8
@@ -29,12 +29,12 @@ const maxRoomYSize = 4
 const maxCorridorAttempts = 50
 
 // --- Globals ---
-export const history: CharMap[] = []
+export let history: CharMap[]
 let current: CharMap = []
 let width: number
 let height: number
 
-export function Dungeon4(w: number, h: number) {
+export function Dungeon4(w: number, h: number): [number[][], Point[]] {
   console.log('welcome... to dung4')
   const time = Date.now()
 
@@ -47,44 +47,37 @@ export function Dungeon4(w: number, h: number) {
   current = digRect(current, Rect.at(1, 1, width - 2, height - 2), ' ')
 
   // wipe old history (store this?)
-  // history = []
+  history = []
 
   snapshot(current, 'New', 'new')
 
   const seed = ROT.RNG.getUniformInt(1000, 9999)
   ROT.RNG.setSeed(seed)
-  // ROT.RNG.setSeed(8109) created diagonal corner room opening
   // ROT.RNG.setSeed(7805)
-  console.log('create()', width, height, ROT.RNG.getSeed())
-  console.log(ROT.RNG.getState())
 
-  // TODO priorities bigger rooms, smarter placement?
-  const trooms = Date.now()
+  console.log('create()', width, height, ROT.RNG.getSeed())
+
   const rooms = generateRooms()
-  console.log(`Complete - Rooms: ${rooms.length} Time: ${Date.now() - trooms}ms`)
 
   const tcorr = Date.now()
   const corridors = generateCorridors(rooms)
   console.log(`Complete - Corridors: ${corridors.length}, Time: ${Date.now() - tcorr}ms`)
 
-  // Assemble the complete level
-  let final = createBlankMap()
-  final = digRoom(final, rooms, '.', '#', false)
-  final = digCorridor(final, corridors, '.', '#')
-  final = createDoors(final, rooms)
-  final = centerLevel(final, rooms)
+  const [final, doorPts] = finalize(rooms, corridors)
 
-  snapshot(final, 'Generation complete')
-  consoleLogMap(final, true, 'Final')
+  const terrain = generateTerrainData(final)
 
   const t = Date.now() - time
-  snapshot(final, 'Done ' + t + 'ms', 'done')
-  console.log('Took ' + t + 'ms')
+  snapshot(final, 'Success! Time: ' + t + 'ms', 'done')
+  console.log('Total ' + t + 'ms')
+
+  return [terrain, doorPts]
 }
 
 // #region ===== 1. Rooms =====
 
 function generateRooms(): Room[] {
+  const trooms = Date.now()
   let attempts = 0
   const rooms: Room[] = []
   console.groupCollapsed('%c  generateRooms()  ', 'background-color: cyan')
@@ -98,7 +91,7 @@ function generateRooms(): Room[] {
 
     // lazily encourage larger, more horizontal rooms until later
     let xs: number
-    if (attempts / maxRoomAttempts < 0.75) {
+    if (attempts / maxRoomAttempts < 0.5) {
       const xs1 = rnd(minRoomXSize, maxRoomXSize)
       const xs2 = rnd(minRoomXSize, maxRoomXSize)
       xs = xs1 > xs2 ? xs1 : xs2
@@ -117,14 +110,14 @@ function generateRooms(): Room[] {
     if (!roomInBounds(room)) {
       console.log('fail: oob')
       const failed = digRect(current, room.rect, 'x')
-      snapshot(failed, 'OOB', 'roomfail')
+      snapshot(failed, 'Failed - out of bounds', 'roomfail')
       continue
     }
 
     if (!roomSpaceValid(room, rooms)) {
       console.log('fail: invalid')
       const failed = digRect(current, room.rect, 'x')
-      snapshot(failed, 'Invalid', 'roomfail')
+      snapshot(failed, 'Failed - overlaps room boundary', 'roomfail')
       continue
     }
 
@@ -137,6 +130,7 @@ function generateRooms(): Room[] {
 
   // reduce room borders to wall
   rooms.forEach((r) => (r.border = r.rect.scale(1)))
+  console.log(`Complete - Rooms: ${rooms.length} Attempts: ${attempts} Time: ${Date.now() - trooms}ms`)
   return rooms
 }
 
@@ -304,7 +298,7 @@ function connectRooms(level: CharMap, origin: Room, target: Room) {
       const prev = i > 0 ? path[i - 1] : pt
 
       if ((currentMap[pt.y][pt.x] === 'w' && currentMap[prev.y][prev.x] === 'w') || currentMap[pt.y][pt.x] === 'c') {
-        if (currentMap[pt.y][pt.x] === 'W') {
+        if (currentMap[pt.y][pt.x] === 'c') {
           console.log('Corner fail')
           corrMap = digPts(corrMap, [pt], 'x')
           snapshot(corrMap, 'Path failed - damaged room corner', 'pathfail')
@@ -363,7 +357,7 @@ function createPath(from: Point, to: Point) {
 // TODO start from wall instead of center point
 function floodFind(origin: Room, targets: Room[], map: CharMap) {
   console.groupCollapsed(`flood ${origin.label} to closest target`)
-  const useONeighbours = false
+  const useONeighbours = false // config
   const t = Date.now()
   // const start = pt2s({ x: origin.rect.cx, y: origin.rect.cy })
   const start = origin.border.toPts().map((pt) => pt2s(pt))
@@ -484,21 +478,34 @@ function s2pt(s: string): Point {
 // #region ===== 3. Finalize =====
 
 // some finishing touches
-function createDoors(level: CharMap, rooms: Room[]) {
+function finalize(rooms: Room[], corridors: Corridor[]): [CharMap, Point[]] {
+  // Assemble the complete level
+  let final = createBlankMap()
+  final = digRoom(final, rooms, '.', '#', false)
+  final = digCorridor(final, corridors, '.', '#')
+
+  const [finalD, doorPts] = createDoors(final, rooms)
+  const [finalS, dx, dy] = centerLevel(finalD, rooms)
+
+  const shiftPts = doorPts.flat().map((pt) => ({ x: pt.x + dx, y: pt.y + dy }))
+  return [finalS, shiftPts]
+}
+
+function createDoors(level: CharMap, rooms: Room[]): [CharMap, Point[][]] {
   // search room borders for '.', should be doorways
   const doorPts = rooms.map((room) => {
     return room.border.toPts(true).filter((pt) => inBoundsG(pt.x, pt.y) && level[pt.y][pt.x] === '.')
   })
 
-  console.log('doorPts:', doorPts)
+  // console.log('doorPts:', doorPts)
 
   const doorMap = digPts(level, doorPts.flat(), '+')
   snapshot(doorMap, 'The Doors', 'doors')
 
-  return doorMap
+  return [doorMap, doorPts]
 }
 
-function centerLevel(level: CharMap, rooms: Room[]) {
+function centerLevel(level: CharMap, rooms: Room[]): [CharMap, number, number] {
   const xmin = rooms.reduce((prev, curr) => (prev.border.x < curr.border.x ? prev : curr)).border.x
   const xmax = rooms.reduce((prev, curr) => (prev.border.x2 > curr.border.x2 ? prev : curr)).border.x2
   const dx = Math.floor((width - 1 - xmax - xmin) / 2)
@@ -521,7 +528,7 @@ function centerLevel(level: CharMap, rooms: Room[]) {
     for (let i = 0; i < Math.abs(dx); i++) centeredLevel = transposeLevelX(centeredLevel, xDir)
   }
 
-  return centeredLevel
+  return [centeredLevel, dx, dy]
 }
 
 function transposeLevelX(level: CharMap, dir: number) {
@@ -670,7 +677,7 @@ function inBounds(map: CharMap, x: number, y: number, within = 0) {
 }
 
 function inBoundsG(x: number, y: number, within = 0) {
-  return x >= 0 + within && x < width - 1 - within && y >= 0 + within && y < height - 1 - within
+  return x >= 0 + within && x < width - within && y >= 0 + within && y < height - within
 }
 
 function rectInBounds(map: CharMap, rect: Rect, within = 0) {
@@ -713,4 +720,9 @@ function snapshot(map: CharMap, label = '(no label!)', group = '') {
 
 function createBlankMap(): CharMap {
   return [...new Array(height)].map(() => new Array(width).fill(' '))
+}
+
+// rot-js style 0/1 terrain map for game
+function generateTerrainData(level: CharMap): number[][] {
+  return level.map((row) => row.map((e) => ('.+'.includes(e) ? 0 : 1)))
 }

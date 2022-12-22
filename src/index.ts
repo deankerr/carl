@@ -30,15 +30,6 @@ function init() {
   resize()
   window.addEventListener('resize', resize)
 
-  const ctx = display.getContainer()
-  if (ctx) {
-    ctx.addEventListener('mousedown', (event) => {
-      const ev = display.eventToPosition(event)
-      ev[1] = ev[1] - 2
-      console.log(ev)
-    })
-  }
-
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   document.body.appendChild(display.getContainer()!)
 
