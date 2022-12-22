@@ -28,7 +28,7 @@ let display: ROT.Display
 // let oldMsg: string[] = []
 
 const keys = new Keys()
-let vis: { start: (h: CharMap[]) => void; control: (key: string) => void; reset: () => void }
+let vis: { start: (h: CharMap[]) => void; control: (key: string) => void }
 // keys.add(newWorld)
 
 export function Game(d: ROT.Display) {
@@ -52,7 +52,7 @@ export function Game(d: ROT.Display) {
 
   function readkeys(key: string) {
     if (key === 'KeyN') {
-      vis.reset()
+      // vis.reset()
       setTimeout(d4, 100)
     } else vis.control(key)
   }

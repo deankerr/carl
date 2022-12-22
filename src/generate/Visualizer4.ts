@@ -3,14 +3,14 @@
 import * as ROT from 'rot-js'
 import { CharMap } from './Dungeon4'
 
-let d: ROT.Display | null
+let d: ROT.Display
 let history: CharMap[]
 let index = -1
 let last: number
-let animating = true
-const animate = true
+let animating = false
+let nextFrame: number
 
-const debugid = ROT.RNG.getUniformInt(1000, 9999)
+const animate = true
 
 const speedMap: { [key: string]: number } = {
   default: 200,
@@ -30,23 +30,26 @@ const speedMap: { [key: string]: number } = {
 }
 
 export function Visualizer4(display: ROT.Display) {
-  console.log('Visualizer4', debugid)
+  console.log('Visualizer4')
   d = display
 
-  // coords viewer
+  // coords display
   const ctx = display.getContainer()
   if (ctx) {
     ctx.addEventListener('mousemove', mouse)
   }
 
-  return { start, control, reset }
+  return { start, control }
 }
 
 function start(h: CharMap[]) {
+  stop()
   history = h
   last = history.length - 1
+  index = 0
 
   if (animate) {
+    animating = true
     play()
   } else {
     index = last
@@ -55,21 +58,25 @@ function start(h: CharMap[]) {
 }
 
 function play() {
-  // console.log('play')
-  index++
-  render(index)
-  if (index >= last) return
-  if (animating) {
-    const group = history[index][0][1]
-    const speedTag = speedMap[group]
-    // console.log(group, speedTag)
-
-    setTimeout(play, speedTag ? speedTag : speedMap['default'])
+  if (!animating) return
+  render(++index)
+  if (index >= last) {
+    index--
+    animating = false
+    return
   }
+  const group = history[index][0][1]
+  const speedTag = speedMap[group]
+  nextFrame = setTimeout(play, speedTag ? speedTag : speedMap['default'])
+}
+
+function stop() {
+  clearTimeout(nextFrame)
+  animating = false
 }
 
 function render(index: number) {
-  d?.clear()
+  d.clear()
   const map = history[index]
   map.forEach((row, yi) => {
     if (yi !== 0) {
@@ -82,7 +89,7 @@ function render(index: number) {
         if (char === 'C') color = 'cyan'
         if (char === 'p') color = 'yellow'
         if (char === '+') color = 'saddlebrown'
-        if (char === 'W') color = 'darkred'
+        if (char === 'W') color = 'firebrick'
         d?.draw(xi, yi + 1, char, color, null)
       })
     }
@@ -102,40 +109,37 @@ function control(key: string) {
       play()
       break
     case 'ArrowLeft':
-      console.log('Vis4: left', debugid)
       if (index - 1 < 0) break
-      animating = false
+      stop()
       index--
       render(index)
       break
     case 'ArrowRight':
-      // console.log('Vis4: right')
       if (index + 1 >= history.length) break
-      animating = false
+      stop()
       index++
       render(index)
       break
     case 'Escape':
       console.log('Vis4: stop')
-      animating = false
-      // index--
+      stop()
       console.log(index)
       break
     case 'Digit1':
       // goto start
-      animating = false
+      stop()
       index = 0
       render(index)
       break
     case 'Digit2':
       // goto corrstart
-      animating = false
+      stop()
       index = history.findIndex((h) => h[0][1] === 'corrstart')
       render(index)
       break
     case 'Digit3':
       // goto final
-      animating = false
+      stop()
       index = last
       render(index)
       break
@@ -143,15 +147,8 @@ function control(key: string) {
 }
 
 function mouse(event: MouseEvent) {
-  const dis = d as ROT.Display
+  const dis = d
   const ev = dis.eventToPosition(event)
   d?.drawText(0, 0, '......')
   d?.drawText(0, 0, `${ev[0]}, ${ev[1] - 2}`)
-}
-
-function reset() {
-  animating = false
-  // const ctx = d?.getContainer()
-  // ctx?.removeEventListener('mousemove', mouse)
-  // d = null
 }
