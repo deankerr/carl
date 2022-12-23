@@ -6,11 +6,11 @@ import { Level } from './Level'
 import { FOV } from './components'
 import { HandlePlayer, HandleNPCs, UpdateFOV } from './Systems'
 import { World, activeLevel } from './World'
-// import { World } from './__test_World'
 
+// new
 import { Keys } from './keys'
-import { Dungeon4, CharMap, history, Point } from './generate/Dungeon4'
-import { Visualizer4 } from './generate/Visualizer4'
+import { dungeon4, CharMap, history, Point } from './generate/dungeon4'
+import { visualizer4 } from './generate/visualizer4'
 
 export type D4Data = [number[][], Point[]]
 // TODO Rethink using component fn names as keys, doesn't work with default minifier options
@@ -38,7 +38,7 @@ export function Game(d: ROT.Display) {
   keys?.add(readkeys)
 
   // ? garbagec test
-  vis = Visualizer4(display)
+  vis = visualizer4(display)
   const registry = new FinalizationRegistry((heldValue) => {
     console.log(`%c!!!!!!!!!! ${heldValue}`, 'background-color: red')
   })
@@ -50,7 +50,7 @@ export function Game(d: ROT.Display) {
 
   function d4() {
     try {
-      d4data = Dungeon4(CONFIG.levelWidth, CONFIG.levelHeight)
+      d4data = dungeon4(CONFIG.levelWidth, CONFIG.levelHeight)
     } finally {
       vis?.start(history)
     }

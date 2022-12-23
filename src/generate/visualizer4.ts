@@ -1,5 +1,5 @@
 import * as ROT from 'rot-js'
-import { CharMap } from './Dungeon4'
+import { CharMap } from './dungeon4'
 
 let d: ROT.Display
 let history: CharMap[]
@@ -11,7 +11,7 @@ let nextFrame: number
 const animate = true
 const speed = 'demo' // demo | fast
 
-export function Visualizer4(display: ROT.Display) {
+export function visualizer4(display: ROT.Display) {
   console.log('Visualizer4', speed)
   d = display
 

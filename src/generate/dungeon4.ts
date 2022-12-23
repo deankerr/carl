@@ -34,7 +34,7 @@ let current: CharMap = []
 let width: number
 let height: number
 
-export function Dungeon4(w: number, h: number): [number[][], Point[]] {
+export function dungeon4(w: number, h: number): [number[][], Point[]] {
   console.log('welcome... to dung4')
   const time = Date.now()
 
@@ -70,6 +70,7 @@ export function Dungeon4(w: number, h: number): [number[][], Point[]] {
   const t = Date.now() - time
   snapshot(final, 'Success! Time: ' + t + 'ms', 'done')
   console.log('Total ' + t + 'ms')
+  consoleLogMap(final, true, 'final')
 
   return [terrain, doorPts]
 }

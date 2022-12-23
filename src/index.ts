@@ -1,7 +1,6 @@
 import fontURL from '../assets/Inconsolata.otf'
 import * as ROT from 'rot-js'
 import { Game } from './game'
-// import { visgen } from './generate/visgen'
 import { CONFIG } from './config'
 console.log('it begins')
 const font = new FontFace('Inconsolata', `url(${fontURL})`)
@@ -34,7 +33,6 @@ function init() {
   document.body.appendChild(display.getContainer()!)
 
   Game(display)
-  // visgen(display)
 
   function resize() {
     const screenW = document.documentElement.clientWidth
