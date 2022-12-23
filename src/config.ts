@@ -8,6 +8,7 @@ const CONFIG = {
   marginBot: 2,
   levelWidth: 80,
   levelHeight: 20,
+  appInitial: 'dungeon4',
 }
 
 export { CONFIG }

@@ -13,6 +13,7 @@ import { Rect } from './Rectangle'
 
 export type CharMap = string[][]
 export type Point = { x: number; y: number }
+export type Dungeon4Data = [number[][], Point[]]
 
 // --- Config ---
 const maxRooms = 8
@@ -34,7 +35,7 @@ let current: CharMap = []
 let width: number
 let height: number
 
-export function dungeon4(w: number, h: number): [number[][], Point[]] {
+export function dungeon4(w: number, h: number): Dungeon4Data {
   console.log('welcome... to dung4')
   const time = Date.now()
 

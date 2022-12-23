@@ -1,6 +1,8 @@
 import * as ROT from 'rot-js'
 import { CharMap } from './dungeon4'
 
+export type Visualizer4 = { start: (h: CharMap[]) => void; control: (key: string) => void; cleanup: () => void }
+
 let d: ROT.Display
 let history: CharMap[]
 let index = -1
@@ -9,9 +11,9 @@ let animating = false
 let nextFrame: number
 
 const animate = true
-const speed = 'demo' // demo | fast
+const speed = 'calm' // demo | fast | calm
 
-export function visualizer4(display: ROT.Display) {
+export function visualizer4(display: ROT.Display): Visualizer4 {
   console.log('Visualizer4', speed)
   d = display
 
@@ -160,7 +162,9 @@ function cleanup() {
   d = new ROT.Display()
 }
 
-const fast: { [key: string]: number } = {
+type SpeedMap = { [key: string]: number }
+
+const fast: SpeedMap = {
   default: 200,
   roomfail: 30,
   roomsuccess: 100,
@@ -174,7 +178,7 @@ const fast: { [key: string]: number } = {
   shift: 50,
 }
 
-const demo: { [key: string]: number } = {
+const demo: SpeedMap = {
   default: 200,
   roomfail: 40,
   roomsuccess: 150,
@@ -188,4 +192,18 @@ const demo: { [key: string]: number } = {
   shift: 75,
 }
 
-const speedMap = { fast, demo }
+const calm: SpeedMap = {
+  default: 200,
+  roomfail: 200,
+  roomsuccess: 400,
+  corrstart: 2000,
+  corrsuccess: 2000,
+  flood: 200,
+  floodhit: 1500,
+  path: 200,
+  pathfail: 2000,
+  pathtarget: 2000,
+  shift: 100,
+}
+
+const speedMap = { fast, demo, calm }
