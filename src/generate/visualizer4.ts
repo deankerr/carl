@@ -2,10 +2,10 @@
 // TODO visualizer can create its own display, can coexist with game/multiple
 // ? TODO Vis reads colour pallette
 import * as ROT from 'rot-js'
-import { CharMap, ModuleNames } from './dungeon4'
+import { CharMap, RoomModules } from './dungeon4'
 
 export type Visualizer4 = {
-  start: (h: CharMap[], module: ModuleNames) => void
+  start: (h: CharMap[], module: RoomModules) => void
   control: (key: string) => void
   cleanup: () => void
 }
@@ -18,7 +18,7 @@ let last: number
 let animating = false
 let nextFrame: number
 
-let currentModule: ModuleNames
+let currentModule: RoomModules
 
 // config
 let animate = true
@@ -49,7 +49,7 @@ export function visualizer4(display: ROT.Display, anim: boolean, skipRooms = fal
   return { start, control, cleanup }
 }
 
-function start(h: CharMap[], module: ModuleNames) {
+function start(h: CharMap[], module: RoomModules) {
   stop()
   history = h
   currentModule = module
