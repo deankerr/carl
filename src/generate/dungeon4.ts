@@ -61,11 +61,12 @@ export interface GEN_CONFIG {
   maxRoomW: number
   minRoomH: number
   maxRoomH: number
+  levelEdge: number
   shiftFinal: boolean
 }
 
 // TODO should pass this into Dungeon4 + use this as default
-const CONFIG: GEN_CONFIG = {
+const DEFAULT_CONFIG: GEN_CONFIG = {
   // level size
   width: 80,
   height: 20,
@@ -82,29 +83,33 @@ const CONFIG: GEN_CONFIG = {
   minRoomH: 3,
   maxRoomH: 7,
 
+  // avoid placing features within this range of the level edge
+  levelEdge: 1,
+
   shiftFinal: true,
 }
+
+let CONFIG: GEN_CONFIG
 
 const maxCorridorAttempts = 50
 
 // --- Globals ---
 export let history: CharMap[]
 let current: CharMap = []
-let width: number
-let height: number
 
 // TODO config object
-export function dungeon4(w: number, h: number): Dungeon4Data | null {
-  console.log('welcome... to dung4')
+export function dungeon4(newConfig?: Partial<GEN_CONFIG>): Dungeon4Data | null {
   const time = Date.now()
+  console.log('welcome... to dung4')
 
   // set up
-  width = w
-  height = h
+  if (newConfig) CONFIG = { ...DEFAULT_CONFIG, ...newConfig }
+  else CONFIG = { ...DEFAULT_CONFIG }
+  console.log('CONFIG:', CONFIG)
 
-  current = [...new Array(height)].map(() => new Array(width).fill(' '))
-  current = digRect(current, Rect.at(0, 0, width, height), '·')
-  current = digRect(current, Rect.at(1, 1, width - 2, height - 2), ' ')
+  current = [...new Array(CONFIG.height)].map(() => new Array(CONFIG.width).fill(' '))
+  current = digRect(current, Rect.at(0, 0, CONFIG.width, CONFIG.height), '·')
+  current = digRect(current, Rect.at(1, 1, CONFIG.width - 2, CONFIG.height - 2), ' ')
 
   // wipe old history (store this?)
   history = []
@@ -114,8 +119,9 @@ export function dungeon4(w: number, h: number): Dungeon4Data | null {
   const seed = ROT.RNG.getUniformInt(1000, 9999)
   ROT.RNG.setSeed(seed)
 
-  console.log('create()', width, height, ROT.RNG.getSeed())
+  console.log('create() W:', CONFIG.width, 'H:', CONFIG.height, ROT.RNG.getSeed())
 
+  // ? modules handle timing, report with data? eg const [ rooms, time ] = gen()
   const tRooms = Date.now()
   const rooms = generateRooms(CONFIG) // give min / max room amounts?
   const tRoomsEnd = Date.now() - tRooms
@@ -499,11 +505,11 @@ function createDoors(level: CharMap, rooms: Room[]): [CharMap, Point[]] {
 function centerLevel(level: CharMap, rooms: Room[]): [CharMap, number, number] {
   const xMin = rooms.reduce((prev, curr) => (prev.border.x < curr.border.x ? prev : curr)).border.x
   const xMax = rooms.reduce((prev, curr) => (prev.border.x2 > curr.border.x2 ? prev : curr)).border.x2
-  const dx = Math.floor((width - 1 - xMax - xMin) / 2)
+  const dx = Math.floor((CONFIG.width - 1 - xMax - xMin) / 2)
 
   const yMin = rooms.reduce((prev, curr) => (prev.border.y < curr.border.y ? prev : curr)).border.y
   const yMax = rooms.reduce((prev, curr) => (prev.border.y2 > curr.border.y2 ? prev : curr)).border.y2
-  const dy = Math.floor((height - 1 - yMax - yMin) / 2)
+  const dy = Math.floor((CONFIG.height - 1 - yMax - yMin) / 2)
 
   dx !== 0 && dy !== 0 && console.log(`Shift level: x ${dx} y: ${dy}`)
 
@@ -559,11 +565,11 @@ function transposeLevelY(level: CharMap, dir: number) {
   if (dir === -1) {
     // move up
     centeredLevel.shift()
-    centeredLevel.push(new Array(width).fill(' '))
+    centeredLevel.push(new Array(CONFIG.width).fill(' '))
   } else if (dir === 1) {
     // move down
     centeredLevel.pop()
-    centeredLevel.unshift(new Array(width).fill(' '))
+    centeredLevel.unshift(new Array(CONFIG.width).fill(' '))
   }
   snapshot(centeredLevel, 'Shift Y', 'shift')
 
@@ -575,7 +581,7 @@ function transposeLevelY(level: CharMap, dir: number) {
 /// ======== Utility
 
 export function inBounds(x: number, y: number, within = 0) {
-  return x >= 0 + within && x < width - within && y >= 0 + within && y < height - within
+  return x >= 0 + within && x < CONFIG.width - within && y >= 0 + within && y < CONFIG.height - within
 }
 
 export function rectInBounds(rect: Rect, within = 0) {
@@ -589,7 +595,7 @@ export function snapshot(map: CharMap, label: string | number = '(no label!)', g
 }
 
 export function createBlankMap(c = ' '): CharMap {
-  return [...new Array(height)].map(() => new Array(width).fill(c[0]))
+  return [...new Array(CONFIG.height)].map(() => new Array(CONFIG.width).fill(c[0]))
 }
 
 // rot-js style 0/1 terrain map for game

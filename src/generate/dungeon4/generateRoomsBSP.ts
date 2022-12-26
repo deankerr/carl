@@ -33,12 +33,11 @@ export function generateRoomsBSP(newConfig: GEN_CONFIG): Room[] | null {
   const levelMaxY = current.length - 1
 
   // create initial sector
-  const levelEdgeBorder = 1
   const initialRect = Rect.atxy2(
-    levelEdgeBorder,
-    levelEdgeBorder,
-    levelMaxX - levelEdgeBorder,
-    levelMaxY - levelEdgeBorder
+    CONFIG.levelEdge,
+    CONFIG.levelEdge,
+    levelMaxX - CONFIG.levelEdge,
+    levelMaxY - CONFIG.levelEdge
   )
   initialRect.id = 0
 

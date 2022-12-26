@@ -1,44 +1,30 @@
-import { createBlankMap, rectInBounds, Room, snapshot, rnd } from '../dungeon4'
-// import { Rect } from '../Rectangle'
+import { GEN_CONFIG, createBlankMap, rectInBounds, Room, snapshot, rnd } from '../dungeon4'
 import { digRect, digRoom } from './dig'
 
-// my original random room implementation
+// my original random room placement implementation
 
-// ? config object to pass to arbitrary room/corr/etc. modules?
-// -- only classic uses this?
-const maxRooms = 8
-const maxRoomAttempts = 500
-const levelEdge = 1
-
-// i messed with these during testing and cant remember whats good
+// Classic specific configs kept for compatibility
 const minRoomXSize = 5
 const maxRoomXSize = 7
-
 const minRoomYSize = 3
 const maxRoomYSize = 3
-// --
+const maxRoomAttempts = 500
 
-// type Config = {
-//   maxRooms: number
-//   maxRoomAttempts: number
-//   minRoomXSize: number
-//   maxRoomXSize: number
-//   minRoomYSize: number
-//   maxRoomYSize: number
-//   levelEdge: number
-//   roomBorderSize: number
-// }
+let CONFIG: GEN_CONFIG
 
-export function generateRoomsClassic(): Room[] {
+export function generateRoomsClassic(newConfig: GEN_CONFIG): Room[] {
   const trooms = Date.now()
   console.groupCollapsed('%c  generateRoomsClassic()  ', 'background-color: cyan')
+
+  CONFIG = { ...newConfig }
+
   let attempts = 0
   const rooms: Room[] = []
   let current = createBlankMap()
   const width = current[0].length
   const height = current.length
 
-  while (rooms.length < maxRooms) {
+  while (rooms.length < CONFIG.maxRooms) {
     if (++attempts >= maxRoomAttempts) {
       console.error('Max attempts exceeded', attempts, maxRoomAttempts)
       break
@@ -92,7 +78,7 @@ export function generateRoomsClassic(): Room[] {
 
   // Room must be in level bounds, and not touching an edge
   function roomInBounds(room: Room) {
-    return rectInBounds(room.rect, levelEdge)
+    return rectInBounds(room.rect, CONFIG.levelEdge)
   }
 
   // Room can't overlap other room's borders

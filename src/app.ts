@@ -50,7 +50,7 @@ export function app(d: ROT.Display) {
   function startdungeon4() {
     if (visual4 === undefined) visual4 = visualizer4(display, true, false, true)
     try {
-      d4data = dungeon4(CONFIG.levelWidth, CONFIG.levelHeight)
+      d4data = dungeon4()
     } catch (error) {
       console.groupEnd()
       console.groupEnd()
