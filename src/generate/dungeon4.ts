@@ -5,52 +5,36 @@
 // ? => encapsulate "level"/"current"/"visual" etc CharMaps to make copy/mutate easier/less error prone
 // TODO smarter corridors
 // TODO !!! save RNG state to replicate history as needed? !!!
-// TODO submodule selection that isn't just commenting in/out desired modules
 // ? Vis reads colour pallette (etc) for modules? tag in history
 // ? Better encapsulate "dig"/visual only/level data structure
 // ? unit tests
 // ? ROT getWeightedValue for room size distribution?
 // TODO return Room[], Corridor[] along with data
 // TODO Maybe: abandon charmaps entirely, send rects lists to vis with color tags? way faster, i don't seem to actually need them now
+// TODO make room + walls the canonical way of using rooms
 
 import * as ROT from 'rot-js'
 import { Rect } from './Rectangle'
 import { digCorridor, digRect, digRoom, digPts } from './dungeon4/dig'
 
-export type Dungeon4Data = [number[][], Point[]]
-export type CharMap = string[][]
-export type Point = { x: number; y: number }
-
-// TODO make room + walls the canonical way of using rooms
-export class Room {
-  readonly rect: Rect
-  readonly label: string
-  border: Rect
-
-  constructor(rect: Rect, label: string | number, borderSize: number) {
-    this.rect = rect
-    this.label = `${label}`
-    this.border = rect.scale(borderSize)
-  }
-
-  static scaled(x: number, y: number, xScale: number, yScale: number, label: string | number = '?', borderSize = 1) {
-    const rect = Rect.scaled(x, y, xScale, yScale)
-
-    return new Room(rect, label, borderSize)
-  }
-}
-export class Corridor {
-  readonly points: Point[]
-  readonly label: number
-  constructor(points: Point[], label: number) {
-    this.points = points
-    this.label = label
-  }
+// Modules
+import { generateRoomsClassic } from './dungeon4/generateRoomsClassic'
+import { generateRoomsBSP } from './dungeon4/generateRoomsBSP'
+export interface RoomGenModule {
+  (newConfig: GEN_CONFIG): Room[] | null
 }
 
-// todo handle this better
-// import { generateRoomsClassic as generateRooms } from './dungeon4/generateRoomsClassic'
-import { generateRoomsBSP as generateRooms } from './dungeon4/generateRoomsBSP'
+const modules = {
+  BSP: generateRoomsBSP,
+  Classic: generateRoomsClassic,
+}
+
+export enum ModuleNames {
+  BSP = 'BSP',
+  Classic = 'Classic',
+}
+
+export const modulesAvailable = [ModuleNames.BSP, ModuleNames.Classic]
 
 export interface GEN_CONFIG {
   width: number
@@ -63,10 +47,10 @@ export interface GEN_CONFIG {
   maxRoomH: number
   levelEdge: number
   shiftFinal: boolean
+  moduleRoomGen: keyof typeof modules
 }
 
-// TODO should pass this into Dungeon4 + use this as default
-const DEFAULT_CONFIG: GEN_CONFIG = {
+export const DEFAULT_CONFIG: GEN_CONFIG = {
   // level size
   width: 80,
   height: 20,
@@ -86,7 +70,12 @@ const DEFAULT_CONFIG: GEN_CONFIG = {
   // avoid placing features within this range of the level edge
   levelEdge: 1,
 
+  // Center the level after features generated
   shiftFinal: true,
+
+  // modules
+  // ? do they live here?
+  moduleRoomGen: ModuleNames.BSP,
 }
 
 let CONFIG: GEN_CONFIG
@@ -97,15 +86,14 @@ const maxCorridorAttempts = 50
 export let history: CharMap[]
 let current: CharMap = []
 
-// TODO config object
 export function dungeon4(newConfig?: Partial<GEN_CONFIG>): Dungeon4Data | null {
   const time = Date.now()
   console.log('%c   Welcome to Dungeon4   ', 'background-color: pink; font-weight: bold')
 
   // set up
-  if (newConfig) CONFIG = { ...DEFAULT_CONFIG, ...newConfig }
-  else CONFIG = { ...DEFAULT_CONFIG }
+  CONFIG = { ...DEFAULT_CONFIG, ...newConfig }
   console.log('CONFIG:', CONFIG)
+  console.log('modulesAvailable:', modulesAvailable)
 
   current = [...new Array(CONFIG.height)].map(() => new Array(CONFIG.width).fill(' '))
   current = digRect(current, Rect.at(0, 0, CONFIG.width, CONFIG.height), '·')
@@ -122,14 +110,21 @@ export function dungeon4(newConfig?: Partial<GEN_CONFIG>): Dungeon4Data | null {
   console.log('create() W:', CONFIG.width, 'H:', CONFIG.height, ROT.RNG.getSeed())
 
   // ? modules handle timing, report with data? eg const [ rooms, time ] = gen()
+  // * Rooms
+  // Get module
+  const generateRooms = modules[CONFIG.moduleRoomGen]
+  console.log(`Using module ${CONFIG.moduleRoomGen}:`, generateRooms.name)
+
   const tRooms = Date.now()
-  const rooms = generateRooms(CONFIG) // give min / max room amounts?
+  const rooms = generateRooms(CONFIG)
   const tRoomsEnd = Date.now() - tRooms
+
   if (rooms === null) {
     console.warn('rooms == null, aborting')
     return null
   }
 
+  // * Corridors
   const tCorr = Date.now()
   const corridors = generateCorridors(rooms)
   const tCorrEnd = Date.now() - tCorr
@@ -139,7 +134,7 @@ export function dungeon4(newConfig?: Partial<GEN_CONFIG>): Dungeon4Data | null {
   const terrain = generateTerrainData(final)
 
   const t = Date.now() - time
-  snapshot(final, 'Complete! Time: ' + t + 'ms', 'done')
+  snapshot(final, `Complete! Rooms: ${rooms.length}, Corridors: ${corridors.length} Time: ` + t + 'ms', 'done')
 
   const logMsg = `%c Dungeon4 Complete (${t}ms), Rooms: ${rooms.length} (${tRoomsEnd}ms), Corridors: ${corridors.length} (${tCorrEnd}ms) `
   consoleLogMap(final, true, logMsg, 'background-color: pink')
@@ -496,7 +491,7 @@ function createDoors(level: CharMap, rooms: Room[]): [CharMap, Point[]] {
   // console.log('doorPts:', doorPts)
 
   const doorMap = digPts(level, doorPts.flat(), '+')
-  // snapshot(doorMap, 'The Doors', 'doors') // !
+  // snapshot(doorMap, 'The Doors', 'doors')
 
   // flat() removes which room is associated with each room
   return [doorMap, doorPts.flat()]
@@ -665,4 +660,36 @@ export function half(n: number) {
 
 export function larger(n1: number, n2: number) {
   return n1 >= n2 ? n1 : n2
+}
+
+// Types/Features
+export type Dungeon4Data = [number[][], Point[]]
+export type CharMap = string[][]
+export type Point = { x: number; y: number }
+
+export class Room {
+  readonly rect: Rect
+  readonly label: string
+  border: Rect
+
+  constructor(rect: Rect, label: string | number, borderSize: number) {
+    this.rect = rect
+    this.label = `${label}`
+    this.border = rect.scale(borderSize)
+  }
+
+  static scaled(x: number, y: number, xScale: number, yScale: number, label: string | number = '?', borderSize = 1) {
+    const rect = Rect.scaled(x, y, xScale, yScale)
+
+    return new Room(rect, label, borderSize)
+  }
+}
+
+export class Corridor {
+  readonly points: Point[]
+  readonly label: number
+  constructor(points: Point[], label: number) {
+    this.points = points
+    this.label = label
+  }
 }

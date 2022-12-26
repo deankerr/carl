@@ -7,14 +7,17 @@ import { Keys } from './keys'
 import { Game } from './game'
 
 // dungeon 4
-import { dungeon4, history, Dungeon4Data } from './generate/dungeon4'
+import { dungeon4, history, Dungeon4Data, modulesAvailable } from './generate/dungeon4'
 import { visualizer4, Visualizer4 } from './generate/visualizer4'
 
 let display: ROT.Display
 const keys: Keys = new Keys()
 
+// Dungeon 4
 let visual4: Visualizer4
 let d4data: Dungeon4Data | null
+
+const d4modules = mrModules()
 
 // For handling running things like dungeon visualizers/experiments without messing up Game()
 export function app(d: ROT.Display) {
@@ -36,6 +39,10 @@ export function app(d: ROT.Display) {
 
   function input(key: string) {
     switch (key) {
+      case 'KeyQ':
+        d4modules.next()
+        startdungeon4()
+        break
       case 'KeyN':
         startdungeon4()
         break
@@ -49,8 +56,10 @@ export function app(d: ROT.Display) {
 
   function startdungeon4() {
     if (visual4 === undefined) visual4 = visualizer4(display, true, false, false)
+
+    console.log('d4modules.current:', d4modules.current())
     try {
-      d4data = dungeon4()
+      d4data = dungeon4({ moduleRoomGen: d4modules.current() })
     } catch (error) {
       console.groupEnd()
       console.groupEnd()
@@ -58,7 +67,7 @@ export function app(d: ROT.Display) {
       console.groupEnd()
       console.error(error)
     } finally {
-      visual4.start(history)
+      visual4.start(history, d4modules.current())
     }
   }
 
@@ -73,6 +82,24 @@ export function app(d: ROT.Display) {
     game.newWorld(d4data)
     window.game = game
   }
+}
+
+// Module handler
+function mrModules() {
+  const modules = modulesAvailable
+  let index = 0
+
+  const current = () => {
+    return modules[index]
+  }
+
+  const next = () => {
+    index++
+    if (index > modules.length - 1) index = 0
+    return modules[index]
+  }
+
+  return { next, current }
 }
 
 declare global {

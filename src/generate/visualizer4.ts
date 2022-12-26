@@ -1,9 +1,14 @@
 // TODO localStorage key to toggle animate quickly
+// TODO visualizer can create its own display, can coexist with game/multiple
 // ? TODO Vis reads colour pallette
 import * as ROT from 'rot-js'
-import { CharMap } from './dungeon4'
+import { CharMap, ModuleNames } from './dungeon4'
 
-export type Visualizer4 = { start: (h: CharMap[]) => void; control: (key: string) => void; cleanup: () => void }
+export type Visualizer4 = {
+  start: (h: CharMap[], module: ModuleNames) => void
+  control: (key: string) => void
+  cleanup: () => void
+}
 
 // TODO fix this config mess
 let d: ROT.Display
@@ -12,6 +17,8 @@ let index = -1
 let last: number
 let animating = false
 let nextFrame: number
+
+let currentModule: ModuleNames
 
 // config
 let animate = true
@@ -42,9 +49,10 @@ export function visualizer4(display: ROT.Display, anim: boolean, skipRooms = fal
   return { start, control, cleanup }
 }
 
-function start(h: CharMap[]) {
+function start(h: CharMap[], module: ModuleNames) {
   stop()
   history = h
+  currentModule = module
   index = 0
 
   last = history.length - 1
@@ -81,7 +89,7 @@ function play() {
 
   const tag = history[index][0][1]
   const speedTag = speedMap[speed][tag]
-  if (!speedTag) console.warn(`[Vis4] Unrecognised tag: ${tag}`, index)
+  if (!speedTag) console.warn(`[Vis4] Unrecognised tag: "${tag}"`, index)
   nextFrame = setTimeout(play, speedTag ? speedTag : speedMap[speed]['default'])
 }
 
@@ -105,11 +113,16 @@ function render(index: number) {
     }
   })
 
+  const height = d.getOptions().height
+  // Module
+  d.drawText(0, height - 2, `[Q] Room Module: ${currentModule}`)
+
+  // Lower controls
   const msg = map[0][0]
   const tag = map[0][1]
   d.drawText(0, 1, `${msg}`) // no tag
   showAnimTag && d.drawText(0, 1, `${index}-${tag}| ${msg}`) // playbackspeed tag
-  d.drawText(0, d.getOptions().height - 1, '[SPACE]: Play/Pause, [LEFT/RIGHT]: Step, [N] New, [R] Replay [P]: Play Map')
+  d.drawText(0, height - 1, '[SPACE]: Play/Pause, [LEFT/RIGHT]: Step, [N] New, [R] Replay [P]: Play Map')
 }
 
 const colorMap: { [key: string]: string } = {

@@ -12,7 +12,7 @@ const maxRoomAttempts = 500
 
 let CONFIG: GEN_CONFIG
 
-export function generateRoomsClassic(newConfig: GEN_CONFIG): Room[] {
+export function generateRoomsClassic(newConfig: GEN_CONFIG): Room[] | null {
   const trooms = Date.now()
   console.groupCollapsed('%c  generateRoomsClassic()  ', 'background-color: cyan')
 
