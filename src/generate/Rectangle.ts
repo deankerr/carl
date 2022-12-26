@@ -1,9 +1,8 @@
-// TODO finalize structure. static methods rarely (never?) used. hollow rect?
-// TODO Point class? (... level point manager?)
+// ? hollow rect support?
 import * as ROT from 'rot-js'
 
 type Point = { x: number; y: number }
-// todo negative checks etc everywhere
+
 export class Rect {
   // Top left to bottom right
   readonly x: number
@@ -18,12 +17,15 @@ export class Rect {
   readonly cx: number
   readonly cy: number
 
-  // debug label
-  // label = ''
-  id = -1
   readonly area: number
 
-  constructor(x: number, y: number, width: number, height: number) {
+  // debug id
+  id
+
+  constructor(x: number, y: number, width: number, height: number, id = 0) {
+    if (width < 1 || height < 1)
+      throw new Error('Please do not create zero/negative width Rects, as I cannot fathom them.')
+
     this.x = x
     this.y = y
 
@@ -37,6 +39,8 @@ export class Rect {
     this.cy = this.y2 - Math.floor(this.height / 2)
 
     this.area = width * height
+
+    this.id = id
   }
 
   // Travels through the x/y coords
@@ -48,28 +52,33 @@ export class Rect {
     }
   }
 
-  // TODO push most of this into static method?
   // TODO handle arrays, ts generic
-  // TODO handle empty rect?
+  // Tests if another Rect intersects this, if so returns the Pts where it does
   intersects(rect: Rect) {
-    if (!Rect.intersects(this, rect)) return null
+    if (this === rect) console.warn('Did you mean to check if a rect intersects itself?', this, rect)
+
+    // Quick test if rects intersect
+    if (this.x2 < rect.x || this.y2 < rect.y || this.x > rect.x2 || this.y > rect.y2) return null
 
     const pts: { x: number; y: number }[] = []
     rect.traverse((x, y) => {
-      if (Rect.intersectsPt(this, { x, y })) pts.push({ x, y })
+      if (this.intersectsPt({ x, y })) pts.push({ x, y })
     })
 
     return pts
   }
 
-  intersectsPt(pt: { x: number; y: number }) {
-    return Rect.intersectsPt(this, pt)
+  // Does a point intersect this Rect?
+  intersectsPt(pt: Point) {
+    return pt.x >= this.x && pt.y >= this.y && pt.x <= this.x2 && pt.y <= this.y2
   }
 
-  contains(r: Rect) {
-    return this.x <= r.x && this.x2 >= r.x2 && this.y <= r.y && this.y2 >= r.y2
+  // Is a rect fully contained within this rect (or overlap perfectly)?
+  contains(rect: Rect) {
+    return this.x <= rect.x && this.x2 >= rect.x2 && this.y <= rect.y && this.y2 >= rect.y2
   }
 
+  // Return a clone of this rect, scaled by a given amount
   scale(xBy: number, yBy = xBy) {
     const x = this.x - xBy
     const y = this.y - yBy
@@ -89,44 +98,39 @@ export class Rect {
     return result
   }
 
-  // corners(): Point[] {} ?
-
+  // Return a random point with this rect
   rndPt(): Point {
     return { x: ROT.RNG.getUniformInt(this.x, this.x2), y: ROT.RNG.getUniformInt(this.y, this.y2) }
   }
 
-  static at(x: number, y: number, width: number, height: number) {
-    return new Rect(x, y, width, height)
+  // ? rndPtOuter()
+
+  // Construction
+
+  // Constructor alias
+  static at(x: number, y: number, width: number, height: number, id = 0) {
+    return new Rect(x, y, width, height, id)
   }
 
-  static atC(cx: number, cy: number, width: number, height: number) {
+  // Center-point based
+  static atC(cx: number, cy: number, width: number, height: number, id = 0) {
     const x = cx - Math.floor(width / 2)
     const y = cy - Math.floor(height / 2)
-    return new Rect(x, y, width, height)
+    return new Rect(x, y, width, height, id)
   }
 
-  static atxy2(x: number, y: number, x2: number, y2: number) {
-    return new Rect(x, y, x2 - x + 1, y2 - y + 1)
+  // From x/y to x2/y2
+  static atxy2(x: number, y: number, x2: number, y2: number, id = 0) {
+    return new Rect(x, y, x2 - x + 1, y2 - y + 1, id)
   }
 
-  static scaled(cx: number, cy: number, xScale: number, yScale: number) {
-    const width = 2 * xScale - 1
-    const height = 2 * yScale - 1
+  // By size, eg xSize 1 = 1, 2 = 3, 3 = 5 etc.
+  static scaled(cx: number, cy: number, xSize: number, ySize: number, id = 0) {
+    const width = 2 * xSize - 1
+    const height = 2 * ySize - 1
     const x1 = cx - Math.floor(width / 2)
     const y1 = cy - Math.floor(height / 2)
 
-    return new Rect(x1, y1, width, height)
-  }
-
-  // ? will i ever use these
-  // TODO do main checking here?
-  static intersects(rect1: Rect, rect2: Rect) {
-    if (rect1 === rect2) console.warn('Did you mean to check if a rect intersects itself?', rect1, rect2)
-    return !(rect1.x2 < rect2.x || rect1.y2 < rect2.y || rect1.x > rect2.x2 || rect1.y > rect2.y2)
-  }
-
-  // TODO naming? "pt"? overload with rect:rect function?
-  static intersectsPt(rect: Rect, pt: { x: number; y: number }) {
-    return pt.x >= rect.x && pt.y >= rect.y && pt.x <= rect.x2 && pt.y <= rect.y2
+    return new Rect(x1, y1, width, height, id)
   }
 }
