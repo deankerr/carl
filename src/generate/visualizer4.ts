@@ -2,9 +2,13 @@
 // TODO visualizer can create its own display, can coexist with game/multiple
 // ? TODO Vis reads colour pallette
 import * as ROT from 'rot-js'
-import { CharMap, RoomGenModule, DEFAULT_CONFIG, modules } from './dungeon4'
+import { CharMap, RoomGenModule, DEFAULT_CONFIG, modules, ModuleTypesEnum } from './dungeon4'
 
-export type Visualizer4 = { start: (h: CharMap[]) => void; control: (key: string) => void; cleanup: () => void }
+export type Visualizer4 = {
+  start: (h: CharMap[], module: ModuleTypesEnum) => void
+  control: (key: string) => void
+  cleanup: () => void
+}
 
 // TODO fix this config mess
 let d: ROT.Display
@@ -14,10 +18,7 @@ let last: number
 let animating = false
 let nextFrame: number
 
-// ? actually handled by app?
-// modules
-const roomGenModules = DEFAULT_CONFIG.moduleRoomGenAvailable
-let roomGenModuleActive = DEFAULT_CONFIG.moduleRoomGen
+let currentModule: ModuleTypesEnum
 
 // config
 let animate = true
@@ -32,13 +33,7 @@ const CONFIG = {
 
 let corrStartIndex = 0
 
-export function visualizer4(
-  display: ROT.Display,
-  anim: boolean,
-  skipRooms = false,
-  skipCorrs = false,
-  module: keyof typeof modules
-): Visualizer4 {
+export function visualizer4(display: ROT.Display, anim: boolean, skipRooms = false, skipCorrs = false): Visualizer4 {
   console.log(`Visualizer4 (playback speed: ${speed})`)
   d = display
   animate = anim
@@ -54,9 +49,10 @@ export function visualizer4(
   return { start, control, cleanup }
 }
 
-function start(h: CharMap[]) {
+function start(h: CharMap[], module: ModuleTypesEnum) {
   stop()
   history = h
+  currentModule = module
   index = 0
 
   last = history.length - 1
@@ -119,7 +115,7 @@ function render(index: number) {
 
   const height = d.getOptions().height
   // Module
-  d.drawText(0, height - 2, '[Q]')
+  d.drawText(0, height - 2, `[Q] Room Module: ${currentModule}`)
 
   // Lower controls
   const msg = map[0][0]

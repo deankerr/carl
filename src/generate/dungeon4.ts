@@ -48,7 +48,6 @@ export class Corridor {
   }
 }
 
-// todo handle this better
 import { generateRoomsClassic } from './dungeon4/generateRoomsClassic'
 import { generateRoomsBSP } from './dungeon4/generateRoomsBSP'
 
@@ -56,13 +55,20 @@ export interface RoomGenModule {
   (newConfig: GEN_CONFIG): Room[] | null
 }
 
-// interface ModuleList {[key: string]: RoomGenModule}
-export const modules = {
-  bsp: generateRoomsBSP,
-  classic: generateRoomsClassic,
+export enum ModuleTypesEnum {
+  BSP = 'BSP',
+  Classic = 'Classic',
 }
 
-export const moduleDefault = 'bsp'
+export const moduleDefault = ModuleTypesEnum.BSP
+
+export const modulesAvailable = [ModuleTypesEnum.BSP, ModuleTypesEnum.Classic]
+console.log('modulesAvailable:', modulesAvailable)
+
+export const modules = {
+  BSP: generateRoomsBSP,
+  Classic: generateRoomsClassic,
+}
 
 export interface GEN_CONFIG {
   width: number
@@ -79,7 +85,6 @@ export interface GEN_CONFIG {
   moduleRoomGenAvailable: typeof modules
 }
 
-// TODO should pass this into Dungeon4 + use this as default
 export const DEFAULT_CONFIG: GEN_CONFIG = {
   // level size
   width: 80,
@@ -102,10 +107,9 @@ export const DEFAULT_CONFIG: GEN_CONFIG = {
 
   shiftFinal: true,
 
-  // moduleRoomGen: generateRoomsBSP,
-  moduleRoomGen: 'classic',
-
-  // moduleRoomGenAvailable: [generateRoomsBSP, generateRoomsClassic],
+  // modules
+  // ? do they live here?
+  moduleRoomGen: ModuleTypesEnum.BSP,
   moduleRoomGenAvailable: modules,
 }
 
@@ -117,14 +121,12 @@ const maxCorridorAttempts = 50
 export let history: CharMap[]
 let current: CharMap = []
 
-// TODO config object
 export function dungeon4(newConfig?: Partial<GEN_CONFIG>): Dungeon4Data | null {
   const time = Date.now()
   console.log('%c   Welcome to Dungeon4   ', 'background-color: pink; font-weight: bold')
 
   // set up
-  if (newConfig) CONFIG = { ...DEFAULT_CONFIG, ...newConfig }
-  else CONFIG = { ...DEFAULT_CONFIG }
+  CONFIG = { ...DEFAULT_CONFIG, ...newConfig }
   console.log('CONFIG:', CONFIG)
 
   current = [...new Array(CONFIG.height)].map(() => new Array(CONFIG.width).fill(' '))
@@ -145,7 +147,7 @@ export function dungeon4(newConfig?: Partial<GEN_CONFIG>): Dungeon4Data | null {
   // * Rooms
   // Get module
   const generateRooms = modules[CONFIG.moduleRoomGen]
-  console.log('Using module:', CONFIG.moduleRoomGen)
+  console.log('Using module:', CONFIG.moduleRoomGen, generateRooms.name)
 
   const tRooms = Date.now()
   const rooms = generateRooms(CONFIG)
@@ -166,7 +168,7 @@ export function dungeon4(newConfig?: Partial<GEN_CONFIG>): Dungeon4Data | null {
   const terrain = generateTerrainData(final)
 
   const t = Date.now() - time
-  snapshot(final, 'Complete! Time: ' + t + 'ms', 'done')
+  snapshot(final, `Complete! Rooms: ${rooms.length}, Corridors: ${corridors.length} Time: ` + t + 'ms', 'done')
 
   const logMsg = `%c Dungeon4 Complete (${t}ms), Rooms: ${rooms.length} (${tRoomsEnd}ms), Corridors: ${corridors.length} (${tCorrEnd}ms) `
   consoleLogMap(final, true, logMsg, 'background-color: pink')
