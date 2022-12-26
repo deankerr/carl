@@ -29,7 +29,8 @@ import { digCorridor, digPts, digRect, digRoom } from './dig'
 
 const maxCorridorAttempts = 50
 
-export function generateCorridorsClassic(rooms: Room[]): Corridor[] | null {
+export function generateCorridorsClassic(rooms: Room[]): [Corridor[], number] {
+  const timer = Date.now()
   console.groupCollapsed('%c  generateCorridors()  ', 'background-color: cyan')
   const corridors: Corridor[] = []
 
@@ -112,8 +113,11 @@ export function generateCorridorsClassic(rooms: Room[]): Corridor[] | null {
     }
     console.groupEnd()
   }
+  const timerEnd = Date.now() - timer
+  console.log(`Time: ${timerEnd}ms`)
   console.groupEnd()
-  return corridors
+
+  return [corridors, timerEnd]
 }
 
 // TODO try original "connect actual closest first, link rooms later" algorithm for more randomness?
@@ -150,7 +154,7 @@ function connectRooms(level: CharMap, origin: Room, target: Room) {
       bannedOrigins.map((p) => s2pt(p)),
       'x'
     )
-    snapshot(corrMap, `Path ${origin.label} to ${target.label} ${attempts}/${innerMax}`)
+    snapshot(corrMap, `Path ${origin.label} to ${target.label} ${attempts}/${innerMax}`, 'path')
 
     const valid = path.every((pt, i) => {
       console.log('path pt:', pt)

@@ -16,7 +16,8 @@ let current: CharMap
 // ? handle very large areas left after main loop
 // ? force initial splits to be very different?
 // null = abort
-export function generateRoomsBSP(newConfig: GEN_CONFIG): Room[] | null {
+export function generateRoomsBSP(newConfig: GEN_CONFIG): [Room[], number] {
+  const timer = Date.now()
   console.groupCollapsed('%c  generateRoomsBSP() ', 'background-color: cyan')
 
   CONFIG = { minSectorW: floor(newConfig.minRoomW * 2), minSectorH: floor(newConfig.minRoomH * 2), ...newConfig }
@@ -114,9 +115,11 @@ export function generateRoomsBSP(newConfig: GEN_CONFIG): Room[] | null {
   console.table(sectors)
   console.groupEnd()
 
+  const timerEnd = Date.now() - timer
+  console.log(`Time: ${timerEnd}ms`)
   console.groupEnd()
-  return rooms
-  // return null
+
+  return [rooms, timerEnd]
 }
 
 function split(parent: Rect) {

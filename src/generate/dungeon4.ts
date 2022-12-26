@@ -19,11 +19,6 @@ import { digCorridor, digRect, digRoom, digPts } from './dungeon4/dig'
 
 // Modules
 
-// export interface DungeonModule {
-//   (newConfig: GEN_CONFIG): Room[] | null // rooms
-//   (rooms: Room[]): Corridor[] | null // corridors
-// }
-
 import { generateRoomsClassic } from './dungeon4/generateRoomsClassic'
 import { generateRoomsBSP } from './dungeon4/generateRoomsBSP'
 
@@ -97,11 +92,19 @@ let current: CharMap = []
 export function dungeon4(newConfig?: Partial<GEN_CONFIG>): Dungeon4Data | null {
   const time = Date.now()
   console.log('%c   Welcome to Dungeon4   ', 'background-color: pink; font-weight: bold')
-
-  // set up
   CONFIG = { ...DEFAULT_CONFIG, ...newConfig }
   console.log('CONFIG:', CONFIG)
+
+  // set module functions
   console.log('modulesAvailable:', modulesAvailable)
+
+  const generateRooms = modules.rooms[CONFIG.moduleRoomGen]
+  console.log(`Using module ${CONFIG.moduleRoomGen}:`, generateRooms.name)
+
+  const generateCorridors = modules.corridors[CONFIG.moduleCorridorGen]
+  console.log(`Using module ${CONFIG.moduleCorridorGen}:`, generateCorridors.name)
+
+  // set up
 
   current = [...new Array(CONFIG.height)].map(() => new Array(CONFIG.width).fill(' '))
   current = digRect(current, Rect.at(0, 0, CONFIG.width, CONFIG.height), '·')
@@ -117,33 +120,21 @@ export function dungeon4(newConfig?: Partial<GEN_CONFIG>): Dungeon4Data | null {
 
   console.log('create() W:', CONFIG.width, 'H:', CONFIG.height, ROT.RNG.getSeed())
 
-  // ? modules handle timing, report with data? eg const [ rooms, time ] = gen()
-  // * Rooms
-  // Get module
-  const generateRooms = modules.rooms[CONFIG.moduleRoomGen]
-  console.log(`Using module ${CONFIG.moduleRoomGen}:`, generateRooms.name)
-
-  const tRooms = Date.now()
-  const rooms = generateRooms(CONFIG)
-  const tRoomsEnd = Date.now() - tRooms
+  // * Generate Rooms
+  const [rooms, roomTime] = generateRooms(CONFIG)
 
   // abort
-  if (rooms === null) {
-    console.warn('rooms == null, aborting')
+  if (rooms.length == 0) {
+    console.warn('rooms == 0, aborting')
     return null
   }
 
-  // * Corridors
-  // Get module
-  const generateCorridors = modules.corridors[CONFIG.moduleCorridorGen]
-  console.log(`Using module ${CONFIG.moduleCorridorGen}:`, generateCorridors.name)
-  const tCorr = Date.now()
-  const corridors = generateCorridors(rooms)
-  const tCorrEnd = Date.now() - tCorr
+  // * Generate Corridors
+  const [corridors, corrTime] = generateCorridors(rooms)
 
   // abort
-  if (corridors === null) {
-    console.warn('corridors == null, aborting')
+  if (corridors.length === 0) {
+    console.warn('corridors == 0, aborting')
     return null
   }
 
@@ -154,7 +145,7 @@ export function dungeon4(newConfig?: Partial<GEN_CONFIG>): Dungeon4Data | null {
   const t = Date.now() - time
   snapshot(final, `Complete! Rooms: ${rooms.length}, Corridors: ${corridors.length} Time: ` + t + 'ms', 'done')
 
-  const logMsg = `%c Dungeon4 Complete (${t}ms), Rooms: ${rooms.length} (${tRoomsEnd}ms), Corridors: ${corridors.length} (${tCorrEnd}ms) `
+  const logMsg = `%c Dungeon4 Complete (${t}ms), Rooms: ${rooms.length} (${roomTime}ms), Corridors: ${corridors.length} (${corrTime}ms) `
   consoleLogMap(final, true, logMsg, 'background-color: pink')
 
   return [terrain, doorPts]

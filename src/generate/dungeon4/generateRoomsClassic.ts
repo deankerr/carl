@@ -12,8 +12,8 @@ const maxRoomAttempts = 500
 
 let CONFIG: GEN_CONFIG
 
-export function generateRoomsClassic(newConfig: GEN_CONFIG): Room[] | null {
-  const trooms = Date.now()
+export function generateRoomsClassic(newConfig: GEN_CONFIG): [Room[], number] {
+  const timer = Date.now()
   console.groupCollapsed('%c  generateRoomsClassic()  ', 'background-color: cyan')
 
   CONFIG = { ...newConfig }
@@ -73,8 +73,10 @@ export function generateRoomsClassic(newConfig: GEN_CONFIG): Room[] | null {
 
   // reduce room borders to wall
   rooms.forEach((r) => (r.border = r.rect.scale(1)))
-  console.log(`Complete - Rooms: ${rooms.length} Attempts: ${attempts} Time: ${Date.now() - trooms}ms`)
-  return rooms
+  const timerEnd = Date.now() - timer
+  console.log(`Complete - Rooms: ${rooms.length} Attempts: ${attempts} Time: ${timerEnd}ms`)
+
+  return [rooms, timerEnd]
 
   // Room must be in level bounds, and not touching an edge
   function roomInBounds(room: Room) {
