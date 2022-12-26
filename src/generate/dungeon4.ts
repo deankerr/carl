@@ -1,17 +1,13 @@
 // TODO clean up duplicate functions/functionality, add later improvements to earlier stages
-// TODO improve room gen (room size/w/h)
-// ? 'grow rooms' at point to desired size?
-// TODO reduce excess CharMap copies
-// ? => encapsulate "level"/"current"/"visual" etc CharMaps to make copy/mutate easier/less error prone
-// TODO smarter corridors
-// TODO !!! save RNG state to replicate history as needed? !!!
-// ? Vis reads colour pallette (etc) for modules? tag in history
-// ? Better encapsulate "dig"/visual only/level data structure
-// ? unit tests
-// ? ROT getWeightedValue for room size distribution?
-// TODO return Room[], Corridor[] along with data
-// TODO Maybe: abandon charmaps entirely, send rects lists to vis with color tags? way faster, i don't seem to actually need them now
 // TODO make room + walls the canonical way of using rooms
+// TODO improve room gen (room size/w/h)
+// ? ROT getWeightedValue for room size distribution?
+// ? 'grow rooms' at point to desired size?
+// TODO Reduce/completely remove CharMaps, create Rect + color/info data snapshots instead - constant array copies are slow
+// TODO Refactor Corridor gen
+// TODO !!! save RNG state to replicate history as needed? !!!
+// TODO smoke tests
+// TODO return Room[], Corridor[] along with data
 
 import * as ROT from 'rot-js'
 import { Rect } from './Rectangle'
@@ -105,7 +101,6 @@ export function dungeon4(newConfig?: Partial<GEN_CONFIG>): Dungeon4Data | null {
   console.log(`Using module ${CONFIG.moduleCorridorGen}:`, generateCorridors.name)
 
   // set up
-
   current = [...new Array(CONFIG.height)].map(() => new Array(CONFIG.width).fill(' '))
   current = digRect(current, Rect.at(0, 0, CONFIG.width, CONFIG.height), '·')
   current = digRect(current, Rect.at(1, 1, CONFIG.width - 2, CONFIG.height - 2), ' ')
