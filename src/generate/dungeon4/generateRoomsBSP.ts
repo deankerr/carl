@@ -17,15 +17,13 @@ let current: CharMap
 // ? force initial splits to be very different?
 // null = abort
 export function generateRoomsBSP(newConfig: GEN_CONFIG): Room[] | null {
-  // init
-  console.group('%c  generateRoomsBSP() ', 'background-color: cyan')
+  console.groupCollapsed('%c  generateRoomsBSP() ', 'background-color: cyan')
 
   CONFIG = { minSectorW: floor(newConfig.minRoomW * 2), minSectorH: floor(newConfig.minRoomH * 2), ...newConfig }
-  console.log('CONFIG', CONFIG)
 
   const roomsTarget = rnd(CONFIG.minRooms, CONFIG.maxRooms)
   console.log(
-    `Rooms: ${CONFIG.minRooms}<=${roomsTarget}<=${CONFIG.maxRooms}, Sectors min W:${CONFIG.minSectorW}, H:${CONFIG.minSectorH}`
+    `Rooms: ${CONFIG.minRooms}<=${roomsTarget}<=${CONFIG.maxRooms}, Min sector size W:${CONFIG.minSectorW}*H:${CONFIG.minSectorH}`
   )
 
   current = createBlankMap('*')

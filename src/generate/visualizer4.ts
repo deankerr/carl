@@ -27,7 +27,7 @@ const CONFIG = {
 let corrStartIndex = 0
 
 export function visualizer4(display: ROT.Display, anim: boolean, skipRooms = false, skipCorrs = false): Visualizer4 {
-  console.log('Visualizer4', speed)
+  console.log(`Visualizer4 (playback speed: ${speed})`)
   d = display
   animate = anim
   CONFIG.skipRooms = skipRooms
@@ -81,7 +81,7 @@ function play() {
 
   const tag = history[index][0][1]
   const speedTag = speedMap[speed][tag]
-  if (!speedTag) console.warn('[Vis4] Unrecognised tag: ', speedTag, index)
+  if (!speedTag) console.warn(`[Vis4] Unrecognised tag: ${tag}`, index)
   nextFrame = setTimeout(play, speedTag ? speedTag : speedMap[speed]['default'])
 }
 

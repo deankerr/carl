@@ -100,7 +100,7 @@ let current: CharMap = []
 // TODO config object
 export function dungeon4(newConfig?: Partial<GEN_CONFIG>): Dungeon4Data | null {
   const time = Date.now()
-  console.log('welcome... to dung4')
+  console.log('%c   Welcome to Dungeon4   ', 'background-color: pink; font-weight: bold')
 
   // set up
   if (newConfig) CONFIG = { ...DEFAULT_CONFIG, ...newConfig }
