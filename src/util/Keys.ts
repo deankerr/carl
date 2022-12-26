@@ -1,3 +1,5 @@
+// Simple keyboard listener
+
 type Callback = (code: string) => void
 
 export class Keys {

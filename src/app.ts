@@ -1,7 +1,7 @@
 // TODO use window.gameSeed = '111' / localStorage
 import { CONFIG } from './config'
 import * as ROT from 'rot-js'
-import { Keys } from './keys'
+import { Keys } from './util/Keys'
 
 // game
 import { Game } from './game'
