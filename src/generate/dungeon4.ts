@@ -49,8 +49,20 @@ export class Corridor {
 }
 
 // todo handle this better
-// import { generateRoomsClassic as generateRooms } from './dungeon4/generateRoomsClassic'
-import { generateRoomsBSP as generateRooms } from './dungeon4/generateRoomsBSP'
+import { generateRoomsClassic } from './dungeon4/generateRoomsClassic'
+import { generateRoomsBSP } from './dungeon4/generateRoomsBSP'
+
+export interface RoomGenModule {
+  (newConfig: GEN_CONFIG): Room[] | null
+}
+
+// interface ModuleList {[key: string]: RoomGenModule}
+export const modules = {
+  bsp: generateRoomsBSP,
+  classic: generateRoomsClassic,
+}
+
+export const moduleDefault = 'bsp'
 
 export interface GEN_CONFIG {
   width: number
@@ -63,10 +75,12 @@ export interface GEN_CONFIG {
   maxRoomH: number
   levelEdge: number
   shiftFinal: boolean
+  moduleRoomGen: keyof typeof modules
+  moduleRoomGenAvailable: typeof modules
 }
 
 // TODO should pass this into Dungeon4 + use this as default
-const DEFAULT_CONFIG: GEN_CONFIG = {
+export const DEFAULT_CONFIG: GEN_CONFIG = {
   // level size
   width: 80,
   height: 20,
@@ -87,6 +101,12 @@ const DEFAULT_CONFIG: GEN_CONFIG = {
   levelEdge: 1,
 
   shiftFinal: true,
+
+  // moduleRoomGen: generateRoomsBSP,
+  moduleRoomGen: 'classic',
+
+  // moduleRoomGenAvailable: [generateRoomsBSP, generateRoomsClassic],
+  moduleRoomGenAvailable: modules,
 }
 
 let CONFIG: GEN_CONFIG
@@ -122,14 +142,21 @@ export function dungeon4(newConfig?: Partial<GEN_CONFIG>): Dungeon4Data | null {
   console.log('create() W:', CONFIG.width, 'H:', CONFIG.height, ROT.RNG.getSeed())
 
   // ? modules handle timing, report with data? eg const [ rooms, time ] = gen()
+  // * Rooms
+  // Get module
+  const generateRooms = modules[CONFIG.moduleRoomGen]
+  console.log('Using module:', CONFIG.moduleRoomGen)
+
   const tRooms = Date.now()
-  const rooms = generateRooms(CONFIG) // give min / max room amounts?
+  const rooms = generateRooms(CONFIG)
   const tRoomsEnd = Date.now() - tRooms
+
   if (rooms === null) {
     console.warn('rooms == null, aborting')
     return null
   }
 
+  // * Corridors
   const tCorr = Date.now()
   const corridors = generateCorridors(rooms)
   const tCorrEnd = Date.now() - tCorr

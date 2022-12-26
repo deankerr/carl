@@ -7,14 +7,16 @@ import { Keys } from './keys'
 import { Game } from './game'
 
 // dungeon 4
-import { dungeon4, history, Dungeon4Data } from './generate/dungeon4'
+import { dungeon4, history, Dungeon4Data, RoomGenModule, modules } from './generate/dungeon4'
 import { visualizer4, Visualizer4 } from './generate/visualizer4'
 
 let display: ROT.Display
 const keys: Keys = new Keys()
 
+// Dungeon 4
 let visual4: Visualizer4
 let d4data: Dungeon4Data | null
+let module = modules.default
 
 // For handling running things like dungeon visualizers/experiments without messing up Game()
 export function app(d: ROT.Display) {
@@ -48,9 +50,9 @@ export function app(d: ROT.Display) {
   }
 
   function startdungeon4() {
-    if (visual4 === undefined) visual4 = visualizer4(display, true, false, false)
+    if (visual4 === undefined) visual4 = visualizer4(display, true, false, false, module)
     try {
-      d4data = dungeon4()
+      d4data = dungeon4({ moduleRoomGen: 'bsp' })
     } catch (error) {
       console.groupEnd()
       console.groupEnd()
