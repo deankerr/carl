@@ -71,7 +71,7 @@ function update(event: KeyboardEvent) {
 
   // console.time('update')
   const action = input(event)
-  console.log(`=== update(${event.code}) === Level: ${activeLevel.levelID}`, action)
+  console.groupCollapsed(`=== update(${event.code}) === Level: ${activeLevel.levelID}`, action)
 
   if (action === null) return console.log('No action taken')
 
@@ -103,6 +103,8 @@ function update(event: KeyboardEvent) {
 
   render()
   console.log(`--- update complete --- ${Date.now() - utime}ms`)
+  console.groupEnd()
+
   // console.timeEnd('update')
 }
 

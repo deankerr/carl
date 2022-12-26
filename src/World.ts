@@ -36,10 +36,10 @@ export function World(d4data: Dungeon4Data): World {
     })
   )
 
-  console.log('doorPts:', doorPts)
-  console.log(doorPts.flat())
+  // console.log('doorPts:', doorPts)
+  // console.log(doorPts.flat())
   const doorsAt = doorPts.flat().map((pt) => [pt.x, pt.y])
-  console.log(doorsAt)
+  // console.log(doorsAt)
 
   // const doorsAt: number[][] = []
   // dungeon1.get((x, y, content) => {

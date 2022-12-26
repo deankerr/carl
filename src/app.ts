@@ -1,3 +1,4 @@
+// TODO use window.gameSeed = '111' / localStorage
 import { CONFIG } from './config'
 import * as ROT from 'rot-js'
 import { Keys } from './keys'
@@ -13,19 +14,21 @@ let display: ROT.Display
 const keys: Keys = new Keys()
 
 let visual4: Visualizer4
-let d4data: Dungeon4Data
+let d4data: Dungeon4Data | null
 
-// For handling running things like dungeon visualizers/experiements without messing up Game()
+// For handling running things like dungeon visualizers/experiments without messing up Game()
 export function app(d: ROT.Display) {
   display = d
   keys.add(input)
+
+  // ROT.RNG.setSeed(1111)
 
   switch (CONFIG.appInitial) {
     case 'dungeon4':
       startdungeon4()
       break
     case 'game':
-      startgame(d4data)
+      if (d4data) startgame(d4data)
       break
     default:
       display.drawText(0, 0, 'Welcome to App! I have nothing to do.')
@@ -37,7 +40,7 @@ export function app(d: ROT.Display) {
         startdungeon4()
         break
       case 'KeyP':
-        startgame(d4data)
+        if (d4data) startgame(d4data)
         break
       default:
         visual4.control(key)
@@ -45,9 +48,15 @@ export function app(d: ROT.Display) {
   }
 
   function startdungeon4() {
-    if (visual4 === undefined) visual4 = visualizer4(display)
+    if (visual4 === undefined) visual4 = visualizer4(display, true, false, true)
     try {
       d4data = dungeon4(CONFIG.levelWidth, CONFIG.levelHeight)
+    } catch (error) {
+      console.groupEnd()
+      console.groupEnd()
+      console.groupEnd()
+      console.groupEnd()
+      console.error(error)
     } finally {
       visual4.start(history)
     }

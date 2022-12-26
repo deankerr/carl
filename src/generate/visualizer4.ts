@@ -1,8 +1,11 @@
+// TODO localStorage key to toggle animate quickly
+// ? TODO Vis reads colour pallette
 import * as ROT from 'rot-js'
 import { CharMap } from './dungeon4'
 
 export type Visualizer4 = { start: (h: CharMap[]) => void; control: (key: string) => void; cleanup: () => void }
 
+// TODO fix this config mess
 let d: ROT.Display
 let history: CharMap[]
 let index = -1
@@ -10,12 +13,25 @@ let last: number
 let animating = false
 let nextFrame: number
 
-const animate = true
-const speed = 'calm' // demo | fast | calm
+// config
+let animate = true
+const speed = 'test' // demo | fast | calm | test
+const showAnimTag = true
 
-export function visualizer4(display: ROT.Display): Visualizer4 {
+// todo stopRooms, stopCorrs?
+const CONFIG = {
+  skipRooms: false,
+  skipCorrs: false,
+}
+
+let corrStartIndex = 0
+
+export function visualizer4(display: ROT.Display, anim: boolean, skipRooms = false, skipCorrs = false): Visualizer4 {
   console.log('Visualizer4', speed)
   d = display
+  animate = anim
+  CONFIG.skipRooms = skipRooms
+  CONFIG.skipCorrs = skipCorrs
 
   // coords display
   const ctx = display.getContainer()
@@ -29,8 +45,14 @@ export function visualizer4(display: ROT.Display): Visualizer4 {
 function start(h: CharMap[]) {
   stop()
   history = h
-  last = history.length - 1
   index = 0
+
+  last = history.length - 1
+
+  corrStartIndex = history.findIndex((h) => h[0][1] === 'corrstart')
+  if (corrStartIndex === -1) {
+    console.warn('Visualizer: could not find corrstart index')
+  }
 
   if (animate) {
     animating = true
@@ -49,8 +71,17 @@ function play() {
     animating = false
     return
   }
+
+  if (CONFIG.skipRooms && index < corrStartIndex) index = corrStartIndex
+
+  if (CONFIG.skipCorrs && index === corrStartIndex) {
+    render(last)
+    return
+  }
+
   const tag = history[index][0][1]
   const speedTag = speedMap[speed][tag]
+  if (!speedTag) console.warn('[Vis4] Unrecognised tag: ', speedTag, index)
   nextFrame = setTimeout(play, speedTag ? speedTag : speedMap[speed]['default'])
 }
 
@@ -67,8 +98,8 @@ function render(index: number) {
       row.forEach((char, xi) => {
         let color = '#888'
         if (colorMap[char]) color = colorMap[char]
-        if ('0123456789'.includes(char)) color = 'orange'
-
+        // ? room colors?
+        // if ('0123456789'.includes(char)) color = 'orange'
         d.draw(xi, yi + 1, char, color, null)
       })
     }
@@ -76,12 +107,9 @@ function render(index: number) {
 
   const msg = map[0][0]
   const tag = map[0][1]
-  d?.drawText(0, 1, `[${index}-${tag}] ${msg}`)
-  d?.drawText(
-    0,
-    d.getOptions().height - 1,
-    '[SPACE]: Play/Pause, [LEFT/RIGHT]: Step, [N] New, [R] Replay [P]: Play this Map'
-  )
+  d.drawText(0, 1, `${msg}`) // no tag
+  showAnimTag && d.drawText(0, 1, `${index}-${tag}| ${msg}`) // playbackspeed tag
+  d.drawText(0, d.getOptions().height - 1, '[SPACE]: Play/Pause, [LEFT/RIGHT]: Step, [N] New, [R] Replay [P]: Play Map')
 }
 
 const colorMap: { [key: string]: string } = {
@@ -91,18 +119,30 @@ const colorMap: { [key: string]: string } = {
   C: 'cyan',
   p: 'yellow',
   '+': 'saddlebrown',
-  c: 'crimson',
+  c: '#CCC',
+  1: 'red',
+  2: 'orange',
+  3: 'yellow',
+  4: 'green',
+  5: 'blue',
+  6: 'indigo',
+  7: 'violet',
+  8: 'lime',
+  9: 'cyan',
+  0: 'silver',
+  '✓': 'lime',
+  '|': 'white',
+  '-': 'white',
 }
 
 function control(key: string) {
   switch (key) {
     case 'Space':
       // stop/replay
-      if (animating) {
+      if (animating || index === last) {
         stop()
         break
       }
-      index = 0
       animating = true
       play()
       break
@@ -122,6 +162,13 @@ function control(key: string) {
       console.log('Vis4: stop')
       stop()
       console.log(index)
+      break
+    case 'KeyR':
+      // replay
+      stop()
+      index = 0
+      animating = true
+      play()
       break
     case 'Digit1':
       // goto start
@@ -147,14 +194,14 @@ function control(key: string) {
 function mouse(event: MouseEvent) {
   const dis = d
   const ev = dis.eventToPosition(event)
-  d.draw(6, 0, ' ', 'black', null)
-  d.draw(5, 0, ' ', 'black', null)
-  d.draw(4, 0, ' ', 'black', null)
-  d.draw(3, 0, ' ', 'black', null)
-  d.draw(2, 0, ' ', 'black', null)
-  d.draw(1, 0, ' ', 'black', null)
-  d.draw(0, 0, ' ', 'black', null)
-  d.drawText(0, 0, `${ev[0]}, ${ev[1] - 2}`)
+  d.draw(80, 0, ' ', 'black', null)
+  d.draw(79, 0, ' ', 'black', null)
+  d.draw(78, 0, ' ', 'black', null)
+  d.draw(76, 0, ' ', 'black', null)
+  d.draw(75, 0, ' ', 'black', null)
+  d.draw(74, 0, ' ', 'black', null)
+  d.draw(73, 0, ' ', 'black', null)
+  d.drawText(73, 0, `${ev[0]}, ${ev[1] - 2}`)
 }
 
 function cleanup() {
@@ -162,38 +209,63 @@ function cleanup() {
   d = new ROT.Display()
 }
 
+// TODO this is too much
 type SpeedMap = { [key: string]: number }
+
+const test: SpeedMap = {
+  default: 200,
+  tag: 200,
+  roomfail: 40,
+  roomsuccess: 150,
+  corrstart: 1250,
+  corrsuccess: 1500,
+  flood: 10,
+  floodhit: 600,
+  path: 10,
+  pathfail: 1500,
+  pathtarget: 1500,
+  shift: 75,
+  bsp: 500,
+  bspsuccess: 800,
+}
 
 const fast: SpeedMap = {
   default: 200,
+  tag: 200,
   roomfail: 30,
   roomsuccess: 100,
   corrstart: 500,
   corrsuccess: 1000,
   flood: 10,
   floodhit: 200,
-  path: 30,
+  path: 10,
   pathfail: 1000,
   pathtarget: 1000,
   shift: 50,
+  bsp: 100,
+  bspsuccess: 500,
 }
 
 const demo: SpeedMap = {
   default: 200,
+  tag: 200,
   roomfail: 40,
   roomsuccess: 150,
   corrstart: 1250,
-  corrsuccess: 1500,
-  flood: 100,
-  floodhit: 1000,
-  path: 100,
+  corrsuccess: 1000,
+  flood: 10,
+  floodhit: 600,
+  path: 10,
   pathfail: 1500,
   pathtarget: 1500,
-  shift: 75,
+  shift: 100,
+  bsp: 400,
+  bspsuccess: 1200,
 }
 
 const calm: SpeedMap = {
   default: 200,
+  tag: 200,
   roomfail: 200,
   roomsuccess: 400,
   corrstart: 2000,
@@ -204,6 +276,8 @@ const calm: SpeedMap = {
   pathfail: 2000,
   pathtarget: 2000,
   shift: 100,
+  bsp: 800,
+  bspsuccess: 1100,
 }
 
-const speedMap = { fast, demo, calm }
+const speedMap = { fast, demo, calm, test }
