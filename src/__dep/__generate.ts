@@ -1,8 +1,8 @@
-import { CONFIG } from './config'
+import { CONFIG } from '../config'
 import * as ROT from 'rot-js'
-import { TerrainMap, SeenMap } from './Level'
+import { TerrainMap, SeenMap } from '../Level'
 
-import CellularFixed from './util/cellular'
+import CellularFixed from '../util/cellular'
 import Arena from 'rot-js/lib/map/arena'
 import Cellular from 'rot-js/lib/map/cellular'
 import Digger from 'rot-js/lib/map/digger'

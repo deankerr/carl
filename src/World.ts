@@ -1,31 +1,9 @@
-import { Level, SeenMap, TerrainMap } from './Level'
-// import {
-//   arena,
-//   cellular,
-//   digger,
-//   cellularFixed,
-//   GenTypes,
-//   cellular2,
-//   iceyMaze,
-//   divMaze,
-//   ellerMaze,
-//   uniform,
-//   rogue,
-// } from './generate'
-
-import { qCreatePlayer, Entity } from './entity'
-// import Arena from 'rot-js/lib/map/arena'
-// import Cellular from 'rot-js/lib/map/cellular'
-// import Digger from 'rot-js/lib/map/digger'
-// import CellularFixed from './util/cellular'
-// import DividedMaze from 'rot-js/lib/map/dividedmaze'
-// import IceyMaze from 'rot-js/lib/map/iceymaze'
-// import EllerMaze from 'rot-js/lib/map/ellermaze'
-// import Rogue from 'rot-js/lib/map/rogue'
-// import Uniform from 'rot-js/lib/map/uniform'
-import { Position } from './components'
 import { CONFIG } from './config'
-import { D4Data } from './game'
+import { Dungeon4Data } from './game'
+
+import { Level, SeenMap, TerrainMap } from './Level'
+import { qCreatePlayer, Entity } from './entity'
+import { Position } from './components'
 
 export interface World {
   activeLevel: Level
@@ -39,7 +17,7 @@ export interface World {
 
 export let activeLevel: Level
 
-export function World(d4data: D4Data): World {
+export function World(d4data: Dungeon4Data): World {
   // const globalEntities ???
   // let activeLevel: Level
 
@@ -58,10 +36,10 @@ export function World(d4data: D4Data): World {
     })
   )
 
-  console.log('doorPts:', doorPts)
-  console.log(doorPts.flat())
+  // console.log('doorPts:', doorPts)
+  // console.log(doorPts.flat())
   const doorsAt = doorPts.flat().map((pt) => [pt.x, pt.y])
-  console.log(doorsAt)
+  // console.log(doorsAt)
 
   // const doorsAt: number[][] = []
   // dungeon1.get((x, y, content) => {

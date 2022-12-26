@@ -6,9 +6,9 @@ const CONFIG = {
   refreshRate: 50,
   marginTop: 2,
   marginBot: 2,
-  initLevel: 'arena',
   levelWidth: 80,
   levelHeight: 20,
+  appInitial: 'dungeon4',
 }
 
 export { CONFIG }

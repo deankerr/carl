@@ -3,7 +3,7 @@
 import * as ROT from 'rot-js'
 
 type Point = { x: number; y: number }
-
+// todo negative checks etc everywhere
 export class Rect {
   // Top left to bottom right
   readonly x: number
@@ -18,6 +18,11 @@ export class Rect {
   readonly cx: number
   readonly cy: number
 
+  // debug label
+  // label = ''
+  id = -1
+  readonly area: number
+
   constructor(x: number, y: number, width: number, height: number) {
     this.x = x
     this.y = y
@@ -30,6 +35,8 @@ export class Rect {
 
     this.cx = this.x2 - Math.floor(this.width / 2)
     this.cy = this.y2 - Math.floor(this.height / 2)
+
+    this.area = width * height
   }
 
   // Travels through the x/y coords
@@ -59,11 +66,15 @@ export class Rect {
     return Rect.intersectsPt(this, pt)
   }
 
-  scale(by: number) {
-    const x = this.x - by
-    const y = this.y - by
-    const width = this.width + by * 2
-    const height = this.height + by * 2
+  contains(r: Rect) {
+    return this.x <= r.x && this.x2 >= r.x2 && this.y <= r.y && this.y2 >= r.y2
+  }
+
+  scale(xBy: number, yBy = xBy) {
+    const x = this.x - xBy
+    const y = this.y - yBy
+    const width = this.width + xBy * 2
+    const height = this.height + xBy * 2
     return Rect.at(x, y, width, height)
   }
 
@@ -88,11 +99,21 @@ export class Rect {
     return new Rect(x, y, width, height)
   }
 
-  static scaled(x: number, y: number, xScale: number, yScale: number) {
+  static atC(cx: number, cy: number, width: number, height: number) {
+    const x = cx - Math.floor(width / 2)
+    const y = cy - Math.floor(height / 2)
+    return new Rect(x, y, width, height)
+  }
+
+  static atxy2(x: number, y: number, x2: number, y2: number) {
+    return new Rect(x, y, x2 - x + 1, y2 - y + 1)
+  }
+
+  static scaled(cx: number, cy: number, xScale: number, yScale: number) {
     const width = 2 * xScale - 1
     const height = 2 * yScale - 1
-    const x1 = x - Math.floor(width / 2)
-    const y1 = y - Math.floor(height / 2)
+    const x1 = cx - Math.floor(width / 2)
+    const y1 = cy - Math.floor(height / 2)
 
     return new Rect(x1, y1, width, height)
   }

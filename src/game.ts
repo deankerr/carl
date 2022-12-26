@@ -6,13 +6,13 @@ import { Level } from './Level'
 import { FOV } from './components'
 import { HandlePlayer, HandleNPCs, UpdateFOV } from './Systems'
 import { World, activeLevel } from './World'
-// import { World } from './__test_World'
 
-import { Keys } from './keys'
-import { Dungeon4, CharMap, history, Point } from './generate/Dungeon4'
-import { Visualizer4 } from './generate/Visualizer4'
+// new
+// import { Keys } from './keys'
+import { Dungeon4Data } from './generate/dungeon4'
+export type { Dungeon4Data } from './generate/dungeon4'
 
-export type D4Data = [number[][], Point[]]
+// export type D4Data = [number[][], Point[]]
 // TODO Rethink using component fn names as keys, doesn't work with default minifier options
 
 let display: ROT.Display
@@ -25,65 +25,13 @@ let world: World
 let msg: string[] = ['You decide to exist, for a time.']
 let oldMsg: string[] = []
 
-let keys: Keys | undefined = new Keys()
-let vis: { start: (h: CharMap[]) => void; control: (key: string) => void; cleanup: () => void } | undefined
-
-// keys.add(newWorld)
-
 export function Game(d: ROT.Display) {
-  // console.log('Game init')
-  // ROT.RNG.setSeed(seed)
-  // TODO vis speed, controls msg
   display = d
-  keys?.add(readkeys)
-
-  // ? garbagec test
-  vis = Visualizer4(display)
-  const registry = new FinalizationRegistry((heldValue) => {
-    console.log(`%c!!!!!!!!!! ${heldValue}`, 'background-color: red')
-  })
-
-  registry.register(vis, 'vis!!')
-
-  let d4data: D4Data
-  d4()
-
-  function d4() {
-    try {
-      d4data = Dungeon4(CONFIG.levelWidth, CONFIG.levelHeight)
-    } finally {
-      vis?.start(history)
-    }
-  }
-
-  function readkeys(key: string) {
-    switch (key) {
-      case 'KeyN':
-        d4()
-        break
-      case 'KeyP':
-        start(d4data)
-        break
-      default:
-        vis?.control(key)
-    }
-  }
-
-  function start(d4data: D4Data) {
-    console.log('start')
-    // clean up
-    if (keys) {
-      keys.listener = null
-      keys = undefined
-    }
-    vis?.cleanup()
-    vis = undefined
-
-    newWorld(d4data)
-  }
+  return { newWorld, world }
+  // ? this should be a class?
 }
 
-function newWorld(d4data: D4Data) {
+function newWorld(d4data: Dungeon4Data) {
   world = World(d4data)
 
   const { player, activeLevel } = world
@@ -123,7 +71,7 @@ function update(event: KeyboardEvent) {
 
   // console.time('update')
   const action = input(event)
-  console.log(`=== update(${event.code}) === Level: ${activeLevel.levelID}`, action)
+  console.groupCollapsed(`=== update(${event.code}) === Level: ${activeLevel.levelID}`, action)
 
   if (action === null) return console.log('No action taken')
 
@@ -155,6 +103,8 @@ function update(event: KeyboardEvent) {
 
   render()
   console.log(`--- update complete --- ${Date.now() - utime}ms`)
+  console.groupEnd()
+
   // console.timeEnd('update')
 }
 
