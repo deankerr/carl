@@ -1,28 +1,30 @@
-import { ConsoleRender } from './components'
-
-export type Terrain = {
-  id: string
-  renderVisible: ConsoleRender
-  renderSeen: ConsoleRender
+export interface Terrain {
+  name: string
   walkable: boolean
   transparent: boolean
+  console: {
+    char: string
+    color: string
+  }
 }
 
-type TerrainDict = { [key: number]: Terrain }
-
-export const TerrainDict: TerrainDict = {
+export const TerrainDictionary: { [key: number]: Terrain } = {
   0: {
-    id: 'path',
-    renderVisible: ConsoleRender('.', '#666'),
-    renderSeen: ConsoleRender('.', '#444'),
+    name: 'path',
     walkable: true,
     transparent: true,
+    console: {
+      char: '.',
+      color: '#666',
+    },
   },
   1: {
-    id: 'wall',
-    renderVisible: ConsoleRender('#', '#666'),
-    renderSeen: ConsoleRender('#', '#444'),
+    name: 'wall',
     walkable: false,
     transparent: false,
+    console: {
+      char: '#',
+      color: '#666',
+    },
   },
 }

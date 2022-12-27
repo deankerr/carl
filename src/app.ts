@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // TODO use window.gameSeed = '111' / localStorage
 import { CONFIG } from './config'
 import { createDisplay } from './util/display'
@@ -8,11 +9,12 @@ let display: ROT.Display
 const keys: Keys = new Keys()
 
 // game
-import { Game } from './game'
+// import { Game } from './__dep/__game'
+import { Game } from './Game'
 
 // dungeon 4
-import { dungeon4, history, Dungeon4Data, modulesAvailable } from './generate/dungeon4'
-import { visualizer4, Visualizer4 } from './generate/visualizer4'
+import { createDungeon4, history, Dungeon4Data, modulesAvailable } from './Generate/dungeon4'
+import { visualizer4, Visualizer4 } from './Generate/visualizer4'
 
 // Dungeon 4
 let visual4: Visualizer4
@@ -25,11 +27,14 @@ export function app() {
   display = createDisplay()
   window.display = [display]
 
-  keys.add(input)
+  // keys.add(inputD4)
 
   // ROT.RNG.setSeed(1111)
 
   switch (CONFIG.appInitial) {
+    case 'game2':
+      createGame2()
+      break
     case 'dungeon4':
       startdungeon4()
       break
@@ -37,10 +42,10 @@ export function app() {
       if (d4data) startgame(d4data)
       break
     default:
-      display.drawText(0, 0, 'Welcome to App! I have nothing to do.')
+      display.drawText(0, 0, 'Welcome to App! I have nothing to do. (' + CONFIG.appInitial + ')?')
   }
 
-  function input(key: string) {
+  function inputD4(key: string) {
     switch (key) {
       case 'KeyQ':
         d4modules.next()
@@ -62,7 +67,7 @@ export function app() {
 
     console.log('d4modules.current:', d4modules.current())
     try {
-      d4data = dungeon4({ moduleRoomGen: d4modules.current() })
+      d4data = createDungeon4({ moduleRoomGen: d4modules.current() })
     } catch (error) {
       console.groupEnd()
       console.groupEnd()
@@ -81,10 +86,15 @@ export function app() {
     }
     visual4.cleanup()
 
-    const game = Game(display)
-    game.newWorld(d4data)
-    window.game = game
+    // const game = Game(display)
+    // game.newWorld(d4data)
+    // window.game = game
   }
+}
+
+function createGame2() {
+  if (keys) keys.cleanup
+  window.game = new Game(display)
 }
 
 // Module handler

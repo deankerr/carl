@@ -1,7 +1,7 @@
 import { Path, RNG } from 'rot-js'
 import { NPCChasePlayer, NPC, Position, NPCWander } from '../components'
-import { Entity } from '../entity'
-import { Level } from '../Level'
+import { Entity } from '../__dep/__entity'
+import { Level } from '../__Level'
 import { Direction, Move } from '../Actions'
 import { Die } from '../components/Die'
 

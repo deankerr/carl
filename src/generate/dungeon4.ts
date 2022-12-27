@@ -85,7 +85,7 @@ let CONFIG: GEN_CONFIG
 export let history: CharMap[]
 let current: CharMap = []
 
-export function dungeon4(newConfig?: Partial<GEN_CONFIG>): Dungeon4Data | null {
+export function createDungeon4(newConfig?: Partial<GEN_CONFIG>): Dungeon4Data | null {
   const time = Date.now()
   console.log('%c   Welcome to Dungeon4   ', 'background-color: pink; font-weight: bold')
   CONFIG = { ...DEFAULT_CONFIG, ...newConfig }

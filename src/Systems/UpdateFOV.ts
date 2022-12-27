@@ -1,7 +1,7 @@
 import * as ROT from 'rot-js'
 import { FOV, Position } from '../components'
-import { Entity } from '../entity'
-import { Level } from '../Level'
+import { Entity } from '../__dep/__entity'
+import { Level } from '../__Level'
 
 export function UpdateFOV(entity: Entity, level: Level) {
   if (!entity.has(FOV) || !entity.has(Position)) {

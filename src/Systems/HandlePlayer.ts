@@ -2,8 +2,8 @@ import * as ROT from 'rot-js'
 import { Action } from '../Actions'
 import { NPC, Position } from '../components'
 import { Die } from '../components/Die'
-import { Entity } from '../entity'
-import { Level } from '../Level'
+import { Entity } from '../__dep/__entity'
+import { Level } from '../__Level'
 
 export function HandlePlayer(pc: Entity, action: Action, level: Level, msg: string[]) {
   console.log(`=== Handle Player === `)
