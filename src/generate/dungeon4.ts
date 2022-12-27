@@ -12,6 +12,7 @@
 import * as ROT from 'rot-js'
 import { Rect } from './Rectangle'
 import { digCorridor, digRect, digRoom, digPts } from './dungeon4/dig'
+import { copy } from '../util/util'
 
 // Modules
 
@@ -85,9 +86,9 @@ let CONFIG: GEN_CONFIG
 export let history: CharMap[]
 let current: CharMap = []
 
-export function createDungeon4(newConfig?: Partial<GEN_CONFIG>): Dungeon4Data | null {
+export function createDungeon4(newConfig?: Partial<GEN_CONFIG>): [number[][], Point[]] {
   const time = Date.now()
-  console.log('%c   Welcome to Dungeon4   ', 'background-color: pink; font-weight: bold')
+  console.groupCollapsed('%c   Welcome to Dungeon4   ', 'background-color: pink; font-weight: bold')
   CONFIG = { ...DEFAULT_CONFIG, ...newConfig }
   console.log('CONFIG:', CONFIG)
 
@@ -118,20 +119,8 @@ export function createDungeon4(newConfig?: Partial<GEN_CONFIG>): Dungeon4Data | 
   // * Generate Rooms
   const [rooms, roomTime] = generateRooms(CONFIG)
 
-  // abort
-  if (rooms.length == 0) {
-    console.warn('rooms == 0, aborting')
-    return null
-  }
-
   // * Generate Corridors
   const [corridors, corrTime] = generateCorridors(rooms)
-
-  // abort
-  if (corridors.length === 0) {
-    console.warn('corridors == 0, aborting')
-    return null
-  }
 
   const [final, doorPts] = finalize(rooms, corridors)
 
@@ -140,6 +129,7 @@ export function createDungeon4(newConfig?: Partial<GEN_CONFIG>): Dungeon4Data | 
   const t = Date.now() - time
   snapshot(final, `Complete! Rooms: ${rooms.length}, Corridors: ${corridors.length} Time: ` + t + 'ms', 'done')
 
+  console.groupEnd()
   const logMsg = `%c Dungeon4 Complete (${t}ms), Rooms: ${rooms.length} (${roomTime}ms), Corridors: ${corridors.length} (${corrTime}ms) `
   consoleLogMap(final, true, logMsg, 'background-color: pink')
 
@@ -296,10 +286,6 @@ export function consoleLogMap(map: CharMap, group = false, label = 'CharMap', st
   console.groupEnd()
 }
 
-export function copy(map: CharMap): CharMap {
-  return JSON.parse(JSON.stringify(map))
-}
-
 export function rnd(min: number, max: number) {
   return ROT.RNG.getUniformInt(min, max)
 }
@@ -376,3 +362,4 @@ export class Corridor {
     this.label = label
   }
 }
+export { copy }

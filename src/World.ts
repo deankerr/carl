@@ -1,20 +1,28 @@
-import { Level } from './Level'
-import * as Generate from './Generate/'
+// World handles entities? ECS helper?
+
+import { ConsoleRender, Position } from './Components'
+import { Entity } from './Entity'
+import { State } from './State'
 
 export class World {
-  levels: Level[] //Level[]
-  active: Level // Level
+  constructor(public state: State) {
+    // demo entities
+    const e = this.createEntity()
+    e.components.Position = Position(8, 8)
+    e.components.ConsoleRender = ConsoleRender('@', 'brown')
+    state.addEntity(e)
 
-  constructor() {
-    console.log('new World')
+    const e2 = this.createEntity()
+    e2.components.Position = Position(12, 12)
+    e2.components.ConsoleRender = ConsoleRender('g', 'blue')
+    state.addEntity(e2)
 
-    // get level
-    const terrainGrid = Generate.Dungeon4()
+    // e.components.ConsoleRender.char = 'o'
+  }
 
-    const level = new Level(terrainGrid)
-    this.active = level
-    this.levels = [level]
-
-    console.log('level', level)
+  createEntity() {
+    console.log('World: createEntity')
+    const id = this.state.nextEntityCount()
+    return new Entity(id)
   }
 }

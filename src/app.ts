@@ -9,7 +9,6 @@ let display: ROT.Display
 const keys: Keys = new Keys()
 
 // game
-// import { Game } from './__dep/__game'
 import { Game } from './Game'
 
 // dungeon 4
