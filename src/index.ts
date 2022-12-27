@@ -1,7 +1,5 @@
 import fontURL from '../assets/Inconsolata.otf'
-import { CONFIG } from './config'
 import { app } from './app'
-import { createDisplay } from './util/display'
 
 console.log('it begins')
 const font = new FontFace('Inconsolata', `url(${fontURL})`)
@@ -19,14 +17,5 @@ function init() {
     return
   }
 
-  const display = createDisplay()
-
-  app(display)
-}
-
-declare global {
-  interface Window {
-    game: object
-    app: object
-  }
+  app()
 }

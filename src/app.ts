@@ -1,7 +1,11 @@
 // TODO use window.gameSeed = '111' / localStorage
 import { CONFIG } from './config'
+import { createDisplay } from './util/display'
 import * as ROT from 'rot-js'
 import { Keys } from './util/Keys'
+
+let display: ROT.Display
+const keys: Keys = new Keys()
 
 // game
 import { Game } from './game'
@@ -10,18 +14,17 @@ import { Game } from './game'
 import { dungeon4, history, Dungeon4Data, modulesAvailable } from './generate/dungeon4'
 import { visualizer4, Visualizer4 } from './generate/visualizer4'
 
-let display: ROT.Display
-const keys: Keys = new Keys()
-
 // Dungeon 4
 let visual4: Visualizer4
 let d4data: Dungeon4Data | null
-
 const d4modules = mrModules()
 
 // For handling running things like dungeon visualizers/experiments without messing up Game()
-export function app(d: ROT.Display) {
-  display = d
+export function app() {
+  // main display
+  display = createDisplay()
+  window.display = [display]
+
   keys.add(input)
 
   // ROT.RNG.setSeed(1111)
@@ -105,5 +108,6 @@ function mrModules() {
 declare global {
   interface Window {
     game: object
+    display: ROT.Display[]
   }
 }
