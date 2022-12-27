@@ -1,4 +1,4 @@
-import { ConsoleRender } from '../components'
+import { ConsoleRender } from './components'
 
 export type Terrain = {
   id: string

@@ -9,7 +9,7 @@ import {
   NPCWander,
   Player,
   Position,
-} from '../components'
+} from './components'
 
 export interface Entity {
   id: string

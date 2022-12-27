@@ -1,7 +1,7 @@
 import * as ROT from 'rot-js'
 import { Action } from '../Actions'
-import { NPC, Position } from '../components'
-import { Die } from '../components/Die'
+import { NPC, Position } from '../__dep/components'
+import { Die } from '../__dep/components/Die'
 import { Entity } from '../__dep/__entity'
 import { Level } from '../__Level'
 

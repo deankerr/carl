@@ -1,10 +1,10 @@
 import { CONFIG } from '../config'
 import * as ROT from 'rot-js'
 import { Entity } from './__entity'
-import { input } from '../input'
+import { input } from './input'
 import { Level } from './__Level'
-import { FOV } from '../components'
-import { HandlePlayer, HandleNPCs, UpdateFOV } from '../Systems'
+import { FOV } from './components'
+import { HandlePlayer, HandleNPCs, UpdateFOV } from './Systems'
 import { World, activeLevel } from './__World'
 
 // new

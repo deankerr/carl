@@ -1,5 +1,5 @@
 import * as ROT from 'rot-js'
-import { BlockMovement, ConsoleRender, Position } from '../components'
+import { BlockMovement, ConsoleRender, Position } from './components'
 import { Entity, qCreateDoggy, qCreateDoorAt, qCreateOrc } from './__entity'
 import { Terrain, TerrainDict } from './__Terrain'
 

@@ -3,7 +3,7 @@ import { Dungeon4Data } from './__game'
 
 import { Level, SeenMap, TerrainMap } from './__Level'
 import { qCreatePlayer, Entity } from './__entity'
-import { Position } from '../components'
+import { Position } from './components'
 
 export interface World {
   activeLevel: Level

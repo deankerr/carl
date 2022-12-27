@@ -1,9 +1,9 @@
 import { Path, RNG } from 'rot-js'
-import { NPCChasePlayer, NPC, Position, NPCWander } from '../components'
+import { NPCChasePlayer, NPC, Position, NPCWander } from '../__dep/components'
 import { Entity } from '../__dep/__entity'
 import { Level } from '../__Level'
 import { Direction, Move } from '../Actions'
-import { Die } from '../components/Die'
+import { Die } from '../__dep/components/Die'
 
 export function HandleNPCs(level: Level, player: Entity, msg: string[]) {
   console.log('== Handle NPCs ==')

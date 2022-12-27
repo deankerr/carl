@@ -1,5 +1,5 @@
 import * as ROT from 'rot-js'
-import { FOV, Position } from '../components'
+import { FOV, Position } from '../__dep/components'
 import { Entity } from '../__dep/__entity'
 import { Level } from '../__Level'
 
