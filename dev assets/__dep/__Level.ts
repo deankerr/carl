@@ -10,7 +10,7 @@ type EntityMapCallback = (x: number, y: number, r: ConsoleRender) => void
 type TMapCallback = (x: number, y: number, t: Terrain) => void
 
 let id = 0
-
+const copy = 1
 export type Level = {
   levelData: {
     entities: Entity[]

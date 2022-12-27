@@ -16,5 +16,5 @@
     "skipLibCheck": true
   },
   "include": ["src"],
-  "exclude": ["./__dep/"]
+  "exclude": ["dev assets/__dep/**.ts"]
 }
