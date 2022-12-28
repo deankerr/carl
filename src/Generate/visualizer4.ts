@@ -2,7 +2,7 @@
 // TODO visualizer can create its own display, can coexist with game/multiple
 // ? TODO Vis reads colour pallette
 import * as ROT from 'rot-js'
-import { CharMap, RoomModules } from './dungeon4'
+import { CharMap, RoomModules } from './dungeon4/dungeon4'
 
 export type Visualizer4 = {
   start: (h: CharMap[], module: RoomModules) => void

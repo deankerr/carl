@@ -12,7 +12,7 @@ const keys: Keys = new Keys()
 import { Game } from './Game'
 
 // dungeon 4
-import { createDungeon4, history, Dungeon4Data, modulesAvailable } from './Generate/dungeon4'
+import { create, history, Dungeon4Data, modulesAvailable } from './Generate/dungeon4/dungeon4'
 import { visualizer4, Visualizer4 } from './Generate/visualizer4'
 
 // Dungeon 4
@@ -21,7 +21,7 @@ let d4data: Dungeon4Data | null
 const d4modules = mrModules()
 
 // For handling running things like dungeon visualizers/experiments without messing up Game()
-export function app() {
+export function App() {
   // main display
   display = createDisplay()
   window.display = [display]
@@ -66,7 +66,7 @@ export function app() {
 
     console.log('d4modules.current:', d4modules.current())
     try {
-      d4data = createDungeon4({ moduleRoomGen: d4modules.current() })
+      d4data = create({ moduleRoomGen: d4modules.current() })
     } catch (error) {
       console.groupEnd()
       console.groupEnd()

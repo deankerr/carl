@@ -1,4 +1,4 @@
-import { GEN_CONFIG, createBlankMap, rectInBounds, Room, snapshot, rnd } from '../dungeon4'
+import { GEN_CONFIG, createBlankMap, rectInBounds, Room, snapshot, rnd } from './dungeon4'
 import { digRect, digRoom } from './dig'
 
 // my original random room placement implementation

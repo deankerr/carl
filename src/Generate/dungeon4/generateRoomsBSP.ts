@@ -1,4 +1,4 @@
-import { createBlankMap, snapshot, rnd, CharMap, Room, floor, rndO, max, GEN_CONFIG } from '../dungeon4'
+import { createBlankMap, snapshot, rnd, CharMap, Room, floor, rndO, max, GEN_CONFIG } from './dungeon4'
 import { digRect, digRectCycleChars, digRoom } from './dig'
 import { Rect } from '../Rectangle'
 

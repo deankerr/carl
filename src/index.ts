@@ -1,5 +1,5 @@
 import fontURL from '../assets/Inconsolata.otf'
-import { app } from './app'
+import { App } from './App'
 
 console.log('it begins')
 const font = new FontFace('Inconsolata', `url(${fontURL})`)
@@ -17,5 +17,5 @@ function init() {
     return
   }
 
-  app()
+  App()
 }

@@ -1,6 +1,6 @@
-import { CharMap, Room, Corridor, Point } from '../dungeon4'
+import { CharMap, Room, Corridor, Point } from './dungeon4'
 import { Rect } from '../Rectangle'
-import { inBounds, copy } from '../dungeon4'
+import { inBounds, copy } from './dungeon4'
 
 export function digCorridor(map: CharMap, corridor: Corridor | Corridor[], char = '.', borderChar = 'w') {
   // ? a shorter list would be only overwrite blank or wall?

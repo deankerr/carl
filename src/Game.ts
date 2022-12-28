@@ -3,10 +3,12 @@
 
 // import { CONFIG } from './config'
 import * as ROT from 'rot-js'
-import { World } from './World'
-import { TerrainDictionary } from './Terrain'
+
 import { State } from './State'
 import { initialState } from './Generate/initial'
+import { World } from './World'
+
+import { TerrainDictionary } from './Terrain'
 import * as C from './Components'
 
 export class Game {
@@ -33,7 +35,7 @@ export class Game {
       this.display.draw(x, top + y, char, color, null)
     })
 
-    // render
+    // entities
     const allEntities = this.state.__state.activeLevel.entities
     const rEnt = allEntities.filter((e) => e.components.ConsoleRender && e.components.Position)
 

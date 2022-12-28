@@ -10,21 +10,21 @@
 // TODO return Room[], Corridor[] along with data
 
 import * as ROT from 'rot-js'
-import { Rect } from './Rectangle'
-import { digCorridor, digRect, digRoom, digPts } from './dungeon4/dig'
-import { copy } from '../util/util'
+import { Rect } from '../Rectangle'
+import { digCorridor, digRect, digRoom, digPts } from './dig'
+import { copy } from '../../util/util'
 
 // Modules
 
-import { generateRoomsClassic } from './dungeon4/generateRoomsClassic'
-import { generateRoomsBSP } from './dungeon4/generateRoomsBSP'
+import { generateRoomsClassic } from './generateRoomsClassic'
+import { generateRoomsBSP } from './generateRoomsBSP'
 
 export enum RoomModules {
   BSP = 'BSP',
   Classic = 'Classic',
 }
 
-import { generateCorridorsClassic } from './dungeon4/generateCorridorsClassic'
+import { generateCorridorsClassic } from './generateCorridorsClassic'
 
 export enum CorridorModules {
   Classic = 'Classic',
@@ -86,7 +86,7 @@ let CONFIG: GEN_CONFIG
 export let history: CharMap[]
 let current: CharMap = []
 
-export function createDungeon4(newConfig?: Partial<GEN_CONFIG>): [number[][], Point[]] {
+export function create(newConfig?: Partial<GEN_CONFIG>): [number[][], Point[]] {
   const time = Date.now()
   console.groupCollapsed('%c   Welcome to Dungeon4   ', 'background-color: pink; font-weight: bold')
   CONFIG = { ...DEFAULT_CONFIG, ...newConfig }

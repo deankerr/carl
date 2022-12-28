@@ -23,7 +23,7 @@
 // my original corridor generator. It makes fairly linear dungeons, is slow and often fails.
 
 import * as ROT from 'rot-js'
-import { CharMap, copy, Corridor, createBlankMap, inBounds, Point, Room, snapshot } from '../dungeon4'
+import { CharMap, copy, Corridor, createBlankMap, inBounds, Point, Room, snapshot } from './dungeon4'
 import { Rect } from '../Rectangle'
 import { digCorridor, digPts, digRect, digRoom } from './dig'
 
