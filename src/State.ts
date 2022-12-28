@@ -7,7 +7,7 @@
 // * none or very few instanced objects actually needed?
 import { Entity } from './Entity'
 // import * as Component from './Components'
-import { str } from './util/util'
+import { copy, str } from './util/util'
 import { Grid } from './Core/Grid'
 
 // type StateObject = {
@@ -15,16 +15,16 @@ import { Grid } from './Core/Grid'
 //   [key: string]: Entity[]
 // }
 
-type leLvel = {
+type Level2 = {
   label: string
   entities: Entity[]
   terrain: Grid<number>
 }
 
 export type StateObject = {
-  activeLevel: leLvel
+  activeLevel: Level2
   entityCount: number
-  level: leLvel
+  level: Level2
 }
 
 // ? Think of a better solution
@@ -37,16 +37,17 @@ function log(s: string) {
 
 export class State {
   __state
-
-  // stateIce
+  stateIce
 
   constructor(initialState: StateObject) {
     this.__state = initialState
 
     console.log('this.__state:', this.__state)
     log('Start')
-    // this.stateIce = this.deepFreeze(copy(state))
-    // this.stateIce.entities = []
+
+    console.groupCollapsed('deepFreeze')
+    this.stateIce = this.deepFreeze(copy(this.__state))
+    console.groupEnd()
   }
 
   nextEntityCount() {
@@ -61,22 +62,17 @@ export class State {
     console.log(this.__state.activeLevel.entities)
   }
 
-  // deepFreeze<T>(stateCopy: T): T {
-  //   const keys = Reflect.ownKeys(stateCopy)
-  //   console.log('stateCopy:', stateCopy)
-  //   console.log('keys:', keys)
-
-  //   for (const name of keys) {
-  //     console.log('STATE name:', name)
-  //     const value = stateCopy[name]
-
-  //     if ((value && typeof value === 'object') || typeof value === 'function') {
-  //       this.deepFreeze(value)
-  //     }
-  //   }
-
-  //   return Object.freeze(stateCopy)
-  // }
+  // TODO only pass in what we need to. most state wont change, eg terrain almost never except when changing level
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  deepFreeze(obj: any) {
+    console.log('start', obj)
+    Object.keys(obj).forEach((prop) => {
+      if (typeof obj[prop] === 'object' && !Object.isFrozen(obj[prop])) {
+        this.deepFreeze(obj[prop])
+      }
+    })
+    return Object.freeze(obj)
+  }
 }
 // the "get" method seems impossible, try having a public frozen state
 // OR return the entire object
