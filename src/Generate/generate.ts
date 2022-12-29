@@ -11,6 +11,6 @@ import { create } from './dungeon4/'
 export function dungeon4() {
   const data = create()
   if (!data) throw new Error('Dungeon gen failed.')
-
-  return Grid.from(data[0])
+  const [terrainData, rooms] = data
+  return { terrain: Grid.from(terrainData), rooms }
 }

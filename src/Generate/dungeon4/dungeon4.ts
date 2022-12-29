@@ -86,7 +86,7 @@ let CONFIG: GEN_CONFIG
 export let history: CharMap[]
 let current: CharMap = []
 
-export function create(newConfig?: Partial<GEN_CONFIG>): [number[][], Point[]] {
+export function create(newConfig?: Partial<GEN_CONFIG>): [number[][], Room[], Point[]] {
   const time = Date.now()
   console.groupCollapsed('%c   Welcome to Dungeon4   ', 'background-color: pink; font-weight: bold')
   CONFIG = { ...DEFAULT_CONFIG, ...newConfig }
@@ -122,7 +122,7 @@ export function create(newConfig?: Partial<GEN_CONFIG>): [number[][], Point[]] {
   // * Generate Corridors
   const [corridors, corrTime] = generateCorridors(rooms)
 
-  const [final, doorPts] = finalize(rooms, corridors)
+  const [final, shiftedRooms, doorPts] = finalize(rooms, corridors)
 
   const terrain = generateTerrainData(final)
 
@@ -133,13 +133,13 @@ export function create(newConfig?: Partial<GEN_CONFIG>): [number[][], Point[]] {
   const logMsg = `%c Dungeon4 Complete (${t}ms), Rooms: ${rooms.length} (${roomTime}ms), Corridors: ${corridors.length} (${corrTime}ms) `
   consoleLogMap(final, true, logMsg, 'background-color: pink')
 
-  return [terrain, doorPts]
+  return [terrain, shiftedRooms, doorPts]
 }
 
 // #region ===== 3. Finalize =====
 
 // some finishing touches
-function finalize(rooms: Room[], corridors: Corridor[]): [CharMap, Point[]] {
+function finalize(rooms: Room[], corridors: Corridor[]): [CharMap, Room[], Point[]] {
   // Assemble the complete level
   let final = createBlankMap()
   final = digRoom(final, rooms, '.', '#', false)
@@ -149,10 +149,19 @@ function finalize(rooms: Room[], corridors: Corridor[]): [CharMap, Point[]] {
 
   if (CONFIG.shiftFinal) {
     const [finalS, dx, dy] = centerLevel(finalD, rooms)
+    // feature position info needs to be updated
+    console.log('roomshift?')
+    const shiftedRooms = rooms.map((r) => {
+      const { x, y, width, height } = r.rect
+      console.log('old rect', r)
+      const rect = Rect.at(x + dx, y + dy, width, height)
+      console.log('new rect', rect)
+      return new Room(rect, r.label, 1)
+    })
     const shiftPts = doorPts.map((pt) => ({ x: pt.x + dx, y: pt.y + dy }))
-    return [finalS, shiftPts]
+    return [finalS, shiftedRooms, shiftPts]
   }
-  return [finalD, doorPts]
+  return [finalD, rooms, doorPts]
 }
 
 function createDoors(level: CharMap, rooms: Room[]): [CharMap, Point[]] {
@@ -173,11 +182,11 @@ function createDoors(level: CharMap, rooms: Room[]): [CharMap, Point[]] {
 function centerLevel(level: CharMap, rooms: Room[]): [CharMap, number, number] {
   const xMin = rooms.reduce((prev, curr) => (prev.border.x < curr.border.x ? prev : curr)).border.x
   const xMax = rooms.reduce((prev, curr) => (prev.border.x2 > curr.border.x2 ? prev : curr)).border.x2
-  const dx = Math.floor((CONFIG.width - 1 - xMax - xMin) / 2)
+  let dx = Math.floor((CONFIG.width - 1 - xMax - xMin) / 2)
 
   const yMin = rooms.reduce((prev, curr) => (prev.border.y < curr.border.y ? prev : curr)).border.y
   const yMax = rooms.reduce((prev, curr) => (prev.border.y2 > curr.border.y2 ? prev : curr)).border.y2
-  const dy = Math.floor((CONFIG.height - 1 - yMax - yMin) / 2)
+  let dy = Math.floor((CONFIG.height - 1 - yMax - yMin) / 2)
 
   dx !== 0 && dy !== 0 && console.log(`Shift level: x ${dx} y: ${dy}`)
 
@@ -187,13 +196,13 @@ function centerLevel(level: CharMap, rooms: Room[]): [CharMap, number, number] {
   if (dy < -1 || dy > 1) {
     const yDir = dy < 0 ? -1 : 1
     for (let i = 0; i < Math.abs(dy); i++) centeredLevel = transposeLevelY(centeredLevel, yDir)
-  }
+  } else dy = 0
 
   // if (!(dx === 0)) {
   if (dx < -1 || dx > 1) {
     const xDir = dx < 0 ? -1 : 1
     for (let i = 0; i < Math.abs(dx); i++) centeredLevel = transposeLevelX(centeredLevel, xDir)
-  }
+  } else dx = 0
 
   return [centeredLevel, dx, dy]
 }
@@ -332,7 +341,7 @@ export function larger(n1: number, n2: number) {
 }
 
 // Types/Features
-export type Dungeon4Data = [number[][], Point[]]
+export type Dungeon4Data = [number[][], Room[], Point[]]
 export type CharMap = string[][]
 export type Point = { x: number; y: number }
 
