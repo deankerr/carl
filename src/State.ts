@@ -6,7 +6,6 @@
 
 import { Entity } from './Components'
 import { Level } from './Level'
-import { copy, str } from './util/util'
 import { DeepReadonly } from 'ts-essentials'
 /* 
   state object spec:

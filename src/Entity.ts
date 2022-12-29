@@ -1,4 +1,4 @@
-import { Components, Entity, position, render } from './Components'
+import { Components, Entity, position, render, tagPlayer } from './Components'
 
 export class Builder {
   components: Components = {}
@@ -15,6 +15,11 @@ export class Builder {
 
   render(char: string, color: string) {
     this.components = { ...render(char, color), ...this.components }
+    return this
+  }
+
+  tagPlayer() {
+    this.components = { ...tagPlayer(), ...this.components }
     return this
   }
 }

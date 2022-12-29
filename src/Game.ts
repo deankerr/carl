@@ -7,8 +7,8 @@ import * as ROT from 'rot-js'
 
 import { State } from './State'
 import { World } from './World'
-
 import { TerrainDictionary } from './Terrain'
+import { mouseClick } from './util/display'
 
 export class Game {
   display: ROT.Display
@@ -21,6 +21,12 @@ export class Game {
 
     this.state = new State()
     this.world = new World(this.state)
+
+    // mouse click coords
+    mouseClick(d, (event) => {
+      const pt = d.eventToPosition(event)
+      console.log(`${pt[0]},${pt[1] + 2}`)
+    })
 
     this.render()
   }
@@ -41,7 +47,11 @@ export class Game {
     const entities = this.world.get('render', 'position')
 
     for (const { render, position } of entities) {
-      this.display.draw(position.x, position.y, render.char, render.color, null)
+      this.display.draw(position.x, top + position.y, render.char, render.color, null)
     }
+
+    // player again
+    const player = this.world.get('tagPlayer', 'position', 'render')
+    this.display.draw(player[0].position.x, top + player[0].position.y, player[0].render.char, 'white', null)
   }
 }

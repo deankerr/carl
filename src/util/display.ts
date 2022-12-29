@@ -29,3 +29,17 @@ function resize(display: ROT.Display) {
   const compSize = display.computeFontSize(screenW, screenH)
   display.setOptions({ fontSize: compSize - 1 })
 }
+
+export function mouseMove(d: ROT.Display, callback: (event: MouseEvent) => unknown) {
+  const ctx = d.getContainer()
+  if (ctx) {
+    ctx.addEventListener('mousemove', callback)
+  }
+}
+
+export function mouseClick(d: ROT.Display, callback: (event: MouseEvent) => unknown) {
+  const ctx = d.getContainer()
+  if (ctx) {
+    ctx.addEventListener('mousedown', callback)
+  }
+}
