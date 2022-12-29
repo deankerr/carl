@@ -1,8 +1,6 @@
 // The central, immutable (??) repository for all game world state (but not World??? level?? Are they just interfaces?)
 // The plan: lives in mutable form in here only, Object.freeze on everything handed out
 
-// state.entities['monster-5']. .. ?
-
 // * State is the only truth. everything else only exists for each turn cycle
 // * none or very few instanced objects actually needed?
 
@@ -50,12 +48,6 @@ export class State {
     log('Start')
 
     this.current = this.__state
-
-    // json copy destroys class methods
-
-    // console.groupCollapsed('deepFreeze')
-    // this.current = this.deepFreeze(copy(this.__state))
-    // console.groupEnd()
   }
 
   nextEntityCount() {
@@ -70,23 +62,7 @@ export class State {
     this.__state.activeLevel.entities.push(entity)
     console.log(this.__state.activeLevel.entities)
   }
-
-  // TODO only pass in what we need to. most state wont change, eg terrain almost never except when changing level
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private deepFreeze(obj: any) {
-    console.log('start', obj)
-    Object.keys(obj).forEach((prop) => {
-      if (typeof obj[prop] === 'object' && !Object.isFrozen(obj[prop])) {
-        this.deepFreeze(obj[prop])
-      }
-    })
-    return Object.freeze(obj)
-  }
 }
-
-// get() {
-//   return this.state[key]
-// }
 
 // TODO better log solution
 const stateLog: string[] = []
@@ -95,3 +71,16 @@ function log(s: string) {
   console.log('stateLog:', s)
   console.log(stateLog)
 }
+
+// DeepReadonly is working for now
+// // only pass in what we need to. most state wont change, eg terrain almost never except when changing level
+//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//   private deepFreeze(obj: any) {
+//     console.log('start', obj)
+//     Object.keys(obj).forEach((prop) => {
+//       if (typeof obj[prop] === 'object' && !Object.isFrozen(obj[prop])) {
+//         this.deepFreeze(obj[prop])
+//       }
+//     })
+//     return Object.freeze(obj)
+// }
