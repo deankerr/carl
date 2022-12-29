@@ -26,8 +26,6 @@ export function App() {
   display = createDisplay()
   window.display = [display]
 
-  // keys.add(inputD4)
-
   // ROT.RNG.setSeed(1111)
 
   switch (CONFIG.appInitial) {
@@ -35,10 +33,11 @@ export function App() {
       createGame2()
       break
     case 'dungeon4':
+      keys.add(inputD4)
       startdungeon4()
       break
     case 'game':
-      if (d4data) startgame(d4data)
+      // if (d4data) startgame(d4data)
       break
     default:
       display.drawText(0, 0, 'Welcome to App! I have nothing to do. (' + CONFIG.appInitial + ')?')
@@ -54,7 +53,7 @@ export function App() {
         startdungeon4()
         break
       case 'KeyP':
-        if (d4data) startgame(d4data)
+        // if (d4data) startgame(d4data)
         break
       default:
         visual4.control(key)
@@ -78,17 +77,17 @@ export function App() {
     }
   }
 
-  function startgame(d4data: Dungeon4Data) {
-    // clean up
-    if (keys) {
-      keys.cleanup()
-    }
-    visual4.cleanup()
+  // function startgame(d4data: Dungeon4Data) {
+  //   // clean up
+  //   if (keys) {
+  //     keys.cleanup()
+  //   }
+  //   visual4.cleanup()
 
-    // const game = Game(display)
-    // game.newWorld(d4data)
-    // window.game = game
-  }
+  //   const game = Game(display)
+  //   game.newWorld(d4data)
+  //   window.game = game
+  // }
 }
 
 function createGame2() {
