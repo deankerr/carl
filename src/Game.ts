@@ -2,14 +2,13 @@
 // the main update/render/input loop. Executes Systems loop
 
 // import { CONFIG } from './config'
+
 import * as ROT from 'rot-js'
 
 import { State } from './State'
-import { initialState } from './Generate/initial'
 import { World } from './World'
 
 import { TerrainDictionary } from './Terrain'
-import * as C from './Components'
 
 export class Game {
   display: ROT.Display
@@ -20,7 +19,7 @@ export class Game {
     console.log('new Game2')
     this.display = d
 
-    this.state = new State(initialState())
+    this.state = new State()
     this.world = new World(this.state)
 
     this.render()
@@ -28,21 +27,21 @@ export class Game {
 
   render() {
     // terrain
-    const terrain = this.state.__state.level.terrain
+    const terrain = this.state.current.activeLevel.terrain
+
     const top = 2
+    console.log('terrain:', terrain)
+    console.log('private:', this.state.__state.activeLevel.terrain)
     terrain.each((x, y, t) => {
       const { char, color } = TerrainDictionary[t].console
       this.display.draw(x, top + y, char, color, null)
     })
 
     // entities
-    const allEntities = this.state.__state.activeLevel.entities
-    const rEnt = allEntities.filter((e) => e.components.ConsoleRender && e.components.Position)
+    const entities = this.world.get('render', 'position')
 
-    rEnt.forEach((e) => {
-      const { x, y } = e.components.Position as C.Position
-      const { char, color } = e.components.ConsoleRender as C.ConsoleRender
-      this.display.draw(x, y, char, color, null)
-    })
+    for (const { render, position } of entities) {
+      this.display.draw(position.x, position.y, render.char, render.color, null)
+    }
   }
 }

@@ -1,28 +1,29 @@
 // World handles entities? ECS helper?
 
-import { ConsoleRender, Position } from './Components'
-import { Entity } from './Entity'
+// import { createConsoleRender, createPosition } from './Components'
+import { Entity } from './Components'
 import { State } from './State'
+import { Builder } from './Entity'
 
 export class World {
   constructor(public state: State) {
-    // demo entities
-    const e = this.createEntity()
-    e.components.Position = Position(8, 8)
-    e.components.ConsoleRender = ConsoleRender('@', 'brown')
-    state.addEntity(e)
-
-    const e2 = this.createEntity()
-    e2.components.Position = Position(12, 12)
-    e2.components.ConsoleRender = ConsoleRender('g', 'blue')
-    state.addEntity(e2)
-
-    // e.components.ConsoleRender.char = 'o'
+    const dood = new Builder().position(5, 5).render('D', 'blue').build('doooood')
+    state.addEntity(dood)
   }
 
-  createEntity() {
+  createEntity<C extends keyof Entity>(...comps: C[]) {
     console.log('World: createEntity')
     const id = this.state.nextEntityCount()
-    return new Entity(id)
+
+    // return new Entity(id)
+  }
+
+  get<Key extends keyof Entity>(...components: Key[]): EntityWith<Entity, Key>[] {
+    const entities = this.state.current.activeLevel.entities
+    const results = entities.filter((e) => components.every((name) => name in e)) as EntityWith<Entity, Key>[]
+    console.log('query results:', results)
+    return results
   }
 }
+
+type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }

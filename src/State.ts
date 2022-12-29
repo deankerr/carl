@@ -5,49 +5,57 @@
 
 // * State is the only truth. everything else only exists for each turn cycle
 // * none or very few instanced objects actually needed?
-import { Entity } from './Entity'
-// import * as Component from './Components'
+
+import { Entity } from './Components'
+import { Level } from './Level'
 import { copy, str } from './util/util'
-import { Grid } from './Core/Grid'
+import { DeepReadonly } from 'ts-essentials'
+/* 
+  state object spec:
 
-// type StateObject = {
-// entities: Record<string, string> // ? what am i trying to record?
-//   [key: string]: Entity[]
-// }
+  export type TEST_StateObject = {
+    activeLevel: Level
+    entityCount: number
+    levels: {
+      label: string
+      entities: Entity[]
 
-type Level2 = {
-  label: string
-  entities: Entity[]
-  terrain: Grid<number>
-}
+    }
+  }
+
+*/
 
 export type StateObject = {
-  activeLevel: Level2
+  activeLevel: Level
   entityCount: number
-  level: Level2
-}
-
-// ? Think of a better solution
-const stateLog: string[] = []
-function log(s: string) {
-  stateLog.unshift(s)
-  console.log('stateLog:', s)
-  console.log(stateLog)
+  levels: Level[]
 }
 
 export class State {
-  __state
-  stateIce
+  __state: StateObject
+  current: DeepReadonly<StateObject>
 
-  constructor(initialState: StateObject) {
+  constructor() {
+    const initialLevel = Level.createInitial()
+
+    const initialState = {
+      activeLevel: initialLevel,
+      entityCount: 0,
+      levels: [initialLevel],
+    }
+
     this.__state = initialState
 
-    console.log('this.__state:', this.__state)
+    console.log('initialState:', this.__state)
     log('Start')
 
-    console.groupCollapsed('deepFreeze')
-    this.stateIce = this.deepFreeze(copy(this.__state))
-    console.groupEnd()
+    this.current = this.__state
+
+    // json copy destroys class methods
+
+    // console.groupCollapsed('deepFreeze')
+    // this.current = this.deepFreeze(copy(this.__state))
+    // console.groupEnd()
   }
 
   nextEntityCount() {
@@ -55,16 +63,17 @@ export class State {
     return this.__state.entityCount++
   }
 
+  // TODO just genertic updates to records
   // Should I just remake Redux?
   addEntity(entity: Entity) {
-    log('Add entity' + str(entity.id))
-    this.__state.level.entities.push(entity)
+    log('Add entity ' + entity.id)
+    this.__state.activeLevel.entities.push(entity)
     console.log(this.__state.activeLevel.entities)
   }
 
   // TODO only pass in what we need to. most state wont change, eg terrain almost never except when changing level
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  deepFreeze(obj: any) {
+  private deepFreeze(obj: any) {
     console.log('start', obj)
     Object.keys(obj).forEach((prop) => {
       if (typeof obj[prop] === 'object' && !Object.isFrozen(obj[prop])) {
@@ -74,8 +83,15 @@ export class State {
     return Object.freeze(obj)
   }
 }
-// the "get" method seems impossible, try having a public frozen state
-// OR return the entire object
+
 // get() {
 //   return this.state[key]
 // }
+
+// TODO better log solution
+const stateLog: string[] = []
+function log(s: string) {
+  stateLog.unshift(s)
+  console.log('stateLog:', s)
+  console.log(stateLog)
+}
