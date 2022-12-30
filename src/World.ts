@@ -1,5 +1,5 @@
 // World handles entities? ECS helper?
-import { Entity } from './Components'
+import { Entity, Components, ComponentsU } from './Components'
 import { State } from './State'
 import { Builder } from './Entity'
 
@@ -26,6 +26,37 @@ export class World {
     const results = entities.filter((e) => components.every((name) => name in e)) as EntityWith<Entity, Key>[]
     console.log('query results:', results)
     return results
+  }
+
+  getID(id: string) {
+    const entities = this.state.current.activeLevel.entities
+    const result = entities.filter((e) => e.id === id)
+
+    if (result.length > 1) {
+      console.error('Got multiple entities for id ' + id)
+      console.error(result)
+      throw new Error()
+    }
+
+    if (result.length == 0) {
+      console.error('No entities found for id ' + id)
+      console.error(result)
+      throw new Error()
+    }
+
+    return result[0]
+  }
+
+  update(entity: Entity, component: ComponentsU) {
+    const ent2 = this.getID(entity.id)
+
+    // const newEnt = { ...ent2, component }
+    // this.state.updateEntity(newEnt)
+
+    if ('position' in component) {
+      const newEnt = { ...ent2, ...component }
+      this.state.updateEntity(newEnt)
+    }
   }
 }
 

@@ -9,11 +9,16 @@ import { State } from './State'
 import { World } from './World'
 import { TerrainDictionary } from './Terrain'
 import { mouseClick } from './util/display'
+import { Keys } from './util/Keys'
+import { input } from './input'
+
+import { handlePlayer } from './Systems/HandlePlayer'
 
 export class Game {
   display: ROT.Display
+  keys = new Keys()
+  state: State
   world: World
-  state
 
   constructor(d: ROT.Display) {
     console.log('new Game2')
@@ -29,9 +34,23 @@ export class Game {
     })
 
     this.render()
+
+    this.keys.add(this.update.bind(this))
   }
 
-  // TODO make independant of turn queue - animations/non-blocking/ui updates during turns
+  update(code: string) {
+    console.log('=== update === code:', code)
+
+    const action = input(code)
+    console.log('action:', action)
+
+    // temp
+    handlePlayer(this.world, action)
+
+    this.render()
+  }
+
+  // TODO make independent of turn queue - animations/non-blocking/ui updates during turns
   // TODO ie. debug coords at mouse display
   render() {
     // terrain
@@ -41,8 +60,12 @@ export class Game {
     console.log('terrain:', terrain)
     console.log('private:', this.state.__state.activeLevel.terrain)
 
+    terrain.set(0, 0, 3) // TODO shouldn't work on Readonly current
+
     terrain.each((x, y, t) => {
-      const { char, color } = TerrainDictionary[t].console
+      // TODO TerrainDict function, return default results for unknown?
+      // ? maybe we should just crash
+      const { char, color } = TerrainDictionary[t]?.console ?? { char: t, color: 'red' }
       this.display.draw(x, top + y, char, color, null)
     })
 

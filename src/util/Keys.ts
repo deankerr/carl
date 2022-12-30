@@ -1,6 +1,6 @@
 // Simple keyboard listener
 
-type Callback = (code: string) => void
+type Callback = (code: string) => unknown
 
 export class Keys {
   listener: Callback | null = null
@@ -15,7 +15,8 @@ export class Keys {
     this.listener = callback
   }
 
-  listen(code: string) {
+  // events call this method with keyCode, pass through to subscribed listener
+  private listen(code: string) {
     if (this.listener) this.listener(code)
   }
 
