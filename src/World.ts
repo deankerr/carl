@@ -1,7 +1,7 @@
 // ECS Helper, works with writable state, sends updated state objects to State
 import { Entity, ComponentsU } from './Components'
 import { State, StateCurrent } from './State'
-import { Builder } from './Entity'
+import { Builder } from './Components'
 import { DeepReadonly } from 'ts-essentials'
 
 export class World {
@@ -31,14 +31,6 @@ export class World {
     this.state.addEntity(newEntity)
   }
 
-  // TODO:
-  // createEntity<C extends keyof Entity>(...comps: C[]) {
-  //   console.log('World: createEntity')
-  //   const id = this.state.nextEntityCount()
-
-  //   // return new Entity(id)
-  // }
-
   get<Key extends keyof Entity>(...components: Key[]): DeepReadonly<EntityWith<Entity, Key>>[] {
     const entities = this.state.current.level.entities
     const results = entities.filter((e) => components.every((name) => name in e)) as DeepReadonly<
@@ -46,25 +38,6 @@ export class World {
     >[]
     // console.log('query results:', results)
     return results
-  }
-
-  __getID(id: string) {
-    const entities = this.state.__state.level.entities
-    const result = entities.filter((e) => e.id === id)
-
-    if (result.length > 1) {
-      console.error('Got multiple entities for id ' + id)
-      console.error(result)
-      throw new Error()
-    }
-
-    if (result.length == 0) {
-      console.error('No entities found for id ' + id)
-      console.error(result)
-      throw new Error()
-    }
-
-    return result[0]
   }
 
   // gets writable entity from state, updates component, sends back to state
@@ -88,6 +61,26 @@ export class World {
     const newEntity = { ...oldEntity, ...component }
     this.state.updateEntity(oldEntity, newEntity)
   }
+
+  // * May never need this?
+  // __getID(id: string) {
+  //   const entities = this.state.__state.level.entities
+  //   const result = entities.filter((e) => e.id === id)
+
+  //   if (result.length > 1) {
+  //     console.error('Got multiple entities for id ' + id)
+  //     console.error(result)
+  //     throw new Error()
+  //   }
+
+  //   if (result.length == 0) {
+  //     console.error('No entities found for id ' + id)
+  //     console.error(result)
+  //     throw new Error()
+  //   }
+
+  //   return result[0]
+  // }
 }
 
 type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
