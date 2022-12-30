@@ -5,8 +5,8 @@ import { Builder } from './Entity'
 import { DeepReadonly } from 'ts-essentials'
 
 export class World {
-  private state: State
-  current: StateCurrent
+  private state: State // The actual State instance
+  current: StateCurrent // Just the readonly part, world readable
   constructor(state: State) {
     this.state = state
     this.current = state.current
@@ -20,6 +20,7 @@ export class World {
     state.addEntity(player)
   }
 
+  // TODO:
   // createEntity<C extends keyof Entity>(...comps: C[]) {
   //   console.log('World: createEntity')
   //   const id = this.state.nextEntityCount()

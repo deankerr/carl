@@ -4,7 +4,7 @@ export type Render = { render: { char: string; color: string } }
 export type Position = { position: { x: number; y: number } }
 export type TagPlayer = { tagPlayer: true }
 
-export type ID = {
+export type EntityID = {
   id: string
 }
 
@@ -12,7 +12,7 @@ export type ID = {
 export type ComponentsU = Position | Render | TagPlayer
 
 export type Components = Partial<Position & Render & TagPlayer>
-export type Entity = ID & Components
+export type Entity = EntityID & Components
 
 export const render = (char: string, color: string): Render => {
   return {
