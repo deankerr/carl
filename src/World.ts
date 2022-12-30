@@ -12,11 +12,11 @@ export class World {
     this.state = state
     this.current = state.current
 
-    const pt1 = state.current.activeLevel.ptInRoom(1)
+    const pt1 = state.current.level.ptInRoom(1)
     const dood = new Builder().position(pt1.x, pt1.y).render('D', 'blue').build('dood')
     this.add(dood)
 
-    const pt2 = state.current.activeLevel.ptInRoom(0)
+    const pt2 = state.current.level.ptInRoom(0)
     const player = new Builder().position(pt2.x, pt2.y).render('@', 'white').tagPlayer().build('player')
     this.add(player)
   }
@@ -40,7 +40,7 @@ export class World {
   // }
 
   get<Key extends keyof Entity>(...components: Key[]): DeepReadonly<EntityWith<Entity, Key>>[] {
-    const entities = this.state.current.activeLevel.entities
+    const entities = this.state.current.level.entities
     const results = entities.filter((e) => components.every((name) => name in e)) as DeepReadonly<
       EntityWith<Entity, Key>
     >[]
@@ -49,7 +49,7 @@ export class World {
   }
 
   __getID(id: string) {
-    const entities = this.state.__state.activeLevel.entities
+    const entities = this.state.__state.level.entities
     const result = entities.filter((e) => e.id === id)
 
     if (result.length > 1) {
@@ -69,18 +69,24 @@ export class World {
 
   // gets writable entity from state, updates component, sends back to state
   updateComponent(entity: Entity, component: ComponentsU) {
-    const oldEntity = this.__getID(entity.id)
+    const oldEntity = this.state.__state.level.entities.find((e) => e === entity)
+
+    if (!oldEntity) throw new Error('Unable to locate entity to update')
+
+    // get the property key name. feels weird
+    const componentName = Reflect.ownKeys(component).join()
 
     // verify entity had this component
-    if (Object.keys(component).join() in oldEntity) {
-      const newEntity = { ...oldEntity, ...component }
-      this.state.updateEntity(oldEntity, newEntity)
-    } else {
+    if (!(componentName in oldEntity)) {
       console.error('updateComponent: entity does not have that component')
       console.error(entity)
       console.error(component)
       throw new Error()
     }
+
+    // copy old entity, replacing old component with new
+    const newEntity = { ...oldEntity, ...component }
+    this.state.updateEntity(oldEntity, newEntity)
   }
 }
 

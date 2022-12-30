@@ -59,7 +59,7 @@ export class Game {
   // TODO ie. debug coords at mouse display
   render() {
     // terrain
-    const terrain = this.state.current.activeLevel.terrain
+    const terrain = this.state.current.level.terrain
 
     const top = 2
     // console.log('terrain:', terrain)

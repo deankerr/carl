@@ -1,29 +1,12 @@
-// The central, immutable (??) repository for all game world state (but not World??? level?? Are they just interfaces?)
+// The central, immutable (??) repository for all game world state
 // The plan: lives in mutable form in here only, Object.freeze on everything handed out
-
-// * State is the only truth. everything else only exists for each turn cycle
-// * none or very few instanced objects actually needed?
 
 import { Entity } from './Components'
 import { Level } from './Level'
 import { DeepReadonly } from 'ts-essentials'
-/* 
-  state object spec:
-
-  export type TEST_StateObject = {
-    activeLevel: Level
-    entityCount: number
-    levels: {
-      label: string
-      entities: Entity[]
-
-    }
-  }
-
-*/
 
 export type StateObject = {
-  activeLevel: Level
+  level: Level // Active level, reference to a level in levels[]
   entityCount: number
   levels: Level[]
 }
@@ -32,21 +15,20 @@ export type StateCurrent = DeepReadonly<StateObject>
 
 export class State {
   __state: StateObject
-  current: StateCurrent
+  current: StateCurrent // Readonly typed to be read by the world
 
   constructor() {
     // Create the initial state
     const initialLevel = Level.createInitial()
 
     const initialState = {
-      activeLevel: initialLevel,
+      level: initialLevel,
       entityCount: 0,
       levels: [initialLevel],
     }
 
     this.__state = initialState
 
-    // Readonly typed to be read by the world
     this.current = this.__state
 
     log('Initial', this.__state)
@@ -63,21 +45,25 @@ export class State {
   addEntity(entity: Entity) {
     log('Add entity ' + entity.id, this.__state)
 
-    this.__state.activeLevel.entities.push(entity)
+    this.__state.level.entities.push(entity)
 
     log('Result', this.__state)
   }
 
+  // updates an entity - ie. replaces the entity with a new one with the new component
   updateEntity(oldEntity: Entity, newEntity: Entity) {
-    log('Update entity', this.__state)
-    const allEntities = this.__state.activeLevel.entities
-    let index = -1
-    for (const ent of allEntities) {
+    log('Update entity ' + oldEntity.id, this.__state)
+
+    const all = this.__state.level.entities
+    let index = 0
+    for (const entity of all) {
+      if (entity === oldEntity) {
+        all[index] = newEntity
+        break
+      }
       index++
-      if (ent !== oldEntity) continue
-      allEntities[index] = newEntity
-      break
     }
+
     log('Result', this.__state)
   }
 }

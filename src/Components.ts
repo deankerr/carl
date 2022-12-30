@@ -4,14 +4,11 @@ export type Render = { render: { char: string; color: string } }
 export type Position = { position: { x: number; y: number } }
 export type TagPlayer = { tagPlayer: true }
 
-export type EntityID = {
-  id: string
-}
-
 // currently needed only for updateComponents on world, I probably don't want this
 export type ComponentsU = Position | Render | TagPlayer
 
 export type Components = Partial<Position & Render & TagPlayer>
+export type EntityID = { id: string }
 export type Entity = EntityID & Components
 
 export const render = (char: string, color: string): Render => {
