@@ -6,15 +6,13 @@ import { position } from '../Components'
 import { TerrainDictionary } from '../Terrain'
 
 export function handlePlayer(world: World, action: ActionTypes) {
-  console.log('Handle Player')
-
   if (!action) {
     console.warn('Player: null action')
     return
   }
 
   if (action.move) {
-    console.log('player: move', action.move)
+    console.log('Player: move', action.move)
 
     const [player] = world.get('position', 'tagPlayer')
     const { position: oldPosition } = player
@@ -30,6 +28,6 @@ export function handlePlayer(world: World, action: ActionTypes) {
       console.log('bump')
     }
   } else {
-    console.log('unknown player action:', action)
+    console.log('Player: unknown action:', action)
   }
 }
