@@ -13,6 +13,8 @@ import { Keys } from './util/Keys'
 import { input } from './Input'
 
 import { handlePlayer } from './Systems/HandlePlayer'
+import { UpdateFOV } from './Systems/UpdateFOV'
+import { PtS } from './Core/Point'
 
 export class Game {
   display: ROT.Display
@@ -35,12 +37,14 @@ export class Game {
 
     this.render()
 
+    this.update('x')
+
     this.keys.add(this.update.bind(this))
   }
 
   update(code: string) {
     console.log('=== update === code:', code)
-
+    // UpdateFOV(this.world)
     const action = input(code)
     if (!action) {
       console.warn('null action')
@@ -50,7 +54,10 @@ export class Game {
     console.log('Action:', action)
 
     // temp
+    // use ID? makes passing through entity easier
+    // or attach currentTurn component, integrates with current system
     handlePlayer(this.world, action)
+    UpdateFOV(this.world)
 
     this.render()
   }
@@ -67,11 +74,21 @@ export class Game {
 
     terrain.set(0, 0, 3) // TODO shouldn't work on Readonly current
 
+    const player = this.world.get('tagPlayer', 'position', 'render', 'fov', 'seen')[0]
+
     terrain.each((x, y, t) => {
       // TODO TerrainDict function, return default results for unknown?
       // ? maybe we should just crash
-      const { char, color } = TerrainDictionary[t]?.console ?? { char: t, color: 'red' }
-      this.display.draw(x, top + y, char, color, null)
+      const here = PtS(x, y)
+      // currently visible by player
+      if (player.fov.visible.includes(here)) {
+        const { char, color } = TerrainDictionary[t]?.console ?? { char: t, color: 'red' }
+        this.display.draw(x, top + y, char, color, null)
+      } else if (player.seen.visible.has(here)) {
+        // seen previously
+        const { char, color } = TerrainDictionary[t]?.consoleSeen ?? { char: t, color: 'red' }
+        this.display.draw(x, top + y, char, color, null)
+      }
     })
 
     // entities
@@ -82,7 +99,7 @@ export class Game {
     }
 
     // player again
-    const player = this.world.get('tagPlayer', 'position', 'render')
-    this.display.draw(player[0].position.x, top + player[0].position.y, player[0].render.char, 'white', null)
+    // const player = this.world.get('tagPlayer', 'position', 'render')
+    this.display.draw(player.position.x, top + player.position.y, player.render.char, 'white', null)
   }
 }

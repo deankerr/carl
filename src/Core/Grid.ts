@@ -10,10 +10,12 @@ export class Grid<T> {
   }
 
   get(x: number, y: number) {
+    if (!this.inBounds(x, y)) return null
     return this.grid[y][x]
   }
 
   set(x: number, y: number, value: T) {
+    if (!this.inBounds(x, y)) return
     this.grid[y][x] = value
   }
 
@@ -23,6 +25,10 @@ export class Grid<T> {
         callback(xi, yi, value)
       })
     )
+  }
+
+  inBounds(x: number, y: number) {
+    return x >= 0 && x < this.grid[0].length && y >= 0 && y < this.grid.length
   }
 
   static from<U>(values: U[][]): Grid<U> {

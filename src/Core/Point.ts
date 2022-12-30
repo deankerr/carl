@@ -9,3 +9,7 @@ export class Point {
 export function Pt(x: number, y: number) {
   return new Point(x, y)
 }
+
+export function PtS(x: number, y: number) {
+  return new Point(x, y).str()
+}

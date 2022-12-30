@@ -20,7 +20,7 @@ export function handlePlayer(world: World, action: ActionTypes) {
     const newX = oldPosition.x + action.move.dx
     const newY = oldPosition.y + action.move.dy
 
-    const terrain = world.current.level.terrain.get(newX, newY)
+    const terrain = world.current.level.terrain.get(newX, newY) ?? 1
 
     // terrain walkable check
     // ? handle outcomes like 'bump'?

@@ -6,6 +6,10 @@ export interface Terrain {
     char: string
     color: string
   }
+  consoleSeen: {
+    char: string
+    color: string
+  }
 }
 
 export const TerrainDictionary: { [key: number]: Terrain } = {
@@ -17,6 +21,10 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
       char: '.',
       color: '#666',
     },
+    consoleSeen: {
+      char: '.',
+      color: '#444',
+    },
   },
   1: {
     name: 'wall',
@@ -25,6 +33,10 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
     console: {
       char: '#',
       color: '#666',
+    },
+    consoleSeen: {
+      char: '#',
+      color: '#444',
     },
   },
 }
