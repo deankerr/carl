@@ -5,7 +5,7 @@ export type Render = { render: { char: string; color: string } }
 export type Position = { position: { x: number; y: number } }
 export type TagPlayer = { tagPlayer: true }
 export type FOV = { fov: { radius: number; visible: string[] } }
-export type Seen = { seen: { visible: Set<string> } }
+export type Seen = { seen: { visible: string[] } }
 
 // currently needed only for updateComponents on world, I probably don't want this
 export type ComponentsU = Position | Render | TagPlayer | FOV | Seen
@@ -32,7 +32,7 @@ export const fov = (radius: number): FOV => {
 
 // ? jsonify set?
 export const seen = (pts?: string[]): Seen => {
-  return { seen: { visible: new Set<string>(pts ?? []) } }
+  return { seen: { visible: pts ?? [] } }
 }
 
 export class Builder {

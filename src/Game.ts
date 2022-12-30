@@ -84,7 +84,7 @@ export class Game {
       if (player.fov.visible.includes(here)) {
         const { char, color } = TerrainDictionary[t]?.console ?? { char: t, color: 'red' }
         this.display.draw(x, top + y, char, color, null)
-      } else if (player.seen.visible.has(here)) {
+      } else if (player.seen.visible.includes(here)) {
         // seen previously
         const { char, color } = TerrainDictionary[t]?.consoleSeen ?? { char: t, color: 'red' }
         this.display.draw(x, top + y, char, color, null)

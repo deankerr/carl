@@ -24,8 +24,8 @@ export function UpdateFOV(world: World) {
     // update seen if needed
     const hasSeen = world.with(uEntity, 'seen')
     if (!hasSeen) return
-    const oldPts = [...hasSeen.seen.visible]
-    const newSeen = seen([...oldPts, ...newFOV.fov.visible])
+    const ptSet = new Set<string>([...hasSeen.seen.visible, ...newFOV.fov.visible])
+    const newSeen = seen([...ptSet])
     world.updateComponent(hasSeen, newSeen)
   }
 }
