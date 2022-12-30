@@ -1,12 +1,11 @@
 // * Translate key code into Action
 
 // import { Move, Direction, Wait, UI, ChangeLevel } from './Actions'
-import { Move } from './Actions'
+import { ActionTypes, Move } from './Actions'
 import { Direction } from './util/direction'
 
-export function input(code: string) {
-  console.log('== input ==')
-  console.log('input code', code)
+export function input(code: string): ActionTypes {
+  // console.log('input code', code)
   switch (code) {
     // Movement
     case 'Numpad7':

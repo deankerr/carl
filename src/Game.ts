@@ -42,7 +42,12 @@ export class Game {
     console.log('=== update === code:', code)
 
     const action = input(code)
-    console.log('action:', action)
+    if (!action) {
+      console.warn('null action')
+      return
+    }
+
+    console.log('Action:', action)
 
     // temp
     handlePlayer(this.world, action)

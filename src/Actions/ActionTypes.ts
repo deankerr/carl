@@ -1,3 +1,4 @@
 import { Move } from './Move'
 
-export type Actions = Move | null
+export type ActionTypes = Move | null
+// export type Actions = Move

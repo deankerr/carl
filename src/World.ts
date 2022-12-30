@@ -1,11 +1,16 @@
 // ECS Helper, works with writable state, sends updated state objects to State
 import { Entity, ComponentsU } from './Components'
-import { State } from './State'
+import { State, StateCurrent } from './State'
 import { Builder } from './Entity'
 import { DeepReadonly } from 'ts-essentials'
 
 export class World {
-  constructor(public state: State) {
+  private state: State
+  current: StateCurrent
+  constructor(state: State) {
+    this.state = state
+    this.current = state.current
+
     const pt1 = state.current.activeLevel.ptInRoom(1)
     const dood = new Builder().position(pt1.x, pt1.y).render('D', 'blue').build('doooood')
     state.addEntity(dood)
