@@ -10,7 +10,7 @@ import { World } from './World'
 import { TerrainDictionary } from './Terrain'
 import { mouseClick } from './util/display'
 import { Keys } from './util/Keys'
-import { input } from './input'
+import { input } from './Input'
 
 import { handlePlayer } from './Systems/HandlePlayer'
 
