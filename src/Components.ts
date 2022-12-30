@@ -6,11 +6,12 @@ export type Position = { position: { x: number; y: number } }
 export type TagPlayer = { tagPlayer: true }
 export type FOV = { fov: { radius: number; visible: string[] } }
 export type Seen = { seen: { visible: string[] } }
+export type TagCurrentTurn = { tagCurrentTurn: true }
 
 // currently needed only for updateComponents on world, I probably don't want this
-export type ComponentsU = Position | Render | TagPlayer | FOV | Seen
+export type ComponentsU = Position | Render | TagPlayer | FOV | Seen | TagCurrentTurn
 
-export type Components = Partial<Position & Render & TagPlayer & FOV & Seen>
+export type Components = Partial<Position & Render & TagPlayer & FOV & Seen & TagCurrentTurn>
 export type EntityID = { id: string }
 export type Entity = EntityID & Components
 
@@ -30,9 +31,12 @@ export const fov = (radius: number): FOV => {
   return { fov: { radius, visible: [] } }
 }
 
-// ? jsonify set?
 export const seen = (pts?: string[]): Seen => {
   return { seen: { visible: pts ?? [] } }
+}
+
+export const tagCurrentTurn = (): TagCurrentTurn => {
+  return { tagCurrentTurn: true }
 }
 
 export class Builder {

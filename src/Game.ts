@@ -40,11 +40,14 @@ export class Game {
     this.update('x')
 
     this.keys.add(this.update.bind(this))
+
+    this.world.nextTurn()
   }
 
   update(code: string) {
     console.log('=== update === code:', code)
-    // UpdateFOV(this.world)
+
+    // currently assuming we start the loop on the player's turn
     const action = input(code)
     if (!action) {
       console.warn('null action')
@@ -61,6 +64,30 @@ export class Game {
 
     this.render()
   }
+
+  /*
+  update() {
+
+    do {
+      const next = this.world.nextTurn()
+      if (next == player) break? generator function? how do we jump back in
+      playerAction || getAction()
+       Move(action)
+      UpdateFOV(this.world)
+
+    } while (1)
+
+
+    do {
+      Move(action)
+      UpdateFOV()
+      render()
+      nextTurn()
+      if (next == player) break
+      GetAIAction()
+    } while (1)
+  }
+*/
 
   // TODO make independent of turn queue - animations/non-blocking/ui updates during turns
   // TODO ie. debug coords at mouse display
