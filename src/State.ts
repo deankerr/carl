@@ -35,6 +35,7 @@ export class State {
   current: StateCurrent
 
   constructor() {
+    // Create the initial state
     const initialLevel = Level.createInitial()
 
     const initialState = {
@@ -45,30 +46,30 @@ export class State {
 
     this.__state = initialState
 
-    console.log('initialState:', this.__state)
-
+    // Readonly typed to be read by the world
     this.current = this.__state
 
-    log('Start', this.__state, this.current)
+    log('Initial', this.__state)
   }
 
-  nextEntityCount() {
-    log('nextEntityCount: ' + this.__state.entityCount, this.__state, this.current)
+  // === "Reducers" ===
+
+  // return the next entity id, increment
+  nextEntityID() {
+    log('nextEntityID: ' + this.__state.entityCount, this.__state)
     return this.__state.entityCount++
   }
 
-  // TODO just generic updates to records
-  // Should I just remake Redux?
   addEntity(entity: Entity) {
-    log('Add entity ' + entity.id, this.__state, this.current)
-    // add entity id here ?
-    entity.id += '-' + this.nextEntityCount() // ! mutate param bad no
+    log('Add entity ' + entity.id, this.__state)
+
     this.__state.activeLevel.entities.push(entity)
-    log('Done', this.__state, this.current)
+
+    log('Result', this.__state)
   }
 
   updateEntity(oldEntity: Entity, newEntity: Entity) {
-    log('Update entity', this.__state, this.current)
+    log('Update entity', this.__state)
     const allEntities = this.__state.activeLevel.entities
     let index = -1
     for (const ent of allEntities) {
@@ -77,19 +78,16 @@ export class State {
       allEntities[index] = newEntity
       break
     }
-    log('Done', this.__state, this.current)
+    log('Result', this.__state)
   }
 }
 
 // TODO better log solution
 const stateLog: string[] = []
-function log(s: string, state: StateObject, current: DeepReadonly<StateObject>) {
+function log(s: string, state: StateObject) {
   stateLog.unshift('State: ' + s)
-  // console.log('stateLog:', stateLog[0])
   console.groupCollapsed(stateLog[0])
-  // console.log(stateLog)
-  console.log('state.__state', state)
-  console.log('state.current', current)
+  console.log(state)
   console.groupEnd()
 }
 

@@ -7,17 +7,28 @@ import { DeepReadonly } from 'ts-essentials'
 export class World {
   private state: State // The actual State instance
   current: StateCurrent // Just the readonly part, world readable
+
   constructor(state: State) {
     this.state = state
     this.current = state.current
 
     const pt1 = state.current.activeLevel.ptInRoom(1)
-    const dood = new Builder().position(pt1.x, pt1.y).render('D', 'blue').build('doooood')
-    state.addEntity(dood)
+    const dood = new Builder().position(pt1.x, pt1.y).render('D', 'blue').build('dood')
+    this.add(dood)
 
     const pt2 = state.current.activeLevel.ptInRoom(0)
     const player = new Builder().position(pt2.x, pt2.y).render('@', 'white').tagPlayer().build('player')
-    state.addEntity(player)
+    this.add(player)
+  }
+
+  // === "Actions" ? ===
+
+  // add new entity to state
+  add(entity: Entity) {
+    // stamp with next id
+    const id = entity.id + '-' + this.state.nextEntityID()
+    const newEntity = { ...entity, id }
+    this.state.addEntity(newEntity)
   }
 
   // TODO:

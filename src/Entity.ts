@@ -3,7 +3,7 @@ import { Components, Entity, position, render, tagPlayer } from './Components'
 export class Builder {
   components: Components = {}
 
-  build(id: string): Entity {
+  build(id = ''): Entity {
     const entity = { id, ...this.components }
     return entity
   }
