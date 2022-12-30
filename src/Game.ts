@@ -57,8 +57,8 @@ export class Game {
     const terrain = this.state.current.activeLevel.terrain
 
     const top = 2
-    console.log('terrain:', terrain)
-    console.log('private:', this.state.__state.activeLevel.terrain)
+    // console.log('terrain:', terrain)
+    // console.log('private:', this.state.__state.activeLevel.terrain)
 
     terrain.set(0, 0, 3) // TODO shouldn't work on Readonly current
 

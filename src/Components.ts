@@ -25,3 +25,8 @@ export const position = (x: number, y: number): Position => {
 export const tagPlayer = (): TagPlayer => {
   return { tagPlayer: true }
 }
+
+export type TESTComponent = { TESTComponent: { test1: string } }
+export const TESTComponent = (): TESTComponent => {
+  return { TESTComponent: { test1: 'one' } }
+}

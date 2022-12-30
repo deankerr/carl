@@ -57,7 +57,7 @@ export class State {
     return this.__state.entityCount++
   }
 
-  // TODO just genertic updates to records
+  // TODO just generic updates to records
   // Should I just remake Redux?
   addEntity(entity: Entity) {
     log('Add entity ' + entity.id, this.__state, this.current)
@@ -67,31 +67,26 @@ export class State {
     log('Done', this.__state, this.current)
   }
 
-  updateEntity(entity: Entity) {
+  updateEntity(oldEntity: Entity, newEntity: Entity) {
     log('Update entity', this.__state, this.current)
     const allEntities = this.__state.activeLevel.entities
+    let index = -1
     for (const ent of allEntities) {
-      if (ent.id !== entity.id) continue
-      console.log('found ent')
-      console.table(ent)
-      console.log('new ent')
-      console.table(entity)
-      const index = allEntities.findIndex((e) => e === ent)
-      allEntities[index] = entity
-      console.log('updated')
-      this.__state.activeLevel.entities[index]
+      index++
+      if (ent !== oldEntity) continue
+      allEntities[index] = newEntity
       break
     }
-    log('Done ?', this.__state, this.current)
+    log('Done', this.__state, this.current)
   }
 }
 
 // TODO better log solution
 const stateLog: string[] = []
 function log(s: string, state: StateObject, current: DeepReadonly<StateObject>) {
-  stateLog.unshift(s)
+  stateLog.unshift('State: ' + s)
   // console.log('stateLog:', stateLog[0])
-  console.group(stateLog[0])
+  console.groupCollapsed(stateLog[0])
   // console.log(stateLog)
   console.log('state.__state', state)
   console.log('state.current', current)

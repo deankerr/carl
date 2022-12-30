@@ -1,14 +1,13 @@
 // temp: should be unified with npc actions
 
 import { Actions } from '../Actions'
-import { StateCurrent } from '../State'
 import { World } from '../World'
 import { position } from '../Components'
 
 export function handlePlayer(world: World, action: Actions) {
   console.log('Handle Player')
   if (!action) {
-    console.error('null action')
+    console.warn('Player: null action')
     return
   }
   if (action.move) {
@@ -19,7 +18,7 @@ export function handlePlayer(world: World, action: Actions) {
 
     const newPosition = position(oldPosition.x + action.move.dx, oldPosition.y + action.move.dy)
 
-    world.update(player, newPosition)
+    world.updateComponent(player, newPosition)
   } else {
     console.log('unknown player action:', action)
   }

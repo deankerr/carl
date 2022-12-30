@@ -1,7 +1,8 @@
-// World handles entities? ECS helper?
-import { Entity, Components, ComponentsU } from './Components'
+// ECS Helper, works with writable state, sends updated state objects to State
+import { Entity, ComponentsU } from './Components'
 import { State } from './State'
 import { Builder } from './Entity'
+import { DeepReadonly } from 'ts-essentials'
 
 export class World {
   constructor(public state: State) {
@@ -21,15 +22,17 @@ export class World {
   //   // return new Entity(id)
   // }
 
-  get<Key extends keyof Entity>(...components: Key[]): EntityWith<Entity, Key>[] {
+  get<Key extends keyof Entity>(...components: Key[]): DeepReadonly<EntityWith<Entity, Key>>[] {
     const entities = this.state.current.activeLevel.entities
-    const results = entities.filter((e) => components.every((name) => name in e)) as EntityWith<Entity, Key>[]
-    console.log('query results:', results)
+    const results = entities.filter((e) => components.every((name) => name in e)) as DeepReadonly<
+      EntityWith<Entity, Key>
+    >[]
+    // console.log('query results:', results)
     return results
   }
 
-  getID(id: string) {
-    const entities = this.state.current.activeLevel.entities
+  __getID(id: string) {
+    const entities = this.state.__state.activeLevel.entities
     const result = entities.filter((e) => e.id === id)
 
     if (result.length > 1) {
@@ -47,15 +50,19 @@ export class World {
     return result[0]
   }
 
-  update(entity: Entity, component: ComponentsU) {
-    const ent2 = this.getID(entity.id)
+  // gets writable entity from state, updates component, sends back to state
+  updateComponent(entity: Entity, component: ComponentsU) {
+    const oldEntity = this.__getID(entity.id)
 
-    // const newEnt = { ...ent2, component }
-    // this.state.updateEntity(newEnt)
-
-    if ('position' in component) {
-      const newEnt = { ...ent2, ...component }
-      this.state.updateEntity(newEnt)
+    // verify entity had this component
+    if (Object.keys(component).join() in oldEntity) {
+      const newEntity = { ...oldEntity, ...component }
+      this.state.updateEntity(oldEntity, newEntity)
+    } else {
+      console.error('updateComponent: entity does not have that component')
+      console.error(entity)
+      console.error(component)
+      throw new Error()
     }
   }
 }
