@@ -31,6 +31,8 @@ export class Game {
     this.render()
   }
 
+  // TODO make independant of turn queue - animations/non-blocking/ui updates during turns
+  // TODO ie. debug coords at mouse display
   render() {
     // terrain
     const terrain = this.state.current.activeLevel.terrain
@@ -38,6 +40,7 @@ export class Game {
     const top = 2
     console.log('terrain:', terrain)
     console.log('private:', this.state.__state.activeLevel.terrain)
+
     terrain.each((x, y, t) => {
       const { char, color } = TerrainDictionary[t].console
       this.display.draw(x, top + y, char, color, null)

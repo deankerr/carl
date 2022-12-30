@@ -25,9 +25,7 @@ export class Level {
   }
 
   ptInRoom(index: number) {
-    console.log('pt in', this.rooms[index].rect)
     const pt = this.rooms[index].rect.rndPt()
-    console.log('pt:', pt)
     return pt
   }
 

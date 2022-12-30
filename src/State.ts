@@ -44,31 +44,36 @@ export class State {
     this.__state = initialState
 
     console.log('initialState:', this.__state)
-    log('Start')
 
     this.current = this.__state
+
+    log('Start', this.__state, this.current)
   }
 
   nextEntityCount() {
-    log('nextEntityCount' + this.__state.entityCount)
+    log('nextEntityCount: ' + this.__state.entityCount, this.__state, this.current)
     return this.__state.entityCount++
   }
 
   // TODO just genertic updates to records
   // Should I just remake Redux?
   addEntity(entity: Entity) {
-    log('Add entity ' + entity.id)
+    log('Add entity ' + entity.id, this.__state, this.current)
+    // add enttiy id here ?
+    entity.id += '-' + this.nextEntityCount() // ! mutate param bad no
     this.__state.activeLevel.entities.push(entity)
-    console.log(this.__state.activeLevel.entities)
+    log('Done', this.__state, this.current)
   }
 }
 
 // TODO better log solution
 const stateLog: string[] = []
-function log(s: string) {
+function log(s: string, state: StateObject, current: DeepReadonly<StateObject>) {
   stateLog.unshift(s)
-  console.log('stateLog:', s)
+  console.log('stateLog:', stateLog[0])
   console.log(stateLog)
+  console.log('state.__state', state)
+  console.log('state.current', current)
 }
 
 // DeepReadonly is working for now
