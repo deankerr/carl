@@ -40,21 +40,16 @@ export class World {
   }
 
   // return all entities with specified components
-  get<Key extends keyof Entity>(...components: Key[]): DeepReadonly<EntityWith<Entity, Key>>[] {
+  get<Key extends keyof Entity>(...components: Key[]): ROEntityWith<Key>[] {
     const entities = this.state.__state.level.entities
-    const results = entities.filter((e) => components.every((name) => name in e)) as DeepReadonly<
-      EntityWith<Entity, Key>
-    >[]
+    const results = entities.filter((e) => components.every((name) => name in e)) as ROEntityWith<Key>[]
     // console.log('query results:', results)
     return results
   }
 
   // return entity with component if it has it
-  with<Key extends keyof Entity>(
-    entity: Entity | DeepReadonly<Entity>,
-    component: Key
-  ): DeepReadonly<EntityWith<Entity, Key>> | null {
-    if (component in entity) return entity as DeepReadonly<EntityWith<Entity, Key>>
+  with<Key extends keyof Entity>(entity: Entity | DeepReadonly<Entity>, component: Key): ROEntityWith<Key> | null {
+    if (component in entity) return entity as ROEntityWith<Key>
     return null
   }
 
@@ -134,3 +129,4 @@ export class World {
 }
 
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
+export type ROEntityWith<Key extends keyof Entity> = DeepReadonly<EntityWith<Entity, Key>>
