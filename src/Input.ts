@@ -1,7 +1,7 @@
 // * Translate key code into Action
 
 // import { Move, Direction, Wait, UI, ChangeLevel } from './Actions'
-import { ActionTypes, Move } from './Actions'
+import { ActionTypes, Move, UI } from './Actions'
 import { Direction } from './util/direction'
 
 export function input(code: string): ActionTypes {
@@ -32,8 +32,8 @@ export function input(code: string): ActionTypes {
       return Move(Direction.SE)
 
     // UI
-    // case 'KeyL':
-    //   return UI('lightsOn')
+    case 'KeyL':
+      return UI('lightsOn')
     // case 'KeyN':
     //   return UI('newMap')
 

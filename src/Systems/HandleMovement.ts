@@ -11,9 +11,9 @@ export function handleMovement(world: World, action: ActionTypes) {
     return
   }
 
-  if (action.move) {
+  if ('move' in action) {
     const [entity] = world.get('position', 'tagCurrentTurn')
-    console.log('HandleMovement:', entity, action.move)
+    console.log('Move:', entity, action.move)
     const { position: oldPosition } = entity
 
     const newX = oldPosition.x + action.move.dx
@@ -27,9 +27,9 @@ export function handleMovement(world: World, action: ActionTypes) {
       const newPosition = position(newX, newY)
       world.updateComponent(entity, newPosition)
     } else {
-      console.log('bump')
+      console.log('Move: BUMP!')
     }
   } else {
-    console.log('Move: unknown action:', action)
+    console.log('Move: not a move action', action)
   }
 }
