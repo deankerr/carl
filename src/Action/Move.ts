@@ -44,3 +44,7 @@ export function __randomMove(): ActionTypes {
   const dir = ROT.RNG.getItem(dirs) as Direction
   return Move(dir)
 }
+
+export function __wait(): ActionTypes {
+  return Move(Direction.WAIT)
+}
