@@ -24,6 +24,8 @@ export class Game {
   state: State
   world: World
 
+  lightsOn = false // reveal level debug flag
+
   constructor(d: ROT.Display) {
     console.log('new Game2')
     this.display = d
@@ -38,8 +40,6 @@ export class Game {
     })
 
     this.render()
-
-    this.update('x')
 
     this.keys.add(this.update.bind(this))
   }
@@ -58,6 +58,22 @@ export class Game {
       return
     }
     console.log('Action:', action)
+
+    // UI only
+    if ('ui' in action) {
+      switch (action.ui) {
+        case 'toggleLightSwitch':
+          this.lightsOn = !this.lightsOn
+          console.log('UI: toggleLightSwitch:', this.lightsOn)
+          break
+        default:
+          console.log('UI: Action not implemented', action)
+      }
+
+      this.render()
+      console.groupEnd()
+      return
+    }
 
     this.system(action)
     playerTurn = world.nextTurn()
@@ -124,7 +140,7 @@ export class Game {
       if (player.fov.visible.includes(here)) {
         const { char, color } = TerrainDictionary[t]?.console ?? { char: t, color: 'red' }
         this.display.draw(x, top + y, char, color, null)
-      } else if (player.seen.visible.includes(here)) {
+      } else if (player.seen.visible.includes(here) || this.lightsOn) {
         // seen previously
         const { char, color } = TerrainDictionary[t]?.consoleSeen ?? { char: t, color: 'red' }
         this.display.draw(x, top + y, char, color, null)
@@ -136,7 +152,7 @@ export class Game {
 
     for (const { render, position } of entities) {
       const here = PtS(position.x, position.y)
-      if (player.fov.visible.includes(here)) {
+      if (player.fov.visible.includes(here) || this.lightsOn) {
         this.display.draw(position.x, top + position.y, render.char, render.color, null)
       }
     }

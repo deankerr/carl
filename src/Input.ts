@@ -33,7 +33,7 @@ export function input(code: string): ActionTypes {
 
     // UI
     case 'KeyL':
-      return UI('lightsOn')
+      return UI('toggleLightSwitch')
     // case 'KeyN':
     //   return UI('newMap')
 
