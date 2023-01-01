@@ -6,7 +6,7 @@ export type Move = {
   move: { dir: Direction; dx: number; dy: number }
 }
 
-export function Move(dir: Direction): Move {
+export function move(dir: Direction): Move {
   switch (dir) {
     case Direction.NW:
       return { move: { dir, dx: -1, dy: -1 } }
@@ -42,9 +42,9 @@ export function __randomMove(): ActionTypes {
     Direction.WAIT,
   ]
   const dir = ROT.RNG.getItem(dirs) as Direction
-  return Move(dir)
+  return move(dir)
 }
 
 export function __wait(): ActionTypes {
-  return Move(Direction.WAIT)
+  return move(Direction.WAIT)
 }

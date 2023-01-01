@@ -5,6 +5,8 @@ import { State, StateObject } from './State'
 import { Builder } from './Components'
 import { UpdateFOV } from '../System/UpdateFOV'
 import { objLog } from '../util/util'
+import { Point, Pt } from '../Model/Point'
+import { Terrain, TerrainDictionary } from './Terrain'
 
 export class World {
   private state: State // The actual State instance
@@ -46,8 +48,8 @@ export class World {
     const rNpcs = ROT.RNG.shuffle(npcs)
 
     level.rooms.forEach((_r, i) => {
-      // if (i === 0) return
-      if (i !== 0) return
+      if (i === 0) return
+      // if (i !== 0) return
       const ent = rNpcs[i][0] as Builder
       const tag = rNpcs[i][1] as string
       const n = ent.positionPt(level.ptInRoom(i)).build(tag)
@@ -85,6 +87,18 @@ export class World {
   with<Key extends keyof Entity>(entity: Entity, component: Key): EntityWith<Entity, Key> | null {
     if (component in entity) return entity as EntityWith<Entity, Key>
     return null
+  }
+
+  // return terrain and any entities at this position
+  here(pt: Point): [Terrain, Entity[]] {
+    const t = this.state.current.level.terrain.get(pt.x, pt.y)
+    if (t === null) throw new Error('here: null terrain')
+    const terrain = TerrainDictionary[t]
+
+    const entities = this.get('position')
+    const entitiesHere = entities.filter((e) => Pt(e.position.x, e.position.y).str() === pt.str()) as Entity[]
+
+    return [terrain, entitiesHere]
   }
 
   addComponent(entity: Entity, component: ComponentsU) {

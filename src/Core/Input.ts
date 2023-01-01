@@ -1,7 +1,7 @@
 // * Translate key code into Action
 
 // import { Move, Direction, Wait, UI, ChangeLevel } from './Actions'
-import { ActionTypes, Move, UI } from '../Action'
+import { ActionTypes, move, UI } from '../Action'
 import { Direction } from '../util/direction'
 
 export function input(code: string): ActionTypes {
@@ -9,27 +9,27 @@ export function input(code: string): ActionTypes {
   switch (code) {
     // Movement
     case 'Numpad7':
-      return Move(Direction.NW)
+      return move(Direction.NW)
     case 'ArrowUp':
     case 'Numpad8':
-      return Move(Direction.N)
+      return move(Direction.N)
     case 'Numpad9':
-      return Move(Direction.NE)
+      return move(Direction.NE)
     case 'ArrowLeft':
     case 'Numpad4':
-      return Move(Direction.W)
+      return move(Direction.W)
     case 'Numpad5':
-      return Move(Direction.WAIT)
+      return move(Direction.WAIT)
     case 'ArrowRight':
     case 'Numpad6':
-      return Move(Direction.E)
+      return move(Direction.E)
     case 'Numpad1':
-      return Move(Direction.SW)
+      return move(Direction.SW)
     case 'ArrowDown':
     case 'Numpad2':
-      return Move(Direction.S)
+      return move(Direction.S)
     case 'Numpad3':
-      return Move(Direction.SE)
+      return move(Direction.SE)
 
     // UI
     case 'KeyL':

@@ -96,6 +96,7 @@ export class Game {
     console.groupCollapsed('System', entity.id, actionName(action))
 
     handleMovement(world)
+    handleBump(world)
     UpdateFOV(world)
 
     const [entityDone] = world.get('tagCurrentTurn')

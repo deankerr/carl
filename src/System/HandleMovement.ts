@@ -1,7 +1,7 @@
 import { World } from '../Core/World'
 import { acting, position } from '../Core/Components'
 import { TerrainDictionary } from '../Core/Terrain'
-import { objLog, strCmp } from '../util/util'
+import { strCmp } from '../util/util'
 import { Pt } from '../Model/Point'
 import { bump } from '../Action'
 
@@ -29,14 +29,12 @@ export function handleMovement(world: World) {
     if (!TerrainDictionary[terrain].walkable) {
       console.log('Move: Terrain BUMP!')
       const newAction = acting(bump(Pt(newX, newY)))
-      // objLog(entity, 'in HM t')
       world.updateComponent(entity, newAction)
       return
     }
 
     // entity blocking check
-    // TODO ignore walkable entities
-    // ? probably should be a World method
+    // ? entitiesHere probably should be a World method
     const entityHere = allEntities.some((e) => {
       if (e.id === entity.id) return false
       return strCmp(e.position, Pt(newX, newY))
@@ -45,7 +43,6 @@ export function handleMovement(world: World) {
     if (entityHere) {
       console.log('Move: Entity BUMP!')
       const newAction = acting(bump(Pt(newX, newY)))
-      // objLog(entity, 'in HM e')
       world.updateComponent(entity, newAction)
       return
     }

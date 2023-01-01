@@ -2,7 +2,6 @@
 
 import { Entity } from './Components'
 import { Level } from '../Model/Level'
-import { actionName, ActionTypes } from '../Action'
 
 export type StateObject = {
   level: Level // Active level, reference to a level in levels[]

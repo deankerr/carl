@@ -1,5 +1,5 @@
 export interface Terrain {
-  name: string
+  title: string
   walkable: boolean
   transparent: boolean
   console: {
@@ -14,7 +14,7 @@ export interface Terrain {
 
 export const TerrainDictionary: { [key: number]: Terrain } = {
   0: {
-    name: 'path',
+    title: 'path',
     walkable: true,
     transparent: true,
     console: {
@@ -27,7 +27,7 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
     },
   },
   1: {
-    name: 'wall',
+    title: 'wall',
     walkable: false,
     transparent: false,
     console: {
