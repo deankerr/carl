@@ -4,6 +4,7 @@ import { Entity, ComponentsU, tagCurrentTurn, Components, Build } from './Compon
 import { State, StateObject } from './State'
 import { Builder } from './Components'
 import { UpdateFOV } from '../System/UpdateFOV'
+import { objLog } from '../util/util'
 
 export class World {
   private state: State // The actual State instance
@@ -45,7 +46,8 @@ export class World {
     const rNpcs = ROT.RNG.shuffle(npcs)
 
     level.rooms.forEach((_r, i) => {
-      if (i === 0) return
+      // if (i === 0) return
+      if (i !== 0) return
       const ent = rNpcs[i][0] as Builder
       const tag = rNpcs[i][1] as string
       const n = ent.positionPt(level.ptInRoom(i)).build(tag)
@@ -86,8 +88,15 @@ export class World {
   }
 
   addComponent(entity: Entity, component: ComponentsU) {
-    const oldEntity = this.state.current.level.entities.find((e) => e === entity)
-    if (!oldEntity) throw new Error('addC: Unable to locate entity to update')
+    const entities = this.state.current.level.entities
+    const oldEntity = entities.find((e) => e === entity)
+    // if (!oldEntity) throw new Error('addC: Unable to locate entity to update')
+    if (!oldEntity) {
+      console.error('addC: Unable to locate entity to update')
+      objLog(entity, 'target')
+      objLog(entities, 'all')
+      throw new Error()
+    }
 
     const componentName = Reflect.ownKeys(component).join()
 
@@ -107,8 +116,16 @@ export class World {
 
   // gets writable entity from state, updates component, sends back to state
   updateComponent(entity: Entity, component: ComponentsU) {
-    const oldEntity = this.state.current.level.entities.find((e) => e === entity)
-    if (!oldEntity) throw new Error('updateC: Unable to locate entity to update')
+    // console.log('Start updateComponent', entity.id, Reflect.ownKeys(component).join())
+    const entities = this.state.current.level.entities
+    const oldEntity = entities.find((e) => e === entity)
+    // if (!oldEntity) throw new Error('updateC: Unable to locate entity to update')
+    if (!oldEntity) {
+      console.error('updateC: Unable to locate entity to update')
+      objLog(entity, 'target')
+      objLog(entities, 'all')
+      throw new Error()
+    }
 
     // get the property key name. feels weird
     const componentName = Reflect.ownKeys(component).join()

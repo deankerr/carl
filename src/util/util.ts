@@ -9,3 +9,12 @@ export function str(n: number) {
 export function strCmp(a: object, b: object) {
   return JSON.stringify(a) === JSON.stringify(b)
 }
+
+export function objLog(obj: object | object[], label = 'Object Log') {
+  if (Array.isArray(obj)) obj.forEach((o, i) => objLog(o, label + i))
+  else {
+    console.group(label)
+    console.log(JSON.stringify(obj))
+    console.groupEnd()
+  }
+}

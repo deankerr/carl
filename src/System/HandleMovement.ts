@@ -1,18 +1,20 @@
 import { World } from '../Core/World'
-import { position } from '../Core/Components'
+import { acting, position } from '../Core/Components'
 import { TerrainDictionary } from '../Core/Terrain'
-import { strCmp } from '../util/util'
+import { objLog, strCmp } from '../util/util'
 import { Pt } from '../Model/Point'
+import { bump } from '../Action'
 
 export function handleMovement(world: World) {
-  const action = world.current.action
+  const [entity] = world.get('acting', 'position', 'tagCurrentTurn')
+
+  const action = entity.acting
   if (!action) {
     console.warn('Move: null action')
     return
   }
 
   if ('move' in action) {
-    const [entity] = world.get('position', 'tagCurrentTurn')
     console.log('Move:', entity, action.move)
     const { position: oldPosition } = entity
     const allEntities = world.get('position')
@@ -20,12 +22,15 @@ export function handleMovement(world: World) {
     const newX = oldPosition.x + action.move.dx
     const newY = oldPosition.y + action.move.dy
 
+    // if null (out of bounds) act like its a wall
     const terrain = world.current.level.terrain.get(newX, newY) ?? 1
 
     // terrain walkable check
-    // ? handle outcomes like 'bump'?
     if (!TerrainDictionary[terrain].walkable) {
       console.log('Move: Terrain BUMP!')
+      const newAction = acting(bump(Pt(newX, newY)))
+      // objLog(entity, 'in HM t')
+      world.updateComponent(entity, newAction)
       return
     }
 
@@ -39,6 +44,9 @@ export function handleMovement(world: World) {
 
     if (entityHere) {
       console.log('Move: Entity BUMP!')
+      const newAction = acting(bump(Pt(newX, newY)))
+      // objLog(entity, 'in HM e')
+      world.updateComponent(entity, newAction)
       return
     }
 

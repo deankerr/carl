@@ -12,11 +12,11 @@ import { mouseClick } from '../util/display'
 import { Keys } from '../util/Keys'
 import { input } from './Input'
 
-import { UpdateFOV } from '../System/UpdateFOV'
 import { PtS } from '../Model/Point'
-import { handleMovement } from '../System/HandleMovement'
+import { handleBump, handleMovement, UpdateFOV } from '../System'
 import { actionName, ActionTypes, __randomMove, __wait } from '../Action'
 import { CONFIG } from '../config'
+import { acting } from './Components'
 
 export class Game {
   display: ROT.Display
@@ -89,15 +89,20 @@ export class Game {
   }
 
   system(action: ActionTypes) {
-    const { world, state } = this
-    state.updateAction(action)
-    console.groupCollapsed('System', world.get('tagCurrentTurn')[0].id, actionName(action))
+    const { world } = this
+    const [entity] = world.get('tagCurrentTurn')
+    world.addComponent(entity, acting(action))
+
+    console.groupCollapsed('System', entity.id, actionName(action))
 
     handleMovement(world)
     UpdateFOV(world)
 
+    const [entityDone] = world.get('tagCurrentTurn')
+    world.removeComponent(entityDone, 'acting')
+
     console.groupEnd()
-    state.updateAction(null)
+    this.render()
   }
 
   // TODO make independent of turn queue - animations/non-blocking/ui updates during turns

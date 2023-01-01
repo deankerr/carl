@@ -1,6 +1,7 @@
 // TODO Integrate builder/remove duplication
 // ? causing them to add themselves to that and return "this" ?
 
+import { ActionTypes } from '../Action'
 import { Point } from '../Model/Point'
 
 export type Render = { render: { char: string; color: string } }
@@ -11,11 +12,14 @@ export type Seen = { seen: { visible: string[] } }
 export type TagCurrentTurn = { tagCurrentTurn: true }
 export type TagWalkable = { tagWalkable: true }
 export type TagActor = { tagActor: true }
+export type Acting = { acting: ActionTypes }
 
 // currently needed only for updateComponents on world, I probably don't want this
-export type ComponentsU = Position | Render | TagPlayer | FOV | Seen | TagCurrentTurn | TagWalkable | TagActor
+export type ComponentsU = Position | Render | TagPlayer | FOV | Seen | TagCurrentTurn | TagWalkable | TagActor | Acting
 
-export type Components = Partial<Position & Render & TagPlayer & FOV & Seen & TagCurrentTurn & TagWalkable & TagActor>
+export type Components = Partial<
+  Position & Render & TagPlayer & FOV & Seen & TagCurrentTurn & TagWalkable & TagActor & Acting
+>
 export type EntityID = { id: string }
 export type Entity = EntityID & Components
 
@@ -49,6 +53,10 @@ export const tagWalkable = (): TagWalkable => {
 
 export const tagActor = (): TagActor => {
   return { tagActor: true }
+}
+
+export const acting = (action: ActionTypes): Acting => {
+  return { acting: action }
 }
 
 export class Builder {
