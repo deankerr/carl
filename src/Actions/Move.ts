@@ -1,5 +1,6 @@
 import * as ROT from 'rot-js'
 import { Direction } from './../util/direction'
+import { ActionTypes } from './ActionTypes'
 
 export type Move = {
   move: { dir: Direction; dx: number; dy: number }
@@ -28,7 +29,7 @@ export function Move(dir: Direction): Move {
   }
 }
 
-export function __randomMove() {
+export function __randomMove(): ActionTypes {
   const dirs = [
     Direction.E,
     Direction.N,

@@ -48,26 +48,23 @@ export class Game {
     console.group('=== update === code:', code)
     const world = this.world
 
-    // currently assuming we start the loop on the player's turn
-    let playerTurn = true
-
-    const action = input(code)
-    if (!action) {
+    const playerAction = input(code)
+    if (!playerAction) {
       console.warn('null action')
       console.groupEnd()
       return
     }
-    console.log('Action:', action)
+    console.log('Action:', playerAction)
 
     // UI only
-    if ('ui' in action) {
-      switch (action.ui) {
+    if ('ui' in playerAction) {
+      switch (playerAction.ui) {
         case 'toggleLightSwitch':
           this.lightsOn = !this.lightsOn
           console.log('UI: toggleLightSwitch:', this.lightsOn)
           break
         default:
-          console.log('UI: Action not implemented', action)
+          console.log('UI: Action not implemented', playerAction)
       }
 
       this.render()
@@ -75,12 +72,12 @@ export class Game {
       return
     }
 
-    this.system(action)
-    playerTurn = world.nextTurn()
+    // currently assuming we start the loop on the player's turn
+    let playerTurn = true
 
     // Other entities
     do {
-      this.system(__randomMove())
+      this.system(playerTurn ? playerAction : undefined)
       playerTurn = world.nextTurn()
     } while (!playerTurn)
 
@@ -89,8 +86,9 @@ export class Game {
     this.render()
   }
 
-  system(action: ActionTypes) {
+  system(action = __randomMove()) {
     const world = this.world
+
     console.log('System', world.get('tagCurrentTurn')[0])
     handleMovement(world, action)
     UpdateFOV(world)
