@@ -16,6 +16,7 @@ import { UpdateFOV } from './Systems/UpdateFOV'
 import { PtS } from './Core/Point'
 import { handleMovement } from './Systems/HandleMovement'
 import { ActionTypes, __randomMove } from './Actions'
+import { CONFIG } from './config'
 
 export class Game {
   display: ROT.Display
@@ -33,7 +34,7 @@ export class Game {
     // mouse click coords
     mouseClick(d, (event) => {
       const pt = d.eventToPosition(event)
-      console.log(`${pt[0]},${pt[1] + 2}`)
+      console.log(`${pt[0]},${pt[1] + CONFIG.marginTop}`)
     })
 
     this.render()
@@ -107,14 +108,12 @@ export class Game {
   // TODO ie. debug coords at mouse display
   render() {
     const d = this.display
+    const top = CONFIG.marginTop
+
     d.clear()
+
     // terrain
     const terrain = this.state.current.level.terrain
-
-    const top = 2
-    // console.log('terrain:', terrain)
-    // console.log('private:', this.state.__state.activeLevel.terrain)
-
     const player = this.world.get('tagPlayer', 'position', 'render', 'fov', 'seen')[0]
 
     terrain.each((x, y, t) => {
@@ -136,11 +135,13 @@ export class Game {
     const entities = this.world.get('render', 'position')
 
     for (const { render, position } of entities) {
-      this.display.draw(position.x, top + position.y, render.char, render.color, null)
+      const here = PtS(position.x, position.y)
+      if (player.fov.visible.includes(here)) {
+        this.display.draw(position.x, top + position.y, render.char, render.color, null)
+      }
     }
 
     // player again
-    // const player = this.world.get('tagPlayer', 'position', 'render')
     this.display.draw(player.position.x, top + player.position.y, player.render.char, 'white', null)
   }
 }
