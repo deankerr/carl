@@ -8,15 +8,15 @@ import * as ROT from 'rot-js'
 import { State } from './State'
 import { World } from './World'
 import { TerrainDictionary } from './Terrain'
-import { mouseClick } from './util/display'
-import { Keys } from './util/Keys'
+import { mouseClick } from '../util/display'
+import { Keys } from '../util/Keys'
 import { input } from './Input'
 
-import { UpdateFOV } from './Systems/UpdateFOV'
-import { PtS } from './Core/Point'
-import { handleMovement } from './Systems/HandleMovement'
-import { __randomMove } from './Actions'
-import { CONFIG } from './config'
+import { UpdateFOV } from '../System/UpdateFOV'
+import { PtS } from '../Model/Point'
+import { handleMovement } from '../System/HandleMovement'
+import { __randomMove } from '../Action'
+import { CONFIG } from '../config'
 
 export class Game {
   display: ROT.Display

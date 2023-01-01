@@ -3,7 +3,7 @@ import * as ROT from 'rot-js'
 import { Entity, ComponentsU, tagCurrentTurn, Components, Build } from './Components'
 import { State, StateObject } from './State'
 import { Builder } from './Components'
-import { UpdateFOV } from './Systems/UpdateFOV'
+import { UpdateFOV } from '../System/UpdateFOV'
 
 export class World {
   private state: State // The actual State instance

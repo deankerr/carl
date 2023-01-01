@@ -1,7 +1,7 @@
 // The central, immutable (currently not enforced) repository for all game world state
 
 import { Entity } from './Components'
-import { Level } from './Level'
+import { Level } from '../Model/Level'
 
 export type StateObject = {
   level: Level // Active level, reference to a level in levels[]

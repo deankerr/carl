@@ -1,9 +1,9 @@
 // temp: should be unified with npc actions
 
-import { ActionTypes } from '../Actions'
-import { World } from '../World'
-import { position } from '../Components'
-import { TerrainDictionary } from '../Terrain'
+import { ActionTypes } from '../Action'
+import { World } from '../Core/World'
+import { position } from '../Core/Components'
+import { TerrainDictionary } from '../Core/Terrain'
 
 export function handleMovement(world: World, action: ActionTypes) {
   if (!action) {

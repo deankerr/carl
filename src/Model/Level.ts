@@ -1,10 +1,10 @@
 // Probably will still want this for level helper methods
-import { Grid } from './Core/Grid'
-import { Entity } from './Components'
-import { dungeon4 } from './Generate'
-import { Room } from './Generate/dungeon4/dungeon4'
-import { TerrainDictionary } from './Terrain'
-import { Pt } from './Core/Point'
+import { Grid } from './Grid'
+import { Entity } from '../Core/Components'
+import { dungeon4 } from '../Generate'
+import { Room } from '../Generate/dungeon4/dungeon4'
+import { TerrainDictionary } from '../Core/Terrain'
+import { Pt } from './Point'
 
 // pointless duplication unless I decide I want to build levels outside of Level
 export type LevelData = {

@@ -1,8 +1,8 @@
 // * Translate key code into Action
 
 // import { Move, Direction, Wait, UI, ChangeLevel } from './Actions'
-import { ActionTypes, Move, UI } from './Actions'
-import { Direction } from './util/direction'
+import { ActionTypes, Move, UI } from '../Action'
+import { Direction } from '../util/direction'
 
 export function input(code: string): ActionTypes {
   // console.log('input code', code)

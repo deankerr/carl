@@ -1,6 +1,6 @@
-import { World } from '../World'
-import { fov, seen } from '../Components'
-import { PtS } from '../Core/Point'
+import { World } from '../Core/World'
+import { fov, seen } from '../Core/Components'
+import { PtS } from '../Model/Point'
 import * as ROT from 'rot-js'
 
 export function UpdateFOV(world: World) {

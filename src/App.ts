@@ -9,7 +9,7 @@ let display: ROT.Display
 const keys: Keys = new Keys()
 
 // game
-import { Game } from './Game'
+import { Game } from './Core/Game'
 
 // dungeon 4
 import { create, history, Dungeon4Data, modulesAvailable } from './Generate/dungeon4/dungeon4'
