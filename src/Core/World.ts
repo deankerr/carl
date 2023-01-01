@@ -132,7 +132,7 @@ export class World {
     if (prev.length === 0) console.error('No previous turn?')
 
     const nextID = this.scheduler.next()
-    console.log('next turn:', nextID)
+    // console.log('next turn:', nextID)
     const next = this.getByID(nextID)
     this.addComponent(next, tagCurrentTurn())
 

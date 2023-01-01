@@ -15,7 +15,7 @@ import { input } from './Input'
 import { UpdateFOV } from '../System/UpdateFOV'
 import { PtS } from '../Model/Point'
 import { handleMovement } from '../System/HandleMovement'
-import { __randomMove, __wait } from '../Action'
+import { actionName, ActionTypes, __randomMove, __wait } from '../Action'
 import { CONFIG } from '../config'
 
 export class Game {
@@ -72,13 +72,15 @@ export class Game {
       return
     }
 
+    // debug: all entities do this action
+    const __defaultActions = { wander: __randomMove, wait: __wait }
+    const __defaultAction = __defaultActions.wander()
+
     // Run systems on each entity until it's the player's turn again
     let playerTurn = true
     do {
-      console.groupCollapsed('System', world.get('tagCurrentTurn')[0].id)
-      this.system(playerTurn ? playerAction : undefined)
+      this.system(playerTurn ? playerAction : __defaultAction)
       playerTurn = world.nextTurn()
-      console.groupEnd()
     } while (!playerTurn)
 
     console.log('update complete')
@@ -86,13 +88,14 @@ export class Game {
     this.render()
   }
 
-  // debug: all entities do this action
-  __defaultAction = { wander: __randomMove, wait: __wait }
-
-  system(action = this.__defaultAction.wait()) {
+  system(action: ActionTypes) {
     const world = this.world
+    console.groupCollapsed('System', world.get('tagCurrentTurn')[0].id, actionName(action))
+
     handleMovement(world, action)
     UpdateFOV(world)
+
+    console.groupEnd()
   }
 
   // TODO make independent of turn queue - animations/non-blocking/ui updates during turns
