@@ -15,7 +15,7 @@ import { input } from './Input'
 import { UpdateFOV } from './Systems/UpdateFOV'
 import { PtS } from './Core/Point'
 import { handleMovement } from './Systems/HandleMovement'
-import { ActionTypes, __randomMove } from './Actions'
+import { __randomMove } from './Actions'
 import { CONFIG } from './config'
 
 export class Game {
@@ -72,13 +72,13 @@ export class Game {
       return
     }
 
-    // currently assuming we start the loop on the player's turn
+    // Run systems on each entity until it's the player's turn again
     let playerTurn = true
-
-    // Other entities
     do {
+      console.groupCollapsed('System', world.get('tagCurrentTurn')[0].id)
       this.system(playerTurn ? playerAction : undefined)
       playerTurn = world.nextTurn()
+      console.groupEnd()
     } while (!playerTurn)
 
     console.log('update complete')
@@ -88,35 +88,9 @@ export class Game {
 
   system(action = __randomMove()) {
     const world = this.world
-
-    console.log('System', world.get('tagCurrentTurn')[0])
     handleMovement(world, action)
     UpdateFOV(world)
   }
-
-  /*
-  update() {
-
-    do {
-      const next = this.world.nextTurn()
-      if (next == player) break? generator function? how do we jump back in
-      playerAction || getAction()
-       Move(action)
-      UpdateFOV(this.world)
-
-    } while (1)
-
-
-    do {
-      Move(action)
-      UpdateFOV()
-      render()
-      nextTurn()
-      if (next == player) break
-      GetAIAction()
-    } while (1)
-  }
-*/
 
   // TODO make independent of turn queue - animations/non-blocking/ui updates during turns
   // TODO ie. debug coords at mouse display

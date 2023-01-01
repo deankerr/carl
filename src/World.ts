@@ -1,4 +1,4 @@
-// ECS Helper, works with writable state, sends updated state objects to State
+// Entity/Component manager. Currently should be the only way to mutate game state
 import * as ROT from 'rot-js'
 import { Entity, ComponentsU, tagCurrentTurn, Components, Build } from './Components'
 import { State, StateObject } from './State'
@@ -7,7 +7,7 @@ import { UpdateFOV } from './Systems/UpdateFOV'
 
 export class World {
   private state: State // The actual State instance
-  current: StateObject // reference to State.current
+  current: StateObject // reference to State.current (should be readonly/immutable?)
   readonly scheduler = new ROT.Scheduler.Simple() // ! should be on level?
 
   constructor(state: State) {
@@ -39,7 +39,13 @@ export class World {
     this.nextTurn() // set the currentTurn
   }
 
-  // === "Actions" ? ===
+  /*
+    World API
+    Everything that happens in the game should occur through this API.
+
+    - Currently has duplicate functionality/concept with State
+    - Consider making entity references id based to reduce old/newEntity boilerplate
+  */
 
   // add new entity to state
   add(entity: Entity) {
@@ -54,7 +60,6 @@ export class World {
   get<Key extends keyof Entity>(...components: Key[]): EntityWith<Entity, Key>[] {
     const entities = this.state.current.level.entities
     const results = entities.filter((e) => components.every((name) => name in e)) as EntityWith<Entity, Key>[]
-    // console.log('query results:', results)
     return results
   }
 
@@ -109,7 +114,6 @@ export class World {
   }
 
   removeComponent(entity: Entity, componentName: keyof Components) {
-    // console.log('%cRemove', 'color: red')
     const oldEntity = this.state.current.level.entities.find((e) => e === entity)
     if (!oldEntity) throw new Error('removeC: Unable to locate entity to update')
 
@@ -123,28 +127,21 @@ export class World {
 
   nextTurn() {
     const prev = this.get('tagCurrentTurn')
-    // console.log('prev:', prev)
     if (prev.length > 1) throw new Error('Multiple entities with current turn')
     if (prev.length > 0) this.removeComponent(prev[0], 'tagCurrentTurn')
     if (prev.length === 0) console.error('No previous turn?')
 
     const nextID = this.scheduler.next()
     console.log('next turn:', nextID)
-    const next = this.getID(nextID)
-    // console.log('next:', next)
-
-    // const nNext = this.addComponent(next, tagCurrentTurn())
+    const next = this.getByID(nextID)
     this.addComponent(next, tagCurrentTurn())
-    // console.log(nNext)
 
+    // return true if its the player's turn
     const playerTurn = this.get('tagCurrentTurn', 'tagPlayer')
-    // console.log('playerTurn:', playerTurn)
-    // return true if
     return playerTurn.length === 1 ? true : false
   }
 
-  // * May never need this?
-  getID(id: string) {
+  getByID(id: string) {
     const entities = this.state.current.level.entities
     const result = entities.filter((e) => e.id === id)
 

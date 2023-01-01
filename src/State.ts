@@ -1,9 +1,7 @@
-// The central, immutable (??) repository for all game world state
-// The plan: lives in mutable form in here only, Object.freeze on everything handed out
+// The central, immutable (currently not enforced) repository for all game world state
 
 import { Entity } from './Components'
 import { Level } from './Level'
-import { DeepReadonly } from 'ts-essentials'
 
 export type StateObject = {
   level: Level // Active level, reference to a level in levels[]
@@ -11,7 +9,8 @@ export type StateObject = {
   levels: Level[]
 }
 
-export type StateCurrent = DeepReadonly<StateObject>
+// Config
+const showLog = false
 
 export class State {
   current: StateObject
@@ -31,7 +30,11 @@ export class State {
     log('Initial', this.current)
   }
 
-  // === "Reducers" ===
+  /*
+    State API
+    Should define a limited API for how the state can change.
+    - Currently has duplicate functionality/concept with World
+  */
 
   // return the next entity id, increment
   nextEntityID() {
@@ -50,7 +53,6 @@ export class State {
   // updates an entity - ie. replaces the entity with a new one with the new component
   updateEntity(oldEntity: Entity, newEntity: Entity) {
     log('Update entity ' + oldEntity.id, this.current)
-    // console.table(oldEntity)
     const all = this.current.level.entities
     let index = 0
     for (const entity of all) {
@@ -60,13 +62,10 @@ export class State {
       }
       index++
     }
-
-    // log('Result', this.current)
-    // console.table(newEntity)
+    log('Result', this.current)
   }
 }
 
-const showLog = false
 // TODO better log solution
 const stateLog: string[] = []
 function log(s: string, state: StateObject) {
