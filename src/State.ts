@@ -14,7 +14,7 @@ export type StateObject = {
 export type StateCurrent = DeepReadonly<StateObject>
 
 export class State {
-  __state: StateObject
+  current: StateObject
 
   constructor() {
     // Create the initial state
@@ -26,32 +26,32 @@ export class State {
       levels: [initialLevel],
     }
 
-    this.__state = initialState
+    this.current = initialState
 
-    log('Initial', this.__state)
+    log('Initial', this.current)
   }
 
   // === "Reducers" ===
 
   // return the next entity id, increment
   nextEntityID() {
-    log('nextEntityID: ' + this.__state.entityCount, this.__state)
-    return this.__state.entityCount++
+    log('nextEntityID: ' + this.current.entityCount, this.current)
+    return this.current.entityCount++
   }
 
   addEntity(entity: Entity) {
-    log('Add entity ' + entity.id, this.__state)
+    log('Add entity ' + entity.id, this.current)
 
-    this.__state.level.entities.push(entity)
+    this.current.level.entities.push(entity)
 
-    log('Result', this.__state)
+    log('Result', this.current)
   }
 
   // updates an entity - ie. replaces the entity with a new one with the new component
   updateEntity(oldEntity: Entity, newEntity: Entity) {
-    log('Update entity ' + oldEntity.id, this.__state)
-
-    const all = this.__state.level.entities
+    log('Update entity ' + oldEntity.id, this.current)
+    console.table(oldEntity)
+    const all = this.current.level.entities
     let index = 0
     for (const entity of all) {
       if (entity === oldEntity) {
@@ -61,7 +61,8 @@ export class State {
       index++
     }
 
-    log('Result', this.__state)
+    log('Result', this.current)
+    console.table(newEntity)
   }
 }
 

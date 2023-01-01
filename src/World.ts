@@ -1,23 +1,25 @@
 // ECS Helper, works with writable state, sends updated state objects to State
 import * as ROT from 'rot-js'
-import { Entity, ComponentsU, tagCurrentTurn } from './Components'
-import { State } from './State'
+import { Entity, ComponentsU, tagCurrentTurn, Components } from './Components'
+import { State, StateObject } from './State'
 import { Builder } from './Components'
-import { DeepReadonly } from 'ts-essentials'
 import { UpdateFOV } from './Systems/UpdateFOV'
 
 export class World {
-  readonly state: State // The actual State instance
+  private state: State // The actual State instance
+  current: StateObject
   readonly scheduler = new ROT.Scheduler.Simple() // ! should be on level
+  private currentTurn: Entity | null = null
 
   constructor(state: State) {
     this.state = state
+    this.current = state.current
 
-    const pt1 = state.__state.level.ptInRoom(1)
+    const pt1 = state.current.level.ptInRoom(1)
     const dood = new Builder().position(pt1.x, pt1.y).render('D', 'blue').build('dood')
     const nDood = this.add(dood)
 
-    const pt2 = state.__state.level.ptInRoom(0)
+    const pt2 = state.current.level.ptInRoom(0)
     const player = new Builder().position(pt2.x, pt2.y).render('@', 'white').tagPlayer().fov(5).seen().build('player')
     const nPlayer = this.add(player)
     UpdateFOV(this)
@@ -38,21 +40,21 @@ export class World {
   }
 
   // return all entities with specified components
-  get<Key extends keyof Entity>(...components: Key[]): ROEntityWith<Key>[] {
-    const entities = this.state.__state.level.entities
-    const results = entities.filter((e) => components.every((name) => name in e)) as ROEntityWith<Key>[]
+  get<Key extends keyof Entity>(...components: Key[]): EntityWith<Entity, Key>[] {
+    const entities = this.state.current.level.entities
+    const results = entities.filter((e) => components.every((name) => name in e)) as EntityWith<Entity, Key>[]
     // console.log('query results:', results)
     return results
   }
 
   // return entity with component if it has it
-  with<Key extends keyof Entity>(entity: Entity | DeepReadonly<Entity>, component: Key): ROEntityWith<Key> | null {
-    if (component in entity) return entity as ROEntityWith<Key>
+  with<Key extends keyof Entity>(entity: Entity, component: Key): EntityWith<Entity, Key> | null {
+    if (component in entity) return entity as EntityWith<Entity, Key>
     return null
   }
 
-  addComponent(entity: DeepReadonly<Entity>, component: ComponentsU) {
-    const oldEntity = this.state.__state.level.entities.find((e) => e === entity)
+  addComponent(entity: Entity, component: ComponentsU) {
+    const oldEntity = this.state.current.level.entities.find((e) => e === entity)
     if (!oldEntity) throw new Error('addC: Unable to locate entity to update')
 
     const componentName = Reflect.ownKeys(component).join()
@@ -72,8 +74,8 @@ export class World {
   }
 
   // gets writable entity from state, updates component, sends back to state
-  updateComponent(entity: DeepReadonly<Entity>, component: ComponentsU) {
-    const oldEntity = this.state.__state.level.entities.find((e) => e === entity)
+  updateComponent(entity: Entity, component: ComponentsU) {
+    const oldEntity = this.state.current.level.entities.find((e) => e === entity)
     if (!oldEntity) throw new Error('updateC: Unable to locate entity to update')
 
     // get the property key name. feels weird
@@ -95,19 +97,39 @@ export class World {
     return newEntity
   }
 
+  removeComponent(entity: Entity, componentName: keyof Components) {
+    console.log('%cRemove', 'color: red')
+    const oldEntity = this.state.current.level.entities.find((e) => e === entity)
+    if (!oldEntity) throw new Error('removeC: Unable to locate entity to update')
+
+    const newEntity = { ...oldEntity }
+    Reflect.deleteProperty(newEntity, componentName)
+
+    this.state.updateEntity(oldEntity, newEntity)
+
+    return newEntity
+  }
+
   nextTurn() {
+    if (this.currentTurn) {
+      const prev = this.get('tagCurrentTurn')
+      console.log('prev:', prev)
+      if (prev.length > 1) throw new Error('Multiple entities with current turn')
+      if (prev.length > 0) this.removeComponent(prev[0], 'tagCurrentTurn')
+    }
     const nextID = this.scheduler.next()
     console.log('next turn:', nextID)
     const next = this.getID(nextID)
     console.log('next:', next)
     const nNext = this.addComponent(next, tagCurrentTurn())
     console.log(nNext)
+    this.currentTurn = nNext
     return nextID
   }
 
   // * May never need this?
   getID(id: string) {
-    const entities = this.state.__state.level.entities
+    const entities = this.state.current.level.entities
     const result = entities.filter((e) => e.id === id)
 
     if (result.length > 1) {
@@ -127,4 +149,3 @@ export class World {
 }
 
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
-export type ROEntityWith<Key extends keyof Entity> = DeepReadonly<EntityWith<Entity, Key>>

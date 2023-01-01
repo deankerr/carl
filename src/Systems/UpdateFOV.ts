@@ -11,7 +11,7 @@ export function UpdateFOV(world: World) {
   for (const entity of entities) {
     console.log('UpdateFOV', entity.id)
 
-    const level = world.state.__state.level
+    const level = world.current.level
     const fovFunction = new ROT.FOV.RecursiveShadowcasting(level.isTransparent.bind(level))
 
     const newFOV = fov(entity.fov.radius)

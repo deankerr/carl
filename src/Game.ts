@@ -40,13 +40,12 @@ export class Game {
     this.update('x')
 
     this.keys.add(this.update.bind(this))
-
-    this.world.nextTurn()
   }
 
   update(code: string) {
     console.log('=== update === code:', code)
 
+    this.world.nextTurn()
     // currently assuming we start the loop on the player's turn
     const action = input(code)
     if (!action) {
@@ -93,7 +92,7 @@ export class Game {
   // TODO ie. debug coords at mouse display
   render() {
     // terrain
-    const terrain = this.state.__state.level.terrain
+    const terrain = this.state.current.level.terrain
 
     const top = 2
     // console.log('terrain:', terrain)
