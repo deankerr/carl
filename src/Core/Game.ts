@@ -74,12 +74,12 @@ export class Game {
 
     // debug: all entities do this action
     const __defaultActions = { wander: __randomMove, wait: __wait }
-    const __defaultAction = __defaultActions.wander()
+    const __defaultAction = __defaultActions.wander
 
     // Run systems on each entity until it's the player's turn again
     let playerTurn = true
     do {
-      this.system(playerTurn ? playerAction : __defaultAction)
+      this.system(playerTurn ? playerAction : __defaultAction())
       playerTurn = world.nextTurn()
     } while (!playerTurn)
 
