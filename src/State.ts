@@ -50,7 +50,7 @@ export class State {
   // updates an entity - ie. replaces the entity with a new one with the new component
   updateEntity(oldEntity: Entity, newEntity: Entity) {
     log('Update entity ' + oldEntity.id, this.current)
-    console.table(oldEntity)
+    // console.table(oldEntity)
     const all = this.current.level.entities
     let index = 0
     for (const entity of all) {
@@ -61,15 +61,17 @@ export class State {
       index++
     }
 
-    log('Result', this.current)
-    console.table(newEntity)
+    // log('Result', this.current)
+    // console.table(newEntity)
   }
 }
 
+const showLog = false
 // TODO better log solution
 const stateLog: string[] = []
 function log(s: string, state: StateObject) {
   stateLog.unshift('State: ' + s)
+  if (!showLog) return
   console.groupCollapsed(stateLog[0])
   console.log(state)
   console.groupEnd()

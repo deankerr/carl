@@ -26,7 +26,7 @@ export function App() {
   display = createDisplay()
   window.display = [display]
 
-  ROT.RNG.setSeed(1111)
+  // ROT.RNG.setSeed(1111)
 
   switch (CONFIG.appInitial) {
     case 'game2':

@@ -1,31 +1,42 @@
 // ECS Helper, works with writable state, sends updated state objects to State
 import * as ROT from 'rot-js'
-import { Entity, ComponentsU, tagCurrentTurn, Components } from './Components'
+import { Entity, ComponentsU, tagCurrentTurn, Components, Build } from './Components'
 import { State, StateObject } from './State'
 import { Builder } from './Components'
 import { UpdateFOV } from './Systems/UpdateFOV'
 
 export class World {
   private state: State // The actual State instance
-  current: StateObject
-  readonly scheduler = new ROT.Scheduler.Simple() // ! should be on level
-  private currentTurn: Entity | null = null
+  current: StateObject // reference to State.current
+  readonly scheduler = new ROT.Scheduler.Simple() // ! should be on level?
 
   constructor(state: State) {
     this.state = state
     this.current = state.current
 
-    const pt1 = state.current.level.ptInRoom(1)
-    const dood = new Builder().position(pt1.x, pt1.y).render('D', 'blue').build('dood')
-    const nDood = this.add(dood)
-
     const pt2 = state.current.level.ptInRoom(0)
     const player = new Builder().position(pt2.x, pt2.y).render('@', 'white').tagPlayer().fov(5).seen().build('player')
     const nPlayer = this.add(player)
+    this.scheduler.add(nPlayer.id, true)
+
+    const pt1 = state.current.level.ptInRoom(1)
+    const blueDude = new Builder().position(pt1.x, pt1.y).render('D', 'blue').build('blueDude')
+    const nBlueDude = this.add(blueDude)
+    this.scheduler.add(nBlueDude.id, true)
+
+    const pt3 = state.current.level.ptInRoom(2)
+    const greenDude = Build().position(pt3.x, pt3.y).render('D', 'green').build('green dude')
+    const nGreenDude = this.add(greenDude)
+    this.scheduler.add(nGreenDude.id, true)
+
+    const pt4 = state.current.level.ptInRoom(3)
+    const rat = Build().position(pt4.x, pt4.y).render('r', 'brown').build('rat')
+    const nRat = this.add(rat)
+    this.scheduler.add(nRat.id, true)
+
     UpdateFOV(this)
 
-    this.scheduler.add(nPlayer.id, true)
-    this.scheduler.add(nDood.id, true)
+    this.nextTurn() // set the currentTurn
   }
 
   // === "Actions" ? ===
@@ -98,7 +109,7 @@ export class World {
   }
 
   removeComponent(entity: Entity, componentName: keyof Components) {
-    console.log('%cRemove', 'color: red')
+    // console.log('%cRemove', 'color: red')
     const oldEntity = this.state.current.level.entities.find((e) => e === entity)
     if (!oldEntity) throw new Error('removeC: Unable to locate entity to update')
 
@@ -111,20 +122,25 @@ export class World {
   }
 
   nextTurn() {
-    if (this.currentTurn) {
-      const prev = this.get('tagCurrentTurn')
-      console.log('prev:', prev)
-      if (prev.length > 1) throw new Error('Multiple entities with current turn')
-      if (prev.length > 0) this.removeComponent(prev[0], 'tagCurrentTurn')
-    }
+    const prev = this.get('tagCurrentTurn')
+    // console.log('prev:', prev)
+    if (prev.length > 1) throw new Error('Multiple entities with current turn')
+    if (prev.length > 0) this.removeComponent(prev[0], 'tagCurrentTurn')
+    if (prev.length === 0) console.error('No previous turn?')
+
     const nextID = this.scheduler.next()
     console.log('next turn:', nextID)
     const next = this.getID(nextID)
-    console.log('next:', next)
-    const nNext = this.addComponent(next, tagCurrentTurn())
-    console.log(nNext)
-    this.currentTurn = nNext
-    return nextID
+    // console.log('next:', next)
+
+    // const nNext = this.addComponent(next, tagCurrentTurn())
+    this.addComponent(next, tagCurrentTurn())
+    // console.log(nNext)
+
+    const playerTurn = this.get('tagCurrentTurn', 'tagPlayer')
+    // console.log('playerTurn:', playerTurn)
+    // return true if
+    return playerTurn.length === 1 ? true : false
   }
 
   // * May never need this?

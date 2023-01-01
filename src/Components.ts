@@ -7,11 +7,12 @@ export type TagPlayer = { tagPlayer: true }
 export type FOV = { fov: { radius: number; visible: string[] } }
 export type Seen = { seen: { visible: string[] } }
 export type TagCurrentTurn = { tagCurrentTurn: true }
+export type TagWalkable = { tagWalkable: true }
 
 // currently needed only for updateComponents on world, I probably don't want this
-export type ComponentsU = Position | Render | TagPlayer | FOV | Seen | TagCurrentTurn
+export type ComponentsU = Position | Render | TagPlayer | FOV | Seen | TagCurrentTurn | TagWalkable
 
-export type Components = Partial<Position & Render & TagPlayer & FOV & Seen & TagCurrentTurn>
+export type Components = Partial<Position & Render & TagPlayer & FOV & Seen & TagCurrentTurn & TagWalkable>
 export type EntityID = { id: string }
 export type Entity = EntityID & Components
 
@@ -37,6 +38,10 @@ export const seen = (pts?: string[]): Seen => {
 
 export const tagCurrentTurn = (): TagCurrentTurn => {
   return { tagCurrentTurn: true }
+}
+
+export const tagWalkable = (): TagWalkable => {
+  return { tagWalkable: true }
 }
 
 export class Builder {
@@ -71,4 +76,18 @@ export class Builder {
     this.components = { ...seen(), ...this.components }
     return this
   }
+
+  tagWalkable() {
+    this.components = { ...tagWalkable(), ...this.components }
+    return this
+  }
+
+  tagCurrentTurn() {
+    this.components = { ...tagCurrentTurn(), ...this.components }
+    return this
+  }
+}
+
+export function Build() {
+  return new Builder()
 }

@@ -1,3 +1,4 @@
+import * as ROT from 'rot-js'
 import { Direction } from './../util/direction'
 
 export type Move = {
@@ -25,4 +26,20 @@ export function Move(dir: Direction): Move {
     case Direction.SE:
       return { move: { dir, dx: 1, dy: 1 } }
   }
+}
+
+export function __randomMove() {
+  const dirs = [
+    Direction.E,
+    Direction.N,
+    Direction.NE,
+    Direction.NW,
+    Direction.S,
+    Direction.SE,
+    Direction.SW,
+    Direction.W,
+    Direction.WAIT,
+  ]
+  const dir = ROT.RNG.getItem(dirs) as Direction
+  return Move(dir)
 }

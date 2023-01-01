@@ -9,7 +9,7 @@ export function UpdateFOV(world: World) {
   if (!entities) return
 
   for (const entity of entities) {
-    console.log('UpdateFOV', entity.id)
+    // console.log('UpdateFOV', entity.id)
 
     const level = world.current.level
     const fovFunction = new ROT.FOV.RecursiveShadowcasting(level.isTransparent.bind(level))

@@ -12,10 +12,9 @@ export function handleMovement(world: World, action: ActionTypes) {
   }
 
   if (action.move) {
-    console.log('Player: move', action.move)
-
-    const [player] = world.get('position', 'tagPlayer')
-    const { position: oldPosition } = player
+    const [entity] = world.get('position', 'tagCurrentTurn')
+    console.log('HandleMovement:', entity, action.move)
+    const { position: oldPosition } = entity
 
     const newX = oldPosition.x + action.move.dx
     const newY = oldPosition.y + action.move.dy
@@ -26,11 +25,11 @@ export function handleMovement(world: World, action: ActionTypes) {
     // ? handle outcomes like 'bump'?
     if (TerrainDictionary[terrain].walkable) {
       const newPosition = position(newX, newY)
-      world.updateComponent(player, newPosition)
+      world.updateComponent(entity, newPosition)
     } else {
       console.log('bump')
     }
   } else {
-    console.log('Player: unknown action:', action)
+    console.log('Move: unknown action:', action)
   }
 }

@@ -12,9 +12,10 @@ import { mouseClick } from './util/display'
 import { Keys } from './util/Keys'
 import { input } from './Input'
 
-import { handlePlayer } from './Systems/HandlePlayer'
 import { UpdateFOV } from './Systems/UpdateFOV'
 import { PtS } from './Core/Point'
+import { handleMovement } from './Systems/HandleMovement'
+import { ActionTypes, __randomMove } from './Actions'
 
 export class Game {
   display: ROT.Display
@@ -43,25 +44,39 @@ export class Game {
   }
 
   update(code: string) {
-    console.log('=== update === code:', code)
+    console.group('=== update === code:', code)
+    const world = this.world
 
-    this.world.nextTurn()
     // currently assuming we start the loop on the player's turn
+    let playerTurn = true
+
     const action = input(code)
     if (!action) {
       console.warn('null action')
+      console.groupEnd()
       return
     }
-
     console.log('Action:', action)
 
-    // temp
-    // use ID? makes passing through entity easier
-    // or attach currentTurn component, integrates with current system
-    handlePlayer(this.world, action)
-    UpdateFOV(this.world)
+    this.system(action)
+    playerTurn = world.nextTurn()
 
+    // Other entities
+    do {
+      this.system(__randomMove())
+      playerTurn = world.nextTurn()
+    } while (!playerTurn)
+
+    console.log('update complete')
+    console.groupEnd()
     this.render()
+  }
+
+  system(action: ActionTypes) {
+    const world = this.world
+    console.log('System', world.get('tagCurrentTurn')[0])
+    handleMovement(world, action)
+    UpdateFOV(world)
   }
 
   /*
@@ -91,6 +106,8 @@ export class Game {
   // TODO make independent of turn queue - animations/non-blocking/ui updates during turns
   // TODO ie. debug coords at mouse display
   render() {
+    const d = this.display
+    d.clear()
     // terrain
     const terrain = this.state.current.level.terrain
 
