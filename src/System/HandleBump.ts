@@ -9,13 +9,14 @@ export function handleBump(world: World) {
   if (!('bump' in action)) return console.log('Bump: not a bump action')
 
   const [terrain, entities] = world.here(Pt(action.bump.x, action.bump.y))
+  const isPlayer = 'tagPlayer' in entity
 
   if (entities.length === 0) {
     // no entities, terrain bump
-    console.log(`You bounce off the ${terrain.title}.`)
+    if (isPlayer) world.message(`You bounce off the ${terrain.title}.`)
   } else {
     // entities
     // TODO handle walkable
-    console.log(`You walk straight into the ${entities[0].id}`)
+    if (isPlayer) world.message(`You walk straight into the ${entities[0].id}.`)
   }
 }

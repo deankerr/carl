@@ -111,11 +111,15 @@ export class Game {
   render() {
     const d = this.display
     const top = CONFIG.marginTop
-
     d.clear()
 
+    const { level, message } = this.state.current
+
+    // message
+    const msg = message.join(' ')
+    d.drawText(0, 0, msg)
+
     // terrain
-    const level = this.state.current.level
     const { terrain } = level
     const isInternalWall = level.isInternalWall.bind(level)
     const player = this.world.get('tagPlayer', 'position', 'render', 'fov', 'seen')[0]

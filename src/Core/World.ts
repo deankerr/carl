@@ -206,6 +206,12 @@ export class World {
 
     return result[0]
   }
+
+  // add a message to the buffer
+  message(msg: string) {
+    const { message } = this.state.current
+    message.unshift(msg)
+  }
 }
 
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }

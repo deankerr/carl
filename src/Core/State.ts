@@ -6,6 +6,7 @@ import { Level } from '../Model/Level'
 export type StateObject = {
   level: Level // Active level, reference to a level in levels[]
   entityCount: number
+  message: string[]
   levels: Level[]
 }
 
@@ -22,6 +23,7 @@ export class State {
     const initialState = {
       level: initialLevel,
       entityCount: 0,
+      message: ['You begin your queste.'],
       levels: [initialLevel],
     }
 
