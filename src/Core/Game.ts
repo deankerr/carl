@@ -15,7 +15,7 @@ import { input } from './Input'
 import { UpdateFOV } from '../System/UpdateFOV'
 import { PtS } from '../Model/Point'
 import { handleMovement } from '../System/HandleMovement'
-import { __randomMove } from '../Action'
+import { __randomMove, __wait } from '../Action'
 import { CONFIG } from '../config'
 
 export class Game {
@@ -86,7 +86,10 @@ export class Game {
     this.render()
   }
 
-  system(action = __randomMove()) {
+  // debug: all entities do this action
+  __defaultAction = { wander: __randomMove, wait: __wait }
+
+  system(action = this.__defaultAction.wait()) {
     const world = this.world
     handleMovement(world, action)
     UpdateFOV(world)
