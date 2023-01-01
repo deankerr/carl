@@ -1,25 +1,23 @@
 // ECS Helper, works with writable state, sends updated state objects to State
 import * as ROT from 'rot-js'
-import { Entity, ComponentsU, TagCurrentTurn, tagCurrentTurn } from './Components'
-import { State, StateCurrent } from './State'
+import { Entity, ComponentsU, tagCurrentTurn } from './Components'
+import { State } from './State'
 import { Builder } from './Components'
 import { DeepReadonly } from 'ts-essentials'
 import { UpdateFOV } from './Systems/UpdateFOV'
 
 export class World {
-  private state: State // The actual State instance
-  current: StateCurrent // Just the readonly part, world readable
-  scheduler = new ROT.Scheduler.Simple() // ! should be on level
+  readonly state: State // The actual State instance
+  readonly scheduler = new ROT.Scheduler.Simple() // ! should be on level
 
   constructor(state: State) {
     this.state = state
-    this.current = state.current
 
-    const pt1 = state.current.level.ptInRoom(1)
+    const pt1 = state.__state.level.ptInRoom(1)
     const dood = new Builder().position(pt1.x, pt1.y).render('D', 'blue').build('dood')
     const nDood = this.add(dood)
 
-    const pt2 = state.current.level.ptInRoom(0)
+    const pt2 = state.__state.level.ptInRoom(0)
     const player = new Builder().position(pt2.x, pt2.y).render('@', 'white').tagPlayer().fov(5).seen().build('player')
     const nPlayer = this.add(player)
     UpdateFOV(this)

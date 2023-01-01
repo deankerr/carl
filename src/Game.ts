@@ -93,13 +93,11 @@ export class Game {
   // TODO ie. debug coords at mouse display
   render() {
     // terrain
-    const terrain = this.state.current.level.terrain
+    const terrain = this.state.__state.level.terrain
 
     const top = 2
     // console.log('terrain:', terrain)
     // console.log('private:', this.state.__state.activeLevel.terrain)
-
-    terrain.set(0, 0, 3) // TODO shouldn't work on Readonly current
 
     const player = this.world.get('tagPlayer', 'position', 'render', 'fov', 'seen')[0]
 

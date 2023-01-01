@@ -15,7 +15,6 @@ export type StateCurrent = DeepReadonly<StateObject>
 
 export class State {
   __state: StateObject
-  current: StateCurrent // Readonly typed to be read by the world
 
   constructor() {
     // Create the initial state
@@ -28,8 +27,6 @@ export class State {
     }
 
     this.__state = initialState
-
-    this.current = this.__state
 
     log('Initial', this.__state)
   }
@@ -76,16 +73,3 @@ function log(s: string, state: StateObject) {
   console.log(state)
   console.groupEnd()
 }
-
-// DeepReadonly is working for now
-// // only pass in what we need to. most state wont change, eg terrain almost never except when changing level
-//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//   private deepFreeze(obj: any) {
-//     console.log('start', obj)
-//     Object.keys(obj).forEach((prop) => {
-//       if (typeof obj[prop] === 'object' && !Object.isFrozen(obj[prop])) {
-//         this.deepFreeze(obj[prop])
-//       }
-//     })
-//     return Object.freeze(obj)
-// }
