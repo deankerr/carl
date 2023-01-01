@@ -1,4 +1,5 @@
-// Probably will still want this for level helper methods
+// Represents a game level
+import * as ROT from 'rot-js'
 import { Grid } from './Grid'
 import { Entity } from '../Core/Components'
 import { dungeon4 } from '../Generate'
@@ -33,8 +34,8 @@ export class Level {
   }
 
   ptInRoom(index: number) {
-    const pt = this.rooms[index].rect.rndPt()
-    return pt
+    const rect = this.rooms[index].rect
+    return Pt(ROT.RNG.getUniformInt(rect.x, rect.x2), ROT.RNG.getUniformInt(rect.y, rect.y2))
   }
 
   isInternalWall(x: number, y: number) {

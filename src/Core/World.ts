@@ -14,32 +14,43 @@ export class World {
     this.state = state
     this.current = state.current
 
-    const pt2 = state.current.level.ptInRoom(0)
-    const player = new Builder()
-      .position(pt2.x, pt2.y)
-      .render('@', 'white')
-      .tagPlayer()
-      .fov(5)
-      .seen()
-      .tagActor()
-      .build('player')
-    this.add(player)
-
-    const pt1 = state.current.level.ptInRoom(1)
-    const blueDude = new Builder().position(pt1.x, pt1.y).render('D', 'blue').tagActor().build('blueDude')
-    this.add(blueDude)
-
-    const pt3 = state.current.level.ptInRoom(2)
-    const greenDude = Build().position(pt3.x, pt3.y).render('D', 'green').tagActor().build('green dude')
-    this.add(greenDude)
-
-    const pt4 = state.current.level.ptInRoom(3)
-    const rat = Build().position(pt4.x, pt4.y).render('r', 'brown').tagActor().build('rat')
-    this.add(rat)
+    this.__populate()
 
     UpdateFOV(this)
 
     this.nextTurn() // set the currentTurn
+  }
+
+  __populate() {
+    const level = this.state.current.level
+
+    // player
+    this.add(
+      Build().positionPt(level.ptInRoom(0)).render('@', 'white').tagPlayer().fov(5).seen().tagActor().build('player')
+    )
+
+    // some NPCs (add position + build)
+    const npcs = [
+      [Build().render('o', 'lightgreen').tagActor(), 'orc'],
+      [Build().render('d', 'blue').tagActor(), 'blue-dude'],
+      [Build().render('d', 'green').tagActor(), 'green-dude'],
+      [Build().render('r', 'brown').tagActor(), 'rat'],
+      [Build().render('g', 'olive').tagActor(), 'goblin'],
+      [Build().render('s', 'salmon').tagActor(), 'salmon'],
+      [Build().render('b', 'yellow').tagActor(), 'bart-simpson'],
+      [Build().render('V', 'red').tagActor(), 'fire-vortex'],
+      [Build().render('m', 'mediumslateblue').tagActor(), 'man'],
+    ]
+
+    const rNpcs = ROT.RNG.shuffle(npcs)
+
+    level.rooms.forEach((_r, i) => {
+      if (i === 0) return
+      const ent = rNpcs[i][0] as Builder
+      const tag = rNpcs[i][1] as string
+      const n = ent.positionPt(level.ptInRoom(i)).build(tag)
+      this.add(n)
+    })
   }
 
   /*
