@@ -54,7 +54,7 @@ export class Game {
       console.groupEnd()
       return
     }
-    console.log('Action:', playerAction)
+    console.log('playerAction:', playerAction)
 
     // UI only
     if ('ui' in playerAction) {
@@ -89,13 +89,15 @@ export class Game {
   }
 
   system(action: ActionTypes) {
-    const world = this.world
+    const { world, state } = this
+    state.updateAction(action)
     console.groupCollapsed('System', world.get('tagCurrentTurn')[0].id, actionName(action))
 
-    handleMovement(world, action)
+    handleMovement(world)
     UpdateFOV(world)
 
     console.groupEnd()
+    state.updateAction(null)
   }
 
   // TODO make independent of turn queue - animations/non-blocking/ui updates during turns

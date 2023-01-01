@@ -1,13 +1,11 @@
-// temp: should be unified with npc actions
-
-import { ActionTypes } from '../Action'
 import { World } from '../Core/World'
 import { position } from '../Core/Components'
 import { TerrainDictionary } from '../Core/Terrain'
 import { strCmp } from '../util/util'
 import { Pt } from '../Model/Point'
 
-export function handleMovement(world: World, action: ActionTypes) {
+export function handleMovement(world: World) {
+  const action = world.current.action
   if (!action) {
     console.warn('Move: null action')
     return

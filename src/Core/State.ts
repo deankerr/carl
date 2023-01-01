@@ -2,9 +2,12 @@
 
 import { Entity } from './Components'
 import { Level } from '../Model/Level'
+import { actionName, ActionTypes } from '../Action'
 
 export type StateObject = {
   level: Level // Active level, reference to a level in levels[]
+  // entity: Entity | null // the entity currently taking their turn
+  action: ActionTypes // the action currently being taken by the active entity (systems can update this) // ? make [] - record action history?
   entityCount: number
   levels: Level[]
 }
@@ -21,6 +24,8 @@ export class State {
 
     const initialState = {
       level: initialLevel,
+      entity: null,
+      action: null,
       entityCount: 0,
       levels: [initialLevel],
     }
@@ -63,6 +68,13 @@ export class State {
       index++
     }
     log('Result', this.current)
+  }
+
+  // set the current action being evaluated during system process
+  updateAction(action: ActionTypes) {
+    const prevAction = this.current.action
+    this.current.action = action
+    console.log(`STATE UPDATE_ACTION '${actionName(prevAction)}' -> '${actionName(action)}'`)
   }
 }
 
