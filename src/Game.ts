@@ -101,12 +101,19 @@ export class Game {
     d.clear()
 
     // terrain
-    const terrain = this.state.current.level.terrain
+    const level = this.state.current.level
+    const { terrain } = level
+    const isInternalWall = level.isInternalWall.bind(level)
     const player = this.world.get('tagPlayer', 'position', 'render', 'fov', 'seen')[0]
 
     terrain.each((x, y, t) => {
       // TODO TerrainDict function, return default results for unknown?
       // ? maybe we should just crash
+
+      // skip rendering if this is a wall surrounded by other walls
+      // currently only to make lightsOn view look nicer
+      if (this.lightsOn && isInternalWall(x, y)) return
+
       const here = PtS(x, y)
       // currently visible by player
       if (player.fov.visible.includes(here)) {
