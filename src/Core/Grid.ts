@@ -19,10 +19,11 @@ export class Grid<T> {
     this.grid[y][x] = value
   }
 
-  each(callback: (x: number, y: number, value: T) => void) {
+  each(callback: (x: number, y: number, value: T) => void | null) {
     this.grid.forEach((row, yi) =>
       row.forEach((value, xi) => {
-        callback(xi, yi, value)
+        // return null to exit loop
+        if (callback(xi, yi, value) === null) return
       })
     )
   }
