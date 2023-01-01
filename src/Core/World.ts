@@ -18,6 +18,7 @@ export class World {
     this.current = state.current
 
     this.__populate()
+    this.message('You begin your queste.')
 
     UpdateFOV(this)
 
@@ -209,8 +210,8 @@ export class World {
 
   // add a message to the buffer
   message(msg: string) {
-    const { message } = this.state.current
-    message.unshift(msg)
+    const { messages, playerTurns } = this.state.current
+    messages.unshift([playerTurns, msg])
   }
 }
 

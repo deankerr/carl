@@ -3,10 +3,13 @@
 import { Entity } from './Components'
 import { Level } from '../Model/Level'
 
+type Message = [number, string]
+
 export type StateObject = {
   level: Level // Active level, reference to a level in levels[]
   entityCount: number
-  message: string[]
+  playerTurns: number
+  messages: Message[]
   levels: Level[]
 }
 
@@ -23,7 +26,8 @@ export class State {
     const initialState = {
       level: initialLevel,
       entityCount: 0,
-      message: ['You begin your queste.'],
+      playerTurns: 0,
+      messages: [],
       levels: [initialLevel],
     }
 
@@ -65,6 +69,10 @@ export class State {
       index++
     }
     log('Result', this.current)
+  }
+
+  increasePlayerTurns() {
+    this.current.playerTurns++
   }
 }
 

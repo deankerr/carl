@@ -25,6 +25,7 @@ export class Game {
   world: World
 
   lightsOn = false // reveal level debug flag
+  hideInternalWalls = true
 
   constructor(d: ROT.Display) {
     console.log('new Game2')
@@ -78,6 +79,7 @@ export class Game {
 
     // Run systems on each entity until it's the player's turn again
     let playerTurn = true
+    this.state.increasePlayerTurns()
     do {
       this.system(playerTurn ? playerAction : __defaultAction())
       playerTurn = world.nextTurn()
@@ -90,10 +92,12 @@ export class Game {
 
   system(action: ActionTypes) {
     const { world } = this
+    const playerTurns = world.current.playerTurns
     const [entity] = world.get('tagCurrentTurn')
+
     world.addComponent(entity, acting(action))
 
-    console.groupCollapsed('System', entity.id, actionName(action))
+    console.groupCollapsed('System', entity.id, actionName(action), playerTurns)
 
     handleMovement(world)
     handleBump(world)
@@ -111,12 +115,31 @@ export class Game {
   render() {
     const d = this.display
     const top = CONFIG.marginTop
+
+    const { level, messages, playerTurns } = this.state.current
+
+    // message buffer
+    let msgIndex = -1
+    let newMsg = ''
+
+    // add all new messages to buffer // ? handle (more...)
+    while (++msgIndex < messages.length && messages[msgIndex][0] === playerTurns) {
+      newMsg += messages[msgIndex][1]
+    }
+
+    // add older messages until the buffer will wrap to 3 lines
+    msgIndex--
+    let oldMsg = ''
+    while (
+      ++msgIndex < messages.length &&
+      d.drawText(0, 0, '%c{000}' + newMsg + ' ' + oldMsg + ' ' + messages[msgIndex][1]) < 3
+    ) {
+      oldMsg += ' ' + messages[msgIndex++][1]
+    }
+
     d.clear()
 
-    const { level, message } = this.state.current
-
-    // message
-    const msg = message.join(' ')
+    const msg = newMsg + '%c{#666}' + oldMsg
     d.drawText(0, 0, msg)
 
     // terrain
@@ -130,7 +153,7 @@ export class Game {
 
       // skip rendering if this is a wall surrounded by other walls
       // currently only to make lightsOn view look nicer
-      if (this.lightsOn && isInternalWall(x, y)) return
+      if (this.lightsOn && this.hideInternalWalls && isInternalWall(x, y)) return
 
       const here = PtS(x, y)
       // currently visible by player
