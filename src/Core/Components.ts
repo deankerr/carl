@@ -1,5 +1,7 @@
-// ? Integrate builder - functions could take optional object of components
+// TODO Integrate builder/remove duplication
 // ? causing them to add themselves to that and return "this" ?
+
+import { Point } from '../Model/Point'
 
 export type Render = { render: { char: string; color: string } }
 export type Position = { position: { x: number; y: number } }
@@ -8,11 +10,12 @@ export type FOV = { fov: { radius: number; visible: string[] } }
 export type Seen = { seen: { visible: string[] } }
 export type TagCurrentTurn = { tagCurrentTurn: true }
 export type TagWalkable = { tagWalkable: true }
+export type TagActor = { tagActor: true }
 
 // currently needed only for updateComponents on world, I probably don't want this
-export type ComponentsU = Position | Render | TagPlayer | FOV | Seen | TagCurrentTurn | TagWalkable
+export type ComponentsU = Position | Render | TagPlayer | FOV | Seen | TagCurrentTurn | TagWalkable | TagActor
 
-export type Components = Partial<Position & Render & TagPlayer & FOV & Seen & TagCurrentTurn & TagWalkable>
+export type Components = Partial<Position & Render & TagPlayer & FOV & Seen & TagCurrentTurn & TagWalkable & TagActor>
 export type EntityID = { id: string }
 export type Entity = EntityID & Components
 
@@ -44,6 +47,10 @@ export const tagWalkable = (): TagWalkable => {
   return { tagWalkable: true }
 }
 
+export const tagActor = (): TagActor => {
+  return { tagActor: true }
+}
+
 export class Builder {
   components: Components = {}
 
@@ -54,6 +61,11 @@ export class Builder {
 
   position(x: number, y: number) {
     this.components = { ...position(x, y), ...this.components }
+    return this
+  }
+
+  positionPt(pt: Point) {
+    this.components = { ...position(pt.x, pt.y), ...this.components }
     return this
   }
 
@@ -84,6 +96,11 @@ export class Builder {
 
   tagCurrentTurn() {
     this.components = { ...tagCurrentTurn(), ...this.components }
+    return this
+  }
+
+  tagActor() {
+    this.components = { ...tagActor(), ...this.components }
     return this
   }
 }

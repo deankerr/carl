@@ -15,24 +15,27 @@ export class World {
     this.current = state.current
 
     const pt2 = state.current.level.ptInRoom(0)
-    const player = new Builder().position(pt2.x, pt2.y).render('@', 'white').tagPlayer().fov(5).seen().build('player')
-    const nPlayer = this.add(player)
-    this.scheduler.add(nPlayer.id, true)
+    const player = new Builder()
+      .position(pt2.x, pt2.y)
+      .render('@', 'white')
+      .tagPlayer()
+      .fov(5)
+      .seen()
+      .tagActor()
+      .build('player')
+    this.add(player)
 
     const pt1 = state.current.level.ptInRoom(1)
-    const blueDude = new Builder().position(pt1.x, pt1.y).render('D', 'blue').build('blueDude')
-    const nBlueDude = this.add(blueDude)
-    this.scheduler.add(nBlueDude.id, true)
+    const blueDude = new Builder().position(pt1.x, pt1.y).render('D', 'blue').tagActor().build('blueDude')
+    this.add(blueDude)
 
     const pt3 = state.current.level.ptInRoom(2)
-    const greenDude = Build().position(pt3.x, pt3.y).render('D', 'green').build('green dude')
-    const nGreenDude = this.add(greenDude)
-    this.scheduler.add(nGreenDude.id, true)
+    const greenDude = Build().position(pt3.x, pt3.y).render('D', 'green').tagActor().build('green dude')
+    this.add(greenDude)
 
     const pt4 = state.current.level.ptInRoom(3)
-    const rat = Build().position(pt4.x, pt4.y).render('r', 'brown').build('rat')
-    const nRat = this.add(rat)
-    this.scheduler.add(nRat.id, true)
+    const rat = Build().position(pt4.x, pt4.y).render('r', 'brown').tagActor().build('rat')
+    this.add(rat)
 
     UpdateFOV(this)
 
@@ -53,6 +56,8 @@ export class World {
     const id = entity.id + '-' + this.state.nextEntityID()
     const newEntity = { ...entity, id }
     this.state.addEntity(newEntity)
+    // add actors to turn queue
+    if ('tagActor' in newEntity) this.scheduler.add(newEntity.id, true)
     return newEntity
   }
 
@@ -129,7 +134,7 @@ export class World {
     const prev = this.get('tagCurrentTurn')
     if (prev.length > 1) throw new Error('Multiple entities with current turn')
     if (prev.length > 0) this.removeComponent(prev[0], 'tagCurrentTurn')
-    if (prev.length === 0) console.error('No previous turn?')
+    if (prev.length === 0) console.warn('No previous turn?')
 
     const nextID = this.scheduler.next()
     // console.log('next turn:', nextID)
