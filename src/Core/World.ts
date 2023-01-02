@@ -116,6 +116,8 @@ export class World {
     } else {
       console.log('World: removed entity was not an actor')
     }
+
+    this.current.graveyard.push(targetEntity.id)
   }
 
   addComponent(entity: Entity, component: ComponentsU) {
