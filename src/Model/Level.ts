@@ -3,7 +3,7 @@ import * as ROT from 'rot-js'
 import { Grid } from './Grid'
 import { Entity } from '../Core/Components'
 import { dungeon4 } from '../Generate'
-import { Room } from '../Generate/dungeon4/dungeon4'
+import { Dungeon4Data, Room } from '../Generate/dungeon4/dungeon4'
 import { TerrainDictionary } from '../Core/Terrain'
 import { Pt } from './Point'
 
@@ -51,8 +51,8 @@ export class Level {
     return result
   }
 
-  static createInitial() {
-    const { terrain, rooms } = dungeon4()
+  static createInitial(loadLevel?: Dungeon4Data) {
+    const { terrain, rooms } = dungeon4(loadLevel)
     return new Level({ label: 'initialLevel', entities: [], terrain, rooms })
   }
 

@@ -19,6 +19,8 @@ import { input } from './Input'
 
 import { PtS } from '../Model/Point'
 
+import { Dungeon4Data } from '../Generate/dungeon4/dungeon4'
+
 export class Game {
   display: ROT.Display
   keys = new Keys()
@@ -28,11 +30,12 @@ export class Game {
   lightsOn = false // reveal level debug flag
   hideInternalWalls = true
 
-  constructor(d: ROT.Display) {
+  constructor(d: ROT.Display, loadLevel?: Dungeon4Data) {
     console.log('new Game2')
+    if (loadLevel) console.log('Loading level')
     this.display = d
 
-    this.state = new State()
+    this.state = new State(loadLevel)
     this.world = new World(this.state)
 
     // mouse click coords

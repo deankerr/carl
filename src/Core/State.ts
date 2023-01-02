@@ -3,6 +3,7 @@
 import { Entity } from './Components'
 import { Level } from '../Model/Level'
 import { objLog } from '../util/util'
+import { Dungeon4Data } from '../Generate/dungeon4/dungeon4'
 
 type TurnMessages = [number, string[]]
 
@@ -21,9 +22,9 @@ const showLog = false
 export class State {
   current: StateObject
 
-  constructor() {
+  constructor(loadLevel?: Dungeon4Data) {
     // Create the initial state
-    const initialLevel = Level.createInitial()
+    const initialLevel = Level.createInitial(loadLevel)
 
     const initialState = {
       level: initialLevel,

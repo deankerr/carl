@@ -7,9 +7,10 @@
 // const max = 5
 import { Grid } from '../Model/Grid'
 import { create } from './dungeon4/'
+import { Dungeon4Data } from './dungeon4/dungeon4'
 
-export function dungeon4() {
-  const data = create()
+export function dungeon4(loadLevel?: Dungeon4Data) {
+  const data = loadLevel ?? create()
   if (!data) throw new Error('Dungeon gen failed.')
   const [terrainData, rooms] = data
   return { terrain: Grid.from(terrainData), rooms }

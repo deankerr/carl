@@ -8,7 +8,7 @@ const CONFIG = {
   marginBot: 2,
   levelWidth: 80,
   levelHeight: 20,
-  appInitial: 'game2',
+  appInitial: 'dungeon4',
   oldMessageTurns: 10, // how old can messages be to still appear in the buffer
 }
 
