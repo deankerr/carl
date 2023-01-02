@@ -6,7 +6,6 @@ export const handleBump = (world: World) => {
   const [currentEntity] = world.get('acting', 'position')
   const { acting: action } = currentEntity
 
-  if (!action) return console.log('handleBump: null action')
   if (!('bump' in action)) return console.log('handleBump: not a bump action')
 
   const [terrain, entities] = world.here(action.bump)

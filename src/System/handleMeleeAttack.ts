@@ -5,7 +5,6 @@ export const handleMeleeAttack = (world: World) => {
   const [currentEntity] = world.get('acting')
   const { acting: action } = currentEntity
 
-  if (!action) return console.log('handleMeleeAttack: null action')
   if (!('meleeAttack' in action)) return console.log('handleMeleeAttack: not a meleeAttack action')
 
   console.warn('handleMeleeAttack: I should do something')

@@ -4,7 +4,7 @@
 import { ActionTypes, Move, UI } from '../Action'
 import { Direction } from '../util/direction'
 
-export function input(code: string): ActionTypes {
+export function input(code: string): ActionTypes | null {
   // console.log('input code', code)
   switch (code) {
     // Movement

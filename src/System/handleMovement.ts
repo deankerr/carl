@@ -9,10 +9,6 @@ export const handleMovement = (world: World) => {
   const [entity] = world.get('acting', 'position', 'tagCurrentTurn')
 
   const action = entity.acting
-  if (!action) {
-    console.warn('handleMovement: null action')
-    return
-  }
 
   if ('move' in action) {
     console.log('handleMovement:', entity, action.move)
