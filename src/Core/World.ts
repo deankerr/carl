@@ -3,7 +3,6 @@ import * as ROT from 'rot-js'
 import { Entity, ComponentsU, tagCurrentTurn, Components, Build } from './Components'
 import { State, StateObject } from './State'
 import { Builder } from './Components'
-import { processFOV } from '../System/processFOV'
 import { objLog } from '../util/util'
 import { Point, Pt } from '../Model/Point'
 import { Terrain, TerrainDictionary } from './Terrain'
@@ -19,8 +18,6 @@ export class World {
 
     this.__populate()
     this.message('You begin your queste.')
-
-    processFOV(this)
 
     this.nextTurn() // set the currentTurn
   }

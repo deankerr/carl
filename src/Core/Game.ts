@@ -42,6 +42,7 @@ export class Game {
     })
 
     this.processMessages()
+    processFOV(this.world)
     this.render()
 
     this.keys.add(this.update.bind(this))
