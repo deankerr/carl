@@ -9,7 +9,7 @@ import { World } from './World'
 import { TerrainDictionary } from './Terrain'
 
 import { acting } from './Components'
-import { handleBump, processDeath, handleMovement, UpdateFOV, handleMeleeAttack } from '../System'
+import { handleBump, processDeath, handleMovement, processFOV, handleMeleeAttack } from '../System'
 import { actionName, ActionTypes, __randomMove, __wait } from '../Action'
 
 import { mouseClick } from '../util/display'
@@ -111,10 +111,7 @@ export class Game {
     this.messageCurrent = []
 
     // new messages from this turn, put into current
-    if (messages[0][0] === playerTurns) {
-      this.messageCurrent = messages[0][1]
-      console.log('update current')
-    }
+    if (messages[0][0] === playerTurns) this.messageCurrent = messages[0][1]
   }
 
   system(action: ActionTypes) {
@@ -127,8 +124,8 @@ export class Game {
     handleMovement(world)
     handleBump(world)
     handleMeleeAttack(world)
-    UpdateFOV(world)
     processDeath(world)
+    processFOV(world)
 
     const [entityDone] = world.get('tagCurrentTurn')
     world.removeComponent(entityDone, 'acting')

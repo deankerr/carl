@@ -3,14 +3,12 @@ import { fov, seen } from '../Core/Components'
 import { PtS } from '../Model/Point'
 import * as ROT from 'rot-js'
 
-export function UpdateFOV(world: World) {
+export const processFOV = (world: World) => {
   // ! currently updating all entities' fov each turn
   const entities = world.get('fov', 'position')
   if (!entities) return
-
+  let didSomething = false
   for (const entity of entities) {
-    // console.log('UpdateFOV', entity.id)
-
     const level = world.current.level
     const fovFunction = new ROT.FOV.RecursiveShadowcasting(level.isTransparent.bind(level))
 
@@ -23,9 +21,15 @@ export function UpdateFOV(world: World) {
 
     // update seen if needed
     const hasSeen = world.with(uEntity, 'seen')
-    if (!hasSeen) return
-    const ptSet = new Set<string>([...hasSeen.seen.visible, ...newFOV.fov.visible])
-    const newSeen = seen([...ptSet])
-    world.updateComponent(hasSeen, newSeen)
+    if (hasSeen) {
+      const ptSet = new Set<string>([...hasSeen.seen.visible, ...newFOV.fov.visible])
+      const newSeen = seen([...ptSet])
+      world.updateComponent(hasSeen, newSeen)
+    }
+
+    didSomething = true
   }
+
+  if (didSomething) console.log('processFOV: done')
+  else console.warn('processFOV: no FOV to process?')
 }

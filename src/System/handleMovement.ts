@@ -5,7 +5,7 @@ import { strCmp } from '../util/util'
 import { Pt } from '../Model/Point'
 import { Bump } from '../Action'
 
-export function handleMovement(world: World) {
+export const handleMovement = (world: World) => {
   const [entity] = world.get('acting', 'position', 'tagCurrentTurn')
 
   const action = entity.acting

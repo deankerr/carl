@@ -2,7 +2,7 @@ import { World } from '../Core/World'
 import { tagMeleeAttackTarget, acting } from '../Core/Components'
 import { MeleeAttack } from '../Action'
 
-export function handleBump(world: World) {
+export const handleBump = (world: World) => {
   const [currentEntity] = world.get('acting', 'position')
   const { acting: action } = currentEntity
 
