@@ -10,10 +10,10 @@ export function strCmp(a: object, b: object) {
   return JSON.stringify(a) === JSON.stringify(b)
 }
 
-export function objLog(obj: object | object[], label = 'Object Log') {
+export function objLog(obj: object | object[], label = 'Object Log', collapsed = false) {
   if (Array.isArray(obj)) obj.forEach((o, i) => objLog(o, label + i))
   else {
-    console.group(label)
+    collapsed ? console.groupCollapsed(label) : console.group(label)
     // console.log(JSON.stringify(obj))
     console.log(copy(obj))
     console.groupEnd()

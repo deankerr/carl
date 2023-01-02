@@ -1,23 +1,23 @@
 // Game: should handle the initial invocation of World etc.
 // the main update/render/input loop. Executes Systems loop
 
-// import { CONFIG } from './config'
-
+import { CONFIG } from '../config'
 import * as ROT from 'rot-js'
 
 import { State } from './State'
 import { World } from './World'
 import { TerrainDictionary } from './Terrain'
+
+import { acting } from './Components'
+import { handleBump, processDeath, handleMovement, UpdateFOV, handleMeleeAttack } from '../System'
+import { actionName, ActionTypes, __randomMove, __wait } from '../Action'
+
 import { mouseClick } from '../util/display'
 import { Keys } from '../util/Keys'
+import { objLog } from '../util/util'
 import { input } from './Input'
 
 import { PtS } from '../Model/Point'
-import { handleBump, processDeath, handleMovement, UpdateFOV } from '../System'
-import { actionName, ActionTypes, __randomMove, __wait } from '../Action'
-import { CONFIG } from '../config'
-import { acting } from './Components'
-import { handleMeleeAttack } from '../System/HandleMeleeAttack'
 
 export class Game {
   display: ROT.Display
@@ -47,12 +47,13 @@ export class Game {
   }
 
   update(code: string) {
-    console.group('=== update === code:', code)
+    const timeUpdate = Date.now()
+    console.group(`# update # key: '${code}', turn: '${this.state.current.playerTurns}'`)
     const world = this.world
 
     const playerAction = input(code)
     if (!playerAction) {
-      console.warn('null action')
+      console.log('null action')
       console.groupEnd()
       return
     }
@@ -74,30 +75,31 @@ export class Game {
       return
     }
 
-    // debug: all entities do this action
+    // * temp: all npc entities do this action
     const __defaultActions = { wander: __randomMove, wait: __wait }
     const __defaultAction = __defaultActions.wander
 
     // Run systems on each entity until it's the player's turn again
     let playerTurn = true
-    this.state.increasePlayerTurns()
     do {
       this.system(playerTurn ? playerAction : __defaultAction())
       playerTurn = world.nextTurn()
     } while (!playerTurn)
 
-    console.log('update complete')
+    this.state.increasePlayerTurns()
     console.groupEnd()
-    this.render()
+
+    objLog(this.state.current, `# update complete # ${Date.now() - timeUpdate}ms`, true)
+
+    // this.render()
   }
 
   system(action: ActionTypes) {
     const { world } = this
-    const playerTurns = world.current.playerTurns
     const [entity] = world.get('tagCurrentTurn')
 
     world.addComponent(entity, acting(action))
-    console.groupCollapsed('System', entity.id, actionName(action), playerTurns)
+    console.groupCollapsed(`System: '${entity.id}' -> '${actionName(action)}'`)
 
     handleMovement(world)
     handleBump(world)
@@ -106,7 +108,6 @@ export class Game {
     processDeath(world)
 
     const [entityDone] = world.get('tagCurrentTurn')
-    console.warn(world.get('tagCurrentTurn'))
     world.removeComponent(entityDone, 'acting')
 
     console.groupEnd()
