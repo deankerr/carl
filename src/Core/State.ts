@@ -2,6 +2,7 @@
 
 import { Entity } from './Components'
 import { Level } from '../Model/Level'
+import { objLog } from '../util/util'
 
 type Message = [number, string]
 
@@ -11,6 +12,7 @@ export type StateObject = {
   playerTurns: number
   messages: Message[]
   levels: Level[]
+  graveyard: string[] // list of entity IDs that have been removed, currently for debug only
 }
 
 // Config
@@ -29,6 +31,7 @@ export class State {
       playerTurns: 0,
       messages: [],
       levels: [initialLevel],
+      graveyard: [],
     }
 
     this.current = initialState
@@ -58,7 +61,7 @@ export class State {
 
   // updates an entity - ie. replaces the entity with a new one with the new component
   updateEntity(oldEntity: Entity, newEntity: Entity) {
-    log('Update entity ' + oldEntity.id, this.current)
+    log('Update entity ' + oldEntity.id, this.current.level.entities)
     const all = this.current.level.entities
     let index = 0
     for (const entity of all) {
@@ -68,7 +71,24 @@ export class State {
       }
       index++
     }
-    log('Result', this.current)
+    log('Result', this.current.level.entities)
+  }
+
+  deleteEntity(entity: Entity) {
+    log('Remove entity ' + entity.id, this.current.level.entities)
+    const oldEntities = this.current.level.entities
+    const newEntities = oldEntities.filter((e) => e !== entity)
+
+    if (newEntities.length !== oldEntities.length - 1) {
+      console.error('State - deleteEntity did not change array length')
+      console.error(entity)
+      console.error(oldEntities)
+      console.error(newEntities)
+      throw new Error()
+    }
+
+    this.current.level.entities = newEntities
+    log('Remove entity ' + entity.id, this.current.level.entities)
   }
 
   increasePlayerTurns() {
@@ -78,10 +98,10 @@ export class State {
 
 // TODO better log solution
 const stateLog: string[] = []
-function log(s: string, state: StateObject) {
+function log(s: string, state: object) {
   stateLog.unshift('State: ' + s)
   if (!showLog) return
   console.groupCollapsed(stateLog[0])
-  console.log(state)
+  objLog(state)
   console.groupEnd()
 }

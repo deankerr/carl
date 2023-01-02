@@ -102,6 +102,25 @@ export class World {
     return [terrain, entitiesHere]
   }
 
+  // remove entity from the world + turn queue if necessary
+  remove(entity: Entity) {
+    console.log('World: remove entity', entity.id)
+    const targetEntity = this.current.level.entities.find((e) => e === entity)
+    if (!targetEntity) throw new Error('remove: Unable to locate entity to remove')
+    this.state.deleteEntity(targetEntity)
+
+    // turn queue
+    const actorEntity = this.with(entity, 'tagActor')
+    if (actorEntity) {
+      console.log('World: removing entity from turn queue', actorEntity.id)
+      const result = this.scheduler.remove(actorEntity.id)
+      if (result) console.log('World: done')
+      else throw new Error('World: could not remove entity from turn queue')
+    } else {
+      console.log('World: removed entity was not an actor')
+    }
+  }
+
   addComponent(entity: Entity, component: ComponentsU) {
     const entities = this.state.current.level.entities
     const oldEntity = entities.find((e) => e === entity)
@@ -118,8 +137,8 @@ export class World {
     // verify entity doesn't already have this component
     if (componentName in oldEntity) {
       console.error('addComponent: entity already has that component')
-      console.error(entity)
       console.error(component)
+      console.error(entity)
       throw new Error()
     }
 
@@ -163,7 +182,8 @@ export class World {
 
   removeComponent(entity: Entity, componentName: keyof Components) {
     const oldEntity = this.state.current.level.entities.find((e) => e === entity)
-    if (!oldEntity) throw new Error('removeC: Unable to locate entity to update')
+    if (!oldEntity)
+      throw new Error(`removeC: Unable to locate entity "${entity?.id}" to remove component "${componentName}"`)
 
     const newEntity = { ...oldEntity }
     Reflect.deleteProperty(newEntity, componentName)
@@ -177,7 +197,7 @@ export class World {
     const prev = this.get('tagCurrentTurn')
     if (prev.length > 1) throw new Error('Multiple entities with current turn')
     if (prev.length > 0) this.removeComponent(prev[0], 'tagCurrentTurn')
-    if (prev.length === 0) console.warn('No previous turn?')
+    if (prev.length === 0) console.log('No tagCurrentTurn found')
 
     const nextID = this.scheduler.next()
     // console.log('next turn:', nextID)

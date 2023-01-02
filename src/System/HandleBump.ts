@@ -1,22 +1,44 @@
 import { World } from '../Core/World'
-import { Pt } from '../Model/Point'
+import { tagMeleeAttackTarget, acting } from '../Core/Components'
+import { MeleeAttack } from '../Action'
 
 export function handleBump(world: World) {
-  const [entity] = world.get('acting', 'position')
-  const { acting: action } = entity
+  const [currentEntity] = world.get('acting', 'position')
+  const { acting: action } = currentEntity
 
-  if (!action) return console.log('Bump: null action')
-  if (!('bump' in action)) return console.log('Bump: not a bump action')
+  if (!action) return console.log('handleBump: null action')
+  if (!('bump' in action)) return console.log('handleBump: not a bump action')
 
-  const [terrain, entities] = world.here(Pt(action.bump.x, action.bump.y))
-  const isPlayer = 'tagPlayer' in entity
+  const [terrain, entities] = world.here(action.bump)
+  const currentIsPlayer = 'tagPlayer' in currentEntity
 
   if (entities.length === 0) {
     // no entities, terrain bump
-    if (isPlayer) world.message(`You bounce off the ${terrain.title}.`)
+    console.log('handleBump: result - terrain bump')
+    if (currentIsPlayer) world.message(`You bounce off the ${terrain.title}.`)
   } else {
     // entities
-    // TODO handle walkable
-    if (isPlayer) world.message(`You walk straight into the ${entities[0].id}.`)
+    console.log('handleBump: entity bump')
+    // TODO handle walkable/items etc
+    // ? assuming there can only be one entity here
+    // * Player attack NPC:
+    const [blockingEntity] = entities
+    if (currentIsPlayer) {
+      world.message(`You walk straight into the ${blockingEntity.id}...`)
+
+      // attach component to target
+      const newTag = tagMeleeAttackTarget()
+      world.addComponent(blockingEntity, newTag)
+
+      // update acting component
+      const newActing = acting(MeleeAttack(action.bump))
+      world.updateComponent(currentEntity, newActing)
+      console.log(`handleBump: action - MeleeAttack ${blockingEntity.id}`)
+    }
+
+    // * NPC attack something
+    else {
+      // TODO
+    }
   }
 }

@@ -13,10 +13,11 @@ import { Keys } from '../util/Keys'
 import { input } from './Input'
 
 import { PtS } from '../Model/Point'
-import { handleBump, handleMovement, UpdateFOV } from '../System'
+import { handleBump, processDeath, handleMovement, UpdateFOV } from '../System'
 import { actionName, ActionTypes, __randomMove, __wait } from '../Action'
 import { CONFIG } from '../config'
 import { acting } from './Components'
+import { handleMeleeAttack } from '../System/HandleMeleeAttack'
 
 export class Game {
   display: ROT.Display
@@ -96,14 +97,16 @@ export class Game {
     const [entity] = world.get('tagCurrentTurn')
 
     world.addComponent(entity, acting(action))
-
     console.groupCollapsed('System', entity.id, actionName(action), playerTurns)
 
     handleMovement(world)
     handleBump(world)
+    handleMeleeAttack(world)
     UpdateFOV(world)
+    processDeath(world)
 
     const [entityDone] = world.get('tagCurrentTurn')
+    console.warn(world.get('tagCurrentTurn'))
     world.removeComponent(entityDone, 'acting')
 
     console.groupEnd()

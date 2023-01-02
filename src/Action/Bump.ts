@@ -5,6 +5,6 @@ import { Point } from '../Model/Point'
 
 export type Bump = { bump: Point }
 
-export const bump = (pt: Point): Bump => {
+export const Bump = (pt: Point): Bump => {
   return { bump: pt }
 }

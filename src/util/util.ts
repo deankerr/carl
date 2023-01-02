@@ -14,7 +14,8 @@ export function objLog(obj: object | object[], label = 'Object Log') {
   if (Array.isArray(obj)) obj.forEach((o, i) => objLog(o, label + i))
   else {
     console.group(label)
-    console.log(JSON.stringify(obj))
+    // console.log(JSON.stringify(obj))
+    console.log(copy(obj))
     console.groupEnd()
   }
 }
