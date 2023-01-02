@@ -9,6 +9,7 @@ const CONFIG = {
   levelWidth: 80,
   levelHeight: 20,
   appInitial: 'game2',
+  oldMessageTurns: 10, // how old can messages be to still appear in the buffer
 }
 
 export { CONFIG }

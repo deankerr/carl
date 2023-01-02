@@ -41,14 +41,18 @@ export class Game {
       console.log(`${pt[0]},${pt[1] + CONFIG.marginTop}`)
     })
 
+    this.processMessages()
     this.render()
 
     this.keys.add(this.update.bind(this))
+
+    objLog(this.state.current, 'Initial state')
   }
 
   update(code: string) {
     const timeUpdate = Date.now()
-    console.group(`# update # key: '${code}', turn: '${this.state.current.playerTurns}'`)
+    const { playerTurns } = this.state.current
+    console.group(`# update # key: '${code}', turn: '${playerTurns}'`)
     const world = this.world
 
     const playerAction = input(code)
@@ -81,17 +85,36 @@ export class Game {
 
     // Run systems on each entity until it's the player's turn again
     let playerTurn = true
+    this.state.increasePlayerTurns()
     do {
       this.system(playerTurn ? playerAction : __defaultAction())
       playerTurn = world.nextTurn()
     } while (!playerTurn)
 
-    this.state.increasePlayerTurns()
+    this.processMessages()
+
     console.groupEnd()
 
     objLog(this.state.current, `# update complete # ${Date.now() - timeUpdate}ms`, true)
 
-    // this.render()
+    this.render()
+  }
+
+  messageCurrent: string[] = [] // messages generated during the last update
+  messageBuffer: string[] = [] // previous messages that still fit in the buffer visually
+
+  processMessages() {
+    const { messages, playerTurns } = this.state.current
+    if (messages.length < 1) return
+
+    this.messageBuffer = [...this.messageCurrent, ...this.messageBuffer]
+    this.messageCurrent = []
+
+    // new messages from this turn, put into current
+    if (messages[0][0] === playerTurns) {
+      this.messageCurrent = messages[0][1]
+      console.log('update current')
+    }
   }
 
   system(action: ActionTypes) {
@@ -120,31 +143,10 @@ export class Game {
     const d = this.display
     const top = CONFIG.marginTop
 
-    const { level, messages, playerTurns } = this.state.current
-
-    // message buffer
-    let msgIndex = -1
-    let newMsg = ''
-
-    // add all new messages to buffer // ? handle (more...)
-    while (++msgIndex < messages.length && messages[msgIndex][0] === playerTurns) {
-      newMsg += messages[msgIndex][1]
-    }
-
-    // add older messages until the buffer will wrap to 3 lines
-    msgIndex--
-    let oldMsg = ''
-    while (
-      ++msgIndex < messages.length &&
-      d.drawText(0, 0, '%c{000}' + newMsg + ' ' + oldMsg + ' ' + messages[msgIndex][1]) < 3
-    ) {
-      oldMsg += ' ' + messages[msgIndex++][1]
-    }
+    const { level } = this.state.current
 
     d.clear()
-
-    const msg = newMsg + '%c{#666}' + oldMsg
-    d.drawText(0, 0, msg)
+    d.drawText(0, 0, this.messageCurrent.join(' ') + '%c{#777} ' + this.messageBuffer.join(' '))
 
     // terrain
     const { terrain } = level
@@ -168,6 +170,9 @@ export class Game {
         // seen previously
         const { char, color } = TerrainDictionary[t]?.consoleSeen ?? { char: t, color: 'red' }
         this.display.draw(x, top + y, char, color, null)
+      } else {
+        // blank space (currently needed to clip message buffer)
+        this.display.draw(x, top + y, ' ', 'black', null)
       }
     })
 

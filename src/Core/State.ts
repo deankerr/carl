@@ -4,13 +4,13 @@ import { Entity } from './Components'
 import { Level } from '../Model/Level'
 import { objLog } from '../util/util'
 
-type Message = [number, string]
+type TurnMessages = [number, string[]]
 
 export type StateObject = {
   level: Level // Active level, reference to a level in levels[]
   entityCount: number
   playerTurns: number
-  messages: Message[]
+  messages: TurnMessages[]
   levels: Level[]
   graveyard: string[] // list of entity IDs that have been removed, currently for debug only
 }
@@ -28,7 +28,7 @@ export class State {
     const initialState = {
       level: initialLevel,
       entityCount: 0,
-      playerTurns: 0,
+      playerTurns: -1,
       messages: [],
       levels: [initialLevel],
       graveyard: [],
