@@ -1,4 +1,5 @@
 // ADOM display total: 80 x 25, game map: 80 x 20
+const PROD = import.meta.env.PROD
 
 const CONFIG = {
   displayWidth: 80,
@@ -8,7 +9,8 @@ const CONFIG = {
   marginBot: 2,
   levelWidth: 80,
   levelHeight: 20,
-  appInitial: 'game',
+  appInitial: PROD ? 'dungeon4' : 'game',
+  lightsOnInitial: PROD ? false : true,
   oldMessageTurns: 10, // how old can messages be to still appear in the buffer
 }
 

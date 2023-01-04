@@ -33,7 +33,7 @@ export class Game {
   // dummy display for checking wrapped message height
   messageDummyDisplay = new ROT.Display({ width: CONFIG.displayWidth, height: CONFIG.displayHeight })
 
-  lightsOn = true // reveal level debug flag
+  lightsOn = CONFIG.lightsOnInitial // reveal level debug flag
   hideInternalWalls = true
 
   constructor(d: ROT.Display, loadLevel?: Dungeon4Data) {
