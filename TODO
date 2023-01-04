@@ -2,3 +2,4 @@
 - Clarify State class functionality, logging
 - Unify function declaration style
 - Refactor Generate to improvement corridor placement, flexibility, visualizer integration into Game, entity generation
+- Move TerrainDictionary into Level
