@@ -144,6 +144,7 @@ export class Game {
     const d = this.display
     const top = CONFIG.marginTop
 
+    const world = this.world
     const { level } = this.state.current
 
     d.clear()
@@ -180,10 +181,20 @@ export class Game {
     // entities
     const entities = this.world.get('render', 'position')
 
-    for (const { render, position } of entities) {
+    for (const entity of entities) {
+      const { render, position } = entity
       const here = PtS(position.x, position.y)
+
+      // currently visible entities
       if (player.fov.visible.includes(here) || this.lightsOn) {
         this.display.draw(position.x, top + position.y, render.char, render.color, null)
+      }
+      // seen furniture
+      else {
+        const seenEntity = world.with(entity, 'renderSeen')
+        if (seenEntity && player.seen.visible.includes(here)) {
+          this.display.draw(position.x, top + position.y, seenEntity.renderSeen.char, seenEntity.renderSeen.color, null)
+        }
       }
     }
 

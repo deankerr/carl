@@ -1,7 +1,7 @@
 // Entity/Component manager. Currently should be the only way to mutate game state
 import * as ROT from 'rot-js'
-import { tagCurrentTurn, Components, Build } from './Components'
-import { Entity } from './Entity'
+import { tagCurrentTurn, Components, Build, position } from './Components'
+import { Entity, templates } from './Entity'
 import { State, StateObject } from './State'
 import { Builder } from './Components'
 import { objLog } from '../util/util'
@@ -17,6 +17,7 @@ export class World {
     this.state = state
     this.current = state.current
 
+    this.__createDoors()
     this.__populate()
     this.message('You begin your queste.')
 
@@ -58,7 +59,12 @@ export class World {
   }
 
   __createDoors() {
-    //todo
+    const level = this.state.current.level
+
+    for (const doorPt of level.doors) {
+      const door = { ...templates.door(), ...position(doorPt.x, doorPt.y) }
+      this.add(door)
+    }
   }
 
   /*
