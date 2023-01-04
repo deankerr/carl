@@ -1,7 +1,6 @@
 import { World } from '../Core/World'
 import { acting, position } from '../Core/Components'
 import { TerrainDictionary } from '../Core/Terrain'
-import { strCmp } from '../util/util'
 import { Pt } from '../Model/Point'
 import { Bump } from '../Action'
 
@@ -13,7 +12,6 @@ export const handleMovement = (world: World) => {
   if ('move' in action) {
     console.log('handleMovement:', entity, action.move)
     const { position: oldPosition } = entity
-    const allEntities = world.get('position')
 
     const newX = oldPosition.x + action.move.dx
     const newY = oldPosition.y + action.move.dy
@@ -30,13 +28,8 @@ export const handleMovement = (world: World) => {
     }
 
     // entity blocking check
-    // ? entitiesHere probably should be a World method
-    const entityHere = allEntities.some((e) => {
-      if (e.id === entity.id) return false
-      return strCmp(e.position, Pt(newX, newY))
-    })
-
-    if (entityHere) {
+    const here = world.here(Pt(newX, newY))
+    if (here[1].length > 0) {
       console.log('handleMovement: new action - Bump (entity)')
       const newAction = acting(Bump(Pt(newX, newY)))
       world.updateComponent(entity, newAction)
