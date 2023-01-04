@@ -2,7 +2,7 @@ import { World } from '../Core/World'
 import { acting, position } from '../Core/Components'
 import { TerrainDictionary } from '../Core/Terrain'
 import { Pt } from '../Model/Point'
-import { Bump } from '../Action'
+import { Bump, Tread } from '../Action'
 
 export const handleMovement = (world: World) => {
   const [entity] = world.get('acting', 'position', 'tagCurrentTurn')
@@ -29,17 +29,22 @@ export const handleMovement = (world: World) => {
 
     // entity blocking check
     const here = world.here(Pt(newX, newY))
-    const entitiesWalkable = here[1].every((e) => 'tagWalkable' in e)
+    const entitiesWalkable = here[1].every((e) => 'tagCurrentTurn' in e || 'tagWalkable' in e)
     if (!entitiesWalkable) {
       console.log('handleMovement: new action - Bump (entity)')
       const newAction = acting(Bump(Pt(newX, newY)))
       world.updateComponent(entity, newAction)
       return
-    }
+    } else {
+      // create tread action
+      console.log('handleMovement: new action - Tread')
+      const newAction = acting(Tread(Pt(newX, newY)))
+      const newEntity = world.updateComponent(entity, newAction)
 
-    // update position
-    const newPosition = position(newX, newY)
-    world.updateComponent(entity, newPosition)
+      // update position
+      const newPosition = position(newX, newY)
+      world.updateComponent(newEntity, newPosition)
+    }
   } else {
     console.log('handleMovement: not a move action', action)
   }

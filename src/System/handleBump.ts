@@ -9,9 +9,10 @@ export const handleBump = (world: World) => {
   if (!('bump' in action)) return console.log('handleBump: not a bump action')
 
   const [terrain, entities] = world.here(action.bump)
+  const bumpableEntities = entities.filter((e) => !('tagCurrentTurn' in e) && !('tagWalkable' in e))
   const currentIsPlayer = 'tagPlayer' in currentEntity
 
-  if (entities.length === 0) {
+  if (bumpableEntities.length === 0) {
     // no entities, terrain bump
     console.log('handleBump: result - terrain bump')
     if (currentIsPlayer) world.message(`You bounce off the ${terrain.title}.`)
@@ -21,22 +22,23 @@ export const handleBump = (world: World) => {
     // TODO handle walkable/items etc
     // ? assuming there can only be one entity here
     // * Player attack NPC:
-    const [blockingEntity] = entities
+    const [bumpedEntity] = bumpableEntities
     if (currentIsPlayer) {
-      world.message(`You walk straight into the ${blockingEntity.id}...`)
+      world.message(`You walk straight into the ${bumpedEntity.id}...`)
 
       // attach component to target
       const newTag = tagMeleeAttackTarget()
-      world.addComponent(blockingEntity, newTag)
+      world.addComponent(bumpedEntity, newTag)
 
       // update acting component
       const newActing = acting(MeleeAttack(action.bump))
       world.updateComponent(currentEntity, newActing)
-      console.log(`handleBump: action - MeleeAttack ${blockingEntity.id}`)
+      console.log(`handleBump: action - MeleeAttack ${bumpedEntity.id}`)
     }
 
     // * NPC attack something
     else {
+      console.log('handleBump:', currentEntity.id, 'bumped', bumpedEntity.id)
       // TODO
     }
   }

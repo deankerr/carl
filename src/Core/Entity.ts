@@ -12,6 +12,7 @@ export const templates = {
       ...Component.renderSeen('+', '#4d2509'),
       ...Component.door(false, '/', 'saddlebrown'),
       ...Component.tagWalkable(),
+      ...Component.trodOn('You carefully navigate through the door.'),
     }
   },
 }

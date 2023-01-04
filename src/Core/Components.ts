@@ -18,6 +18,7 @@ export type TagMeleeAttackTarget = { tagMeleeAttackTarget: true }
 export type TagDead = { tagDead: true }
 export type RenderSeen = { renderSeen: { char: string; color: string } }
 export type Door = { open: boolean; char: string; color: string }
+export type TrodOn = { trodOn: { message: string } }
 
 export type Components = Partial<
   Position &
@@ -32,7 +33,8 @@ export type Components = Partial<
     TagMeleeAttackTarget &
     TagDead &
     RenderSeen &
-    Door
+    Door &
+    TrodOn
 >
 
 export const render = (char: string, color: string): Render => {
@@ -87,7 +89,9 @@ export const door = (open: boolean, char: string, color: string) => {
   return { door: { open, char, color } }
 }
 
-// export const door = ()
+export const trodOn = (message: string) => {
+  return { trodOn: { message } }
+}
 
 export class Builder {
   components: Components = {}

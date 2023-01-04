@@ -170,6 +170,7 @@ export class World {
     // if (!oldEntity) throw new Error('updateC: Unable to locate entity to update')
     if (!oldEntity) {
       console.error('updateC: Unable to locate entity to update')
+      objLog(component, 'component')
       objLog(entity, 'target')
       objLog(this.getByID(entity.id), 'probably')
       console.groupCollapsed('all entities')

@@ -1,5 +1,16 @@
 - Unify Point object use throughout project
-- Clarify State class functionality, logging
+- Clarify State functionality, logging
 - Unify function declaration style
 - Refactor Generate to improvement corridor placement, flexibility, visualizer integration into Game, entity generation
 - Move TerrainDictionary into Level
+- Split Components into own files
+- Move all entities into templates
+- Refactor world.here() result from tuple to object for better clarity
+- Create logger, Exception handling
+- Something like world.query().entitiesWith('position', 'tagWalkable').optionally('door').without('tagPlayer').at({x: 1, y: 2})
+- Teleport player to mouse click
+
+=== Bugs
+
+- NPCs can walk under player
+- Tread triggered on Wait move causes unwanted responses

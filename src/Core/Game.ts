@@ -20,6 +20,7 @@ import { input } from './Input'
 import { PtS } from '../Model/Point'
 
 import { Dungeon4Data } from '../Generate/dungeon4/dungeon4'
+import { handleTread } from '../System/handleTread'
 
 export class Game {
   display: ROT.Display
@@ -32,6 +33,8 @@ export class Game {
 
   constructor(d: ROT.Display, loadLevel?: Dungeon4Data) {
     console.log('new Game2')
+    const seed = ROT.RNG.getSeed()
+    console.log('seed:', seed)
     if (loadLevel) console.log('Loading level')
     this.display = d
 
@@ -126,6 +129,7 @@ export class Game {
     console.groupCollapsed(`System: '${entity.id}' -> '${actionName(action)}'`)
 
     handleMovement(world)
+    handleTread(world)
     handleBump(world)
     handleMeleeAttack(world)
     processDeath(world)
