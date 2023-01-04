@@ -1,5 +1,5 @@
 import * as ROT from 'rot-js'
-import { Direction } from './../util/direction'
+import { Direction, DIRECTIONS } from './../util/direction'
 import { ActionTypes } from './ActionTypes'
 
 export type Move = {
@@ -8,43 +8,34 @@ export type Move = {
 
 export const Move = (dir: Direction): Move => {
   switch (dir) {
-    case Direction.NW:
+    case 'NW':
       return { move: { dir, dx: -1, dy: -1 } }
-    case Direction.N:
+    case 'N':
       return { move: { dir, dx: 0, dy: -1 } }
-    case Direction.NE:
+    case 'NE':
       return { move: { dir, dx: 1, dy: -1 } }
-    case Direction.W:
+    case 'W':
       return { move: { dir, dx: -1, dy: 0 } }
-    case Direction.WAIT:
+    case 'WAIT':
       return { move: { dir, dx: 0, dy: 0 } }
-    case Direction.E:
+    case 'E':
       return { move: { dir, dx: 1, dy: 0 } }
-    case Direction.SW:
+    case 'SW':
       return { move: { dir, dx: -1, dy: 1 } }
-    case Direction.S:
+    case 'S':
       return { move: { dir, dx: 0, dy: 1 } }
-    case Direction.SE:
+    case 'SE':
       return { move: { dir, dx: 1, dy: 1 } }
+    default:
+      throw new Error(`Unknown Move dir: '${dir}'`)
   }
 }
 
 export function __randomMove(): ActionTypes {
-  const dirs = [
-    Direction.E,
-    Direction.N,
-    Direction.NE,
-    Direction.NW,
-    Direction.S,
-    Direction.SE,
-    Direction.SW,
-    Direction.W,
-    Direction.WAIT,
-  ]
-  const dir = ROT.RNG.getItem(dirs) as Direction
+  const dir = ROT.RNG.getItem(Object.keys(DIRECTIONS)) as Direction
   return Move(dir)
 }
 
 export function __wait(): ActionTypes {
-  return Move(Direction.WAIT)
+  return Move('WAIT')
 }

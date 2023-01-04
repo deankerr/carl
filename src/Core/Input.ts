@@ -2,34 +2,33 @@
 
 // import { Move, Direction, Wait, UI, ChangeLevel } from './Actions'
 import { ActionTypes, Move, UI } from '../Action'
-import { Direction } from '../util/direction'
 
 export function input(code: string): ActionTypes | null {
   // console.log('input code', code)
   switch (code) {
     // Movement
     case 'Numpad7':
-      return Move(Direction.NW)
+      return Move('NW')
     case 'ArrowUp':
     case 'Numpad8':
-      return Move(Direction.N)
+      return Move('N')
     case 'Numpad9':
-      return Move(Direction.NE)
+      return Move('NE')
     case 'ArrowLeft':
     case 'Numpad4':
-      return Move(Direction.W)
+      return Move('W')
     case 'Numpad5':
-      return Move(Direction.WAIT)
+      return Move('WAIT')
     case 'ArrowRight':
     case 'Numpad6':
-      return Move(Direction.E)
+      return Move('E')
     case 'Numpad1':
-      return Move(Direction.SW)
+      return Move('SW')
     case 'ArrowDown':
     case 'Numpad2':
-      return Move(Direction.S)
+      return Move('S')
     case 'Numpad3':
-      return Move(Direction.SE)
+      return Move('SE')
 
     // UI
     case 'KeyL':
