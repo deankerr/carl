@@ -1,5 +1,5 @@
 import { World } from '../Core/World'
-import { tagMeleeAttackTarget, acting } from '../Core/Components'
+import { tagMeleeAttackTarget, acting, door, tagWalkable, render } from '../Core/Components'
 import { MeleeAttack } from '../Action'
 
 export const handleBump = (world: World) => {
@@ -19,14 +19,24 @@ export const handleBump = (world: World) => {
   } else {
     // entities
     console.log('handleBump: entity bump')
-    // TODO handle walkable/items etc
+    // TODO Let NPCs do things
     // ? assuming there can only be one entity here
-    // * Player attack NPC:
     const [bumpedEntity] = bumpableEntities
     if (currentIsPlayer) {
-      world.message(`You walk straight into the ${bumpedEntity.id}...`)
+      // * handle door
+      // ? should this be handled elsewhere
+      const doorEntity = world.with(bumpedEntity, 'door')
+      if (doorEntity) {
+        if (doorEntity.door.open) throw new Error('Bumped into an open door?')
+        console.log('handleBump: result - open door')
+        const doorEntityOpen = world.updateComponent(doorEntity, door(true))
+        const doorEntityWalkable = world.addComponent(doorEntityOpen, tagWalkable())
+        world.updateComponent(doorEntityWalkable, render('/', 'saddlebrown'))
+        world.message('Your hands tremble as you slowly push or pull the door open.')
+        return
+      }
 
-      // attach component to target
+      // * attack!
       const newTag = tagMeleeAttackTarget()
       world.addComponent(bumpedEntity, newTag)
 

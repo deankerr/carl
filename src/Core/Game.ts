@@ -195,9 +195,9 @@ export class Game {
       }
       // seen furniture
       else {
-        const seenEntity = world.with(entity, 'renderSeen')
+        const seenEntity = world.with(entity, 'renderSeenColor')
         if (seenEntity && player.seen.visible.includes(here)) {
-          this.display.draw(position.x, top + position.y, seenEntity.renderSeen.char, seenEntity.renderSeen.color, null)
+          this.display.draw(position.x, top + position.y, render.char, seenEntity.renderSeenColor.color, null)
         }
       }
     }

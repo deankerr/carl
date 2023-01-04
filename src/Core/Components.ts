@@ -16,8 +16,8 @@ export type TagActor = { tagActor: true }
 export type Acting = { acting: ActionTypes }
 export type TagMeleeAttackTarget = { tagMeleeAttackTarget: true }
 export type TagDead = { tagDead: true }
-export type RenderSeen = { renderSeen: { char: string; color: string } }
-export type Door = { open: boolean; char: string; color: string }
+export type RenderSeenColor = { renderSeenColor: { color: string } }
+export type Door = { door: { open: boolean } }
 export type TrodOn = { trodOn: { message: string } }
 
 export type Components = Partial<
@@ -32,7 +32,7 @@ export type Components = Partial<
     Acting &
     TagMeleeAttackTarget &
     TagDead &
-    RenderSeen &
+    RenderSeenColor &
     Door &
     TrodOn
 >
@@ -81,12 +81,12 @@ export const dead = (): TagDead => {
   return { tagDead: true }
 }
 
-export const renderSeen = (char: string, color: string): RenderSeen => {
-  return { renderSeen: { char, color } }
+export const renderSeenColor = (color: string): RenderSeenColor => {
+  return { renderSeenColor: { color } }
 }
 
-export const door = (open: boolean, char: string, color: string) => {
-  return { door: { open, char, color } }
+export const door = (open = false) => {
+  return { door: { open } }
 }
 
 export const trodOn = (message: string) => {

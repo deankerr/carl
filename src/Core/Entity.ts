@@ -9,9 +9,8 @@ export const templates = {
     return {
       id: 'door',
       ...Component.render('+', 'saddlebrown'),
-      ...Component.renderSeen('+', '#4d2509'),
-      ...Component.door(false, '/', 'saddlebrown'),
-      ...Component.tagWalkable(),
+      ...Component.renderSeenColor('#4d2509'),
+      ...Component.door(),
       ...Component.trodOn('You carefully navigate through the door.'),
     }
   },

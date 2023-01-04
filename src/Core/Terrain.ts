@@ -19,11 +19,11 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
     transparent: true,
     console: {
       char: '.',
-      color: '#666',
+      color: '#AAA',
     },
     consoleSeen: {
       char: '.',
-      color: '#444',
+      color: '#777',
     },
   },
   1: {

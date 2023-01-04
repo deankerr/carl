@@ -249,6 +249,7 @@ export class World {
   // add a message to the buffer
   message(msg: string) {
     const { messages, playerTurns } = this.state.current
+    console.log('msg:', msg)
     // empty buffer
     if (messages.length === 0) messages.push([playerTurns, [msg]])
     // add to existing buffer for this turn
