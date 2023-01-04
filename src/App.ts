@@ -102,5 +102,6 @@ declare global {
   interface Window {
     game: object
     display: ROT.Display[]
+    tileSet: HTMLImageElement
   }
 }
