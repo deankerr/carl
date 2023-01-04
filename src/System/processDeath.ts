@@ -7,7 +7,7 @@ export const processDeath = (world: World) => {
 
   if (currentEntities.length === 0) return console.log('processDeath: no entities to remove')
 
-  console.warn('processDeath: I should do something')
+  console.log('processDeath: reaping')
   for (const entity of currentEntities) {
     console.log('processDeath: removing', entity.id)
     world.remove(entity)

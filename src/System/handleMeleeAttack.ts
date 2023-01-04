@@ -7,7 +7,7 @@ export const handleMeleeAttack = (world: World) => {
 
   if (!('meleeAttack' in action)) return console.log('handleMeleeAttack: not a meleeAttack action')
 
-  console.warn('handleMeleeAttack: I should do something')
+  console.log('handleMeleeAttack: ', currentEntity.id)
 
   // get target
   const [targetEntity] = world.get('tagMeleeAttackTarget')
