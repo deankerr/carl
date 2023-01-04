@@ -34,6 +34,21 @@
     "isFileTemplate": true
   },
 
+  "Entity Template": {
+    "prefix": "ent-template",
+    "body": [
+      "${1:monster}: (pt: Point) => {",
+      "  return {",
+      "    id: '$1',",
+      "    ...C.position(pt.x, pt.y),",
+      "    ...C.render('${2:m}', '${3:red}'),",
+      "    ...C.tagActor(),",
+      "  }",
+      "},"
+    ],
+    "description": "CARL! Entity Template"
+  },
+
   "X Y Arguments": {
     "prefix": "xynumber",
     "body": ["x: number, y: number"],

@@ -1,9 +1,8 @@
 // Entity/Component manager. Currently should be the only way to mutate game state
 import * as ROT from 'rot-js'
-import { tagCurrentTurn, Components, Build, position } from './Components'
+import { tagCurrentTurn, Components } from './Components'
 import { Entity, templates } from './Entity'
 import { State, StateObject } from './State'
-import { Builder } from './Components'
 import { objLog } from '../util/util'
 import { Point, Pt } from '../Model/Point'
 import { Terrain, TerrainDictionary } from './Terrain'
@@ -28,33 +27,27 @@ export class World {
   __populate() {
     const level = this.state.current.level
 
-    // player
-    this.add(
-      Build().positionPt(level.ptInRoom(0)).render('@', 'white').tagPlayer().fov(5).seen().tagActor().build('player')
-    )
+    this.add(templates.player(level.ptInRoom(0), 5))
 
-    // some NPCs (add position + build)
-    const npcs = [
-      [Build().render('o', 'lightgreen').tagActor(), 'orc'],
-      [Build().render('d', 'blue').tagActor(), 'blue-dude'],
-      [Build().render('d', 'green').tagActor(), 'green-dude'],
-      [Build().render('r', 'brown').tagActor(), 'rat'],
-      [Build().render('g', 'olive').tagActor(), 'goblin'],
-      [Build().render('s', 'salmon').tagActor(), 'salmon'],
-      [Build().render('b', 'yellow').tagActor(), 'bart-simpson'],
-      [Build().render('V', 'red').tagActor(), 'fire-vortex'],
-      [Build().render('m', 'mediumslateblue').tagActor(), 'man'],
-    ]
-
-    const rNpcs = ROT.RNG.shuffle(npcs)
+    const npcs = ROT.RNG.shuffle([
+      'orc',
+      'spider',
+      'snake',
+      'toad',
+      'crab',
+      'ghost',
+      'demon',
+      'hammerhead',
+      'skeleton',
+      'chicken',
+      'bat',
+    ])
 
     level.rooms.forEach((_r, i) => {
-      if (i === 0) return
-      // if (i !== 0) return
-      const ent = rNpcs[i][0] as Builder
-      const tag = rNpcs[i][1] as string
-      const n = ent.positionPt(level.ptInRoom(i)).build(tag)
-      this.add(n)
+      if (i === 0 || i >= npcs.length) return
+      const pos = level.ptInRoom(i)
+      const choice = npcs[i]
+      this.add(templates[choice](pos))
     })
   }
 
@@ -62,7 +55,7 @@ export class World {
     const level = this.state.current.level
 
     for (const doorPt of level.doors) {
-      const door = { ...templates.door(), ...position(doorPt.x, doorPt.y) }
+      const door = templates.door(doorPt)
       this.add(door)
     }
   }
