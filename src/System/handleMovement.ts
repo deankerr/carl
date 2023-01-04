@@ -10,7 +10,14 @@ export const handleMovement = (world: World) => {
   const action = entity.acting
 
   if ('move' in action) {
-    console.log('handleMovement:', entity, action.move)
+    console.log('handleMovement:', entity.id, action.move)
+
+    // wait, just return (for now)
+    if (action.move.dir === 'WAIT') {
+      console.log('handleMovement: result - wait')
+      return
+    }
+
     const { position: oldPosition } = entity
 
     const newX = oldPosition.x + action.move.dx
