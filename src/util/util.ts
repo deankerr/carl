@@ -11,7 +11,7 @@ export function strCmp(a: object, b: object) {
 }
 
 export function objLog(obj: object | object[], label = 'Object Log', collapsed = false) {
-  if (Array.isArray(obj)) obj.forEach((o, i) => objLog(o, label + i))
+  if (Array.isArray(obj)) obj.forEach((o, i) => objLog(o, label + i, collapsed))
   else {
     collapsed ? console.groupCollapsed(label) : console.group(label)
     // console.log(JSON.stringify(obj))

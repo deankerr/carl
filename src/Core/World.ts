@@ -139,7 +139,10 @@ export class World {
     if (!oldEntity) {
       console.error('addC: Unable to locate entity to update')
       objLog(entity, 'target')
+      objLog(this.getByID(entity.id), 'probably')
+      console.groupCollapsed('all entities')
       objLog(entities, 'all')
+      console.groupEnd()
       throw new Error()
     }
 
@@ -168,7 +171,10 @@ export class World {
     if (!oldEntity) {
       console.error('updateC: Unable to locate entity to update')
       objLog(entity, 'target')
-      objLog(entities, 'all')
+      objLog(this.getByID(entity.id), 'probably')
+      console.groupCollapsed('all entities')
+      objLog(entities, 'all', true)
+      console.groupEnd()
       throw new Error()
     }
 
