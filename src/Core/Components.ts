@@ -29,7 +29,7 @@ export type Components = Partial<
     TagMeleeAttackTarget &
     TagDead
 >
-export type EntityID = { id: string }
+export type EntityID = { readonly id: string }
 export type Entity = EntityID & Components
 
 export const render = (char: string, color: string): Render => {
