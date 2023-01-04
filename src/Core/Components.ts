@@ -16,20 +16,6 @@ export type Acting = { acting: ActionTypes }
 export type TagMeleeAttackTarget = { tagMeleeAttackTarget: true }
 export type TagDead = { tagDead: true }
 
-// currently needed only for updateComponents on world, I probably don't want this
-export type ComponentsU =
-  | Position
-  | Render
-  | TagPlayer
-  | FOV
-  | Seen
-  | TagCurrentTurn
-  | TagWalkable
-  | TagActor
-  | Acting
-  | TagMeleeAttackTarget
-  | TagDead
-
 export type Components = Partial<
   Position &
     Render &

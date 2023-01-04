@@ -1,6 +1,6 @@
 // Entity/Component manager. Currently should be the only way to mutate game state
 import * as ROT from 'rot-js'
-import { Entity, ComponentsU, tagCurrentTurn, Components, Build } from './Components'
+import { Entity, tagCurrentTurn, Components, Build } from './Components'
 import { State, StateObject } from './State'
 import { Builder } from './Components'
 import { objLog } from '../util/util'
@@ -120,7 +120,7 @@ export class World {
     this.current.graveyard.push(targetEntity.id)
   }
 
-  addComponent(entity: Entity, component: ComponentsU) {
+  addComponent<C extends Components>(entity: Entity, component: C) {
     const entities = this.state.current.level.entities
     const oldEntity = entities.find((e) => e === entity)
     // if (!oldEntity) throw new Error('addC: Unable to locate entity to update')
@@ -148,7 +148,7 @@ export class World {
   }
 
   // gets writable entity from state, updates component, sends back to state
-  updateComponent(entity: Entity, component: ComponentsU) {
+  updateComponent<C extends Components>(entity: Entity, component: C) {
     // console.log('Start updateComponent', entity.id, Reflect.ownKeys(component).join())
     const entities = this.state.current.level.entities
     const oldEntity = entities.find((e) => e === entity)
