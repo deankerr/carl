@@ -28,6 +28,11 @@ export class Game {
   state: State
   world: World
 
+  messageCurrent: string[] = [] // messages generated during the last update
+  messageBuffer: string[] = [] // previous messages that still fit in the buffer visually
+  // dummy display for checking wrapped message height
+  messageDummyDisplay = new ROT.Display({ width: CONFIG.displayWidth, height: CONFIG.displayHeight })
+
   lightsOn = true // reveal level debug flag
   hideInternalWalls = true
 
@@ -107,9 +112,6 @@ export class Game {
     this.render()
   }
 
-  messageCurrent: string[] = [] // messages generated during the last update
-  messageBuffer: string[] = [] // previous messages that still fit in the buffer visually
-
   processMessages() {
     const { messages, playerTurns } = this.state.current
     if (messages.length < 1) return
@@ -117,8 +119,15 @@ export class Game {
     this.messageBuffer = [...this.messageCurrent, ...this.messageBuffer]
     this.messageCurrent = []
 
-    // new messages from this turn, put into current
+    // put new messages from this turn into current
     if (messages[0][0] === playerTurns) this.messageCurrent = messages[0][1]
+
+    // clip buffer height
+    while (
+      this.messageDummyDisplay.drawText(0, 0, this.messageCurrent.join(' ') + ' ' + this.messageBuffer.join(' ')) > 3
+    ) {
+      this.messageBuffer.pop()
+    }
   }
 
   system(action: ActionTypes) {

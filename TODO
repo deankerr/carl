@@ -9,6 +9,7 @@
 - Create logger, Exception handling
 - Something like world.query().entitiesWith('position', 'tagWalkable').optionally('door').without('tagPlayer').at({x: 1, y: 2})
 - Teleport player to mouse click
+- Messages get dimmer as they age
 
 === Bugs
 
