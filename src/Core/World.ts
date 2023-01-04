@@ -1,6 +1,7 @@
 // Entity/Component manager. Currently should be the only way to mutate game state
 import * as ROT from 'rot-js'
-import { Entity, tagCurrentTurn, Components, Build } from './Components'
+import { tagCurrentTurn, Components, Build } from './Components'
+import { Entity } from './Entity'
 import { State, StateObject } from './State'
 import { Builder } from './Components'
 import { objLog } from '../util/util'
@@ -22,6 +23,7 @@ export class World {
     this.nextTurn() // set the currentTurn
   }
 
+  // TODO Move this responsibility to Generate(?)
   __populate() {
     const level = this.state.current.level
 
@@ -53,6 +55,10 @@ export class World {
       const n = ent.positionPt(level.ptInRoom(i)).build(tag)
       this.add(n)
     })
+  }
+
+  __createDoors() {
+    //todo
   }
 
   /*

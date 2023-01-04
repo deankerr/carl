@@ -3,6 +3,7 @@
 
 import { ActionTypes } from '../Action'
 import { Point } from '../Model/Point'
+import { Entity } from './Entity'
 
 export type Render = { render: { char: string; color: string } }
 export type Position = { position: { x: number; y: number } }
@@ -15,6 +16,7 @@ export type TagActor = { tagActor: true }
 export type Acting = { acting: ActionTypes }
 export type TagMeleeAttackTarget = { tagMeleeAttackTarget: true }
 export type TagDead = { tagDead: true }
+export type TagFurniture = { tagFurniture: true }
 
 export type Components = Partial<
   Position &
@@ -29,8 +31,6 @@ export type Components = Partial<
     TagMeleeAttackTarget &
     TagDead
 >
-export type EntityID = { readonly id: string }
-export type Entity = EntityID & Components
 
 export const render = (char: string, color: string): Render => {
   return { render: { char, color } }
@@ -74,6 +74,10 @@ export const tagMeleeAttackTarget = (): TagMeleeAttackTarget => {
 
 export const dead = (): TagDead => {
   return { tagDead: true }
+}
+
+export const tagFurniture = (): TagFurniture => {
+  return { tagFurniture: true }
 }
 
 export class Builder {

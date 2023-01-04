@@ -1,6 +1,6 @@
 // The central, immutable (currently not enforced) repository for all game world state
 
-import { Entity } from './Components'
+import { Entity } from './Entity'
 import { Level } from '../Model/Level'
 import { objLog } from '../util/util'
 import { Dungeon4Data } from '../Generate/dungeon4/dungeon4'

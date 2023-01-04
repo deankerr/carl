@@ -1,7 +1,7 @@
 // Represents a game level
 import * as ROT from 'rot-js'
 import { Grid } from './Grid'
-import { Entity } from '../Core/Components'
+import { Entity } from '../Core/Entity'
 import { dungeon4 } from '../Generate'
 import { Dungeon4Data, Room } from '../Generate/dungeon4/dungeon4'
 import { TerrainDictionary } from '../Core/Terrain'
