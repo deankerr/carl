@@ -17,6 +17,7 @@ export type Acting = { acting: ActionTypes }
 export type TagMeleeAttackTarget = { tagMeleeAttackTarget: true }
 export type TagDead = { tagDead: true }
 export type RenderSeen = { renderSeen: { char: string; color: string } }
+export type Door = { open: boolean; char: string; color: string }
 
 export type Components = Partial<
   Position &
@@ -30,7 +31,8 @@ export type Components = Partial<
     Acting &
     TagMeleeAttackTarget &
     TagDead &
-    RenderSeen
+    RenderSeen &
+    Door
 >
 
 export const render = (char: string, color: string): Render => {
@@ -79,6 +81,10 @@ export const dead = (): TagDead => {
 
 export const renderSeen = (char: string, color: string): RenderSeen => {
   return { renderSeen: { char, color } }
+}
+
+export const door = (open: boolean, char: string, color: string) => {
+  return { door: { open, char, color } }
 }
 
 // export const door = ()

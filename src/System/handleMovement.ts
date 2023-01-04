@@ -29,7 +29,8 @@ export const handleMovement = (world: World) => {
 
     // entity blocking check
     const here = world.here(Pt(newX, newY))
-    if (here[1].length > 0) {
+    const entitiesWalkable = here[1].every((e) => 'tagWalkable' in e)
+    if (!entitiesWalkable) {
       console.log('handleMovement: new action - Bump (entity)')
       const newAction = acting(Bump(Pt(newX, newY)))
       world.updateComponent(entity, newAction)

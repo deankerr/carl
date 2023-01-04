@@ -10,6 +10,7 @@ export const templates = {
       id: 'door',
       ...Component.render('+', 'saddlebrown'),
       ...Component.renderSeen('+', '#4d2509'),
+      ...Component.door(false, '/', 'saddlebrown'),
       ...Component.tagWalkable(),
     }
   },
