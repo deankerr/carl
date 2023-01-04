@@ -27,7 +27,7 @@ export class Game {
   state: State
   world: World
 
-  lightsOn = false // reveal level debug flag
+  lightsOn = true // reveal level debug flag
   hideInternalWalls = true
 
   constructor(d: ROT.Display, loadLevel?: Dungeon4Data) {

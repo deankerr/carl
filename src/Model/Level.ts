@@ -5,7 +5,7 @@ import { Entity } from '../Core/Components'
 import { dungeon4 } from '../Generate'
 import { Dungeon4Data, Room } from '../Generate/dungeon4/dungeon4'
 import { TerrainDictionary } from '../Core/Terrain'
-import { Pt } from './Point'
+import { Point, Pt } from './Point'
 
 // pointless duplication unless I decide I want to build levels outside of Level
 export type LevelData = {
@@ -13,6 +13,7 @@ export type LevelData = {
   entities: Entity[]
   terrain: Grid<number>
   rooms: Room[]
+  doors: Point[]
 }
 
 export class Level {
@@ -20,11 +21,13 @@ export class Level {
   entities: Entity[]
   terrain: Grid<number>
   rooms: Room[]
+  doors: Point[]
   constructor(levelData: LevelData) {
     this.label = levelData.label
     this.entities = levelData.entities
     this.terrain = levelData.terrain
     this.rooms = levelData.rooms
+    this.doors = levelData.doors
   }
 
   isTransparent(x: number, y: number) {
@@ -52,8 +55,8 @@ export class Level {
   }
 
   static createInitial(loadLevel?: Dungeon4Data) {
-    const { terrain, rooms } = dungeon4(loadLevel)
-    return new Level({ label: 'initialLevel', entities: [], terrain, rooms })
+    const { terrain, rooms, doors } = dungeon4(loadLevel)
+    return new Level({ label: 'initialLevel', entities: [], terrain, rooms, doors })
   }
 
   // ? static create(generator: Function) { levelData = generator() }
