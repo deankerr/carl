@@ -22,10 +22,12 @@ export const handleMeleeAttack = (world: World) => {
     console.log(`handleMeleeAttack: player killed ${targetEntity.id}`)
     const newDead = dead()
     world.addComponent(targetEntity, newDead)
-    world.message(`You obliterate the ${targetEntity.id} with your mind!`)
+    world.message(`You obliterate the ${targetEntity?.description?.name ?? targetEntity.id} with your mind!`)
   } else {
     // TODO in player vision/hearing range only
-    world.message(`The ${currentEntity.id} glares helplessly at the ${targetEntity.id}`)
+    world.message(
+      `The ${currentEntity?.description?.name ?? currentEntity.id} glares helplessly at the ${targetEntity.id}`
+    )
   }
 
   // ? cleanup

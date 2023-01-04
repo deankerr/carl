@@ -13,6 +13,7 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
       ...C.position(pt.x, pt.y),
       ...C.render('+', 'saddlebrown'),
       ...C.renderSeenColor('#4d2509'),
+      ...C.description('door'),
       ...C.door(),
       ...C.trodOn('You carefully navigate through the door.'),
     }
@@ -23,6 +24,7 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
       id: 'player',
       ...C.position(pt.x, pt.y),
       ...C.render('@', 'white'),
+      ...C.description('yourself'),
       ...C.tagPlayer(),
       ...C.tagActor(),
       ...C.fov(fov ?? 5),
@@ -35,6 +37,7 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
       id: 'orc',
       ...C.position(pt.x, pt.y),
       ...C.render('o', 'green'),
+      ...C.description('orc'),
       ...C.tagActor(),
     }
   },
@@ -44,6 +47,7 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
       id: 'spider',
       ...C.position(pt.x, pt.y),
       ...C.render('x', 'lightblue'),
+      ...C.description('tarantula'),
       ...C.tagActor(),
     }
   },
@@ -53,6 +57,7 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
       id: 'snake',
       ...C.position(pt.x, pt.y),
       ...C.render('s', 'lightgreen'),
+      ...C.description('taipan'),
       ...C.tagActor(),
     }
   },
@@ -62,6 +67,7 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
       id: 'toad',
       ...C.position(pt.x, pt.y),
       ...C.render('t', 'limegreen'),
+      ...C.description('menacing toad'),
       ...C.tagActor(),
     }
   },
@@ -71,6 +77,7 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
       id: 'crab',
       ...C.position(pt.x, pt.y),
       ...C.render('c', 'red'),
+      ...C.description('doomcrab'),
       ...C.tagActor(),
     }
   },
@@ -80,6 +87,7 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
       id: 'ghost',
       ...C.position(pt.x, pt.y),
       ...C.render('g', 'white'),
+      ...C.description('ghost'),
       ...C.tagActor(),
     }
   },
@@ -89,6 +97,7 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
       id: 'demon',
       ...C.position(pt.x, pt.y),
       ...C.render('D', 'orangered'),
+      ...C.description('demon'),
       ...C.tagActor(),
     }
   },
@@ -98,6 +107,7 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
       id: 'hammerhead',
       ...C.position(pt.x, pt.y),
       ...C.render('H', 'orange'),
+      ...C.description('hammerhead shark man'),
       ...C.tagActor(),
     }
   },
@@ -107,6 +117,7 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
       id: 'skeleton',
       ...C.position(pt.x, pt.y),
       ...C.render('S', 'white'),
+      ...C.description('skellybones'),
       ...C.tagActor(),
     }
   },
@@ -116,6 +127,7 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
       id: 'chicken',
       ...C.position(pt.x, pt.y),
       ...C.render('c', 'grey'),
+      ...C.description("lil' chickadee"),
       ...C.tagActor(),
     }
   },
@@ -125,6 +137,7 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
       id: 'bat',
       ...C.position(pt.x, pt.y),
       ...C.render('a', 'red'),
+      ...C.description('bat from hell'),
       ...C.tagActor(),
     }
   },

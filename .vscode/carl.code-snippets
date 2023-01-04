@@ -42,6 +42,7 @@
       "    id: '$1',",
       "    ...C.position(pt.x, pt.y),",
       "    ...C.render('${2:m}', '${3:red}'),",
+      "    ...C.description($1)",
       "    ...C.tagActor(),",
       "  }",
       "},"

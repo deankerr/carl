@@ -14,6 +14,7 @@ export type TagDead = { tagDead: true }
 export type RenderSeenColor = { renderSeenColor: { color: string } }
 export type Door = { door: { open: boolean } }
 export type TrodOn = { trodOn: { message: string } }
+export type Description = { description: { name: string } }
 
 export type Components = Partial<
   Position &
@@ -29,7 +30,8 @@ export type Components = Partial<
     TagDead &
     RenderSeenColor &
     Door &
-    TrodOn
+    TrodOn &
+    Description
 >
 
 export const render = (char: string, color: string): Render => {
@@ -86,4 +88,8 @@ export const door = (open = false) => {
 
 export const trodOn = (message: string) => {
   return { trodOn: { message } }
+}
+
+export const description = (name: string) => {
+  return { description: { name } }
 }
