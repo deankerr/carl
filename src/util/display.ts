@@ -43,11 +43,11 @@ export const createTileSetDisplay = (width: number, height: number) => {
     tileMap: tileMapOryxClassic,
   })
 
-  resizeTileSetDisplay(display)
+  // resizeTileSetDisplay(display)
 
-  window.addEventListener('resize', () => {
-    resizeTileSetDisplay(display)
-  })
+  // window.addEventListener('resize', () => {
+  //   resizeTileSetDisplay(display)
+  // })
 
   const c = display.getContainer()
   if (c) document.body.appendChild(c)
@@ -56,21 +56,25 @@ export const createTileSetDisplay = (width: number, height: number) => {
   return display
 }
 
-const resizeTileSetDisplay = (display: ROT.Display) => {
-  const maxW = document.documentElement.clientWidth
-  const maxH = document.documentElement.clientHeight
-  const dWidth = maxW - 60
-  const dHeight = maxH - 30
+// const resizeTileSetDisplay = (display: ROT.Display) => {
+//   const maxW = document.documentElement.clientWidth
+//   const maxH = document.documentElement.clientHeight
+//   const dWidth = maxW - 60
+//   const dHeight = maxH - 30
 
-  const debugMsg = `w: ${document.documentElement.clientWidth}/${dWidth} h: ${document.documentElement.clientHeight}/${dHeight}`
-  display.drawText(0, display.getOptions().height - 1, debugMsg)
+//   // display debug
+//   const yMax = display.getOptions().height - 1
+//   const ddb = displayDebugStrings(display)
 
-  const c = display.getContainer()
-  if (c && 'style' in c) {
-    // c.style.width = `${dWidth}px`
-    c.style.height = `${dHeight}px`
-  }
-}
+//   display.drawText(0, yMax - 1, ddb[0])
+//   display.drawText(0, yMax, ddb[1])
+
+//   const c = display.getContainer()
+//   if (c && 'style' in c) {
+//     // c.style.width = `${dWidth}px`
+//     c.style.height = `${dHeight}px`
+//   }
+// }
 
 // get a range of tiles in the ROT format
 const mapTiles = (chars: string, y: number, tileWidth: number) => {
@@ -123,3 +127,12 @@ export function mouseClick(d: ROT.Display, callback: (event: MouseEvent) => unkn
     ctx.addEventListener('mousedown', callback)
   }
 }
+
+// export function displayDebugStrings(display: ROT.Display) {
+//   const cW = document.documentElement.clientWidth
+//   console.log('cW:', cW)
+//   const cH = document.documentElement.clientHeight
+//   const { width: gW, height: gH } = display.getOptions()
+
+//   return [`cW: ${cW} gW: ${gW} cH: ${cH} gW: ${gH}`, `cR: ${cW / cH} gR: ${gW / gH}`]
+// }
