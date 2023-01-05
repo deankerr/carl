@@ -5,7 +5,7 @@ const CONFIG = {
   displayWidth: 80,
   displayHeight: 25,
   refreshRate: 50,
-  marginTop: 3,
+  marginTop: 2,
   marginBot: 2,
   levelWidth: 80,
   levelHeight: 20,
@@ -14,6 +14,10 @@ const CONFIG = {
   lightsOnInitial: PROD ? false : true,
   htmlBGColor: PROD ? '#000' : '#444',
   useTSDisplay: true,
+  TSDisplayWidth: 48,
+  TSDisplayHeight: 28,
+  TSLevelWidth: 48,
+  TSLevelHeight: 24,
   // oldMessageTurns: 10, // how old can messages be to still appear in the buffer
 }
 
