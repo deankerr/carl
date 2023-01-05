@@ -21,6 +21,7 @@ let tileSetLoaded = false
 const tileSet = new Image()
 tileSet.src = tileSetURL
 tileSet.onload = () => {
+  window.tileSet = tileSet
   tileSetLoaded = true
   init()
 }
