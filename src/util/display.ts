@@ -31,6 +31,14 @@ function resize(display: ROT.Display) {
 }
 
 export const createTileSetDisplay = (width: number, height: number) => {
+  // const wrapper = document.createElement('div')
+  // wrapper.style.display = 'flex'
+  // wrapper.style.alignItems = 'center'
+  // wrapper.style.justifyContent = 'center'
+  // // wrapper.style.width = '100%'
+  // wrapper.style.height = '90%'
+  // wrapper.style.border = '1px dotted red'
+
   const display = new ROT.Display({
     layout: 'tile-gl',
     width,
@@ -49,9 +57,12 @@ export const createTileSetDisplay = (width: number, height: number) => {
   //   resizeTileSetDisplay(display)
   // })
 
+  const wrapper = document.getElementById('wrapper')
   const c = display.getContainer()
-  if (c) document.body.appendChild(c)
-  else throw new Error('Unable to get ROT.Display container')
+  if (c && wrapper) {
+    // wrapper.appendChild(c)
+    wrapper.appendChild(c)
+  } else throw new Error('Unable to get ROT.Display container')
 
   return display
 }
@@ -135,5 +146,5 @@ export function displayDebugStrings(display: ROT.Display) {
   const cH = document.documentElement.clientHeight
   const { width: gW, height: gH } = display.getOptions()
 
-  return [`cW: ${cW} gW: ${gW} cH: ${cH} gW: ${gH}`, `cR: ${cW / cH} gR: ${gW / gH}`]
+  return [`cW:${cW} gW:${gW} cH:${cH} gH:${gH}`, `cR:${(cW / cH).toFixed(2)} gR:${gW / gH}`]
 }
