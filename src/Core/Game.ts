@@ -156,6 +156,7 @@ export class Game {
   render() {
     const d = this.display
     const top = CONFIG.marginTop
+    const useOryx = CONFIG.useTSDisplay
 
     const world = this.world
     const { level } = this.state.current
@@ -172,19 +173,15 @@ export class Game {
       // TODO TerrainDict function, return default results for unknown?
       // ? maybe we should just crash
 
-      // skip rendering if this is a wall surrounded by other walls
-      // currently only to make lightsOn view look nicer
-      if (this.lightsOn && this.hideInternalWalls && isInternalWall(x, y)) return
-
       const here = PtS(x, y)
       // currently visible by player
       if (player.fov.visible.includes(here)) {
-        const { char, color } = TerrainDictionary[t]?.console ?? { char: t, color: 'red' }
-        this.display.draw(x, top + y, char, color, null)
-      } else if (player.seen.visible.includes(here) || this.lightsOn) {
+        const { char, color, oryxChar, oryxColor } = TerrainDictionary[t]?.console ?? { char: t, color: 'red' }
+        this.display.draw(x, top + y, useOryx ? oryxChar : char, useOryx ? oryxColor : color, null)
+      } else if (player.seen.visible.includes(here) || (this.lightsOn && !isInternalWall(x, y))) {
         // seen previously
-        const { char, color } = TerrainDictionary[t]?.consoleSeen ?? { char: t, color: 'red' }
-        this.display.draw(x, top + y, char, color, null)
+        const { char, color, oryxChar, oryxColor } = TerrainDictionary[t]?.consoleSeen ?? { char: t, color: 'red' }
+        this.display.draw(x, top + y, useOryx ? oryxChar : char, useOryx ? oryxColor : color, null)
       } else {
         // blank space (currently needed to clip message buffer)
         this.display.draw(x, top + y, ' ', 'black', null)
@@ -198,15 +195,16 @@ export class Game {
       const { render, position } = entity
       const here = PtS(position.x, position.y)
 
+      const char = useOryx ? render.oryxChar ?? render.char : render.char
       // currently visible entities
       if (player.fov.visible.includes(here) || this.lightsOn) {
-        this.display.draw(position.x, top + position.y, render.char, render.color, null)
+        this.display.draw(position.x, top + position.y, char, render.color, null)
       }
       // seen furniture
       else {
         const seenEntity = world.with(entity, 'renderSeenColor')
         if (seenEntity && player.seen.visible.includes(here)) {
-          this.display.draw(position.x, top + position.y, render.char, seenEntity.renderSeenColor.color, null)
+          this.display.draw(position.x, top + position.y, char, seenEntity.renderSeenColor.color, null)
         }
       }
     }

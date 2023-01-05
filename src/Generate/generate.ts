@@ -9,9 +9,13 @@ import { Grid } from '../Model/Grid'
 import { create } from './dungeon4/'
 import { Dungeon4Data } from './dungeon4/dungeon4'
 import { Pt } from '../Model/Point'
+import { CONFIG } from '../config'
 
 export function dungeon4(loadLevel?: Dungeon4Data) {
-  const data = loadLevel ?? create()
+  const data =
+    loadLevel ?? CONFIG.useTSDisplay
+      ? create({ width: 40, height: 22, minRoomW: 5, maxRoomW: 7, maxRoomH: 5 })
+      : create()
   if (!data) throw new Error('Dungeon gen failed.')
   const [terrainData, rooms] = data
   const doors = data[2].map((d) => Pt(d.x, d.y))

@@ -21,12 +21,11 @@ let d4Data: Dungeon4Data | null
 const d4modules = mrModules()
 
 // TODO live display switching
-const useTSDisplay = true
 
 export function App() {
   // main display
 
-  display = useTSDisplay ? createTileSetDisplay(48, 30) : createDisplay()
+  display = CONFIG.useTSDisplay ? createTileSetDisplay(40, 25) : createDisplay()
   window.display = [display]
 
   // ROT.RNG.setSeed(1111)

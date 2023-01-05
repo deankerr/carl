@@ -1,6 +1,7 @@
 import { World } from '../Core/World'
 import { tagMeleeAttackTarget, acting, door, tagWalkable, render } from '../Core/Components'
 import { MeleeAttack } from '../Action'
+import { CONFIG } from '../config'
 
 export const handleBump = (world: World) => {
   const [currentEntity] = world.get('acting', 'position')
@@ -31,7 +32,7 @@ export const handleBump = (world: World) => {
         console.log('handleBump: result - open door')
         const doorEntityOpen = world.updateComponent(doorEntity, door(true))
         const doorEntityWalkable = world.addComponent(doorEntityOpen, tagWalkable())
-        world.updateComponent(doorEntityWalkable, render('/', 'saddlebrown'))
+        world.updateComponent(doorEntityWalkable, render(CONFIG.useTSDisplay ? '{O}/' : '/', 'saddlebrown'))
         world.message('Your hands tremble as you slowly push or pull the door open.')
         return
       }
