@@ -12,7 +12,7 @@ import { acting } from './Components'
 import { handleBump, processDeath, handleMovement, processFOV, handleMeleeAttack } from '../System'
 import { actionName, ActionTypes, __randomMove, __wait } from '../Action'
 
-import { mouseClick } from '../util/display'
+import { displayDebugStrings, mouseClick } from '../util/display'
 import { Keys } from '../util/Keys'
 import { objLog } from '../util/util'
 import { input } from './Input'
@@ -81,6 +81,10 @@ export class Game {
         case 'toggleLightSwitch':
           this.lightsOn = !this.lightsOn
           console.log('UI: toggleLightSwitch:', this.lightsOn)
+          break
+        case 'render':
+          this.render()
+          console.log('UI: render')
           break
         default:
           console.log('UI: Action not implemented', playerAction)
@@ -156,7 +160,7 @@ export class Game {
   render() {
     const d = this.display
     const top = CONFIG.marginTop
-    // const yMax = d.getOptions().height - 1
+    const yMax = d.getOptions().height - 1
     const useOryx = CONFIG.useTSDisplay
 
     const world = this.world
@@ -230,5 +234,12 @@ export class Game {
 
     // player again
     d.draw(player.position.x, top + player.position.y, player.render.textChar, 'white', null)
+
+    // display debug
+    if (this.lightsOn) {
+      const ddb = displayDebugStrings(d)
+      d.drawText(0, yMax - 1, ddb[0])
+      d.drawText(0, yMax, ddb[1])
+    }
   }
 }

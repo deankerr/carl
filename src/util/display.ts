@@ -129,11 +129,11 @@ export function mouseClick(d: ROT.Display, callback: (event: MouseEvent) => unkn
   }
 }
 
-// export function displayDebugStrings(display: ROT.Display) {
-//   const cW = document.documentElement.clientWidth
-//   console.log('cW:', cW)
-//   const cH = document.documentElement.clientHeight
-//   const { width: gW, height: gH } = display.getOptions()
+export function displayDebugStrings(display: ROT.Display) {
+  const cW = document.documentElement.clientWidth
+  console.log('cW:', cW)
+  const cH = document.documentElement.clientHeight
+  const { width: gW, height: gH } = display.getOptions()
 
-//   return [`cW: ${cW} gW: ${gW} cH: ${cH} gW: ${gH}`, `cR: ${cW / cH} gR: ${gW / gH}`]
-// }
+  return [`cW: ${cW} gW: ${gW} cH: ${cH} gW: ${gH}`, `cR: ${cW / cH} gR: ${gW / gH}`]
+}
