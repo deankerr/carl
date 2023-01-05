@@ -92,6 +92,7 @@ const tileMapOryxClassic = {
   ...mapTiles(letters.toLowerCase(), 640, 80),
   ...mapTiles(numbers, 560, 80),
   ...mapTiles(punctuation, 400, 80),
+  "'": [2080, 640],
   ' ': [960, 0],
   'O^#': [0, 160],
   'O^.': [640, 160],

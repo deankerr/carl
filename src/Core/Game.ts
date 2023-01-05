@@ -156,6 +156,7 @@ export class Game {
   render() {
     const d = this.display
     const top = CONFIG.marginTop
+    // const yMax = d.getOptions().height - 1
     const useOryx = CONFIG.useTSDisplay
 
     const world = this.world
@@ -192,15 +193,15 @@ export class Game {
 
       if (player.fov.visible.includes(here)) {
         // currently visible by player
-        this.display.draw(x, top + y, terrainChar, terrainColor, null)
+        d.draw(x, top + y, terrainChar, terrainColor, null)
 
         // seen previously
       } else if (player.seen.visible.includes(here) || (this.lightsOn && !isInternalWall(x, y))) {
-        this.display.draw(x, top + y, terrainChar, terrainColor, null)
+        d.draw(x, top + y, terrainChar, terrainColor, null)
 
         // blank space (currently needed to clip message buffer)
       } else {
-        this.display.draw(x, top + y, ' ', 'black', null)
+        d.draw(x, top + y, ' ', 'black', null)
       }
     })
 
@@ -216,18 +217,18 @@ export class Game {
 
       // currently visible entities
       if (player.fov.visible.includes(here) || this.lightsOn) {
-        this.display.draw(position.x, top + position.y, entityChar, render.color, null)
+        d.draw(position.x, top + position.y, entityChar, render.color, null)
       }
       // seen furniture
       else {
         const seenEntity = world.with(entity, 'renderSeenColor')
         if (seenEntity && player.seen.visible.includes(here)) {
-          this.display.draw(position.x, top + position.y, entityChar, seenEntity.renderSeenColor.color, null)
+          d.draw(position.x, top + position.y, entityChar, seenEntity.renderSeenColor.color, null)
         }
       }
     }
 
     // player again
-    this.display.draw(player.position.x, top + player.position.y, player.render.textChar, 'white', null)
+    d.draw(player.position.x, top + player.position.y, player.render.textChar, 'white', null)
   }
 }
