@@ -20,6 +20,12 @@ export class World {
     this.__populate()
     this.message('You begin your queste.')
 
+    // font test
+    this.message('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+    this.message('abcdefghijklmnopqrstuvwxyz')
+    this.message('!@#$%^&*()-=+.,:;"<>?\\/|-:')
+    this.message('1234567890')
+
     this.nextTurn() // set the currentTurn
   }
 

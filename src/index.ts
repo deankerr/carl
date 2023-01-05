@@ -1,5 +1,5 @@
 import fontURL from '../assets/Inconsolata.otf'
-import tileSetURL from '../assets/oryx_classic.png'
+import tileSetURL from '../assets/oryx_classic_lc3.png'
 import { App } from './App'
 
 console.log('it begins')
