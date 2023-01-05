@@ -174,14 +174,23 @@ export class Game {
       // ? maybe we should just crash
 
       const here = PtS(x, y)
+
+      // temp oryx path variants
+      let pathChar = '{O}.'
+      if (useOryx) {
+        if (x % 4 === 0 && y % 2 === 0) pathChar = '{O}.' + ((y % 4) + 2)
+      }
+
       // currently visible by player
       if (player.fov.visible.includes(here)) {
         const { char, color, oryxChar, oryxColor } = TerrainDictionary[t]?.console ?? { char: t, color: 'red' }
-        this.display.draw(x, top + y, useOryx ? oryxChar : char, useOryx ? oryxColor : color, null)
+        if (char === '.' && useOryx) this.display.draw(x, top + y, pathChar, useOryx ? oryxColor : color, null)
+        else this.display.draw(x, top + y, useOryx ? oryxChar : char, useOryx ? oryxColor : color, null)
       } else if (player.seen.visible.includes(here) || (this.lightsOn && !isInternalWall(x, y))) {
         // seen previously
         const { char, color, oryxChar, oryxColor } = TerrainDictionary[t]?.consoleSeen ?? { char: t, color: 'red' }
-        this.display.draw(x, top + y, useOryx ? oryxChar : char, useOryx ? oryxColor : color, null)
+        if (char === '.' && useOryx) this.display.draw(x, top + y, pathChar, useOryx ? oryxColor : color, null)
+        else this.display.draw(x, top + y, useOryx ? oryxChar : char, useOryx ? oryxColor : color, null)
       } else {
         // blank space (currently needed to clip message buffer)
         this.display.draw(x, top + y, ' ', 'black', null)

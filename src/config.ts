@@ -9,7 +9,8 @@ const CONFIG = {
   marginBot: 2,
   levelWidth: 80,
   levelHeight: 20,
-  appInitial: PROD ? 'dungeon4' : 'game',
+  // appInitial: PROD ? 'dungeon4' : 'game', // ! d4vis broken with TSDisplay
+  appInitial: 'game',
   lightsOnInitial: PROD ? false : true,
   useTSDisplay: true,
   // oldMessageTurns: 10, // how old can messages be to still appear in the buffer
