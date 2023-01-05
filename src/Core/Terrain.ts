@@ -2,16 +2,14 @@ export interface Terrain {
   title: string
   walkable: boolean
   transparent: boolean
-  console: {
-    char: string
-
+  render: {
+    textChar: string
     color: string
     oryxChar: string
     oryxColor: string
   }
   consoleSeen: {
-    char: string
-
+    textChar: string
     color: string
     oryxChar: string
     oryxColor: string
@@ -23,16 +21,16 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
     title: 'path',
     walkable: true,
     transparent: true,
-    console: {
-      char: '.',
+    render: {
+      textChar: '.',
       color: '#AAA',
-      oryxChar: '{O}.',
+      oryxChar: 'O^.',
       oryxColor: '#222',
     },
     consoleSeen: {
-      char: '.',
+      textChar: '.',
       color: '#777',
-      oryxChar: '{O}.',
+      oryxChar: 'O^.',
       oryxColor: '#111',
     },
   },
@@ -40,16 +38,16 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
     title: 'wall',
     walkable: false,
     transparent: false,
-    console: {
-      char: '#',
+    render: {
+      textChar: '#',
       color: '#666',
-      oryxChar: '{O}#',
+      oryxChar: 'O^#',
       oryxColor: '#666',
     },
     consoleSeen: {
-      char: '#',
+      textChar: '#',
       color: '#444',
-      oryxChar: '{O}#',
+      oryxChar: 'O^#',
       oryxColor: '#555',
     },
   },

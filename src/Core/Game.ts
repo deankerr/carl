@@ -176,23 +176,30 @@ export class Game {
       const here = PtS(x, y)
 
       // temp oryx path variants
-      let pathChar = '{O}.'
-      if (useOryx) {
-        if (x % 4 === 0 && y % 2 === 0) pathChar = '{O}.' + (((y + x) % 4) + 2)
-      }
+      // let pathChar = 'O^.'
+      // if (useOryx) {
+      //   if (x % 4 === 0 && y % 2 === 0) pathChar = 'O^.' + (((y + x) % 4) + 2)
+      // }
 
-      // currently visible by player
+      const terrain = TerrainDictionary[t]
+      const terrainColor = useOryx ? terrain.render.oryxColor : terrain.render.color
+      const terrainChar = useOryx ? terrain.render.oryxChar : terrain.render.textChar
+      // if (useOryx) {
+      //   if (terrain.title === 'path') {
+      //     if (x % 5 === 0)
+      //   }
+      // }
+
       if (player.fov.visible.includes(here)) {
-        const { char, color, oryxChar, oryxColor } = TerrainDictionary[t]?.console ?? { char: t, color: 'red' }
-        if (char === '.' && useOryx) this.display.draw(x, top + y, pathChar, useOryx ? oryxColor : color, null)
-        else this.display.draw(x, top + y, useOryx ? oryxChar : char, useOryx ? oryxColor : color, null)
-      } else if (player.seen.visible.includes(here) || (this.lightsOn && !isInternalWall(x, y))) {
+        // currently visible by player
+        this.display.draw(x, top + y, terrainChar, terrainColor, null)
+
         // seen previously
-        const { char, color, oryxChar, oryxColor } = TerrainDictionary[t]?.consoleSeen ?? { char: t, color: 'red' }
-        if (char === '.' && useOryx) this.display.draw(x, top + y, pathChar, useOryx ? oryxColor : color, null)
-        else this.display.draw(x, top + y, useOryx ? oryxChar : char, useOryx ? oryxColor : color, null)
-      } else {
+      } else if (player.seen.visible.includes(here) || (this.lightsOn && !isInternalWall(x, y))) {
+        this.display.draw(x, top + y, terrainChar, terrainColor, null)
+
         // blank space (currently needed to clip message buffer)
+      } else {
         this.display.draw(x, top + y, ' ', 'black', null)
       }
     })
@@ -204,21 +211,23 @@ export class Game {
       const { render, position } = entity
       const here = PtS(position.x, position.y)
 
-      const char = useOryx ? render.oryxChar ?? render.char : render.char
+      // use oryxChar if applicable
+      const entityChar = useOryx && render.oryxChar ? render.oryxChar : render.textChar
+
       // currently visible entities
       if (player.fov.visible.includes(here) || this.lightsOn) {
-        this.display.draw(position.x, top + position.y, char, render.color, null)
+        this.display.draw(position.x, top + position.y, entityChar, render.color, null)
       }
       // seen furniture
       else {
         const seenEntity = world.with(entity, 'renderSeenColor')
         if (seenEntity && player.seen.visible.includes(here)) {
-          this.display.draw(position.x, top + position.y, char, seenEntity.renderSeenColor.color, null)
+          this.display.draw(position.x, top + position.y, entityChar, seenEntity.renderSeenColor.color, null)
         }
       }
     }
 
     // player again
-    this.display.draw(player.position.x, top + player.position.y, player.render.char, 'white', null)
+    this.display.draw(player.position.x, top + player.position.y, player.render.textChar, 'white', null)
   }
 }
