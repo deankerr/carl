@@ -14,7 +14,7 @@ import { CONFIG } from '../config'
 export function dungeon4(loadLevel?: Dungeon4Data) {
   const data =
     loadLevel ?? CONFIG.useTSDisplay
-      ? create({ width: 40, height: 22, minRoomW: 5, maxRoomW: 7, maxRoomH: 5 })
+      ? create({ width: 50, height: 21, minRoomW: 5, maxRoomW: 7, maxRoomH: 5 })
       : create()
   if (!data) throw new Error('Dungeon gen failed.')
   const [terrainData, rooms] = data

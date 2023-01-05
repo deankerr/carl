@@ -24,13 +24,13 @@ const d4modules = mrModules()
 
 export function App() {
   // main display
-  display = CONFIG.useTSDisplay ? createTileSetDisplay(50, 25) : createDisplay()
+  display = CONFIG.useTSDisplay ? createTileSetDisplay(48, 28) : createDisplay()
   window.display = [display]
 
   // dev html background
   document.body.style.backgroundColor = CONFIG.htmlBGColor
 
-  // ROT.RNG.setSeed(1111)
+  ROT.RNG.setSeed(1672910468299)
 
   switch (CONFIG.appInitial) {
     case 'game':
