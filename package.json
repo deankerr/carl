@@ -20,6 +20,6 @@
     "vite": "^3.2.3"
   },
   "dependencies": {
-    "rot-js": "^2.2.0"
+    "rot-js": "github:deankerr/rot.js#b44825c210267099fbaa2686183afa32f6d13f87"
   }
 }

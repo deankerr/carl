@@ -43,7 +43,7 @@ export const createTileSetDisplay = (width = CONFIG.TSDisplayWidth, height = CON
     layout: 'tile-gl',
     width,
     height,
-    bg: 'black',
+    // bg: 'black',
     tileWidth: 40, // oryx-classic
     tileHeight: 40,
     tileSet: window.tileSet,
@@ -114,7 +114,7 @@ const tileMapOryxClassic = {
   'O^+': [520, 80],
   'O^/': [560, 80],
   'O^o': [480, 120],
-  'O^x': [480, 120],
+  'O^x': [240, 120],
   'O^s': [320, 120],
   'O^t': [760, 120],
   'O^r': [400, 120],

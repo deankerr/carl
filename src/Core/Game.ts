@@ -125,7 +125,7 @@ export class Game {
 
     // put new messages from this turn into current
     if (messages[0][0] === playerTurns) this.messageCurrent = messages[0][1]
-
+    // ! ROT.Text.measure???
     // clip buffer height
     while (
       this.messageDummyDisplay.drawText(0, 0, this.messageCurrent.join(' ') + ' ' + this.messageBuffer.join(' ')) > 3
@@ -188,6 +188,7 @@ export class Game {
 
       const terrain = TerrainDictionary[t]
       const terrainColor = useOryx ? terrain.render.oryxColor : terrain.render.color
+      const terrainSeen = useOryx ? terrain.seen.oryxColor : terrain.render.color
       const terrainChar = useOryx ? terrain.render.oryxChar : terrain.render.textChar
       // if (useOryx) {
       //   if (terrain.title === 'path') {
@@ -198,11 +199,9 @@ export class Game {
       if (player.fov.visible.includes(here)) {
         // currently visible by player
         d.draw(x, top + y, terrainChar, terrainColor, null)
-
         // seen previously
       } else if (player.seen.visible.includes(here) || (this.lightsOn && !isInternalWall(x, y))) {
-        d.draw(x, top + y, terrainChar, terrainColor, null)
-
+        d.draw(x, top + y, terrainChar, terrainSeen, null)
         // blank space (currently needed to clip message buffer)
       } else {
         d.draw(x, top + y, ' ', 'black', null)
@@ -233,7 +232,13 @@ export class Game {
     }
 
     // player again
-    d.draw(player.position.x, top + player.position.y, player.render.textChar, 'white', null)
+    d.draw(
+      player.position.x,
+      top + player.position.y,
+      ['O^.', player.render.textChar],
+      ['#222', player.render.color],
+      ['black', 'transparent']
+    )
 
     // display debug
     const ddebug = false

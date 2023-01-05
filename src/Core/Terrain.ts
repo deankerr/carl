@@ -8,7 +8,7 @@ export interface Terrain {
     oryxChar: string
     oryxColor: string
   }
-  consoleSeen: {
+  seen: {
     textChar: string
     color: string
     oryxChar: string
@@ -27,7 +27,7 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
       oryxChar: 'O^.',
       oryxColor: '#222',
     },
-    consoleSeen: {
+    seen: {
       textChar: '.',
       color: '#777',
       oryxChar: 'O^.',
@@ -44,7 +44,7 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
       oryxChar: 'O^#',
       oryxColor: '#666',
     },
-    consoleSeen: {
+    seen: {
       textChar: '#',
       color: '#444',
       oryxChar: 'O^#',
