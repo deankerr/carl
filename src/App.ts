@@ -24,9 +24,11 @@ const d4modules = mrModules()
 
 export function App() {
   // main display
-
   display = CONFIG.useTSDisplay ? createTileSetDisplay(40, 25) : createDisplay()
   window.display = [display]
+
+  // dev html background
+  document.body.style.backgroundColor = CONFIG.htmlBGColor
 
   // ROT.RNG.setSeed(1111)
 

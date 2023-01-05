@@ -12,6 +12,7 @@ const CONFIG = {
   // appInitial: PROD ? 'dungeon4' : 'game', // ! d4vis broken with TSDisplay
   appInitial: 'game',
   lightsOnInitial: PROD ? false : true,
+  htmlBGColor: PROD ? '#000' : '#444',
   useTSDisplay: true,
   // oldMessageTurns: 10, // how old can messages be to still appear in the buffer
 }

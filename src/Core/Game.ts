@@ -178,7 +178,7 @@ export class Game {
       // temp oryx path variants
       let pathChar = '{O}.'
       if (useOryx) {
-        if (x % 4 === 0 && y % 2 === 0) pathChar = '{O}.' + ((y % 4) + 2)
+        if (x % 4 === 0 && y % 2 === 0) pathChar = '{O}.' + (((y + x) % 4) + 2)
       }
 
       // currently visible by player
