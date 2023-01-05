@@ -236,7 +236,8 @@ export class Game {
     d.draw(player.position.x, top + player.position.y, player.render.textChar, 'white', null)
 
     // display debug
-    if (this.lightsOn) {
+    const ddebug = false
+    if (this.lightsOn && ddebug) {
       const ddb = displayDebugStrings(d)
       d.drawText(0, yMax - 1, ddb[0])
       d.drawText(0, yMax, ddb[1])
