@@ -10,10 +10,6 @@
 - Larger TS levels + Viewport
 - Enable view selection + live switching
 
-### Related:
-
-- Unify Point object use throughout project + str method
-
 # TODO
 
 - Clarify State functionality, logging

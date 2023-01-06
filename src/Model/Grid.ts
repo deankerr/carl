@@ -1,6 +1,6 @@
 // essentially a 2D array
 // for storing things at x/y coordinates
-// ? Points lookup?
+import { Point, Pt } from './Point'
 
 export class Grid<T> {
   private grid: T[][]
@@ -9,27 +9,27 @@ export class Grid<T> {
     this.grid = values
   }
 
-  get(x: number, y: number) {
-    if (!this.inBounds(x, y)) return null
-    return this.grid[y][x]
+  get(pt: Point) {
+    if (!this.inBounds(pt)) return null
+    return this.grid[pt.y][pt.x]
   }
 
-  set(x: number, y: number, value: T) {
-    if (!this.inBounds(x, y)) return
-    this.grid[y][x] = value
+  set(pt: Point, value: T) {
+    if (!this.inBounds(pt)) return
+    this.grid[pt.y][pt.x] = value
   }
 
-  each(callback: (x: number, y: number, value: T) => void | null) {
+  each(callback: (pt: Point, value: T) => void | null) {
     this.grid.forEach((row, yi) =>
       row.forEach((value, xi) => {
         // return null to exit loop
-        if (callback(xi, yi, value) === null) return
+        if (callback(Pt(xi, yi), value) === null) return
       })
     )
   }
 
-  inBounds(x: number, y: number) {
-    return x >= 0 && x < this.grid[0].length && y >= 0 && y < this.grid.length
+  inBounds(pt: Point) {
+    return pt.x >= 0 && pt.x < this.grid[0].length && pt.y >= 0 && pt.y < this.grid.length
   }
 
   static from<U>(values: U[][]): Grid<U> {

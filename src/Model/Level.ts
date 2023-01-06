@@ -31,7 +31,7 @@ export class Level {
   }
 
   isTransparent(x: number, y: number) {
-    const t = this.terrain.get(x, y)
+    const t = this.terrain.get(Pt(x, y))
     if (t === null) return false
     return TerrainDictionary[t].transparent
   }
@@ -41,12 +41,12 @@ export class Level {
     return Pt(ROT.RNG.getUniformInt(rect.x, rect.x2), ROT.RNG.getUniformInt(rect.y, rect.y2))
   }
 
-  isInternalWall(x: number, y: number) {
+  isInternalWall(pt: Point) {
     const terrain = this.terrain
     const neigh = [Pt(-1, -1), Pt(0, -1), Pt(1, -1), Pt(-1, 0), Pt(1, 0), Pt(-1, 1), Pt(0, 1), Pt(1, 1)]
     // apply neigh coords to current, return true if its another wall, false otherwise (not internal)
     const result = neigh.every((n) => {
-      const t = terrain.get(x + n.x, y + n.y)
+      const t = terrain.get(Pt(pt.x + n.x, pt.y + n.y))
       if (t === null) return true
       return t === 1 ? true : false
     })

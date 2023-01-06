@@ -17,7 +17,7 @@ import { Keys } from '../util/Keys'
 import { objLog } from '../util/util'
 import { input } from './Input'
 
-import { Pt, PtS } from '../Model/Point'
+import { Pt } from '../Model/Point'
 
 import { Dungeon4Data } from '../Generate/dungeon4/dungeon4'
 import { handleTread } from '../System/handleTread'
@@ -176,12 +176,12 @@ export class Game {
     const isInternalWall = level.isInternalWall.bind(level)
     const player = this.world.get('tagPlayer', 'position', 'render', 'fov', 'seen')[0]
 
-    terrain.each((x, y, t) => {
+    terrain.each((pt, t) => {
       // TODO TerrainDict function, return default results for unknown?
       // TODO "renderAs" function, pass a whole render component and it choses the correct char/color
       // ? maybe we should just crash
 
-      const here = PtS(x, y)
+      const here = pt
 
       // temp oryx path variants
       // let pathChar = 'O^.'
@@ -199,15 +199,15 @@ export class Game {
       //   }
       // }
 
-      if (player.fov.visible.includes(here)) {
+      if (player.fov.visible.includes(here.s)) {
         // currently visible by player
-        d.draw(x, top + y, terrainChar, terrainColor, null)
+        d.draw(pt.x, top + pt.y, terrainChar, terrainColor, null)
         // seen previously
-      } else if (player.seen.visible.includes(here) || (this.lightsOn && !isInternalWall(x, y))) {
-        d.draw(x, top + y, terrainChar, terrainSeen, null)
+      } else if (player.seen.visible.includes(here.s) || (this.lightsOn && !isInternalWall(pt))) {
+        d.draw(pt.x, top + pt.y, terrainChar, terrainSeen, null)
         // blank space (currently needed to clip message buffer)
       } else {
-        d.draw(x, top + y, ' ', 'black', null)
+        d.draw(pt.x, top + pt.y, ' ', 'black', null)
       }
     })
 
@@ -216,7 +216,7 @@ export class Game {
 
     for (const entity of entities) {
       const { render, position } = entity
-      const here = PtS(position.x, position.y)
+      const here = Pt(position.x, position.y).s
 
       // use oryxChar if applicable
       const entityChar = useOryx && render.oryxChar ? render.oryxChar : render.textChar

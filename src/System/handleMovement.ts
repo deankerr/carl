@@ -24,7 +24,7 @@ export const handleMovement = (world: World) => {
     const newY = oldPosition.y + action.move.dy
 
     // if null (out of bounds) act like its a wall
-    const terrain = world.current.level.terrain.get(newX, newY) ?? 1
+    const terrain = world.current.level.terrain.get(Pt(newX, newY)) ?? 1
 
     // terrain walkable check
     if (!TerrainDictionary[terrain].walkable) {
@@ -49,7 +49,7 @@ export const handleMovement = (world: World) => {
       const newEntity = world.updateComponent(entity, newAction)
 
       // update position
-      const newPosition = position(newX, newY)
+      const newPosition = position(Pt(newX, newY))
       world.updateComponent(newEntity, newPosition)
     }
   } else {

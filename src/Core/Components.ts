@@ -1,7 +1,8 @@
 import { ActionTypes } from '../Action'
+import { Point } from '../Model/Point'
 
 export type Render = { render: { color: string; textChar: string; oryxChar?: string } }
-export type Position = { position: { x: number; y: number } }
+export type Position = { position: Point }
 export type TagPlayer = { tagPlayer: true }
 export type FOV = { fov: { radius: number; visible: string[] } }
 export type Seen = { seen: { visible: string[] } }
@@ -38,8 +39,8 @@ export const render = (color: string, textChar: string, oryxChar?: string): Rend
   return { render: { color, textChar, oryxChar } }
 }
 
-export const position = (x: number, y: number): Position => {
-  return { position: { x, y } }
+export const position = (pt: Point): Position => {
+  return { position: pt }
 }
 
 export const tagPlayer = (): TagPlayer => {

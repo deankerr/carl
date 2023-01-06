@@ -1,15 +1,10 @@
 export class Point {
-  constructor(public x: number, public y: number) {}
-
-  str() {
-    return `${this.x},${this.y}`
+  readonly s: string
+  constructor(readonly x: number, readonly y: number) {
+    this.s = `${this.x},${this.y}`
   }
 }
 
 export function Pt(x: number, y: number) {
   return new Point(x, y)
-}
-
-export function PtS(x: number, y: number) {
-  return new Point(x, y).str()
 }
