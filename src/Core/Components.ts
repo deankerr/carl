@@ -1,19 +1,27 @@
 import { ActionTypes } from '../Action'
 import { Point } from '../Model/Point'
 
+// TODO add charMap type safety
+export type Render2 = {
+  render2: {
+    text: { visible: { char: string; color: string }; seen?: { char: string; color: string } }
+    oryx: { visible: { char: string; color: string }; seen?: { char: string; color: string } }
+  }
+}
+
 export type Render = { render: { color: string; textChar: string; oryxChar?: string } }
 export type Position = { position: Point }
 export type TagPlayer = { tagPlayer: true }
 export type FOV = { fov: { radius: number; visible: string[] } }
-export type Seen = { seen: { visible: string[] } }
+export type Seen = { seen: { visible: string[] } } // cellSeen? cellMemory?
 export type TagCurrentTurn = { tagCurrentTurn: true }
 export type TagWalkable = { tagWalkable: true }
 export type TagActor = { tagActor: true }
 export type Acting = { acting: ActionTypes }
 export type TagMeleeAttackTarget = { tagMeleeAttackTarget: true }
 export type TagDead = { tagDead: true }
-export type RenderSeenColor = { renderSeenColor: { color: string } }
-export type Door = { door: { open: boolean } }
+export type RenderSeenColor = { renderSeenColor: { color: string } } // !
+export type Door = { door: { open: boolean } } // !
 export type TrodOn = { trodOn: { message: string } }
 export type Description = { description: { name: string } }
 
@@ -34,6 +42,28 @@ export type Components = Partial<
     TrodOn &
     Description
 >
+
+export const render2 = (
+  textChar: string,
+  textColor: string,
+  oryxChar: string,
+  oryxColor: string,
+  textSeen?: { char: string; color: string },
+  oryxSeen?: { char: string; color: string }
+) => {
+  const newRender2 = {
+    text: {
+      visible: { char: textChar, color: textColor },
+      seen: textSeen,
+    },
+    oryx: {
+      visible: { char: oryxChar, color: oryxColor },
+      seen: oryxSeen,
+    },
+  }
+
+  return newRender2
+}
 
 export const render = (color: string, textChar: string, oryxChar?: string): Render => {
   return { render: { color, textChar, oryxChar } }

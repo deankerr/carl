@@ -2,6 +2,7 @@
 
 - Simplify render components -> set a default visible/seen, stop doing a giant deciscion tree every render
 - Unify render attribute between all entities/terrain/etc.
+- new Render function (decoupling?)
 - Add decoration terrain/items
 - Import prefab
 
@@ -9,6 +10,9 @@
 
 - Larger TS levels + Viewport
 - Enable view selection + live switching
+- Lighting effects (torches/decreasing light from player)
+- (light bleeds slightly into void? )
+- Add simple animation (npc bobbing)/ Render decouple
 
 # TODO
 
