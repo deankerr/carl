@@ -100,7 +100,9 @@ const numbers = '1234567890'
 
 const tileMapOryxClassic = {
   ...mapTiles(letters, 240, 40),
-  ...mapTiles(letters.toLowerCase(), 320, 40),
+  ...mapTiles(letters.toLocaleLowerCase(), 240, 40),
+  // ...mapTiles(letters.toLowerCase(), 320, 40), // lowercase font
+
   ...mapTiles(numbers, 280, 40),
   ...mapTiles(punctuation, 200, 40),
   "'": [1040, 320],

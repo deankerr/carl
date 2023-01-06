@@ -17,7 +17,7 @@ import { Keys } from '../util/Keys'
 import { objLog } from '../util/util'
 import { input } from './Input'
 
-import { Point, Pt, PtS } from '../Model/Point'
+import { Pt, PtS } from '../Model/Point'
 
 import { Dungeon4Data } from '../Generate/dungeon4/dungeon4'
 import { handleTread } from '../System/handleTread'
@@ -34,6 +34,7 @@ export class Game {
   messageDummyDisplay = new ROT.Display({ width: CONFIG.displayWidth, height: CONFIG.displayHeight })
 
   lightsOn = CONFIG.lightsOnInitial // reveal level debug flag
+  showDisplayDebug = false
   hideInternalWalls = true
 
   constructor(d: ROT.Display, loadLevel?: Dungeon4Data) {
@@ -83,6 +84,7 @@ export class Game {
           console.log('UI: toggleLightSwitch:', this.lightsOn)
           break
         case 'render':
+          this.showDisplayDebug = true
           this.render()
           console.log('UI: render')
           break
@@ -244,8 +246,7 @@ export class Game {
     )
 
     // display debug
-    const ddebug = false
-    if (this.lightsOn && ddebug) {
+    if (this.lightsOn && this.showDisplayDebug) {
       const ddb = displayDebugStrings(d)
       d.drawText(0, yMax - 1, ddb[0])
       d.drawText(0, yMax, ddb[1])

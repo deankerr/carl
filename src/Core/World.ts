@@ -21,9 +21,9 @@ export class World {
     this.message("You begin your queste's.")
 
     // font test
-    this.message('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-    this.message('abcdefghijklmn opqrstuvwxyz')
-    this.message('1234 567890')
+    // this.message('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+    // this.message('abcdefghijklmn opqrstuvwxyz')
+    // this.message('1234 567890')
 
     this.nextTurn() // set the currentTurn
   }
@@ -46,6 +46,7 @@ export class World {
       'skeleton',
       'chicken',
       'bat',
+      'karl',
     ])
 
     level.rooms.forEach((_r, i) => {

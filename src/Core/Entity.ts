@@ -19,7 +19,7 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
     }
   },
 
-  player: (pt: Point, fov?: number) => {
+  player: (pt: Point, fov = 5) => {
     return {
       id: 'player',
       ...C.position(pt.x, pt.y),
@@ -27,7 +27,7 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
       ...C.description('yourself'),
       ...C.tagPlayer(),
       ...C.tagActor(),
-      ...C.fov(fov ?? 5),
+      ...C.fov(fov),
       ...C.seen(),
     }
   },
@@ -46,7 +46,7 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
     return {
       id: 'spider',
       ...C.position(pt.x, pt.y),
-      ...C.render('lightblue', 'x', 'O^x'),
+      ...C.render('cyan', 'x', 'O^x'),
       ...C.description('tarantula'),
       ...C.tagActor(),
     }
@@ -138,6 +138,16 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
       ...C.position(pt.x, pt.y),
       ...C.render('red', 'a', 'O^a'),
       ...C.description('bat of hell'),
+      ...C.tagActor(),
+    }
+  },
+
+  karl: (pt: Point) => {
+    return {
+      id: 'karl',
+      ...C.position(pt.x, pt.y),
+      ...C.render('khaki', 'K', 'K'),
+      ...C.description('Karl'),
       ...C.tagActor(),
     }
   },
