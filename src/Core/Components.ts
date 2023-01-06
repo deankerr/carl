@@ -9,6 +9,10 @@ export type Render2 = {
   }
 }
 
+type Render3 = { text: RenderText; oryx: RenderOryx }
+type RenderText = { renderText: { visible: { char: string; color: string }; seen?: { char: string; color: string } } }
+type RenderOryx = { renderOryx: { visible: { char: string; color: string }; seen?: { char: string; color: string } } }
+
 export type Render = { render: { color: string; textChar: string; oryxChar?: string } }
 export type Position = { position: Point }
 export type TagPlayer = { tagPlayer: true }
@@ -63,6 +67,18 @@ export const render2 = (
   }
 
   return newRender2
+}
+
+const render3 = (renderText: RenderText, renderOryx: RenderOryx) => {
+  return { render3: { renderText, renderOryx } }
+}
+
+const renderText = (color: string, char: string, seenColor?: string, seenChar?: string) => {
+  return { text: { color, char, seenColor, seenChar } }
+}
+
+const renderOryx = (color: string, char: string, seenColor?: string, seenChar?: string) => {
+  return { text: { color, char, seenColor, seenChar } }
 }
 
 export const render = (color: string, textChar: string, oryxChar?: string): Render => {

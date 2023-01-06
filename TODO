@@ -5,6 +5,7 @@
 - new Render function (decoupling?)
 - Add decoration terrain/items
 - Import prefab
+- Doors block light
 
 ## Later
 
