@@ -10,7 +10,9 @@
 - Something like world.query().entitiesWith('position', 'tagWalkable').optionally('door').without('tagPlayer').at({x: 1, y: 2})
 - Teleport player to mouse click
 - Messages get dimmer as they age
-
-=== Bugs
+- Move Messages into different ROT.Display with different font
+- Localestorage random seed saving, easily travel backwards throguh previously generated levels
+  ? Strip Level down to data structure, move terrain info methods to World(?), level gen initition to genereate/world
+  === Bugs
 
 - Tread triggered on Wait move causes unwanted responses

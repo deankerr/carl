@@ -17,7 +17,7 @@ import { Keys } from '../util/Keys'
 import { objLog } from '../util/util'
 import { input } from './Input'
 
-import { PtS } from '../Model/Point'
+import { Point, Pt, PtS } from '../Model/Point'
 
 import { Dungeon4Data } from '../Generate/dungeon4/dungeon4'
 import { handleTread } from '../System/handleTread'
@@ -176,6 +176,7 @@ export class Game {
 
     terrain.each((x, y, t) => {
       // TODO TerrainDict function, return default results for unknown?
+      // TODO "renderAs" function, pass a whole render component and it choses the correct char/color
       // ? maybe we should just crash
 
       const here = PtS(x, y)
@@ -232,11 +233,13 @@ export class Game {
     }
 
     // player again
+    const pT = world.here(Pt(player.position.x, player.position.y))[0]
+    const { textChar, color, oryxChar, oryxColor } = pT.render
     d.draw(
       player.position.x,
       top + player.position.y,
-      ['O^.', player.render.textChar],
-      ['#222', player.render.color],
+      [useOryx ? oryxChar : textChar, player.render.textChar],
+      [useOryx ? oryxColor : color, player.render.color],
       ['black', 'transparent']
     )
 

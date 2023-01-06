@@ -25,13 +25,15 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
       textChar: '.',
       color: '#AAA',
       oryxChar: 'O^.',
-      oryxColor: '#222',
+      // oryxColor: '#222',
+      oryxColor: '#AAA',
     },
     seen: {
       textChar: '.',
       color: '#777',
       oryxChar: 'O^.',
-      oryxColor: '#111',
+      // oryxColor: '#111',
+      oryxColor: '#888',
     },
   },
   1: {

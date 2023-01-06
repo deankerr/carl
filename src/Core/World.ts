@@ -21,10 +21,9 @@ export class World {
     this.message("You begin your queste's.")
 
     // font test
-    // this.message('!@#$%^&*()-=+.,:;"<>?\\/|-:\'')
-    // this.message('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-    // this.message('abcdefghijklmnopqrstuvwxyz')
-    // this.message('1234567890')
+    this.message('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+    this.message('abcdefghijklmn opqrstuvwxyz')
+    this.message('1234 567890')
 
     this.nextTurn() // set the currentTurn
   }
