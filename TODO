@@ -1,5 +1,6 @@
 # TILESET
 
+- ??? Patch ROT.JS to handle drawOver tiles? ???
 - Simplify render components -> set a default visible/seen, stop doing a giant deciscion tree every render
 - Unify render attribute between all entities/terrain/etc.
 - new Render function (decoupling?)

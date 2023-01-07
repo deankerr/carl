@@ -6,6 +6,7 @@ import * as ROT from 'rot-js'
 
 import { State } from './State'
 import { World } from './World'
+
 import { TerrainDictionary } from './Terrain'
 
 import { acting } from './Components'
@@ -16,8 +17,6 @@ import { displayDebugStrings, mouseClick } from '../util/display'
 import { Keys } from '../util/Keys'
 import { objLog } from '../util/util'
 import { input } from './Input'
-
-import { Pt } from '../Model/Point'
 
 import { Dungeon4Data } from '../Generate/dungeon4/dungeon4'
 import { handleTread } from '../System/handleTread'
@@ -48,14 +47,14 @@ export class Game {
     this.world = new World(this.state)
 
     // mouse click coords
-    mouseClick(d, (event) => {
+    mouseClick(d, event => {
       const pt = d.eventToPosition(event)
       console.log(`${pt[0]},${pt[1] + CONFIG.marginTop}`)
     })
 
     this.processMessages()
     processFOV(this.world)
-    this.render()
+    this.renderNEW()
 
     this.keys.add(this.update.bind(this))
 
@@ -85,14 +84,14 @@ export class Game {
           break
         case 'render':
           this.showDisplayDebug = true
-          this.render()
+          this.renderNEW()
           console.log('UI: render')
           break
         default:
           console.log('UI: Action not implemented', playerAction)
       }
 
-      this.render()
+      this.renderNEW()
       console.groupEnd()
       return
     }
@@ -115,7 +114,7 @@ export class Game {
 
     objLog(this.state.current, `# update complete # ${Date.now() - timeUpdate}ms`, true)
 
-    this.render()
+    this.renderNEW()
   }
 
   processMessages() {
@@ -154,114 +153,86 @@ export class Game {
     world.removeComponent(entityDone, 'acting')
 
     console.groupEnd()
-    this.render()
+    this.renderNEW()
   }
 
-  // TODO make independent of turn queue - animations/non-blocking/ui updates during turns
-  // TODO ie. debug coords at mouse display
-  render() {
+  renderNEW() {
     const d = this.display
     const top = CONFIG.marginTop
     const yMax = d.getOptions().height - 1
 
-    const world = this.world
     const { level } = this.state.current
 
     d.clear()
-    d.drawText(0, 0, this.messageCurrent.join(' ') + '%c{#777} ' + this.messageBuffer.join(' '))
 
-    // terrain
-    const { terrain: LevelTerrain } = level
-    const isInternalWall = level.isInternalWall.bind(level)
+    // TODO messages?
+
     const player = this.world.get('tagPlayer', 'position', 'render', 'fov', 'seen')[0]
+    const doors = this.world.get('position', 'render', 'door')
+    const entities = this.world.get('position', 'render').filter(e => doors.every(d => d.id !== e.id) && e !== player)
 
-    LevelTerrain.each((pt, t) => {
-      // TODO TerrainDict function, return default results for unknown?
-      // TODO "renderAs" function, pass a whole render component and it choses the correct char/color
-      // ? maybe we should just crash
-
-      const here = pt
-
-      // temp oryx path variants
-      // let pathChar = 'O^.'
-      // if (useOryx) {
-      //   if (x % 4 === 0 && y % 2 === 0) pathChar = 'O^.' + (((y + x) % 4) + 2)
-      // }
-
+    level.terrain.each((here, t) => {
       const terrain = TerrainDictionary[t]
-      // const terrainColor = useOryx ? terrain.render.oryxColor: terrain.render.color
-      // const terrainSeen = useOryx ? terrain.seen.oryxColor : terrain.render.color
-      // const terrainChar = useOryx ? terrain.render.oryxChar : terrain.render.textChar
-      // const terrainColor = terrain.render.render.base.color
-      // const terrainSeen = terrain.render.render.seen?.color ?? 'pink'
-      // const terrainChar = terrain.render.render.base.char
+      const char: string[] = []
+      const color: string[] = []
 
-      // if (useOryx) {
-      //   if (terrain.title === 'path') {
-      //     if (x % 5 === 0)
-      //   }
-      // }
+      const visible = player.fov.visible.includes(here.s)
+      const seen = player.seen.visible.includes(here.s) || this.lightsOn
 
-      if (player.fov.visible.includes(here.s)) {
-        // currently visible by player
-        d.draw(pt.x, top + pt.y, terrain.render.render.base.char, terrain.render.render.base.color, null)
-        // seen previously
-      } else if (player.seen.visible.includes(here.s) || (this.lightsOn && !isInternalWall(pt))) {
-        d.draw(
-          pt.x,
-          top + pt.y,
-          terrain.render.render.base.char,
-          terrain.render.render?.seen?.color ?? terrain.render.render.base.color,
-          null
-        )
-        // blank space (currently needed to clip message buffer)
-      } else {
-        d.draw(pt.x, top + pt.y, ' ', 'black', null)
-      }
-    })
+      // terrain
+      const terrainVisible = terrain.render.render.base
+      const terrainSeen = terrain.render.render.seen
 
-    // entities
-    const entities = this.world.get('render', 'position')
-
-    for (const entity of entities) {
-      const { render, position } = entity
-      const here = Pt(position.x, position.y).s
-
-      // check if door :( (this is dumb)
-      const door = world.with(entity, 'door')
-
-      // currently visible entities
-      if (player.fov.visible.includes(here) || this.lightsOn) {
-        if (door) {
-          const char = door.door.open ? render.baseDoorOpen?.char : render.base.char
-          d.draw(position.x, top + position.y, char ?? render.base.char, render.base.color, null)
-        } else d.draw(position.x, top + position.y, render.base.char, render.base.color, null)
-      }
-      // seen doors
-      else {
-        if (door && player.seen.visible.includes(here)) {
-          const char = door.door.open ? entity.render.baseDoorOpen?.char : entity.render.base.char
-          d.draw(
-            position.x,
-            top + position.y,
-            char ?? entity.render.base.char,
-            entity.render?.seen?.color ?? entity.render.base.color,
-            null
-          )
+      if (!level.isInternalWall(here)) {
+        if (visible) {
+          char.push(terrainVisible.char)
+          color.push(terrainVisible.color)
+        } else if (seen) {
+          char.push(terrainSeen?.char ?? terrainVisible.char)
+          color.push(terrainSeen?.color ?? terrainVisible.color)
         }
       }
-    }
 
-    // player again
-    const playerTerrain = world.here(Pt(player.position.x, player.position.y))[0]
+      // door
+      const door = doors.filter(d => d.position.s === here.s)[0]
+      if (door) {
+        const open = door.door.open
+        const doorChar = open ? door.render?.baseDoorOpen?.char ?? door.render.base.char : door.render.base.char
 
-    d.draw(
-      player.position.x,
-      top + player.position.y,
-      [playerTerrain.render.render.base.char, player.render.base.char],
-      [playerTerrain.render.render.base.color, player.render.base.color],
-      ['black', 'transparent']
-    )
+        if (visible) {
+          char.push(doorChar)
+          color.push(door.render.base.color)
+        } else if (seen) {
+          char.push(doorChar)
+          color.push(door.render.seen?.color ?? door.render.base.color)
+        }
+      }
+
+      // entities
+      entities
+        .filter(e => e.position.s === here.s)
+        .forEach(e => {
+          if (visible || this.lightsOn) {
+            char.push(e.render.base.char)
+            color.push(e.render.base.color)
+          }
+        })
+
+      // player
+      if (player.position.s === here.s) {
+        char.push(player.render.base.char)
+        color.push(player.render.base.color)
+      }
+
+      char.length > 0 &&
+        d.draw(
+          here.x,
+          top + here.y,
+          char,
+          color,
+          color.map((_c, i) => (i === 0 ? 'black' : 'transparent'))
+        )
+    })
 
     // display debug
     if (this.lightsOn && this.showDisplayDebug) {
