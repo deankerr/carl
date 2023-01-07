@@ -1,19 +1,9 @@
+import { render, Render } from '../Component/Render'
 export interface Terrain {
   title: string
   walkable: boolean
   transparent: boolean
-  render: {
-    textChar: string
-    color: string
-    oryxChar: string
-    oryxColor: string
-  }
-  seen: {
-    textChar: string
-    color: string
-    oryxChar: string
-    oryxColor: string
-  }
+  render: Render
 }
 
 export const TerrainDictionary: { [key: number]: Terrain } = {
@@ -21,36 +11,18 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
     title: 'path',
     walkable: true,
     transparent: true,
-    render: {
-      textChar: '.',
-      color: '#AAA',
-      oryxChar: 'O.',
-      oryxColor: '#222',
-      // oryxColor: '#AAA',
-    },
-    seen: {
-      textChar: '.',
-      color: '#777',
-      oryxChar: 'O.',
-      oryxColor: '#111',
-      // oryxColor: '#888',
-    },
+    render: render({
+      base: { char: 'O.', color: '#222' },
+      seen: { color: '#111' },
+    }),
   },
   1: {
     title: 'wall',
     walkable: false,
     transparent: false,
-    render: {
-      textChar: '#',
-      color: '#666',
-      oryxChar: 'O#',
-      oryxColor: '#666',
-    },
-    seen: {
-      textChar: '#',
-      color: '#444',
-      oryxChar: 'O#',
-      oryxColor: '#555',
-    },
+    render: render({
+      base: { char: 'O#', color: '#666' },
+      seen: { color: '#555' },
+    }),
   },
 }

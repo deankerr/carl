@@ -163,7 +163,6 @@ export class Game {
     const d = this.display
     const top = CONFIG.marginTop
     const yMax = d.getOptions().height - 1
-    const useOryx = CONFIG.useTSDisplay
 
     const world = this.world
     const { level } = this.state.current
@@ -172,11 +171,11 @@ export class Game {
     d.drawText(0, 0, this.messageCurrent.join(' ') + '%c{#777} ' + this.messageBuffer.join(' '))
 
     // terrain
-    const { terrain } = level
+    const { terrain: LevelTerrain } = level
     const isInternalWall = level.isInternalWall.bind(level)
     const player = this.world.get('tagPlayer', 'position', 'render', 'fov', 'seen')[0]
 
-    terrain.each((pt, t) => {
+    LevelTerrain.each((pt, t) => {
       // TODO TerrainDict function, return default results for unknown?
       // TODO "renderAs" function, pass a whole render component and it choses the correct char/color
       // ? maybe we should just crash
@@ -190,9 +189,13 @@ export class Game {
       // }
 
       const terrain = TerrainDictionary[t]
-      const terrainColor = useOryx ? terrain.render.oryxColor : terrain.render.color
-      const terrainSeen = useOryx ? terrain.seen.oryxColor : terrain.render.color
-      const terrainChar = useOryx ? terrain.render.oryxChar : terrain.render.textChar
+      // const terrainColor = useOryx ? terrain.render.oryxColor: terrain.render.color
+      // const terrainSeen = useOryx ? terrain.seen.oryxColor : terrain.render.color
+      // const terrainChar = useOryx ? terrain.render.oryxChar : terrain.render.textChar
+      // const terrainColor = terrain.render.render.base.color
+      // const terrainSeen = terrain.render.render.seen?.color ?? 'pink'
+      // const terrainChar = terrain.render.render.base.char
+
       // if (useOryx) {
       //   if (terrain.title === 'path') {
       //     if (x % 5 === 0)
@@ -201,10 +204,16 @@ export class Game {
 
       if (player.fov.visible.includes(here.s)) {
         // currently visible by player
-        d.draw(pt.x, top + pt.y, terrainChar, terrainColor, null)
+        d.draw(pt.x, top + pt.y, terrain.render.render.base.char, terrain.render.render.base.color, null)
         // seen previously
       } else if (player.seen.visible.includes(here.s) || (this.lightsOn && !isInternalWall(pt))) {
-        d.draw(pt.x, top + pt.y, terrainChar, terrainSeen, null)
+        d.draw(
+          pt.x,
+          top + pt.y,
+          terrain.render.render.base.char,
+          terrain.render.render?.seen?.color ?? terrain.render.render.base.color,
+          null
+        )
         // blank space (currently needed to clip message buffer)
       } else {
         d.draw(pt.x, top + pt.y, ' ', 'black', null)
@@ -218,29 +227,39 @@ export class Game {
       const { render, position } = entity
       const here = Pt(position.x, position.y).s
 
-      // use oryxChar if applicable
+      // check if door :( (this is dumb)
+      const door = world.with(entity, 'door')
 
       // currently visible entities
       if (player.fov.visible.includes(here) || this.lightsOn) {
-        d.draw(position.x, top + position.y, render.base.char, render.base.color, null)
+        if (door) {
+          const char = door.door.open ? render.baseDoorOpen?.char : render.base.char
+          d.draw(position.x, top + position.y, char ?? render.base.char, render.base.color, null)
+        } else d.draw(position.x, top + position.y, render.base.char, render.base.color, null)
       }
-      // seen furniture
+      // seen doors
       else {
-        const seenEntity = world.with(entity, 'renderSeenColor')
-        if (seenEntity && player.seen.visible.includes(here)) {
-          d.draw(position.x, top + position.y, entity.render.base.char, entity.render.base.color, null)
+        if (door && player.seen.visible.includes(here)) {
+          const char = door.door.open ? entity.render.baseDoorOpen?.char : entity.render.base.char
+          d.draw(
+            position.x,
+            top + position.y,
+            char ?? entity.render.base.char,
+            entity.render?.seen?.color ?? entity.render.base.color,
+            null
+          )
         }
       }
     }
 
     // player again
-    const pT = world.here(Pt(player.position.x, player.position.y))[0]
-    const { textChar, color, oryxChar, oryxColor } = pT.render
+    const playerTerrain = world.here(Pt(player.position.x, player.position.y))[0]
+
     d.draw(
       player.position.x,
       top + player.position.y,
-      [useOryx ? oryxChar : textChar, player.render.base.char],
-      [useOryx ? oryxColor : color, player.render.base.color],
+      [playerTerrain.render.render.base.char, player.render.base.char],
+      [playerTerrain.render.render.base.color, player.render.base.color],
       ['black', 'transparent']
     )
 

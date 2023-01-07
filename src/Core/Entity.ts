@@ -15,9 +15,9 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
       id: 'door',
       ...C.position(pt),
       ...render({
-        base: { char: '+', color: 'saddlebrown' },
+        base: { char: 'O+', color: 'saddlebrown' },
         seen: { color: 'saddlebrown' },
-        baseDoorOpen: { char: '/' },
+        baseDoorOpen: { char: 'O/' },
       }),
       ...C.description('door'),
       ...C.door(),
