@@ -54,7 +54,7 @@ export class Game {
 
     this.processMessages()
     processFOV(this.world)
-    this.renderNEW()
+    this.render()
 
     this.keys.add(this.update.bind(this))
 
@@ -84,14 +84,14 @@ export class Game {
           break
         case 'render':
           this.showDisplayDebug = true
-          this.renderNEW()
+          this.render()
           console.log('UI: render')
           break
         default:
           console.log('UI: Action not implemented', playerAction)
       }
 
-      this.renderNEW()
+      this.render()
       console.groupEnd()
       return
     }
@@ -114,7 +114,7 @@ export class Game {
 
     objLog(this.state.current, `# update complete # ${Date.now() - timeUpdate}ms`, true)
 
-    this.renderNEW()
+    this.render()
   }
 
   processMessages() {
@@ -153,19 +153,19 @@ export class Game {
     world.removeComponent(entityDone, 'acting')
 
     console.groupEnd()
-    this.renderNEW()
+    this.render()
   }
 
-  renderNEW() {
+  render() {
     const d = this.display
     const top = CONFIG.marginTop
     const yMax = d.getOptions().height - 1
-
     const { level } = this.state.current
 
     d.clear()
 
-    // TODO messages?
+    // messages
+    d.drawText(0, 0, this.messageCurrent.join(' ') + '%c{#777} ' + this.messageBuffer.join(' '))
 
     const player = this.world.get('tagPlayer', 'position', 'render', 'fov', 'seen')[0]
     const doors = this.world.get('position', 'render', 'door')
@@ -224,14 +224,15 @@ export class Game {
         color.push(player.render.base.color)
       }
 
-      char.length > 0 &&
-        d.draw(
-          here.x,
-          top + here.y,
-          char,
-          color,
-          color.map((_c, i) => (i === 0 ? 'black' : 'transparent'))
-        )
+      char.length > 0
+        ? d.draw(
+            here.x,
+            top + here.y,
+            char,
+            color,
+            color.map((_c, i) => (i === 0 ? 'black' : 'transparent'))
+          )
+        : d.draw(here.x, top + here.y, ' ', 'black', null) // blank
     })
 
     // display debug
