@@ -48,7 +48,7 @@ export class Game {
     this.world = new World(this.state)
 
     // mouse click coords
-    mouseClick(d, (event) => {
+    mouseClick(d, event => {
       const pt = d.eventToPosition(event)
       console.log(`${pt[0]},${pt[1] + CONFIG.marginTop}`)
     })
@@ -171,36 +171,17 @@ export class Game {
     d.drawText(0, 0, this.messageCurrent.join(' ') + '%c{#777} ' + this.messageBuffer.join(' '))
 
     // terrain
-    const { terrain: LevelTerrain } = level
+    const { terrain: levelTerrain } = level
     const isInternalWall = level.isInternalWall.bind(level)
     const player = this.world.get('tagPlayer', 'position', 'render', 'fov', 'seen')[0]
 
-    LevelTerrain.each((pt, t) => {
+    levelTerrain.each((pt, t) => {
       // TODO TerrainDict function, return default results for unknown?
       // TODO "renderAs" function, pass a whole render component and it choses the correct char/color
-      // ? maybe we should just crash
 
       const here = pt
 
-      // temp oryx path variants
-      // let pathChar = 'O^.'
-      // if (useOryx) {
-      //   if (x % 4 === 0 && y % 2 === 0) pathChar = 'O^.' + (((y + x) % 4) + 2)
-      // }
-
       const terrain = TerrainDictionary[t]
-      // const terrainColor = useOryx ? terrain.render.oryxColor: terrain.render.color
-      // const terrainSeen = useOryx ? terrain.seen.oryxColor : terrain.render.color
-      // const terrainChar = useOryx ? terrain.render.oryxChar : terrain.render.textChar
-      // const terrainColor = terrain.render.render.base.color
-      // const terrainSeen = terrain.render.render.seen?.color ?? 'pink'
-      // const terrainChar = terrain.render.render.base.char
-
-      // if (useOryx) {
-      //   if (terrain.title === 'path') {
-      //     if (x % 5 === 0)
-      //   }
-      // }
 
       if (player.fov.visible.includes(here.s)) {
         // currently visible by player
@@ -269,5 +250,49 @@ export class Game {
       d.drawText(0, yMax - 1, ddb[0])
       d.drawText(0, yMax, ddb[1])
     }
+  }
+
+  renderNEW() {
+    // ? bundle all {terrain + door + entity + player} chars/colors into array
+    const d = this.display
+    const yMin = CONFIG.marginTop
+    const yMax = d.getOptions().height - 1
+
+    const world = this.world
+    const { level } = this.state.current
+
+    d.clear()
+
+    // TODO messages?
+
+    const player = this.world.get('tagPlayer', 'position', 'render', 'fov', 'seen')[0]
+    const entities = this.world.get('position', 'render').filter(e => e !== player)
+
+    level.terrain.each((here, t) => {
+      const terrain = TerrainDictionary[t]
+      const char: string[] = []
+      const color: string[] = []
+
+      if (player.fov.visible.includes(here.s)) {
+        // CAN SEE
+        // terrain
+        char.push(terrain.render.render.base.char)
+        color.push(terrain.render.render.base.color)
+
+        const entitiesHere = world.here(here)[1]
+
+        // doors (should be just one?)
+        // const door = entitiesHere.filter(e => 'door' in e)[0]
+        // if (door) {
+        //   door.
+        // }
+      } else if (player.seen.visible.includes(here.s)) {
+        // memory
+      } else {
+        // TODO Clip messages properly so I dont have to do this
+        // blank // ? decoration?
+        d.draw(here.x, here.y, ' ', ' black', null)
+      }
+    })
   }
 }

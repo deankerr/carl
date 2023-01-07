@@ -12,7 +12,7 @@ const CONFIG = {
   // appInitial: PROD ? 'dungeon4' : 'game', // ! d4vis broken with TSDisplay
   appInitial: 'game',
   lightsOnInitial: PROD ? false : true,
-  htmlBGColor: PROD ? '#000' : '#111',
+  htmlBGColor: PROD ? '#000' : '#222',
   useTSDisplay: true,
   TSDisplayWidth: 48,
   TSDisplayHeight: 28,
