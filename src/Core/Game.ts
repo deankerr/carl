@@ -180,8 +180,8 @@ export class Game {
       const seen = player.seen.visible.includes(here.s) || this.lightsOn
 
       // terrain
-      const terrainVisible = terrain.render.render.base
-      const terrainSeen = terrain.render.render.seen
+      const terrainVisible = terrain.render.base
+      const terrainSeen = terrain.render.seen
 
       if (!level.isInternalWall(here)) {
         if (visible) {
