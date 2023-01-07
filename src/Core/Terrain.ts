@@ -24,14 +24,14 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
     render: {
       textChar: '.',
       color: '#AAA',
-      oryxChar: 'O^.',
+      oryxChar: 'O.',
       oryxColor: '#222',
       // oryxColor: '#AAA',
     },
     seen: {
       textChar: '.',
       color: '#777',
-      oryxChar: 'O^.',
+      oryxChar: 'O.',
       oryxColor: '#111',
       // oryxColor: '#888',
     },
@@ -43,13 +43,13 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
     render: {
       textChar: '#',
       color: '#666',
-      oryxChar: 'O^#',
+      oryxChar: 'O#',
       oryxColor: '#666',
     },
     seen: {
       textChar: '#',
       color: '#444',
-      oryxChar: 'O^#',
+      oryxChar: 'O#',
       oryxColor: '#555',
     },
   },

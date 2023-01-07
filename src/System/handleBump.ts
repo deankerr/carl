@@ -1,5 +1,5 @@
 import { World } from '../Core/World'
-import { tagMeleeAttackTarget, acting, door, tagWalkable, render } from '../Core/Components'
+import { tagMeleeAttackTarget, acting, door, tagWalkable } from '../Core/Components'
 import { MeleeAttack } from '../Action'
 import { CONFIG } from '../config'
 
@@ -31,9 +31,9 @@ export const handleBump = (world: World) => {
         if (doorEntity.door.open) throw new Error('Bumped into an open door?')
         console.log('handleBump: result - open door')
         const doorEntityOpen = world.updateComponent(doorEntity, door(true))
-        const doorEntityWalkable = world.addComponent(doorEntityOpen, tagWalkable())
+        world.addComponent(doorEntityOpen, tagWalkable())
         // ! this needs to move
-        world.updateComponent(doorEntityWalkable, render('saddlebrown', CONFIG.useTSDisplay ? 'O^/' : '/'))
+        // world.updateComponent(doorEntityWalkable, render('saddlebrown', CONFIG.useTSDisplay ? 'O^/' : '/'))
         world.message('Your hands tremble as you slowly push or pull the door open.')
         return
       }

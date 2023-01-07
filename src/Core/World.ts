@@ -53,7 +53,7 @@ export class World {
       if (i === 0 || i >= npcs.length) return
       const pos = level.ptInRoom(i)
       const choice = npcs[i]
-      this.add(templates[choice](pos))
+      if (templates[choice]) this.add(templates[choice](pos))
     })
   }
 

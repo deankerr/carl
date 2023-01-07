@@ -219,17 +219,16 @@ export class Game {
       const here = Pt(position.x, position.y).s
 
       // use oryxChar if applicable
-      const entityChar = useOryx && render.oryxChar ? render.oryxChar : render.textChar
 
       // currently visible entities
       if (player.fov.visible.includes(here) || this.lightsOn) {
-        d.draw(position.x, top + position.y, entityChar, render.color, null)
+        d.draw(position.x, top + position.y, render.base.char, render.base.color, null)
       }
       // seen furniture
       else {
         const seenEntity = world.with(entity, 'renderSeenColor')
         if (seenEntity && player.seen.visible.includes(here)) {
-          d.draw(position.x, top + position.y, entityChar, seenEntity.renderSeenColor.color, null)
+          d.draw(position.x, top + position.y, entity.render.base.char, entity.render.base.color, null)
         }
       }
     }
@@ -240,8 +239,8 @@ export class Game {
     d.draw(
       player.position.x,
       top + player.position.y,
-      [useOryx ? oryxChar : textChar, player.render.textChar],
-      [useOryx ? oryxColor : color, player.render.color],
+      [useOryx ? oryxChar : textChar, player.render.base.char],
+      [useOryx ? oryxColor : color, player.render.base.color],
       ['black', 'transparent']
     )
 

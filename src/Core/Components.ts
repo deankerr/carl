@@ -1,19 +1,7 @@
+import { Render } from '../Component/Render'
 import { ActionTypes } from '../Action'
 import { Point } from '../Model/Point'
 
-// TODO add charMap type safety
-export type Render2 = {
-  render2: {
-    text: { visible: { char: string; color: string }; seen?: { char: string; color: string } }
-    oryx: { visible: { char: string; color: string }; seen?: { char: string; color: string } }
-  }
-}
-
-type Render3 = { text: RenderText; oryx: RenderOryx }
-type RenderText = { renderText: { visible: { char: string; color: string }; seen?: { char: string; color: string } } }
-type RenderOryx = { renderOryx: { visible: { char: string; color: string }; seen?: { char: string; color: string } } }
-
-export type Render = { render: { color: string; textChar: string; oryxChar?: string } }
 export type Position = { position: Point }
 export type TagPlayer = { tagPlayer: true }
 export type FOV = { fov: { radius: number; visible: string[] } }
@@ -46,44 +34,6 @@ export type Components = Partial<
     TrodOn &
     Description
 >
-
-export const render2 = (
-  textChar: string,
-  textColor: string,
-  oryxChar: string,
-  oryxColor: string,
-  textSeen?: { char: string; color: string },
-  oryxSeen?: { char: string; color: string }
-) => {
-  const newRender2 = {
-    text: {
-      visible: { char: textChar, color: textColor },
-      seen: textSeen,
-    },
-    oryx: {
-      visible: { char: oryxChar, color: oryxColor },
-      seen: oryxSeen,
-    },
-  }
-
-  return newRender2
-}
-
-const render3 = (renderText: RenderText, renderOryx: RenderOryx) => {
-  return { render3: { renderText, renderOryx } }
-}
-
-const renderText = (color: string, char: string, seenColor?: string, seenChar?: string) => {
-  return { text: { color, char, seenColor, seenChar } }
-}
-
-const renderOryx = (color: string, char: string, seenColor?: string, seenChar?: string) => {
-  return { text: { color, char, seenColor, seenChar } }
-}
-
-export const render = (color: string, textChar: string, oryxChar?: string): Render => {
-  return { render: { color, textChar, oryxChar } }
-}
 
 export const position = (pt: Point): Position => {
   return { position: pt }

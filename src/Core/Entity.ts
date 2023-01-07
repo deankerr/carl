@@ -1,5 +1,8 @@
 import { Components } from './Components'
 import * as C from './Components'
+
+import { render } from '../Component/Render'
+
 import { Point } from '../Model/Point'
 
 export type EntityID = { readonly id: string }
@@ -11,8 +14,11 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
     return {
       id: 'door',
       ...C.position(pt),
-      ...C.render('saddlebrown', '+', 'O^+'),
-      ...C.renderSeenColor('#4d2509'),
+      ...render({
+        base: { char: '+', color: 'saddlebrown' },
+        seen: { color: 'saddlebrown' },
+        baseDoorOpen: { char: '/' },
+      }),
       ...C.description('door'),
       ...C.door(),
       ...C.trodOn('You carefully navigate through the door.'),
@@ -23,7 +29,7 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
     return {
       id: 'player',
       ...C.position(pt),
-      ...C.render('white', '@'),
+      ...render({ base: { char: '@', color: 'violet' } }),
       ...C.description('yourself'),
       ...C.tagPlayer(),
       ...C.tagActor(),
@@ -36,7 +42,7 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
     return {
       id: 'orc',
       ...C.position(pt),
-      ...C.render('green', 'o', 'O^o'),
+      ...render({ base: { char: 'Oo', color: 'green' } }),
       ...C.description('orc porkhoarder'),
       ...C.tagActor(),
     }
@@ -46,7 +52,8 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
     return {
       id: 'spider',
       ...C.position(pt),
-      ...C.render('cyan', 'x', 'O^x'),
+      ...render({ base: { char: 'Ox', color: 'cyan' } }),
+
       ...C.description('tarantula'),
       ...C.tagActor(),
     }
@@ -56,7 +63,8 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
     return {
       id: 'snake',
       ...C.position(pt),
-      ...C.render('lightgreen', 's', 'O^s'),
+      ...render({ base: { char: 'Os', color: 'green' } }),
+
       ...C.description('taipan'),
       ...C.tagActor(),
     }
@@ -66,7 +74,8 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
     return {
       id: 'toad',
       ...C.position(pt),
-      ...C.render('limegreen', 't', 'O^t'),
+      ...render({ base: { char: 'Ot', color: 'limegreen' } }),
+
       ...C.description('menacing toad'),
       ...C.tagActor(),
     }
@@ -76,7 +85,8 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
     return {
       id: 'crab',
       ...C.position(pt),
-      ...C.render('red', 'r', 'O^r'),
+      ...render({ base: { char: 'Or', color: 'red' } }),
+
       ...C.description('doomcrab'),
       ...C.tagActor(),
     }
@@ -86,7 +96,8 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
     return {
       id: 'ghost',
       ...C.position(pt),
-      ...C.render('white', 'g', 'O^g'),
+      ...render({ base: { char: 'Og', color: 'white' } }),
+
       ...C.description('spectre'),
       ...C.tagActor(),
     }
@@ -96,7 +107,8 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
     return {
       id: 'demon',
       ...C.position(pt),
-      ...C.render('orangered', 'D', 'O^D'),
+      ...render({ base: { char: 'OD', color: 'red' } }),
+
       ...C.description('SATAN'),
       ...C.tagActor(),
     }
@@ -106,7 +118,8 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
     return {
       id: 'hammerhead',
       ...C.position(pt),
-      ...C.render('orange', 'H', 'O^H'),
+      ...render({ base: { char: 'OH', color: 'orange' } }),
+
       ...C.description('hammerhead shark man'),
       ...C.tagActor(),
     }
@@ -116,7 +129,8 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
     return {
       id: 'skeleton',
       ...C.position(pt),
-      ...C.render('white', 'S', 'O^S'),
+      ...render({ base: { char: 'OS', color: 'white' } }),
+
       ...C.description('skellybones'),
       ...C.tagActor(),
     }
@@ -126,7 +140,7 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
     return {
       id: 'chicken',
       ...C.position(pt),
-      ...C.render('grey', 'c', 'O^c'),
+      ...render({ base: { char: 'Oc', color: 'white' } }),
       ...C.description('lil chickadee'),
       ...C.tagActor(),
     }
@@ -136,7 +150,7 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
     return {
       id: 'bat',
       ...C.position(pt),
-      ...C.render('red', 'a', 'O^a'),
+      ...render({ base: { char: 'Oa', color: 'red' } }),
       ...C.description('bat of hell'),
       ...C.tagActor(),
     }
@@ -146,7 +160,7 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
     return {
       id: 'karl',
       ...C.position(pt),
-      ...C.render('khaki', 'K', 'K'),
+      ...render({ base: { char: 'K', color: 'yellow' } }),
       ...C.description('Karl'),
       ...C.tagActor(),
     }
