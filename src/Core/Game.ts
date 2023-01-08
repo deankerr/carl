@@ -45,7 +45,7 @@ export class Game {
     this.display = d
 
     this.state = new State(loadLevel)
-    this.world = new World(this.state)
+    this.world = new World(this.state, this.options)
 
     // mouse click coords
     mouseClick(d, event => {

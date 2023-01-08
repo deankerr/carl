@@ -6,15 +6,18 @@ import { State, StateObject } from './State'
 import { objLog, rnd } from '../util/util'
 import { Point, Pt } from '../Model/Point'
 import { Terrain, TerrainDictionary } from './Terrain'
+import { Game } from './Game'
 
 export class World {
   private state: State // The actual State instance
   current: StateObject // reference to State.current (should be readonly/immutable?)
   readonly scheduler = new ROT.Scheduler.Simple() // ! should be on level?
+  options: Game['options']
 
-  constructor(state: State) {
+  constructor(state: State, options: Game['options']) {
     this.state = state
     this.current = state.current
+    this.options = options
 
     const { entities } = this.current.level
     if (entities.length === 0) {

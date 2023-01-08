@@ -5,12 +5,13 @@ import { Pt } from '../Model/Point'
 import { Bump, Tread } from '../Action'
 
 export const handleMovement = (world: World) => {
-  const [entity] = world.get('acting', 'position', 'tagCurrentTurn')
+  const [currentEntity] = world.get('acting', 'position', 'tagCurrentTurn')
 
-  const action = entity.acting
+  const action = currentEntity.acting
 
   if ('move' in action) {
-    console.log('handleMovement:', entity.id, action.move)
+    console.log('handleMovement:', currentEntity.id, action.move)
+    const currentIsPlayer = 'tagPlayer' in currentEntity
 
     // wait, just return (for now)
     if (action.move.dir === 'WAIT') {
@@ -18,10 +19,16 @@ export const handleMovement = (world: World) => {
       return
     }
 
-    const { position: oldPosition } = entity
+    const { position: oldPosition } = currentEntity
 
     const newX = oldPosition.x + action.move.dx
     const newY = oldPosition.y + action.move.dy
+
+    if (world.options.debugMode && currentIsPlayer) {
+      // update position
+      world.updateComponent(currentEntity, position(Pt(newX, newY)))
+      return
+    }
 
     // if null (out of bounds) act like its a wall
     const terrain = world.current.level.terrain.get(Pt(newX, newY)) ?? 1
@@ -30,23 +37,23 @@ export const handleMovement = (world: World) => {
     if (!TerrainDictionary[terrain].walkable) {
       console.log('handleMovement: new action - Bump (terrain)')
       const newAction = acting(Bump(Pt(newX, newY)))
-      world.updateComponent(entity, newAction)
+      world.updateComponent(currentEntity, newAction)
       return
     }
 
     // entity blocking check
     const here = world.here(Pt(newX, newY))
-    const entitiesWalkable = here[1].every((e) => 'tagCurrentTurn' in e || 'tagWalkable' in e)
+    const entitiesWalkable = here[1].every(e => 'tagCurrentTurn' in e || 'tagWalkable' in e)
     if (!entitiesWalkable) {
       console.log('handleMovement: new action - Bump (entity)')
       const newAction = acting(Bump(Pt(newX, newY)))
-      world.updateComponent(entity, newAction)
+      world.updateComponent(currentEntity, newAction)
       return
     } else {
       // create tread action
       console.log('handleMovement: new action - Tread')
       const newAction = acting(Tread(Pt(newX, newY)))
-      const newEntity = world.updateComponent(entity, newAction)
+      const newEntity = world.updateComponent(currentEntity, newAction)
 
       // update position
       const newPosition = position(Pt(newX, newY))
