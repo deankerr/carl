@@ -40,8 +40,8 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
     transparent: true,
     tread: 'You splash through the water.',
     ...render({
-      base: { char: '~', color: 'blue' },
-      seen: { color: 'darkblue' },
+      base: { char: '~', color: 'cyan' },
+      seen: { color: 'darkcyan' },
     }),
   },
   4: {

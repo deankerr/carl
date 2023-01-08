@@ -4,7 +4,7 @@ const PROD = import.meta.env.PROD
 const CONFIG = {
   appInitial: 'game',
   // seed: 1673152889440,
-  renderLevelY1: 2,
+  renderLevelY1: 3,
   renderLevelY2: 2,
   displayWidthText: 80,
   displayHeightText: 25,
@@ -20,8 +20,8 @@ const CONFIG = {
   levelWidthTileset: 60,
   levelHeightTileset: 60,
   useTileset: true,
-  // initialLevel: 'ruins1',
-  initialLevel: 'dungeon4',
+  initialLevel: 'ruins1',
+  // initialLevel: 'dungeon4',
   lightsOnInitial: PROD ? false : true,
   htmlBGColor: PROD ? '#000' : '#333',
 }
@@ -30,4 +30,3 @@ export { CONFIG }
 
 // appInitial: PROD ? 'dungeon4' : 'game', // ! d4vis broken with TSDisplay
 // oldMessageTurns: 10, // how old can messages be to still appear in the buffer
-// marginBot: 2,

@@ -3,8 +3,7 @@
 - ??? Patch ROT.JS to handle drawOver tiles? ???
 - Doors block vision
 - Add more decoration terrain/items
-- Larger TS levels + Viewport
-- Enable view selection + live switching
+- ?xxxEnable view selection + live switching
 - Lighting effects (torches/decreasing light from player)
 - (light bleeds slightly into void? )
 - Add simple animation (npc bobbing)/ Render decouple
@@ -19,7 +18,7 @@
 - Create logger, Exception handling
 - Something like world.query().entitiesWith('position', 'tagWalkable').optionally('door').without('tagPlayer').at({x: 1, y: 2})
 - Teleport player to mouse click
-- Messages get dimmer as they age, use ROT.Text.measure to clip instead of dummy display
+- Messages get dimmer as they age
 - Move Messages into different ROT.Display with different font
 - Localestorage random seed saving, easily travel backwards throguh previously generated levels
 - ? Strip Level down to data structure, move terrain info methods to World(?), level gen initition to genereate/world
@@ -29,3 +28,4 @@
 === Bugs ===
 
 - Tread triggered on Wait move causes unwanted responses
+- Viewport clamp settings aren't right?

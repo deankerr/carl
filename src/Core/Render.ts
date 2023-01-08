@@ -71,12 +71,12 @@ export const renderLevel = (display: ROT.Display, world: World, message: string,
     console.log('offsetY: small level, centered level')
   } else if (offsetY > viewport.inner.yMin && offsetY < viewport.inner.yMax) {
     // within box, don't move
-    offsetY = clamp(viewport.h - level.height + 1, offsetY, 0, 'offsetY')
+    offsetY = clamp(viewport.h - level.height, offsetY, 0, 'offsetY')
     console.log('offsetY: within inner box, shouldnt move')
   } else {
     // outside box, move with player
     offsetY = centerY - player.position.y
-    offsetY = clamp(viewport.h - level.height + 1, offsetY, 0, 'offsetY')
+    offsetY = clamp(viewport.h - level.height, offsetY, 0, 'offsetY')
     console.log('offsetY: outside box, move with player')
   }
 
@@ -168,7 +168,7 @@ export const renderLevel = (display: ROT.Display, world: World, message: string,
 
     // * level border
     if (options.showLevelBorder) {
-      if (here.x === 0 || here.x === level.width - 2 || here.y === 0 || here.y === level.height - 2)
+      if (here.x === 0 || here.x === level.width - 1 || here.y === 0 || here.y === level.height - 1)
         display.draw(left + here.x, top + here.y, 'x', 'cyan', null)
     }
 
