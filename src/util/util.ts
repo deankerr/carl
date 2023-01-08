@@ -25,3 +25,7 @@ export function objLog(obj: object | object[], label = 'Object Log', collapsed =
 export function rnd(min: number, max: number) {
   return ROT.RNG.getUniformInt(min, max)
 }
+
+export function half(n: number) {
+  return Math.floor(n / 2)
+}

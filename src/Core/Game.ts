@@ -15,7 +15,7 @@ import { actionName, ActionTypes, __randomMove, __wait } from '../Action'
 
 import { displayDebugStrings, mouseClick } from '../util/display'
 import { Keys } from '../util/Keys'
-import { objLog } from '../util/util'
+import { half, objLog } from '../util/util'
 import { input } from './Input'
 
 import { Dungeon4Data } from '../Generate/dungeon4/dungeon4'
@@ -158,9 +158,11 @@ export class Game {
 
   render() {
     const d = this.display
-    const top = CONFIG.marginTop
-    const yMax = d.getOptions().height - 1
     const { level } = this.state.current
+
+    const top = CONFIG.marginTop
+    const left = half(CONFIG.TSDisplayWidth) - half(level.terrain.width)
+    const yMax = d.getOptions().height - 1
 
     d.clear()
 
@@ -226,7 +228,7 @@ export class Game {
 
       char.length > 0
         ? d.draw(
-            here.x,
+            left + here.x,
             top + here.y,
             char,
             color,
