@@ -1,5 +1,6 @@
 # TODO
 
+- Combine State into World
 - ??? Patch ROT.JS to handle drawOver tiles? ???
 - Doors block vision
 - Add more decoration terrain/items

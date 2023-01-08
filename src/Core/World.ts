@@ -1,12 +1,13 @@
 // Entity/Component manager. Currently should be the only way to mutate game state
 import * as ROT from 'rot-js'
-import { tagCurrentTurn, Components, componentName } from './Components'
+import { tagCurrentTurn, Components, componentName, tagWalkable, door } from './Components'
 import { Entity, templates } from './Entity'
 import { State, StateObject } from './State'
 import { objLog, rnd } from '../util/util'
 import { Point, Pt } from '../Model/Point'
 import { Terrain, TerrainDictionary } from './Terrain'
 import { Game } from './Game'
+import { tagBlocksLight } from '../Component'
 
 export class World {
   private state: State // The actual State instance
@@ -206,6 +207,31 @@ export class World {
     return newEntity
   }
 
+  updateComponents<C extends Components>(entity: Entity, components: C) {
+    const entities = this.state.current.level.entities
+    const oldEntity = entities.find(e => e === entity)
+
+    if (!oldEntity) {
+      this.EntityComponentException('updateComponent: cannot locate', entity, components)
+      throw new Error()
+    }
+
+    Object.keys(components).forEach(c => {
+      // verify entity had this component
+      if (!(c in oldEntity)) {
+        this.EntityComponentException('update: did not have', entity, components)
+        throw new Error()
+      }
+    })
+
+    // copy old entity, replacing old component with new
+    const newEntity = { ...oldEntity, ...components }
+    this.state.updateEntity(oldEntity, newEntity)
+
+    // return the new entity if further updates needed
+    return newEntity
+  }
+
   removeComponent(entity: Entity, componentName: keyof Components) {
     const oldEntity = this.state.current.level.entities.find(e => e === entity)
     if (!oldEntity)
@@ -264,7 +290,7 @@ export class World {
     return opaqueEntities && TerrainDictionary[t].transparent
   }
 
-  EntityComponentException<C extends Components>(error: string, entity: Entity, component: C) {
+  EntityComponentException<C extends Components>(error: string, entity: Entity, component: C | C[]) {
     console.error(error)
     objLog(component, 'component')
     objLog(entity, 'target')
@@ -276,3 +302,55 @@ export class World {
 }
 
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
+
+class WorldHelper {
+  constructor(private entity: Entity) {}
+
+  add<C extends Components>(c: C) {
+    // check for components first
+    this.entity = { ...this.entity, ...c }
+    return this
+  }
+
+  update<C extends Components>(c: C) {
+    // check for existing
+    this.entity = { ...this.entity, ...c }
+    return this
+  }
+
+  remove<N extends keyof Components>(c: N) {
+    // check for existing
+    Reflect.deleteProperty(this.entity, c)
+    return this
+  }
+
+  // done() {
+
+  // }
+
+  static do(entity: Entity) {
+    return new WorldHelper(entity)
+  }
+}
+const teste = templates.karl(Pt(1, 2))
+
+WorldHelper.do(teste)
+  .add({ ...tagBlocksLight(), ...tagWalkable() })
+  .update({ ...door(true) })
+
+/*
+  world.update(doorent)
+    .add(...tagWalkable())
+    .update(...doorOpen(true))
+    .remove('tagBlocksLight')
+    .done()
+
+  world.transform(doorEntity)
+    .add(tagWalkable())
+    .update(doorOpen(true))
+    .remove('tagBlocksLight')
+    .done()
+
+*/
+
+type ttt = keyof Components
