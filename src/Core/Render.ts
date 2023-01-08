@@ -32,18 +32,13 @@ export const renderLevel = (d: ROT.Display, world: World, message: string, optio
 
   const offsetX =
     level.width > viewport.w
-      ? clamp(viewport.w - level.width, viewport.x1 + centerX - player.position.x, viewport.x1, 'offX')
+      ? clamp(viewport.w - level.width, viewport.x1 + centerX - player.position.x, viewport.x1)
       : viewport.x1 + half(viewport.w - level.width)
 
   const offsetY =
     level.height >= viewport.h
-      ? clamp(viewport.y1 + viewport.h - level.height, viewport.y1 + centerY - player.position.y, viewport.y1, 'offY')
+      ? clamp(viewport.y1 + viewport.h - level.height, viewport.y1 + centerY - player.position.y, viewport.y1)
       : viewport.y1 + half(viewport.h - level.height)
-
-  console.log('viewport width:', viewport.w, 'height:', viewport.h)
-  console.log('level width:', level.width, 'height', level.height)
-  console.log('player x', player.position.x, 'y', player.position.y)
-  console.log('offsetX:', offsetX, 'offsetY', offsetY)
 
   // * ========== Rendering ========== *
 

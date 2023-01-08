@@ -17,8 +17,9 @@ const CONFIG = {
   // levelWidthTileset: 48,
   // levelHeightTileset: 24,
 
-  initialLevel: 'bigRoom',
+  initialLevel: 'ruins1',
   // initialLevel: 'dungeon4',
+  // initialLevel: 'bigRoom',
   lightsOnInitial: PROD ? false : false,
   htmlBGColor: PROD ? '#000' : '#000',
   displayWidthText: 80,

@@ -137,8 +137,8 @@ export class World {
   // return terrain and any entities at this position
   here(pt: Point): [Terrain, Entity[]] {
     const t = this.state.current.level.terrain.get(pt)
-    if (t === null) throw new Error('here: null terrain')
-    const terrain = TerrainDictionary[t]
+    // pretend its a wall if out of bounds?
+    const terrain = t ? TerrainDictionary[t] : TerrainDictionary[1]
 
     const entities = this.get('position')
     const entitiesHere = entities.filter(e => Pt(e.position.x, e.position.y).s === pt.s) as Entity[]
