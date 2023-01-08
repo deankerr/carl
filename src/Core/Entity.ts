@@ -165,4 +165,17 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
       ...C.tagActor(),
     }
   },
+
+  shrub: (pt: Point) => {
+    return {
+      id: 'shrub',
+      ...C.position(pt),
+      ...render({
+        base: { char: 'Ov', color: 'green' },
+        seen: { color: 'darkgreen' },
+      }),
+      ...C.tagWalkable(),
+      ...C.trodOn('You trample the pathetic shrub.'),
+    }
+  },
 }

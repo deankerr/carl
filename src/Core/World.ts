@@ -3,7 +3,7 @@ import * as ROT from 'rot-js'
 import { tagCurrentTurn, Components } from './Components'
 import { Entity, templates } from './Entity'
 import { State, StateObject } from './State'
-import { objLog } from '../util/util'
+import { objLog, rnd } from '../util/util'
 import { Point, Pt } from '../Model/Point'
 import { Terrain, TerrainDictionary } from './Terrain'
 
@@ -17,7 +17,9 @@ export class World {
     this.current = state.current
 
     this.__createDoors()
-    this.__populate()
+    this.__populateNPCs()
+    this.__features()
+
     this.message("You begin your queste's.")
 
     // font test
@@ -29,7 +31,7 @@ export class World {
   }
 
   // TODO Move this responsibility to Generate(?)
-  __populate() {
+  __populateNPCs() {
     const level = this.state.current.level
 
     this.add(templates.player(level.ptInRoom(0), 5))
@@ -66,6 +68,30 @@ export class World {
     }
   }
 
+  __features() {
+    const level = this.state.current.level
+
+    level.rooms.forEach((r, i) => {
+      // shrubbery
+      if (i % 3 === 0) {
+        for (let j = 0; j < 6; j++) this.add(templates.shrub(level.ptInRoom(i)))
+      }
+
+      // water
+      if (i % 4 === 1) {
+        r.rect.traverse((x, y) => {
+          level.terrain.set(Pt(x, y), 3)
+        })
+      }
+    })
+
+    // cracked walls/paths
+    level.terrain.each((pt, t) => {
+      if (t === 0 && rnd(0, 3) === 0) level.terrain.set(pt, rnd(4, 7))
+      if (t === 1 && rnd(0, 16) === 0) level.terrain.set(pt, 2)
+    })
+  }
+
   /*
     World API
     Everything that happens in the game should occur through this API.
@@ -88,7 +114,7 @@ export class World {
   // return all entities with specified components
   get<Key extends keyof Entity>(...components: Key[]): EntityWith<Entity, Key>[] {
     const entities = this.state.current.level.entities
-    const results = entities.filter((e) => components.every((name) => name in e)) as EntityWith<Entity, Key>[]
+    const results = entities.filter(e => components.every(name => name in e)) as EntityWith<Entity, Key>[]
     return results
   }
 
@@ -105,7 +131,7 @@ export class World {
     const terrain = TerrainDictionary[t]
 
     const entities = this.get('position')
-    const entitiesHere = entities.filter((e) => Pt(e.position.x, e.position.y).s === pt.s) as Entity[]
+    const entitiesHere = entities.filter(e => Pt(e.position.x, e.position.y).s === pt.s) as Entity[]
 
     return [terrain, entitiesHere]
   }
@@ -113,7 +139,7 @@ export class World {
   // remove entity from the world + turn queue if necessary
   remove(entity: Entity) {
     console.log('World: remove entity', entity.id)
-    const targetEntity = this.current.level.entities.find((e) => e === entity)
+    const targetEntity = this.current.level.entities.find(e => e === entity)
     if (!targetEntity) throw new Error('remove: Unable to locate entity to remove')
     this.state.deleteEntity(targetEntity)
 
@@ -133,7 +159,7 @@ export class World {
 
   addComponent<C extends Components>(entity: Entity, component: C) {
     const entities = this.state.current.level.entities
-    const oldEntity = entities.find((e) => e === entity)
+    const oldEntity = entities.find(e => e === entity)
     // if (!oldEntity) throw new Error('addC: Unable to locate entity to update')
     if (!oldEntity) {
       console.error('addC: Unable to locate entity to update')
@@ -165,7 +191,7 @@ export class World {
   updateComponent<C extends Components>(entity: Entity, component: C) {
     // console.log('Start updateComponent', entity.id, Reflect.ownKeys(component).join())
     const entities = this.state.current.level.entities
-    const oldEntity = entities.find((e) => e === entity)
+    const oldEntity = entities.find(e => e === entity)
     // if (!oldEntity) throw new Error('updateC: Unable to locate entity to update')
     if (!oldEntity) {
       console.error('updateC: Unable to locate entity to update')
@@ -198,7 +224,7 @@ export class World {
   }
 
   removeComponent(entity: Entity, componentName: keyof Components) {
-    const oldEntity = this.state.current.level.entities.find((e) => e === entity)
+    const oldEntity = this.state.current.level.entities.find(e => e === entity)
     if (!oldEntity)
       throw new Error(`removeC: Unable to locate entity "${entity?.id}" to remove component "${componentName}"`)
 
@@ -228,7 +254,7 @@ export class World {
 
   getByID(id: string) {
     const entities = this.state.current.level.entities
-    const result = entities.filter((e) => e.id === id)
+    const result = entities.filter(e => e.id === id)
 
     if (result.length > 1) {
       console.error('Got multiple entities for id ' + id)

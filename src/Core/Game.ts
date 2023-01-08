@@ -183,7 +183,7 @@ export class Game {
       const terrainVisible = terrain.render.base
       const terrainSeen = terrain.render.seen
 
-      if (!level.isInternalWall(here)) {
+      if (!level.isInternalWall(here) || !this.hideInternalWalls) {
         if (visible) {
           char.push(terrainVisible.char)
           color.push(terrainVisible.color)

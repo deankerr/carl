@@ -13,20 +13,20 @@ export const handleTread = (world: World) => {
     return
   }
 
-  // ? treadable terrain?
-  const entitiesHere = world.here(action.tread)[1].filter((e) => e !== currentEntity)
+  const [terrainHere, entities] = world.here(action.tread)
+  const entitiesHere = entities.filter(e => e !== currentEntity)
 
-  if (entitiesHere.length === 0) {
-    console.log('handleTread: result - there is nothing to tread on')
-    return
-  }
-
-  for (const entity of entitiesHere) {
-    const treaddable = world.with(entity, 'trodOn')
-    if (treaddable) {
-      console.log('handleTread: treading on', entity.id)
-      world.message(treaddable.trodOn.message)
+  if (entitiesHere.length > 0) {
+    // entity tread
+    for (const entity of entitiesHere) {
+      const treaddable = world.with(entity, 'trodOn')
+      if (treaddable) {
+        console.log('handleTread: treading on', entity.id)
+        world.message(treaddable.trodOn.message)
+      }
     }
+  } else if (terrainHere.tread) {
+    world.message(terrainHere.tread)
   }
 
   console.log('handleTread: done')

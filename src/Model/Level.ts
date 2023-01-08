@@ -45,10 +45,10 @@ export class Level {
     const terrain = this.terrain
     const neigh = [Pt(-1, -1), Pt(0, -1), Pt(1, -1), Pt(-1, 0), Pt(1, 0), Pt(-1, 1), Pt(0, 1), Pt(1, 1)]
     // apply neigh coords to current, return true if its another wall, false otherwise (not internal)
-    const result = neigh.every((n) => {
+    const result = neigh.every(n => {
       const t = terrain.get(Pt(pt.x + n.x, pt.y + n.y))
       if (t === null) return true
-      return t === 1 ? true : false
+      return t === 1 || t === 2 ? true : false
     })
 
     return result
