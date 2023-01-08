@@ -6,8 +6,9 @@ import { TerrainDictionary } from './Terrain'
 import { half, floor, clamp } from '../util/util'
 import { displayDebugStrings } from '../util/display'
 
-export const renderLevel = (display: ROT.Display, world: World, message: string, options: Game['options']) => {
-  const d = display
+export const renderLevel = (d: ROT.Display, world: World, message: string, options: Game['options']) => {
+  const { displayW, displayH, topPanelSize, botPanelSize } = CONFIG
+
   d.clear()
   d.drawText(0, 0, message)
 
@@ -15,21 +16,18 @@ export const renderLevel = (display: ROT.Display, world: World, message: string,
   const yMax = d.getOptions().height - 1
 
   // * ========== Viewport ========== *
-  const CONFIG_viewW = CONFIG.viewportW
-  const CONFIG_viewH = CONFIG.viewportH
-  // const CONFIG_viewW = 48
-  // const CONFIG_viewH = 16
   const viewport = {
+    w: displayW,
+    h: displayH - topPanelSize - botPanelSize,
     x: {
-      min: half(CONFIG.displayWidthTileset) - half(CONFIG_viewW),
-      max: half(CONFIG.displayWidthTileset) + half(CONFIG_viewW),
+      min: 0,
+      max: displayW - 1,
     },
     y: {
-      min: half(CONFIG.displayHeightTileset) - half(CONFIG_viewH),
-      max: half(CONFIG.displayHeightTileset) + half(CONFIG_viewH) - 1,
+      min: topPanelSize,
+      max: displayH - botPanelSize - 1,
     },
-    w: CONFIG_viewW,
-    h: CONFIG_viewH,
+
     // allowed to move in this fraction of the center of the viewport
     // before changing the render point
     // TODO ?? figure this out
@@ -40,8 +38,8 @@ export const renderLevel = (display: ROT.Display, world: World, message: string,
       yMax: 6,
     },
   }
-  const centerX = floor(CONFIG.displayWidthTileset / 2)
-  const centerY = floor(CONFIG.displayHeightTileset / 2)
+  const centerX = floor(CONFIG.displayW / 2)
+  const centerY = floor(CONFIG.displayH / 2)
 
   const player = world.get('tagPlayer', 'position', 'render', 'fov', 'seen')[0]
   // * center on player for now
@@ -50,7 +48,7 @@ export const renderLevel = (display: ROT.Display, world: World, message: string,
 
   if (level.terrain.width < viewport.w) {
     // if the level w/h is smaller than the viewport, just center it
-    offsetX = half(CONFIG.displayWidthTileset) - half(level.terrain.width)
+    offsetX = half(CONFIG.displayW) - half(level.terrain.width)
     console.log('offsetX: small level, centered level')
   } else if (offsetX > viewport.inner.xMin && offsetX < viewport.inner.xMax) {
     // within box, don't move
@@ -67,7 +65,7 @@ export const renderLevel = (display: ROT.Display, world: World, message: string,
 
   if (level.terrain.height < viewport.h) {
     // if the level w/h is smaller than the viewport, just center it
-    offsetY = half(CONFIG.displayHeightTileset) - half(level.terrain.height)
+    offsetY = half(CONFIG.displayH) - half(level.terrain.height)
     console.log('offsetY: small level, centered level')
   } else if (offsetY > viewport.inner.yMin && offsetY < viewport.inner.yMax) {
     // within box, don't move
@@ -80,7 +78,7 @@ export const renderLevel = (display: ROT.Display, world: World, message: string,
     console.log('offsetY: outside box, move with player')
   }
 
-  const top = CONFIG.renderLevelY1 + offsetY
+  const top = topPanelSize + offsetY
   const left = 0 + offsetX
 
   console.log('viewport width:', viewport.w, 'height:', viewport.h)
@@ -156,20 +154,21 @@ export const renderLevel = (display: ROT.Display, world: World, message: string,
       color.push(player.render.base.color)
     }
 
-    char.length > 0
-      ? d.draw(
-          left + here.x,
-          top + here.y,
-          char,
-          color,
-          color.map((_c, i) => (i === 0 ? 'black' : 'transparent'))
-        )
-      : d.draw(left + here.x, top + here.y, ' ', 'black', null) // blank
+    if (char.length > 0) {
+      if (here.y === 0) console.log('char:', char, color)
+      d.draw(
+        left + here.x,
+        top + here.y,
+        char,
+        color,
+        color.map((_c, i) => (i === 0 ? 'black' : 'transparent'))
+      )
+    } else d.draw(left + here.x, top + here.y, ' ', 'black', null) // blank
 
     // * level border
     if (options.showLevelBorder) {
       if (here.x === 0 || here.x === level.width - 1 || here.y === 0 || here.y === level.height - 1)
-        display.draw(left + here.x, top + here.y, 'x', 'cyan', null)
+        d.draw(left + here.x, top + here.y, 'x', 'cyan', null)
     }
 
     return true

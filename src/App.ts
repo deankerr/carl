@@ -25,7 +25,7 @@ const d4modules = mrModules()
 export function App() {
   // main display
   display = CONFIG.useTileset
-    ? createTileSetDisplay(CONFIG.displayWidthTileset, CONFIG.displayHeightTileset)
+    ? createTileSetDisplay(CONFIG.displayW, CONFIG.displayH)
     : createDisplay(CONFIG.displayWidthText, CONFIG.displayHeightText)
   window.display = [display]
 

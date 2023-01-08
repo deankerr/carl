@@ -30,7 +30,7 @@ function resize(display: ROT.Display) {
   display.setOptions({ fontSize: compSize - 1 })
 }
 
-export const createTileSetDisplay = (width = CONFIG.displayWidthTileset, height = CONFIG.displayHeightTileset) => {
+export const createTileSetDisplay = (width = CONFIG.displayW, height = CONFIG.displayH) => {
   // const wrapper = document.createElement('div')
   // wrapper.style.display = 'flex'
   // wrapper.style.alignItems = 'center'

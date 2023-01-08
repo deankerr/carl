@@ -4,14 +4,10 @@ const PROD = import.meta.env.PROD
 const CONFIG = {
   appInitial: 'game',
   // seed: 1673152889440,
-  renderLevelY1: 3,
-  renderLevelY2: 2,
-  displayWidthText: 80,
-  displayHeightText: 25,
-  displayWidthTileset: 48,
-  displayHeightTileset: 28,
-  viewportW: 48,
-  viewportH: 24,
+  displayW: 48,
+  displayH: 32,
+  topPanelSize: 4,
+  botPanelSize: 2,
 
   levelWidthText: 80,
   levelHeightText: 20,
@@ -20,10 +16,12 @@ const CONFIG = {
   levelWidthTileset: 60,
   levelHeightTileset: 60,
   useTileset: true,
-  initialLevel: 'ruins1',
-  // initialLevel: 'dungeon4',
+  // initialLevel: 'ruins1',
+  initialLevel: 'dungeon4',
   lightsOnInitial: PROD ? false : true,
   htmlBGColor: PROD ? '#000' : '#333',
+  displayWidthText: 80,
+  displayHeightText: 25,
 }
 
 export { CONFIG }

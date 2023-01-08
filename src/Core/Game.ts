@@ -50,7 +50,7 @@ export class Game {
     // mouse click coords
     mouseClick(d, event => {
       const pt = d.eventToPosition(event)
-      console.log(`${pt[0]},${pt[1] + CONFIG.renderLevelY1}`)
+      console.log(`${pt[0]},${pt[1] + CONFIG.topPanelSize}`)
     })
 
     this.processMessages()
@@ -124,7 +124,7 @@ export class Game {
   }
 
   messages() {
-    return this.messageNew.join(' ') + '%c{#777} ' + this.messageHistory.join(' ')
+    return this.messageNew.join('  ') + '%c{#777}  ' + this.messageHistory.join('  ')
   }
 
   processMessages() {
@@ -139,7 +139,7 @@ export class Game {
 
     // clip buffer height
     const maxWidth = this.display.getOptions().width
-    while (ROT.Text.measure(this.messages(), maxWidth).height > CONFIG.renderLevelY1 + 1) {
+    while (ROT.Text.measure(this.messages(), maxWidth).height > CONFIG.topPanelSize + 1) {
       this.messageHistory.pop()
     }
   }

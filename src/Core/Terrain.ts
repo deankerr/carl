@@ -21,7 +21,7 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
     walkable: false,
     transparent: false,
     ...render({
-      base: { char: 'O#', color: '#666' },
+      base: { char: 'O#', color: '#5f574f' },
       seen: { color: '#555' },
     }),
   },
@@ -85,8 +85,8 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
     walkable: true,
     transparent: true,
     ...render({
-      base: { char: 'O"', color: '#222' },
-      seen: { color: '#111' },
+      base: { char: 'O"', color: 'green' },
+      seen: { color: 'darkgreen' },
     }),
   },
   9: {
@@ -94,8 +94,8 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
     walkable: true,
     transparent: true,
     ...render({
-      base: { char: 'O:', color: '#222' },
-      seen: { color: '#111' },
+      base: { char: 'O:', color: '#5f574f' },
+      seen: { color: '#5f574f' },
     }),
   },
   10: {

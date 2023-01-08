@@ -3,6 +3,8 @@
 - ??? Patch ROT.JS to handle drawOver tiles? ???
 - Doors block vision
 - Add more decoration terrain/items
+- Outdoor level
+- Void decoration (paths, dead grass etc). Revealed by radius instead of FOV
 - ?xxxEnable view selection + live switching
 - Lighting effects (torches/decreasing light from player)
 - (light bleeds slightly into void? )
@@ -24,6 +26,7 @@
 - ? Strip Level down to data structure, move terrain info methods to World(?), level gen initition to genereate/world
 - Move player "seen" tracking to level
 - Clean up CONFIG
+- Terrain colour pallettes/themes
 
 === Bugs ===
 
