@@ -292,6 +292,14 @@ export class World {
     // new buffer for this turn
     else messages.unshift([playerTurns, [msg]])
   }
+
+  isTransparent(x: number, y: number) {
+    const here = Pt(x, y)
+    const t = this.state.current.level.terrain.get(here)
+    if (t === null) return false
+    const opaqueEntities = this.get('tagBlocksLight', 'position').filter(e => e.position.s === here.s).length === 0
+    return opaqueEntities && TerrainDictionary[t].transparent
+  }
 }
 
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }

@@ -9,8 +9,7 @@ export const processFOV = (world: World) => {
   if (!entities) return
   let didSomething = false
   for (const entity of entities) {
-    const level = world.current.level
-    const fovFunction = new ROT.FOV.RecursiveShadowcasting(level.isTransparent.bind(level))
+    const fovFunction = new ROT.FOV.RecursiveShadowcasting(world.isTransparent.bind(world))
 
     const newFOV = fov(entity.fov.radius)
     fovFunction.compute(entity.position.x, entity.position.y, entity.fov.radius, (x, y, _r, isVisible) => {
