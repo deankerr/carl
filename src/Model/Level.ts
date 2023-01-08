@@ -22,12 +22,17 @@ export class Level {
   terrain: Grid<number>
   rooms: Room[]
   doors?: Point[]
+  width: number
+  height: number
   constructor(levelData: LevelData) {
     this.label = levelData.label
     this.entities = levelData.entities
     this.terrain = levelData.terrain
     this.rooms = levelData.rooms
     this.doors = levelData.doors ? levelData.doors : undefined
+
+    this.width = this.terrain.width
+    this.height = this.terrain.height
   }
 
   isTransparent(x: number, y: number) {

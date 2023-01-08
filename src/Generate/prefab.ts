@@ -32,7 +32,7 @@ export const prefabRuin1 = () => {
   }, [] as number[][])
 
   const result = { label: 'ruins1', terrain: Grid.from(terrain), entities, rooms: fakeRooms }
-  console.log('PREFABterrain:', result)
+  // console.log('prefab:', result)
   return result
 }
 
