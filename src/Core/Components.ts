@@ -85,3 +85,7 @@ export const trodOn = (message: string) => {
 export const description = (name: string) => {
   return { description: { name } }
 }
+
+export const componentName = <C extends Components>(component: C) => {
+  return Reflect.ownKeys(component).join()
+}

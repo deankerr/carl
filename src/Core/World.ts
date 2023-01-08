@@ -1,6 +1,6 @@
 // Entity/Component manager. Currently should be the only way to mutate game state
 import * as ROT from 'rot-js'
-import { tagCurrentTurn, Components } from './Components'
+import { tagCurrentTurn, Components, componentName } from './Components'
 import { Entity, templates } from './Entity'
 import { State, StateObject } from './State'
 import { objLog, rnd } from '../util/util'
@@ -139,7 +139,6 @@ export class World {
     const t = this.state.current.level.terrain.get(pt)
     // pretend its a wall if out of bounds?
     const terrain = t ? TerrainDictionary[t] : TerrainDictionary[1]
-
     const entities = this.get('position')
     const entitiesHere = entities.filter(e => Pt(e.position.x, e.position.y).s === pt.s) as Entity[]
 
@@ -156,38 +155,24 @@ export class World {
     // turn queue
     const actorEntity = this.with(entity, 'tagActor')
     if (actorEntity) {
-      console.log('World: removing entity from turn queue', actorEntity.id)
       const result = this.scheduler.remove(actorEntity.id)
-      if (result) console.log('World: done')
-      else throw new Error('World: could not remove entity from turn queue')
-    } else {
-      console.log('World: removed entity was not an actor')
+      if (!result) throw new Error('World: could not remove entity from turn queue')
     }
-
     this.current.graveyard.push(targetEntity.id)
   }
 
   addComponent<C extends Components>(entity: Entity, component: C) {
     const entities = this.state.current.level.entities
     const oldEntity = entities.find(e => e === entity)
-    // if (!oldEntity) throw new Error('addC: Unable to locate entity to update')
+
     if (!oldEntity) {
-      console.error('addC: Unable to locate entity to update')
-      objLog(entity, 'target')
-      objLog(this.getByID(entity.id), 'probably')
-      console.groupCollapsed('all entities')
-      objLog(entities, 'all')
-      console.groupEnd()
+      this.EntityComponentException('addComponent: cannot locate', entity, component)
       throw new Error()
     }
 
-    const componentName = Reflect.ownKeys(component).join()
-
     // verify entity doesn't already have this component
-    if (componentName in oldEntity) {
-      console.error('addComponent: entity already has that component')
-      console.error(component)
-      console.error(entity)
+    if (componentName(component) in oldEntity) {
+      this.EntityComponentException('addComponent: already has component', entity, component)
       throw new Error()
     }
 
@@ -199,29 +184,17 @@ export class World {
 
   // gets writable entity from state, updates component, sends back to state
   updateComponent<C extends Components>(entity: Entity, component: C) {
-    // console.log('Start updateComponent', entity.id, Reflect.ownKeys(component).join())
     const entities = this.state.current.level.entities
     const oldEntity = entities.find(e => e === entity)
-    // if (!oldEntity) throw new Error('updateC: Unable to locate entity to update')
+
     if (!oldEntity) {
-      console.error('updateC: Unable to locate entity to update')
-      objLog(component, 'component')
-      objLog(entity, 'target')
-      objLog(this.getByID(entity.id), 'probably')
-      console.groupCollapsed('all entities')
-      objLog(entities, 'all', true)
-      console.groupEnd()
+      this.EntityComponentException('updateComponent: cannot locate', entity, component)
       throw new Error()
     }
 
-    // get the property key name. feels weird
-    const componentName = Reflect.ownKeys(component).join()
-
     // verify entity had this component
-    if (!(componentName in oldEntity)) {
-      console.error('updateComponent: entity does not have that component')
-      console.error(entity)
-      console.error(component)
+    if (!(componentName(component) in oldEntity)) {
+      this.EntityComponentException('update: already has', entity, component)
       throw new Error()
     }
 
@@ -249,11 +222,10 @@ export class World {
   nextTurn() {
     const prev = this.get('tagCurrentTurn')
     if (prev.length > 1) throw new Error('Multiple entities with current turn')
-    if (prev.length > 0) this.removeComponent(prev[0], 'tagCurrentTurn')
     if (prev.length === 0) console.log('No tagCurrentTurn found')
+    if (prev.length > 0) this.removeComponent(prev[0], 'tagCurrentTurn')
 
     const nextID = this.scheduler.next()
-    // console.log('next turn:', nextID)
     const next = this.getByID(nextID)
     this.addComponent(next, tagCurrentTurn())
 
@@ -266,17 +238,8 @@ export class World {
     const entities = this.state.current.level.entities
     const result = entities.filter(e => e.id === id)
 
-    if (result.length > 1) {
-      console.error('Got multiple entities for id ' + id)
-      console.error(result)
-      throw new Error()
-    }
-
-    if (result.length == 0) {
-      console.error('No entities found for id ' + id)
-      console.error(result)
-      throw new Error()
-    }
+    if (result.length > 1) throw new Error('Got multiple entities for id ' + id)
+    if (result.length == 0) throw new Error('No entities found for id ' + id)
 
     return result[0]
   }
@@ -299,6 +262,16 @@ export class World {
     if (t === null) return false
     const opaqueEntities = this.get('tagBlocksLight', 'position').filter(e => e.position.s === here.s).length === 0
     return opaqueEntities && TerrainDictionary[t].transparent
+  }
+
+  EntityComponentException<C extends Components>(error: string, entity: Entity, component: C) {
+    console.error(error)
+    objLog(component, 'component')
+    objLog(entity, 'target')
+    objLog(this.getByID(entity.id), 'probably')
+    console.groupCollapsed('all entities')
+    objLog(this.current.level.entities, 'all', true)
+    console.groupEnd()
   }
 }
 
