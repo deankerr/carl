@@ -4,6 +4,7 @@ import { Entity } from './Entity'
 import { Level } from '../Model/Level'
 import { objLog } from '../util/util'
 import { Dungeon4Data } from '../Generate/dungeon4/dungeon4'
+import { CONFIG } from '../config'
 
 type TurnMessages = [number, string[]]
 
@@ -24,7 +25,16 @@ export class State {
 
   constructor(loadLevel?: Dungeon4Data) {
     // Create the initial state
-    const initialLevel = Level.createInitial(loadLevel)
+    let initialLevel
+    switch (CONFIG.initialLevel) {
+      default:
+      case 'dungeon4':
+        initialLevel = Level.createDungeon4(loadLevel)
+        break
+      case 'ruins1':
+        initialLevel = Level.createRuin1()
+        break
+    }
 
     const initialState = {
       level: initialLevel,
@@ -78,7 +88,7 @@ export class State {
   deleteEntity(entity: Entity) {
     log('Remove entity ' + entity.id, this.current.level.entities)
     const oldEntities = this.current.level.entities
-    const newEntities = oldEntities.filter((e) => e !== entity)
+    const newEntities = oldEntities.filter(e => e !== entity)
 
     if (newEntities.length !== oldEntities.length - 1) {
       console.error('State - deleteEntity did not change array length')

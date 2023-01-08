@@ -6,12 +6,24 @@
     <title>CARL!</title>
     <style>
       body {
-        background-color: #222;
-        text-align: center;
-        /* padding-top: 10px; */
+        box-sizing: border-box;
+        background-color: #000;
+        margin: 0;
+      }
+      div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100vw;
+        height: 100vh;
+      }
+      canvas {
+        max-height: 100%;
+        max-width: 100%;
       }
     </style>
     <script type="module" src="src/index.ts"></script>
+    <div id="wrapper"></div>
   </head>
   <body></body>
 </html>

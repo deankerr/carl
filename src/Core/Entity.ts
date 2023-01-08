@@ -1,5 +1,8 @@
 import { Components } from './Components'
 import * as C from './Components'
+
+import { render } from '../Component/Render'
+
 import { Point } from '../Model/Point'
 
 export type EntityID = { readonly id: string }
@@ -10,24 +13,27 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
   door: (pt: Point) => {
     return {
       id: 'door',
-      ...C.position(pt.x, pt.y),
-      ...C.render('+', 'saddlebrown'),
-      ...C.renderSeenColor('#4d2509'),
+      ...C.position(pt),
+      ...render({
+        base: { char: 'O+', color: 'saddlebrown' },
+        seen: { color: 'saddlebrown' },
+        baseDoorOpen: { char: 'O/' },
+      }),
       ...C.description('door'),
       ...C.door(),
       ...C.trodOn('You carefully navigate through the door.'),
     }
   },
 
-  player: (pt: Point, fov?: number) => {
+  player: (pt: Point, fov = 5) => {
     return {
       id: 'player',
-      ...C.position(pt.x, pt.y),
-      ...C.render('@', 'white'),
+      ...C.position(pt),
+      ...render({ base: { char: '@', color: 'violet' } }),
       ...C.description('yourself'),
       ...C.tagPlayer(),
       ...C.tagActor(),
-      ...C.fov(fov ?? 5),
+      ...C.fov(fov),
       ...C.seen(),
     }
   },
@@ -35,9 +41,9 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
   orc: (pt: Point) => {
     return {
       id: 'orc',
-      ...C.position(pt.x, pt.y),
-      ...C.render('o', 'green'),
-      ...C.description('orc'),
+      ...C.position(pt),
+      ...render({ base: { char: 'Oo', color: 'green' } }),
+      ...C.description('orc porkhoarder'),
       ...C.tagActor(),
     }
   },
@@ -45,8 +51,9 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
   spider: (pt: Point) => {
     return {
       id: 'spider',
-      ...C.position(pt.x, pt.y),
-      ...C.render('x', 'lightblue'),
+      ...C.position(pt),
+      ...render({ base: { char: 'Ox', color: 'cyan' } }),
+
       ...C.description('tarantula'),
       ...C.tagActor(),
     }
@@ -55,8 +62,9 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
   snake: (pt: Point) => {
     return {
       id: 'snake',
-      ...C.position(pt.x, pt.y),
-      ...C.render('s', 'lightgreen'),
+      ...C.position(pt),
+      ...render({ base: { char: 'Os', color: 'green' } }),
+
       ...C.description('taipan'),
       ...C.tagActor(),
     }
@@ -65,8 +73,9 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
   toad: (pt: Point) => {
     return {
       id: 'toad',
-      ...C.position(pt.x, pt.y),
-      ...C.render('t', 'limegreen'),
+      ...C.position(pt),
+      ...render({ base: { char: 'Ot', color: 'limegreen' } }),
+
       ...C.description('menacing toad'),
       ...C.tagActor(),
     }
@@ -75,8 +84,9 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
   crab: (pt: Point) => {
     return {
       id: 'crab',
-      ...C.position(pt.x, pt.y),
-      ...C.render('c', 'red'),
+      ...C.position(pt),
+      ...render({ base: { char: 'Or', color: 'red' } }),
+
       ...C.description('doomcrab'),
       ...C.tagActor(),
     }
@@ -85,9 +95,10 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
   ghost: (pt: Point) => {
     return {
       id: 'ghost',
-      ...C.position(pt.x, pt.y),
-      ...C.render('g', 'white'),
-      ...C.description('ghost'),
+      ...C.position(pt),
+      ...render({ base: { char: 'Og', color: 'white' } }),
+
+      ...C.description('spectre'),
       ...C.tagActor(),
     }
   },
@@ -95,9 +106,10 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
   demon: (pt: Point) => {
     return {
       id: 'demon',
-      ...C.position(pt.x, pt.y),
-      ...C.render('D', 'orangered'),
-      ...C.description('demon'),
+      ...C.position(pt),
+      ...render({ base: { char: 'OD', color: 'red' } }),
+
+      ...C.description('SATAN'),
       ...C.tagActor(),
     }
   },
@@ -105,8 +117,9 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
   hammerhead: (pt: Point) => {
     return {
       id: 'hammerhead',
-      ...C.position(pt.x, pt.y),
-      ...C.render('H', 'orange'),
+      ...C.position(pt),
+      ...render({ base: { char: 'OH', color: 'orange' } }),
+
       ...C.description('hammerhead shark man'),
       ...C.tagActor(),
     }
@@ -115,8 +128,9 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
   skeleton: (pt: Point) => {
     return {
       id: 'skeleton',
-      ...C.position(pt.x, pt.y),
-      ...C.render('S', 'white'),
+      ...C.position(pt),
+      ...render({ base: { char: 'OS', color: 'white' } }),
+
       ...C.description('skellybones'),
       ...C.tagActor(),
     }
@@ -125,9 +139,9 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
   chicken: (pt: Point) => {
     return {
       id: 'chicken',
-      ...C.position(pt.x, pt.y),
-      ...C.render('c', 'grey'),
-      ...C.description("lil' chickadee"),
+      ...C.position(pt),
+      ...render({ base: { char: 'Oc', color: 'white' } }),
+      ...C.description('lil chickadee'),
       ...C.tagActor(),
     }
   },
@@ -135,10 +149,33 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
   bat: (pt: Point) => {
     return {
       id: 'bat',
-      ...C.position(pt.x, pt.y),
-      ...C.render('a', 'red'),
-      ...C.description('bat from hell'),
+      ...C.position(pt),
+      ...render({ base: { char: 'Oa', color: 'red' } }),
+      ...C.description('bat of hell'),
       ...C.tagActor(),
+    }
+  },
+
+  karl: (pt: Point) => {
+    return {
+      id: 'karl',
+      ...C.position(pt),
+      ...render({ base: { char: 'K', color: 'yellow' } }),
+      ...C.description('Karl'),
+      ...C.tagActor(),
+    }
+  },
+
+  shrub: (pt: Point) => {
+    return {
+      id: 'shrub',
+      ...C.position(pt),
+      ...render({
+        base: { char: 'Ov', color: 'green' },
+        seen: { color: 'darkgreen' },
+      }),
+      ...C.tagWalkable(),
+      ...C.trodOn('You trample the pathetic shrub.'),
     }
   },
 }

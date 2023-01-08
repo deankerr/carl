@@ -61,7 +61,7 @@ export function generateRoomsBSP(newConfig: GEN_CONFIG): [Room[], number] {
     }
 
     console.groupCollapsed(
-      `%c Sector Loop - Current: ${parent.id}, Queue: ${queue.map((r) => r.id)} `,
+      `%c Sector Loop - Current: ${parent.id}, Queue: ${queue.map(r => r.id)} `,
       'background-color: orange'
     )
     console.log('Parent:', parent)
@@ -106,7 +106,7 @@ export function generateRoomsBSP(newConfig: GEN_CONFIG): [Room[], number] {
   console.groupEnd()
 
   // blank sector space
-  sectors.forEach((s) => (current = digRect(current, s, ' ')))
+  sectors.forEach(s => (current = digRect(current, s, ' ')))
   snapshot(current, `Bisect Complete ${sectors.length}/${roomsTarget}`, 'bspsuccess')
 
   const rooms = createRooms(current, sectors)
@@ -195,7 +195,8 @@ function createRooms(current: CharMap, rects: Rect[]) {
       // h = larger(rndO(CONFIG.minRoomH, parent.height - 2), rndO(CONFIG.minRoomH, parent.height - 2))
       w = rndO(CONFIG.minRoomW, max(parent.width - 2, CONFIG.maxRoomW))
       h = rndO(CONFIG.minRoomH, parent.height - 2)
-    } while (h >= w || w > CONFIG.maxRoomW || h > CONFIG.maxRoomH)
+    } while (w > CONFIG.maxRoomW || h > CONFIG.maxRoomH)
+    // } while (h >= w || w > CONFIG.maxRoomW || h > CONFIG.maxRoomH)
 
     const xSpace = parent.x2 - (parent.x + w)
     const x = rnd(parent.x + 1, parent.x + xSpace)

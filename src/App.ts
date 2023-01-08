@@ -1,6 +1,7 @@
+// Initial set up/loading test modules
 // TODO use window.gameSeed = '111' / localStorage
 import { CONFIG } from './config'
-import { createDisplay } from './util/display'
+import { createDisplay, createTileSetDisplay } from './util/display'
 import * as ROT from 'rot-js'
 import { Keys } from './util/Keys'
 
@@ -19,13 +20,17 @@ let visual4: Visualizer4
 let d4Data: Dungeon4Data | null
 const d4modules = mrModules()
 
-// For handling running things like dungeon visualizers/experiments without messing up Game()
+// TODO live display switching
+
 export function App() {
   // main display
-  display = createDisplay()
+  display = CONFIG.useTSDisplay ? createTileSetDisplay(48, 28) : createDisplay()
   window.display = [display]
 
-  // ROT.RNG.setSeed(1111)
+  // dev html background
+  document.body.style.backgroundColor = CONFIG.htmlBGColor
+
+  if (CONFIG.seed) ROT.RNG.setSeed(CONFIG.seed)
 
   switch (CONFIG.appInitial) {
     case 'game':
@@ -102,5 +107,6 @@ declare global {
   interface Window {
     game: object
     display: ROT.Display[]
+    tileSet: HTMLImageElement
   }
 }

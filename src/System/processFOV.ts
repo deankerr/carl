@@ -1,6 +1,6 @@
 import { World } from '../Core/World'
 import { fov, seen } from '../Core/Components'
-import { PtS } from '../Model/Point'
+import { Pt } from '../Model/Point'
 import * as ROT from 'rot-js'
 
 export const processFOV = (world: World) => {
@@ -14,7 +14,7 @@ export const processFOV = (world: World) => {
 
     const newFOV = fov(entity.fov.radius)
     fovFunction.compute(entity.position.x, entity.position.y, entity.fov.radius, (x, y, _r, isVisible) => {
-      if (isVisible) newFOV.fov.visible.push(PtS(x, y))
+      if (isVisible) newFOV.fov.visible.push(Pt(x, y).s)
     })
 
     const uEntity = world.updateComponent(entity, newFOV)

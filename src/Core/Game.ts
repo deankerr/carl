@@ -6,18 +6,17 @@ import * as ROT from 'rot-js'
 
 import { State } from './State'
 import { World } from './World'
+
 import { TerrainDictionary } from './Terrain'
 
 import { acting } from './Components'
 import { handleBump, processDeath, handleMovement, processFOV, handleMeleeAttack } from '../System'
 import { actionName, ActionTypes, __randomMove, __wait } from '../Action'
 
-import { mouseClick } from '../util/display'
+import { displayDebugStrings, mouseClick } from '../util/display'
 import { Keys } from '../util/Keys'
-import { objLog } from '../util/util'
+import { half, objLog } from '../util/util'
 import { input } from './Input'
-
-import { PtS } from '../Model/Point'
 
 import { Dungeon4Data } from '../Generate/dungeon4/dungeon4'
 import { handleTread } from '../System/handleTread'
@@ -34,6 +33,7 @@ export class Game {
   messageDummyDisplay = new ROT.Display({ width: CONFIG.displayWidth, height: CONFIG.displayHeight })
 
   lightsOn = CONFIG.lightsOnInitial // reveal level debug flag
+  showDisplayDebug = false
   hideInternalWalls = true
 
   constructor(d: ROT.Display, loadLevel?: Dungeon4Data) {
@@ -47,7 +47,7 @@ export class Game {
     this.world = new World(this.state)
 
     // mouse click coords
-    mouseClick(d, (event) => {
+    mouseClick(d, event => {
       const pt = d.eventToPosition(event)
       console.log(`${pt[0]},${pt[1] + CONFIG.marginTop}`)
     })
@@ -81,6 +81,11 @@ export class Game {
         case 'toggleLightSwitch':
           this.lightsOn = !this.lightsOn
           console.log('UI: toggleLightSwitch:', this.lightsOn)
+          break
+        case 'render':
+          this.showDisplayDebug = true
+          this.render()
+          console.log('UI: render')
           break
         default:
           console.log('UI: Action not implemented', playerAction)
@@ -121,7 +126,7 @@ export class Game {
 
     // put new messages from this turn into current
     if (messages[0][0] === playerTurns) this.messageCurrent = messages[0][1]
-
+    // ! ROT.Text.measure???
     // clip buffer height
     while (
       this.messageDummyDisplay.drawText(0, 0, this.messageCurrent.join(' ') + ' ' + this.messageBuffer.join(' ')) > 3
@@ -151,67 +156,92 @@ export class Game {
     this.render()
   }
 
-  // TODO make independent of turn queue - animations/non-blocking/ui updates during turns
-  // TODO ie. debug coords at mouse display
   render() {
     const d = this.display
-    const top = CONFIG.marginTop
-
-    const world = this.world
     const { level } = this.state.current
 
+    const top = CONFIG.marginTop
+    const left = half(CONFIG.TSDisplayWidth) - half(level.terrain.width)
+    const yMax = d.getOptions().height - 1
+
     d.clear()
+
+    // messages
     d.drawText(0, 0, this.messageCurrent.join(' ') + '%c{#777} ' + this.messageBuffer.join(' '))
 
-    // terrain
-    const { terrain } = level
-    const isInternalWall = level.isInternalWall.bind(level)
     const player = this.world.get('tagPlayer', 'position', 'render', 'fov', 'seen')[0]
+    const doors = this.world.get('position', 'render', 'door')
+    const entities = this.world.get('position', 'render').filter(e => doors.every(d => d.id !== e.id) && e !== player)
 
-    terrain.each((x, y, t) => {
-      // TODO TerrainDict function, return default results for unknown?
-      // ? maybe we should just crash
+    level.terrain.each((here, t) => {
+      const terrain = TerrainDictionary[t]
+      const char: string[] = []
+      const color: string[] = []
 
-      // skip rendering if this is a wall surrounded by other walls
-      // currently only to make lightsOn view look nicer
-      if (this.lightsOn && this.hideInternalWalls && isInternalWall(x, y)) return
+      const visible = player.fov.visible.includes(here.s)
+      const seen = player.seen.visible.includes(here.s) || this.lightsOn
 
-      const here = PtS(x, y)
-      // currently visible by player
-      if (player.fov.visible.includes(here)) {
-        const { char, color } = TerrainDictionary[t]?.console ?? { char: t, color: 'red' }
-        this.display.draw(x, top + y, char, color, null)
-      } else if (player.seen.visible.includes(here) || this.lightsOn) {
-        // seen previously
-        const { char, color } = TerrainDictionary[t]?.consoleSeen ?? { char: t, color: 'red' }
-        this.display.draw(x, top + y, char, color, null)
-      } else {
-        // blank space (currently needed to clip message buffer)
-        this.display.draw(x, top + y, ' ', 'black', null)
-      }
-    })
+      // terrain
+      const terrainVisible = terrain.render.base
+      const terrainSeen = terrain.render.seen
 
-    // entities
-    const entities = this.world.get('render', 'position')
-
-    for (const entity of entities) {
-      const { render, position } = entity
-      const here = PtS(position.x, position.y)
-
-      // currently visible entities
-      if (player.fov.visible.includes(here) || this.lightsOn) {
-        this.display.draw(position.x, top + position.y, render.char, render.color, null)
-      }
-      // seen furniture
-      else {
-        const seenEntity = world.with(entity, 'renderSeenColor')
-        if (seenEntity && player.seen.visible.includes(here)) {
-          this.display.draw(position.x, top + position.y, render.char, seenEntity.renderSeenColor.color, null)
+      if (!level.isInternalWall(here) || !this.hideInternalWalls) {
+        if (visible) {
+          char.push(terrainVisible.char)
+          color.push(terrainVisible.color)
+        } else if (seen) {
+          char.push(terrainSeen?.char ?? terrainVisible.char)
+          color.push(terrainSeen?.color ?? terrainVisible.color)
         }
       }
-    }
 
-    // player again
-    this.display.draw(player.position.x, top + player.position.y, player.render.char, 'white', null)
+      // door
+      const door = doors.filter(d => d.position.s === here.s)[0]
+      if (door) {
+        const open = door.door.open
+        const doorChar = open ? door.render?.baseDoorOpen?.char ?? door.render.base.char : door.render.base.char
+
+        if (visible) {
+          char.push(doorChar)
+          color.push(door.render.base.color)
+        } else if (seen) {
+          char.push(doorChar)
+          color.push(door.render.seen?.color ?? door.render.base.color)
+        }
+      }
+
+      // entities
+      entities
+        .filter(e => e.position.s === here.s)
+        .forEach(e => {
+          if (visible || this.lightsOn) {
+            char.push(e.render.base.char)
+            color.push(e.render.base.color)
+          }
+        })
+
+      // player
+      if (player.position.s === here.s) {
+        char.push(player.render.base.char)
+        color.push(player.render.base.color)
+      }
+
+      char.length > 0
+        ? d.draw(
+            left + here.x,
+            top + here.y,
+            char,
+            color,
+            color.map((_c, i) => (i === 0 ? 'black' : 'transparent'))
+          )
+        : d.draw(here.x, top + here.y, ' ', 'black', null) // blank
+    })
+
+    // display debug
+    if (this.lightsOn && this.showDisplayDebug) {
+      const ddb = displayDebugStrings(d)
+      d.drawText(0, yMax - 1, ddb[0])
+      d.drawText(0, yMax, ddb[1])
+    }
   }
 }

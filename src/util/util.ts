@@ -1,3 +1,5 @@
+import * as ROT from 'rot-js'
+
 export function copy<T>(obj: T): T {
   return JSON.parse(JSON.stringify(obj))
 }
@@ -18,4 +20,12 @@ export function objLog(obj: object | object[], label = 'Object Log', collapsed =
     console.log(copy(obj))
     console.groupEnd()
   }
+}
+
+export function rnd(min: number, max: number) {
+  return ROT.RNG.getUniformInt(min, max)
+}
+
+export function half(n: number) {
+  return Math.floor(n / 2)
 }

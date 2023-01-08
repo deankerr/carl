@@ -1,17 +1,17 @@
+import { Render } from '../Component/Render'
 import { ActionTypes } from '../Action'
+import { Point } from '../Model/Point'
 
-export type Render = { render: { char: string; color: string } }
-export type Position = { position: { x: number; y: number } }
+export type Position = { position: Point }
 export type TagPlayer = { tagPlayer: true }
 export type FOV = { fov: { radius: number; visible: string[] } }
-export type Seen = { seen: { visible: string[] } }
+export type Seen = { seen: { visible: string[] } } // cellSeen? cellMemory?
 export type TagCurrentTurn = { tagCurrentTurn: true }
 export type TagWalkable = { tagWalkable: true }
 export type TagActor = { tagActor: true }
 export type Acting = { acting: ActionTypes }
 export type TagMeleeAttackTarget = { tagMeleeAttackTarget: true }
 export type TagDead = { tagDead: true }
-export type RenderSeenColor = { renderSeenColor: { color: string } }
 export type Door = { door: { open: boolean } }
 export type TrodOn = { trodOn: { message: string } }
 export type Description = { description: { name: string } }
@@ -28,18 +28,13 @@ export type Components = Partial<
     Acting &
     TagMeleeAttackTarget &
     TagDead &
-    RenderSeenColor &
     Door &
     TrodOn &
     Description
 >
 
-export const render = (char: string, color: string): Render => {
-  return { render: { char, color } }
-}
-
-export const position = (x: number, y: number): Position => {
-  return { position: { x, y } }
+export const position = (pt: Point): Position => {
+  return { position: pt }
 }
 
 export const tagPlayer = (): TagPlayer => {
@@ -76,10 +71,6 @@ export const tagMeleeAttackTarget = (): TagMeleeAttackTarget => {
 
 export const dead = (): TagDead => {
   return { tagDead: true }
-}
-
-export const renderSeenColor = (color: string): RenderSeenColor => {
-  return { renderSeenColor: { color } }
 }
 
 export const door = (open = false) => {
