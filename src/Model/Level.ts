@@ -2,7 +2,7 @@
 import * as ROT from 'rot-js'
 import { Grid } from './Grid'
 import { Entity } from '../Core/Entity'
-import { dungeon4 } from '../Generate'
+import { dungeon4, prefabRuin1 } from '../Generate'
 import { Dungeon4Data, Room } from '../Generate/dungeon4/dungeon4'
 import { TerrainDictionary } from '../Core/Terrain'
 import { Point, Pt } from './Point'
@@ -13,7 +13,7 @@ export type LevelData = {
   entities: Entity[]
   terrain: Grid<number>
   rooms: Room[]
-  doors: Point[]
+  doors?: Point[]
 }
 
 export class Level {
@@ -21,13 +21,13 @@ export class Level {
   entities: Entity[]
   terrain: Grid<number>
   rooms: Room[]
-  doors: Point[]
+  doors?: Point[]
   constructor(levelData: LevelData) {
     this.label = levelData.label
     this.entities = levelData.entities
     this.terrain = levelData.terrain
     this.rooms = levelData.rooms
-    this.doors = levelData.doors
+    this.doors = levelData.doors ? levelData.doors : undefined
   }
 
   isTransparent(x: number, y: number) {
@@ -54,9 +54,13 @@ export class Level {
     return result
   }
 
-  static createInitial(loadLevel?: Dungeon4Data) {
+  static createDungeon4(loadLevel?: Dungeon4Data) {
     const { terrain, rooms, doors } = dungeon4(loadLevel)
     return new Level({ label: 'initialLevel', entities: [], terrain, rooms, doors })
+  }
+
+  static createRuin1() {
+    return new Level(prefabRuin1())
   }
 
   // ? static create(generator: Function) { levelData = generator() }

@@ -98,4 +98,12 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
       seen: { color: '#111' },
     }),
   },
+  10: {
+    title: 'void',
+    walkable: true,
+    transparent: true,
+    ...render({
+      base: { char: ' ', color: '#000' },
+    }),
+  },
 }

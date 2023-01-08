@@ -11,6 +11,7 @@ const CONFIG = {
   levelHeight: 20,
   // appInitial: PROD ? 'dungeon4' : 'game', // ! d4vis broken with TSDisplay
   appInitial: 'game',
+  initialLevel: 'ruins1',
   lightsOnInitial: PROD ? false : true,
   htmlBGColor: PROD ? '#000' : '#222',
   useTSDisplay: true,

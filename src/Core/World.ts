@@ -16,9 +16,15 @@ export class World {
     this.state = state
     this.current = state.current
 
-    this.__createDoors()
+    const { entities } = this.current.level
+    if (entities.length === 0) {
+      this.__createDoors()
+      this.__features()
+    } else {
+      entities.forEach(e => this.add(e))
+    }
+
     this.__populateNPCs()
-    this.__features()
 
     this.message("You begin your queste's.")
 
@@ -61,6 +67,7 @@ export class World {
 
   __createDoors() {
     const level = this.state.current.level
+    if (!level.doors) return
 
     for (const doorPt of level.doors) {
       const door = templates.door(doorPt)
