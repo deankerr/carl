@@ -30,9 +30,11 @@ export class Game {
   messageNew: string[] = [] // messages generated during the last update
   messageHistory: string[] = [] // previous messages that still fit in the buffer visually
 
-  lightsOn = CONFIG.lightsOnInitial // reveal level debug flag
-  showDisplayDebug = false
-  hideInternalWalls = true
+  options = {
+    lightsOn: CONFIG.lightsOnInitial, // reveal level debug flag
+    hideInternalWalls: true,
+    showDisplayDebug: false,
+  }
 
   constructor(d: ROT.Display, loadLevel?: Dungeon4Data) {
     console.log('new Game2')
@@ -47,7 +49,7 @@ export class Game {
     // mouse click coords
     mouseClick(d, event => {
       const pt = d.eventToPosition(event)
-      console.log(`${pt[0]},${pt[1] + CONFIG.renderLevelY}`)
+      console.log(`${pt[0]},${pt[1] + CONFIG.renderLevelY1}`)
     })
 
     this.processMessages()
@@ -77,14 +79,14 @@ export class Game {
     if ('ui' in playerAction) {
       switch (playerAction.ui) {
         case 'toggleLightSwitch':
-          this.lightsOn = !this.lightsOn
-          console.log('UI: toggleLightSwitch:', this.lightsOn)
+          this.options.lightsOn = !this.options.lightsOn
+          console.log('UI: toggleLightSwitch:', this.options.lightsOn)
           break
         case 'toggleInternalWalls':
-          this.hideInternalWalls = !this.hideInternalWalls
+          this.options.hideInternalWalls = !this.options.hideInternalWalls
           break
         case 'render':
-          this.showDisplayDebug = true
+          this.options.showDisplayDebug = true
           this.render()
           console.log('UI: render')
           break
@@ -134,7 +136,7 @@ export class Game {
 
     // clip buffer height
     const maxWidth = this.display.getOptions().width
-    while (ROT.Text.measure(this.messages(), maxWidth).height > CONFIG.renderLevelY + 1) {
+    while (ROT.Text.measure(this.messages(), maxWidth).height > CONFIG.renderLevelY1 + 1) {
       this.messageHistory.pop()
     }
   }
@@ -164,7 +166,7 @@ export class Game {
     const d = this.display
     const { level } = this.state.current
 
-    const top = CONFIG.renderLevelY
+    const top = CONFIG.renderLevelY1
     const left = half(CONFIG.displayWidthTileset) - half(level.terrain.width)
     const yMax = d.getOptions().height - 1
 
@@ -183,13 +185,13 @@ export class Game {
       const color: string[] = []
 
       const visible = player.fov.visible.includes(here.s)
-      const seen = player.seen.visible.includes(here.s) || this.lightsOn
+      const seen = player.seen.visible.includes(here.s) || this.options.lightsOn
 
       // terrain
       const terrainVisible = terrain.render.base
       const terrainSeen = terrain.render.seen
 
-      if (!level.isInternalWall(here) || !this.hideInternalWalls) {
+      if (!level.isInternalWall(here) || !this.options.hideInternalWalls) {
         if (visible) {
           char.push(terrainVisible.char)
           color.push(terrainVisible.color)
@@ -218,7 +220,7 @@ export class Game {
       entities
         .filter(e => e.position.s === here.s)
         .forEach(e => {
-          if (visible || this.lightsOn) {
+          if (visible || this.options.lightsOn) {
             char.push(e.render.base.char)
             color.push(e.render.base.color)
           }
@@ -242,7 +244,7 @@ export class Game {
     })
 
     // display debug
-    if (this.lightsOn && this.showDisplayDebug) {
+    if (this.options.lightsOn && this.options.showDisplayDebug) {
       const ddb = displayDebugStrings(d)
       d.drawText(0, yMax - 1, ddb[0])
       d.drawText(0, yMax, ddb[1])

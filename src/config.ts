@@ -4,11 +4,13 @@ const PROD = import.meta.env.PROD
 const CONFIG = {
   appInitial: 'game',
   seed: 1673152889440,
-  renderLevelY: 2,
+  renderLevelY1: 2,
+  renderLevelY2: 2,
   displayWidthText: 80,
   displayHeightText: 25,
   displayWidthTileset: 48,
   displayHeightTileset: 28,
+
   levelWidthText: 80,
   levelHeightText: 20,
   levelWidthTileset: 48,
