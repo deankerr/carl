@@ -1,5 +1,6 @@
 import { Components } from './Components'
 import * as C from './Components'
+import * as C2 from '../Component'
 
 import { render } from '../Component/Render'
 
@@ -22,6 +23,7 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
       ...C.description('door'),
       ...C.door(),
       ...C.trodOn('You carefully navigate through the door.'),
+      ...C2.tagBlocksLight(),
     }
   },
 

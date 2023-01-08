@@ -1,4 +1,4 @@
-import { Render } from '../Component/Render'
+import { Render, TagBlocksLight } from '../Component/'
 import { ActionTypes } from '../Action'
 import { Point } from '../Model/Point'
 
@@ -30,7 +30,8 @@ export type Components = Partial<
     TagDead &
     Door &
     TrodOn &
-    Description
+    Description &
+    TagBlocksLight
 >
 
 export const position = (pt: Point): Position => {
