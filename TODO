@@ -8,8 +8,8 @@
 - Lighting effects (torches/decreasing light from player)
 - (light bleeds slightly into void? )
 - Add simple animation (npc bobbing)/ Render decouple
-
 - New UI
+- render.current?
 - Clarify State functionality, logging
 - Unify function declaration style
 - Refactor Generate to improvement corridor placement, flexibility, visualizer integration into Game, entity generation
@@ -24,6 +24,7 @@
 - Localestorage random seed saving, easily travel backwards throguh previously generated levels
 - ? Strip Level down to data structure, move terrain info methods to World(?), level gen initition to genereate/world
 - Move player "seen" tracking to level
+- Clean up CONFIG
 
 === Bugs ===
 

@@ -27,10 +27,8 @@ export class Game {
   state: State
   world: World
 
-  messageCurrent: string[] = [] // messages generated during the last update
-  messageBuffer: string[] = [] // previous messages that still fit in the buffer visually
-  // dummy display for checking wrapped message height
-  messageDummyDisplay = new ROT.Display({ width: CONFIG.displayWidth, height: CONFIG.displayHeight })
+  messageNew: string[] = [] // messages generated during the last update
+  messageHistory: string[] = [] // previous messages that still fit in the buffer visually
 
   lightsOn = CONFIG.lightsOnInitial // reveal level debug flag
   showDisplayDebug = false
@@ -117,21 +115,24 @@ export class Game {
     this.render()
   }
 
+  messages() {
+    return this.messageNew.join(' ') + '%c{#777} ' + this.messageHistory.join(' ')
+  }
+
   processMessages() {
     const { messages, playerTurns } = this.state.current
     if (messages.length < 1) return
 
-    this.messageBuffer = [...this.messageCurrent, ...this.messageBuffer]
-    this.messageCurrent = []
+    this.messageHistory = [...this.messageNew, ...this.messageHistory]
+    this.messageNew = []
 
     // put new messages from this turn into current
-    if (messages[0][0] === playerTurns) this.messageCurrent = messages[0][1]
-    // ! ROT.Text.measure???
+    if (messages[0][0] === playerTurns) this.messageNew = messages[0][1]
+
     // clip buffer height
-    while (
-      this.messageDummyDisplay.drawText(0, 0, this.messageCurrent.join(' ') + ' ' + this.messageBuffer.join(' ')) > 3
-    ) {
-      this.messageBuffer.pop()
+    const maxWidth = this.display.getOptions().width
+    while (ROT.Text.measure(this.messages(), maxWidth).height > 3) {
+      this.messageHistory.pop()
     }
   }
 
@@ -167,7 +168,7 @@ export class Game {
     d.clear()
 
     // messages
-    d.drawText(0, 0, this.messageCurrent.join(' ') + '%c{#777} ' + this.messageBuffer.join(' '))
+    d.drawText(0, 0, this.messages())
 
     const player = this.world.get('tagPlayer', 'position', 'render', 'fov', 'seen')[0]
     const doors = this.world.get('position', 'render', 'door')
@@ -234,7 +235,7 @@ export class Game {
             color,
             color.map((_c, i) => (i === 0 ? 'black' : 'transparent'))
           )
-        : d.draw(here.x, top + here.y, ' ', 'black', null) // blank
+        : d.draw(left + here.x, top + here.y, ' ', 'black', null) // blank
     })
 
     // display debug
