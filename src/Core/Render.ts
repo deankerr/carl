@@ -5,7 +5,7 @@ import { World } from './World'
 import { TerrainDictionary } from './Terrain'
 import { half, floor, clamp } from '../util/util'
 import { displayDebugStrings } from '../util/display'
-// - LEFT, + TOP
+
 export const renderLevel = (display: ROT.Display, world: World, message: string, options: Game['options']) => {
   const d = display
   d.clear()
@@ -14,19 +14,25 @@ export const renderLevel = (display: ROT.Display, world: World, message: string,
   const { level } = world.current
   const yMax = d.getOptions().height - 1
 
+  // * ========== Viewport ========== *
+  const CONFIG_viewW = CONFIG.displayWidthTileset
+  const CONFIG_viewH = CONFIG.displayHeightTileset - CONFIG.renderLevelY1 - CONFIG.renderLevelY2 - 1
+  // const CONFIG_viewW = 48
+  // const CONFIG_viewH = 16
   const viewport = {
     x: {
-      min: 0,
-      max: CONFIG.displayWidthTileset,
+      min: half(CONFIG.displayWidthTileset) - half(CONFIG_viewW),
+      max: half(CONFIG.displayWidthTileset) + half(CONFIG_viewW),
     },
     y: {
-      min: CONFIG.renderLevelY1,
-      max: CONFIG.displayHeightTileset - CONFIG.renderLevelY2 - 1,
+      min: half(CONFIG.displayHeightTileset) - half(CONFIG_viewH),
+      max: half(CONFIG.displayHeightTileset) + half(CONFIG_viewH),
     },
-    w: CONFIG.displayWidthTileset,
-    h: CONFIG.displayHeightTileset - CONFIG.renderLevelY1 - CONFIG.renderLevelY2,
+    w: CONFIG_viewW,
+    h: CONFIG_viewH,
     // allowed to move in this fraction of the center of the viewport
     // before changing the render point
+    // TODO ?? figure this out
     inner: {
       xMin: 12,
       xMax: 36,
@@ -74,8 +80,6 @@ export const renderLevel = (display: ROT.Display, world: World, message: string,
     console.log('offsetY: outside box, move with player')
   }
 
-  // clamp offsets to level edges
-
   const top = CONFIG.renderLevelY1 + offsetY
   const left = 0 + offsetX
 
@@ -84,7 +88,7 @@ export const renderLevel = (display: ROT.Display, world: World, message: string,
   console.log('player x', player.position.x, 'y', player.position.y)
   console.log('offsetX:', offsetX, 'offsetY', offsetY, 'top', top, 'left', left)
 
-  // * ========== START RENDERING ========== *
+  // * ========== Rendering ========== *
 
   const doors = world.get('position', 'render', 'door')
   const entities = world.get('position', 'render').filter(e => doors.every(d => d.id !== e.id) && e !== player)
