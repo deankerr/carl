@@ -4,9 +4,13 @@ import { Point, Pt } from './Point'
 
 export class Grid<T> {
   private grid: T[][]
+  readonly width: number
+  readonly height: number
 
   private constructor(values: T[][]) {
     this.grid = values
+    this.width = values[0].length
+    this.height = values.length
   }
 
   get(pt: Point) {
