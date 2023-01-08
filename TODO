@@ -1,19 +1,13 @@
-# TILESET
+# TODO
 
 - ??? Patch ROT.JS to handle drawOver tiles? ???
-- Import prefab
 - Doors block vision
 - Add more decoration terrain/items
-
-## Later
-
 - Larger TS levels + Viewport
 - Enable view selection + live switching
 - Lighting effects (torches/decreasing light from player)
 - (light bleeds slightly into void? )
 - Add simple animation (npc bobbing)/ Render decouple
-
-# TODO
 
 - New UI
 - Clarify State functionality, logging
