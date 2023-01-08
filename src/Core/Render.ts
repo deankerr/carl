@@ -15,8 +15,8 @@ export const renderLevel = (display: ROT.Display, world: World, message: string,
   const yMax = d.getOptions().height - 1
 
   // * ========== Viewport ========== *
-  const CONFIG_viewW = CONFIG.displayWidthTileset
-  const CONFIG_viewH = CONFIG.displayHeightTileset - CONFIG.renderLevelY1 - CONFIG.renderLevelY2 - 1
+  const CONFIG_viewW = CONFIG.viewportW
+  const CONFIG_viewH = CONFIG.viewportH
   // const CONFIG_viewW = 48
   // const CONFIG_viewH = 16
   const viewport = {
@@ -167,16 +167,23 @@ export const renderLevel = (display: ROT.Display, world: World, message: string,
       : d.draw(left + here.x, top + here.y, ' ', 'black', null) // blank
 
     // * level border
-    if (here.x === 0 || here.x === level.width - 2 || here.y === 0 || here.y === level.height - 2)
-      display.draw(left + here.x, top + here.y, 'x', 'cyan', null)
+    if (options.showLevelBorder) {
+      if (here.x === 0 || here.x === level.width - 1 || here.y === 0 || here.y === level.height - 1)
+        display.draw(left + here.x, top + here.y, 'x', 'cyan', null)
+    }
 
     return true
   })
 
-  // display debug
-  if (options.lightsOn && options.showDisplayDebug) {
+  // canvas debug
+  if (options.lightsOn && options.showCanvasDebug) {
     const ddb = displayDebugStrings(d)
     d.drawText(0, yMax - 1, ddb[0])
     d.drawText(0, yMax, ddb[1])
+  }
+
+  // viewport debug
+  if (options.showLevelBorder) {
+    d.drawText(5, 5, `offsetX: ${offsetX} offsetY: ${offsetY}`)
   }
 }

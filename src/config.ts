@@ -10,6 +10,8 @@ const CONFIG = {
   displayHeightText: 25,
   displayWidthTileset: 48,
   displayHeightTileset: 28,
+  viewportW: 48,
+  viewportH: 24,
 
   levelWidthText: 80,
   levelHeightText: 20,

@@ -37,7 +37,8 @@ export class Game {
   options = {
     lightsOn: CONFIG.lightsOnInitial, // reveal level debug flag
     hideInternalWalls: true,
-    showDisplayDebug: false,
+    showCanvasDebug: false,
+    showLevelBorder: false,
   }
 
   constructor(d: ROT.Display, loadLevel?: Dungeon4Data) {
@@ -90,7 +91,8 @@ export class Game {
           this.options.hideInternalWalls = !this.options.hideInternalWalls
           break
         case 'render':
-          this.options.showDisplayDebug = true
+          // this.options.showDisplayDebug = true
+          this.options.showLevelBorder = !this.options.showLevelBorder
           this.render()
           console.log('UI: render')
           break
@@ -239,7 +241,7 @@ export class Game {
         : d.draw(left + here.x, top + here.y, ' ', 'black', null) // blank
     })
     // display debug
-    if (this.options.lightsOn && this.options.showDisplayDebug) {
+    if (this.options.lightsOn && this.options.showCanvasDebug) {
       const ddb = displayDebugStrings(d)
       d.drawText(0, yMax - 1, ddb[0])
       d.drawText(0, yMax, ddb[1])
