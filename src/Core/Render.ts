@@ -26,7 +26,7 @@ export const renderLevel = (display: ROT.Display, world: World, message: string,
     },
     y: {
       min: half(CONFIG.displayHeightTileset) - half(CONFIG_viewH),
-      max: half(CONFIG.displayHeightTileset) + half(CONFIG_viewH),
+      max: half(CONFIG.displayHeightTileset) + half(CONFIG_viewH) - 1,
     },
     w: CONFIG_viewW,
     h: CONFIG_viewH,
@@ -168,7 +168,7 @@ export const renderLevel = (display: ROT.Display, world: World, message: string,
 
     // * level border
     if (options.showLevelBorder) {
-      if (here.x === 0 || here.x === level.width - 1 || here.y === 0 || here.y === level.height - 1)
+      if (here.x === 0 || here.x === level.width - 2 || here.y === 0 || here.y === level.height - 2)
         display.draw(left + here.x, top + here.y, 'x', 'cyan', null)
     }
 
@@ -183,7 +183,8 @@ export const renderLevel = (display: ROT.Display, world: World, message: string,
   }
 
   // viewport debug
-  if (options.showLevelBorder) {
-    d.drawText(5, 5, `offsetX: ${offsetX} offsetY: ${offsetY}`)
+  if (options.debugMode) {
+    d.drawText(5, 5, `offset: ${offsetX}/${offsetY}`)
+    d.drawText(5, 6, `seed: ${ROT.RNG.getSeed()}`)
   }
 }

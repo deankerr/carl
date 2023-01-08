@@ -39,6 +39,7 @@ export class Game {
     hideInternalWalls: true,
     showCanvasDebug: false,
     showLevelBorder: false,
+    debugMode: false,
   }
 
   constructor(d: ROT.Display, loadLevel?: Dungeon4Data) {
@@ -93,6 +94,7 @@ export class Game {
         case 'render':
           // this.options.showDisplayDebug = true
           this.options.showLevelBorder = !this.options.showLevelBorder
+          this.options.debugMode = !this.options.debugMode
           this.render()
           console.log('UI: render')
           break
