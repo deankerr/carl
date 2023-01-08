@@ -14,10 +14,17 @@ import { CONFIG } from '../config'
 export function dungeon4(loadLevel?: Dungeon4Data) {
   const data =
     loadLevel ?? CONFIG.useTSDisplay
-      ? create({ width: CONFIG.TSLevelWidth, height: CONFIG.TSLevelHeight, minRoomW: 5, maxRoomW: 7, maxRoomH: 5 })
+      ? create({
+          width: CONFIG.TSLevelWidth,
+          height: CONFIG.TSLevelHeight,
+          minRoomW: 5,
+          maxRoomW: 9,
+          minRoomH: 5,
+          maxRoomH: 9,
+        })
       : create()
   if (!data) throw new Error('Dungeon gen failed.')
   const [terrainData, rooms] = data
-  const doors = data[2].map((d) => Pt(d.x, d.y))
+  const doors = data[2].map(d => Pt(d.x, d.y))
   return { terrain: Grid.from(terrainData), rooms, doors }
 }
