@@ -23,11 +23,11 @@ export class Grid<T> {
     this.grid[pt.y][pt.x] = value
   }
 
-  each(callback: (pt: Point, value: T) => void | null) {
+  each(callback: (pt: Point, value: T) => unknown) {
     this.grid.forEach((row, yi) =>
       row.forEach((value, xi) => {
-        // return null to exit loop
-        if (callback(Pt(xi, yi), value) === null) return
+        // return false to exit loop
+        if (callback(Pt(xi, yi), value) === false) return
       })
     )
   }

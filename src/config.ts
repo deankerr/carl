@@ -13,11 +13,13 @@ const CONFIG = {
 
   levelWidthText: 80,
   levelHeightText: 20,
-  levelWidthTileset: 48,
-  levelHeightTileset: 24,
+  // levelWidthTileset: 48,
+  // levelHeightTileset: 24,
+  levelWidthTileset: 50,
+  levelHeightTileset: 50,
   useTileset: true,
-  initialLevel: 'ruins1',
-  // initialLevel: 'dungeon4',
+  // initialLevel: 'ruins1',
+  initialLevel: 'dungeon4',
   lightsOnInitial: PROD ? false : true,
   htmlBGColor: PROD ? '#000' : '#111',
 }

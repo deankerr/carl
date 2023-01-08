@@ -3,27 +3,103 @@ import { CONFIG } from '../config'
 import { Game } from './Game'
 import { World } from './World'
 import { TerrainDictionary } from './Terrain'
-import { half } from '../util/util'
+import { half, floor, clamp } from '../util/util'
 import { displayDebugStrings } from '../util/display'
-
+// - LEFT, + TOP
 export const renderLevel = (display: ROT.Display, world: World, message: string, options: Game['options']) => {
   const d = display
-  const { level } = world.current
-
-  const top = CONFIG.renderLevelY1
-  const left = half(CONFIG.displayWidthTileset) - half(level.terrain.width)
-  const yMax = d.getOptions().height - 1
-
   d.clear()
-
-  // messages
   d.drawText(0, 0, message)
 
+  const { level } = world.current
+  const yMax = d.getOptions().height - 1
+
+  const viewport = {
+    x: {
+      min: 0,
+      max: CONFIG.displayWidthTileset,
+    },
+    y: {
+      min: CONFIG.renderLevelY1,
+      max: CONFIG.displayHeightTileset - CONFIG.renderLevelY2 - 1,
+    },
+    w: CONFIG.displayWidthTileset,
+    h: CONFIG.displayHeightTileset - CONFIG.renderLevelY1 - CONFIG.renderLevelY2,
+    // allowed to move in this fraction of the center of the viewport
+    // before changing the render point
+    inner: {
+      xMin: 12,
+      xMax: 36,
+      yMin: 6,
+      yMax: 6,
+    },
+  }
+  const centerX = floor(CONFIG.displayWidthTileset / 2)
+  const centerY = floor(CONFIG.displayHeightTileset / 2)
+
   const player = world.get('tagPlayer', 'position', 'render', 'fov', 'seen')[0]
+  // * center on player for now
+
+  let offsetX = centerX - player.position.x
+
+  if (level.terrain.width < viewport.w) {
+    // if the level w/h is smaller than the viewport, just center it
+    offsetX = half(CONFIG.displayWidthTileset) - half(level.terrain.width)
+    console.log('offsetX: small level, centered level')
+  } else if (offsetX > viewport.inner.xMin && offsetX < viewport.inner.xMax) {
+    // within box, don't move
+    offsetX = clamp(viewport.w - level.width + 1, offsetX, 0, 'offsetX')
+    console.log('offsetX: within inner box, shouldnt move')
+  } else {
+    // outside box, move with player
+    offsetX = centerX - player.position.x
+    offsetX = clamp(viewport.w - level.width + 1, offsetX, 0, 'offsetX')
+    console.log('offsetX: outside box, move with player')
+  }
+
+  let offsetY = centerX - player.position.y
+
+  if (level.terrain.height < viewport.h) {
+    // if the level w/h is smaller than the viewport, just center it
+    offsetY = half(CONFIG.displayHeightTileset) - half(level.terrain.height)
+    console.log('offsetY: small level, centered level')
+  } else if (offsetY > viewport.inner.yMin && offsetY < viewport.inner.yMax) {
+    // within box, don't move
+    offsetY = clamp(viewport.h - level.height + 1, offsetY, 0, 'offsetY')
+    console.log('offsetY: within inner box, shouldnt move')
+  } else {
+    // outside box, move with player
+    offsetY = centerY - player.position.y
+    offsetY = clamp(viewport.h - level.height + 1, offsetY, 0, 'offsetY')
+    console.log('offsetY: outside box, move with player')
+  }
+
+  // clamp offsets to level edges
+
+  const top = CONFIG.renderLevelY1 + offsetY
+  const left = 0 + offsetX
+
+  console.log('viewport width:', viewport.w, 'height:', viewport.h)
+  console.log('level width:', level.width, 'height', level.height)
+  console.log('player x', player.position.x, 'y', player.position.y)
+  console.log('offsetX:', offsetX, 'offsetY', offsetY, 'top', top, 'left', left)
+
+  // * ========== START RENDERING ========== *
+
   const doors = world.get('position', 'render', 'door')
   const entities = world.get('position', 'render').filter(e => doors.every(d => d.id !== e.id) && e !== player)
 
   level.terrain.each((here, t) => {
+    const render = { x: left + here.x, y: top + here.y }
+    if (
+      render.x < viewport.x.min ||
+      render.x > viewport.x.max ||
+      render.y < viewport.y.min ||
+      render.y > viewport.y.max
+    ) {
+      return false
+    }
+
     const terrain = TerrainDictionary[t]
     const char: string[] = []
     const color: string[] = []
@@ -85,6 +161,12 @@ export const renderLevel = (display: ROT.Display, world: World, message: string,
           color.map((_c, i) => (i === 0 ? 'black' : 'transparent'))
         )
       : d.draw(left + here.x, top + here.y, ' ', 'black', null) // blank
+
+    // * level border
+    if (here.x === 0 || here.x === level.width - 2 || here.y === 0 || here.y === level.height - 2)
+      display.draw(left + here.x, top + here.y, 'x', 'cyan', null)
+
+    return true
   })
 
   // display debug

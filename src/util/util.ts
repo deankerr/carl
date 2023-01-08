@@ -29,3 +29,14 @@ export function rnd(min: number, max: number) {
 export function half(n: number) {
   return Math.floor(n / 2)
 }
+
+export function floor(n: number) {
+  return Math.floor(n)
+}
+
+export function clamp(min: number, n: number, max: number, debug?: string) {
+  debug && console.log(`clamp ${debug} ${n} - min: ${min} ${n < min} / max: ${max} ${n > max}`)
+  if (n < min) return min
+  if (n > max) return max
+  return n
+}
