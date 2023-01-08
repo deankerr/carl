@@ -31,55 +31,57 @@ export const renderLevel = (d: ROT.Display, world: World, message: string, optio
     // allowed to move in this fraction of the center of the viewport
     // before changing the render point
     // TODO ?? figure this out
-    inner: {
-      xMin: 12,
-      xMax: 36,
-      yMin: 6,
-      yMax: 6,
-    },
+    // inner: {
+    //   xMin: 12,
+    //   xMax: 36,
+    //   yMin: 6,
+    //   yMax: 6,
+    // },
   }
-  const centerX = floor(CONFIG.displayW / 2)
-  const centerY = floor(CONFIG.displayH / 2)
 
-  const player = world.get('tagPlayer', 'position', 'render', 'fov', 'seen')[0]
   // * center on player for now
 
-  let offsetX = centerX - player.position.x
+  // if (level.width < viewport.w) {
+  //   // if the level w/h is smaller than the viewport, just center it
+  //   offsetX = half(CONFIG.displayW) - half(level.width)
+  //   console.log('offsetX: small level, centered level')
+  // } else {
+  //   // offsetX = clamp(0, player.position.x, level.width)
+  // }
+  // } else if (offsetX > viewport.inner.xMin && offsetX < viewport.inner.xMax) {
+  //   // within box, don't move
+  //   // offsetX = clamp(viewport.w - level.width + 1, offsetX, 0, 'offsetX')
+  //   console.log('offsetX: within inner box, shouldnt move')
+  // } else {
+  //   // outside box, move with player
+  //   offsetX = centerX - player.position.x
+  //   // offsetX = clamp(viewport.w - level.width + 1, offsetX, 0, 'offsetX')
+  //   console.log('offsetX: outside box, move with player')
+  // }
 
-  if (level.terrain.width < viewport.w) {
-    // if the level w/h is smaller than the viewport, just center it
-    offsetX = half(CONFIG.displayW) - half(level.terrain.width)
-    console.log('offsetX: small level, centered level')
-  } else if (offsetX > viewport.inner.xMin && offsetX < viewport.inner.xMax) {
-    // within box, don't move
-    offsetX = clamp(viewport.w - level.width + 1, offsetX, 0, 'offsetX')
-    console.log('offsetX: within inner box, shouldnt move')
-  } else {
-    // outside box, move with player
-    offsetX = centerX - player.position.x
-    offsetX = clamp(viewport.w - level.width + 1, offsetX, 0, 'offsetX')
-    console.log('offsetX: outside box, move with player')
-  }
+  // let offsetY = centerX - player.position.y
 
-  let offsetY = centerX - player.position.y
-
-  if (level.terrain.height < viewport.h) {
-    // if the level w/h is smaller than the viewport, just center it
-    offsetY = half(CONFIG.displayH) - half(level.terrain.height)
-    console.log('offsetY: small level, centered level')
-  } else if (offsetY > viewport.inner.yMin && offsetY < viewport.inner.yMax) {
-    // within box, don't move
-    offsetY = clamp(viewport.h - level.height, offsetY, 0, 'offsetY')
-    console.log('offsetY: within inner box, shouldnt move')
-  } else {
-    // outside box, move with player
-    offsetY = centerY - player.position.y
-    offsetY = clamp(viewport.h - level.height, offsetY, 0, 'offsetY')
-    console.log('offsetY: outside box, move with player')
-  }
-
-  const top = topPanelSize + offsetY
-  const left = 0 + offsetX
+  // if (level.terrain.height < viewport.h) {
+  //   // if the level w/h is smaller than the viewport, just center it
+  //   offsetY = half(CONFIG.displayH) - half(level.terrain.height)
+  //   console.log('offsetY: small level, centered level')
+  // } else if (offsetY > viewport.inner.yMin && offsetY < viewport.inner.yMax) {
+  //   // within box, don't move
+  //   offsetY = clamp(viewport.h - level.height, offsetY, 0, 'offsetY')
+  //   console.log('offsetY: within inner box, shouldnt move')
+  // } else {
+  //   // outside box, move with player
+  //   offsetY = centerY - player.position.y
+  //   offsetY = clamp(viewport.h - level.height, offsetY, 0, 'offsetY')
+  //   console.log('offsetY: outside box, move with player')
+  // }
+  const player = world.get('tagPlayer', 'position', 'render', 'fov', 'seen')[0]
+  const centerX = floor(CONFIG.displayW / 2)
+  const centerY = floor(CONFIG.displayH / 2)
+  const offsetX = centerX - player.position.x
+  const offsetY = centerY - player.position.y
+  const left = viewport.x.min + offsetX
+  const top = viewport.y.min + offsetY
 
   console.log('viewport width:', viewport.w, 'height:', viewport.h)
   console.log('level width:', level.width, 'height', level.height)
@@ -92,15 +94,15 @@ export const renderLevel = (d: ROT.Display, world: World, message: string, optio
   const entities = world.get('position', 'render').filter(e => doors.every(d => d.id !== e.id) && e !== player)
 
   level.terrain.each((here, t) => {
-    const render = { x: left + here.x, y: top + here.y }
-    if (
-      render.x < viewport.x.min ||
-      render.x > viewport.x.max ||
-      render.y < viewport.y.min ||
-      render.y > viewport.y.max
-    ) {
-      return false
-    }
+    // const render = { x: left + here.x, y: top + here.y }
+    // if (
+    //   render.x < viewport.x.min ||
+    //   render.x > viewport.x.max ||
+    //   render.y < viewport.y.min ||
+    //   render.y > viewport.y.max
+    // ) {
+    //   return false
+    // }
 
     const terrain = TerrainDictionary[t]
     const char: string[] = []
@@ -113,15 +115,15 @@ export const renderLevel = (d: ROT.Display, world: World, message: string, optio
     const terrainVisible = terrain.render.base
     const terrainSeen = terrain.render.seen
 
-    if (!level.isInternalWall(here) || !options.hideInternalWalls) {
-      if (visible) {
-        char.push(terrainVisible.char)
-        color.push(terrainVisible.color)
-      } else if (seen) {
-        char.push(terrainSeen?.char ?? terrainVisible.char)
-        color.push(terrainSeen?.color ?? terrainVisible.color)
-      }
+    // if (!level.isInternalWall(here) || !options.hideInternalWalls) {
+    if (visible) {
+      char.push(terrainVisible.char)
+      color.push(terrainVisible.color)
+    } else if (seen) {
+      char.push(terrainSeen?.char ?? terrainVisible.char)
+      color.push(terrainSeen?.color ?? terrainVisible.color)
     }
+    // }
 
     // door
     const door = doors.filter(d => d.position.s === here.s)[0]
@@ -155,7 +157,7 @@ export const renderLevel = (d: ROT.Display, world: World, message: string, optio
     }
 
     if (char.length > 0) {
-      if (here.y === 0) console.log('char:', char, color)
+      // if (here.y === 0) console.log('char:', char, color)
       d.draw(
         left + here.x,
         top + here.y,
@@ -169,6 +171,8 @@ export const renderLevel = (d: ROT.Display, world: World, message: string, optio
     if (options.showLevelBorder) {
       if (here.x === 0 || here.x === level.width - 1 || here.y === 0 || here.y === level.height - 1)
         d.draw(left + here.x, top + here.y, 'x', 'cyan', null)
+      if (here.x === half(level.width) && here.y == half(level.height))
+        d.draw(left + here.x, top + here.y, 'x', 'orange', null)
     }
 
     return true

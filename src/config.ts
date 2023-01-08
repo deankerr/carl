@@ -3,19 +3,20 @@ const PROD = import.meta.env.PROD
 
 const CONFIG = {
   appInitial: 'game',
-  // seed: 1673152889440,
-  displayW: 48,
-  displayH: 32,
+  seed: 5234,
+  displayW: 40,
+  displayH: 40,
   topPanelSize: 4,
-  botPanelSize: 2,
+  botPanelSize: 4,
+  levelWidthTileset: 31,
+  levelHeightTileset: 31,
+  useTileset: true,
 
   levelWidthText: 80,
   levelHeightText: 20,
   // levelWidthTileset: 48,
   // levelHeightTileset: 24,
-  levelWidthTileset: 60,
-  levelHeightTileset: 60,
-  useTileset: true,
+
   // initialLevel: 'ruins1',
   initialLevel: 'dungeon4',
   lightsOnInitial: PROD ? false : true,

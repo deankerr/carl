@@ -33,8 +33,8 @@ export class Game {
     lightsOn: CONFIG.lightsOnInitial, // reveal level debug flag
     hideInternalWalls: true,
     showCanvasDebug: false,
-    showLevelBorder: false,
-    debugMode: false,
+    showLevelBorder: true,
+    debugMode: true,
   }
 
   constructor(d: ROT.Display, loadLevel?: Dungeon4Data) {
