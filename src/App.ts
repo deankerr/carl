@@ -30,7 +30,7 @@ export function App() {
   // dev html background
   document.body.style.backgroundColor = CONFIG.htmlBGColor
 
-  // ROT.RNG.setSeed(1672910468299)
+  if (CONFIG.seed) ROT.RNG.setSeed(CONFIG.seed)
 
   switch (CONFIG.appInitial) {
     case 'game':

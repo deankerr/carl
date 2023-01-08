@@ -2,6 +2,7 @@
 const PROD = import.meta.env.PROD
 
 const CONFIG = {
+  seed: 1673152889440,
   displayWidth: 80,
   displayHeight: 25,
   refreshRate: 50,
@@ -12,8 +13,9 @@ const CONFIG = {
   // appInitial: PROD ? 'dungeon4' : 'game', // ! d4vis broken with TSDisplay
   appInitial: 'game',
   initialLevel: 'ruins1',
+  // initialLevel: 'dungeon4',
   lightsOnInitial: PROD ? false : true,
-  htmlBGColor: PROD ? '#000' : '#222',
+  htmlBGColor: PROD ? '#000' : '#111',
   useTSDisplay: true,
   TSDisplayWidth: 48,
   TSDisplayHeight: 28,
