@@ -47,7 +47,7 @@ export class Game {
     // mouse click coords
     mouseClick(d, event => {
       const pt = d.eventToPosition(event)
-      console.log(`${pt[0]},${pt[1] + CONFIG.marginTop}`)
+      console.log(`${pt[0]},${pt[1] + CONFIG.renderLevelY}`)
     })
 
     this.processMessages()
@@ -134,7 +134,7 @@ export class Game {
 
     // clip buffer height
     const maxWidth = this.display.getOptions().width
-    while (ROT.Text.measure(this.messages(), maxWidth).height > 3) {
+    while (ROT.Text.measure(this.messages(), maxWidth).height > CONFIG.renderLevelY + 1) {
       this.messageHistory.pop()
     }
   }
@@ -164,8 +164,8 @@ export class Game {
     const d = this.display
     const { level } = this.state.current
 
-    const top = CONFIG.marginTop
-    const left = half(CONFIG.TSDisplayWidth) - half(level.terrain.width)
+    const top = CONFIG.renderLevelY
+    const left = half(CONFIG.displayWidthTileset) - half(level.terrain.width)
     const yMax = d.getOptions().height - 1
 
     d.clear()

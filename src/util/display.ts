@@ -1,7 +1,7 @@
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
 
-export function createDisplay(width = CONFIG.displayWidth, height = CONFIG.displayHeight) {
+export function createDisplay(width = CONFIG.displayWidthText, height = CONFIG.displayHeightText) {
   const display = new ROT.Display({
     width,
     height,
@@ -30,7 +30,7 @@ function resize(display: ROT.Display) {
   display.setOptions({ fontSize: compSize - 1 })
 }
 
-export const createTileSetDisplay = (width = CONFIG.TSDisplayWidth, height = CONFIG.TSDisplayHeight) => {
+export const createTileSetDisplay = (width = CONFIG.displayWidthTileset, height = CONFIG.displayHeightTileset) => {
   // const wrapper = document.createElement('div')
   // wrapper.style.display = 'flex'
   // wrapper.style.alignItems = 'center'

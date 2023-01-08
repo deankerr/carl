@@ -24,7 +24,9 @@ const d4modules = mrModules()
 
 export function App() {
   // main display
-  display = CONFIG.useTSDisplay ? createTileSetDisplay(48, 28) : createDisplay()
+  display = CONFIG.useTileset
+    ? createTileSetDisplay(CONFIG.displayWidthTileset, CONFIG.displayHeightTileset)
+    : createDisplay(CONFIG.displayWidthText, CONFIG.displayHeightText)
   window.display = [display]
 
   // dev html background
