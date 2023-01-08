@@ -58,7 +58,7 @@ export const renderLevel = (d: ROT.Display, world: World, message: string, optio
       return false
     }
 
-    // create arrays of chars and colors of terrain + entities here
+    // create array stacks of chars and colors of terrain + entities here
     const terrain = TerrainDictionary[t]
     const char: string[] = []
     const color: string[] = []

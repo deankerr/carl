@@ -34,6 +34,8 @@ export class State {
       case 'ruins1':
         initialLevel = Level.createRuin1()
         break
+      case 'bigRoom':
+        initialLevel = Level.createBigRoom()
     }
 
     const initialState = {

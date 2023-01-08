@@ -2,7 +2,7 @@
 import * as ROT from 'rot-js'
 import { Grid } from './Grid'
 import { Entity } from '../Core/Entity'
-import { dungeon4, prefabRuin1 } from '../Generate'
+import { bigRoom, dungeon4, prefabRuin1 } from '../Generate'
 import { Dungeon4Data, Room } from '../Generate/dungeon4/dungeon4'
 import { TerrainDictionary } from '../Core/Terrain'
 import { Point, Pt } from './Point'
@@ -66,6 +66,10 @@ export class Level {
 
   static createRuin1() {
     return new Level(prefabRuin1())
+  }
+
+  static createBigRoom() {
+    return new Level(bigRoom())
   }
 
   // ? static create(generator: Function) { levelData = generator() }
