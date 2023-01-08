@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */ // !! TEMP
 // Game: should handle the initial invocation of World etc.
 // the main update/render/input loop. Executes Systems loop
 
@@ -9,22 +8,18 @@ import { State } from './State'
 import { World } from './World'
 import { renderLevel } from './Render'
 
-import { TerrainDictionary } from './Terrain'
-
 import { acting } from './Components'
 import { handleBump, processDeath, handleMovement, processFOV, handleMeleeAttack } from '../System'
 import { actionName, ActionTypes, __randomMove, __wait } from '../Action'
 
-import { displayDebugStrings, mouseClick } from '../util/display'
+import { mouseClick } from '../util/display'
 import { Keys } from '../util/Keys'
-import { half, objLog } from '../util/util'
+import { objLog } from '../util/util'
 import { input } from './Input'
 
 import { Dungeon4Data } from '../Generate/dungeon4/dungeon4'
 import { handleTread } from '../System/handleTread'
 
-const TEMP_NEW_RENDER = true
-// const TEMP_NEW_RENDER = false
 export class Game {
   display: ROT.Display
   keys = new Keys()
@@ -171,82 +166,6 @@ export class Game {
   }
 
   render() {
-    if (TEMP_NEW_RENDER) {
-      renderLevel(this.display, this.world, this.messages(), this.options)
-      return
-    }
-
-    const d = this.display
-    const { level } = this.state.current
-    const top = CONFIG.renderLevelY1
-    const left = half(CONFIG.displayWidthTileset) - half(level.terrain.width)
-    const yMax = d.getOptions().height - 1
-    d.clear()
-    // messages
-    d.drawText(0, 0, this.messages())
-    const player = this.world.get('tagPlayer', 'position', 'render', 'fov', 'seen')[0]
-    const doors = this.world.get('position', 'render', 'door')
-    const entities = this.world.get('position', 'render').filter(e => doors.every(d => d.id !== e.id) && e !== player)
-    level.terrain.each((here, t) => {
-      const terrain = TerrainDictionary[t]
-      const char: string[] = []
-      const color: string[] = []
-      const visible = player.fov.visible.includes(here.s)
-      const seen = player.seen.visible.includes(here.s) || this.options.lightsOn
-      // terrain
-      const terrainVisible = terrain.render.base
-      const terrainSeen = terrain.render.seen
-      if (!level.isInternalWall(here) || !this.options.hideInternalWalls) {
-        if (visible) {
-          char.push(terrainVisible.char)
-          color.push(terrainVisible.color)
-        } else if (seen) {
-          char.push(terrainSeen?.char ?? terrainVisible.char)
-          color.push(terrainSeen?.color ?? terrainVisible.color)
-        }
-      }
-      // door
-      const door = doors.filter(d => d.position.s === here.s)[0]
-      if (door) {
-        const open = door.door.open
-        const doorChar = open ? door.render?.baseDoorOpen?.char ?? door.render.base.char : door.render.base.char
-        if (visible) {
-          char.push(doorChar)
-          color.push(door.render.base.color)
-        } else if (seen) {
-          char.push(doorChar)
-          color.push(door.render.seen?.color ?? door.render.base.color)
-        }
-      }
-      // entities
-      entities
-        .filter(e => e.position.s === here.s)
-        .forEach(e => {
-          if (visible || this.options.lightsOn) {
-            char.push(e.render.base.char)
-            color.push(e.render.base.color)
-          }
-        })
-      // player
-      if (player.position.s === here.s) {
-        char.push(player.render.base.char)
-        color.push(player.render.base.color)
-      }
-      char.length > 0
-        ? d.draw(
-            left + here.x,
-            top + here.y,
-            char,
-            color,
-            color.map((_c, i) => (i === 0 ? 'black' : 'transparent'))
-          )
-        : d.draw(left + here.x, top + here.y, ' ', 'black', null) // blank
-    })
-    // display debug
-    if (this.options.lightsOn && this.options.showCanvasDebug) {
-      const ddb = displayDebugStrings(d)
-      d.drawText(0, yMax - 1, ddb[0])
-      d.drawText(0, yMax, ddb[1])
-    }
+    renderLevel(this.display, this.world, this.messages(), this.options)
   }
 }
