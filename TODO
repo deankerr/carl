@@ -27,6 +27,7 @@
 - Move player "seen" tracking to level
 - Clean up CONFIG
 - Terrain colour pallettes/themes
+- Viewport doesn't move until you are closer to the side
 
 === Bugs ===
 

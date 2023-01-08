@@ -21,7 +21,7 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
     walkable: false,
     transparent: false,
     ...render({
-      base: { char: 'O#', color: '#5f574f' },
+      base: { char: 'O#', color: '#777' },
       seen: { color: '#555' },
     }),
   },
@@ -40,7 +40,7 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
     transparent: true,
     tread: 'You splash through the water.',
     ...render({
-      base: { char: '~', color: 'cyan' },
+      base: { char: '~', color: 'deepskyblue' },
       seen: { color: 'darkcyan' },
     }),
   },
