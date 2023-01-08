@@ -80,6 +80,9 @@ export class Game {
           this.lightsOn = !this.lightsOn
           console.log('UI: toggleLightSwitch:', this.lightsOn)
           break
+        case 'toggleInternalWalls':
+          this.hideInternalWalls = !this.hideInternalWalls
+          break
         case 'render':
           this.showDisplayDebug = true
           this.render()

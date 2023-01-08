@@ -4,7 +4,6 @@
 import { ActionTypes, Move, UI } from '../Action'
 
 export function input(code: string): ActionTypes | null {
-  // console.log('input code', code)
   switch (code) {
     // Movement
     case 'Numpad7':
@@ -33,8 +32,11 @@ export function input(code: string): ActionTypes | null {
     // UI
     case 'KeyL':
       return UI('toggleLightSwitch')
+    case 'Semicolon':
+      return UI('toggleInternalWalls')
     case 'KeyR':
       return UI('render')
+
     // case 'KeyN':
     //   return UI('newMap')
 
