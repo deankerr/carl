@@ -22,10 +22,13 @@ export class World {
     this.options = options
 
     const { entities } = this.current.level
+    // debugger
     if (entities.length === 0) {
       this.__createDoors()
       this.__features()
     } else {
+      // const newEntities = entities
+      this.current.level.entities = []
       entities.forEach(e => this.create(e))
     }
 
