@@ -146,7 +146,7 @@ export class Game {
     const { world } = this
     const [entity] = world.get('tagCurrentTurn')
 
-    world.entity(entity).add(acting(action))
+    world.modify(entity).add(acting(action))
     console.groupCollapsed(`System: '${entity.id}' -> '${actionName(action)}'`)
 
     handleMovement(world)
@@ -157,7 +157,7 @@ export class Game {
     processFOV(world)
 
     const [entityDone] = world.get('tagCurrentTurn')
-    world.entity(entityDone).remove('acting')
+    world.modify(entityDone).remove('acting')
 
     console.groupEnd()
     // this.render()

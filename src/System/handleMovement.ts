@@ -27,7 +27,7 @@ export const handleMovement = (world: World) => {
 
     if (world.options.debugMode && currentIsPlayer) {
       // update position
-      world.entity(currentEntity).change(position(Pt(newX, newY)))
+      world.modify(currentEntity).change(position(Pt(newX, newY)))
       return
     }
 
@@ -38,7 +38,7 @@ export const handleMovement = (world: World) => {
     if (!TerrainDictionary[terrain].walkable) {
       console.log('handleMovement: new action - Bump (terrain)')
       const newAction = acting(Bump(Pt(newX, newY)))
-      world.entity(currentEntity).change(newAction)
+      world.modify(currentEntity).change(newAction)
       return
     }
 
@@ -48,7 +48,7 @@ export const handleMovement = (world: World) => {
     if (!entitiesWalkable) {
       console.log('handleMovement: new action - Bump (entity)')
       const newAction = acting(Bump(Pt(newX, newY)))
-      world.entity(currentEntity).change(newAction)
+      world.modify(currentEntity).change(newAction)
       return
     } else {
       // create tread action
@@ -56,7 +56,7 @@ export const handleMovement = (world: World) => {
       const tread = acting(Tread(Pt(newX, newY)))
       // update position
       const pos = position(Pt(newX, newY))
-      world.entity(currentEntity).change(tread).change(pos)
+      world.modify(currentEntity).change(tread).change(pos)
     }
   } else {
     console.log('handleMovement: not a move action', action)

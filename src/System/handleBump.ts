@@ -27,17 +27,17 @@ export const handleBump = (world: World) => {
       const doorEntity = world.with(bumpedEntity, 'door')
       if (doorEntity) {
         console.log('handleBump: result - open door')
-        world.entity(doorEntity).add(tagWalkable()).change(door(true)).remove('tagBlocksLight')
+        world.modify(doorEntity).add(tagWalkable()).change(door(true)).remove('tagBlocksLight')
 
         world.message('Your hands tremble as you slowly push or pull the door open.')
         return
       }
 
       // * attack!
-      world.entity(bumpedEntity).add(tagMeleeAttackTarget())
+      world.modify(bumpedEntity).add(tagMeleeAttackTarget())
 
       // update acting component
-      world.entity(currentEntity).change(acting(MeleeAttack(action.bump)))
+      world.modify(currentEntity).change(acting(MeleeAttack(action.bump)))
       console.log(`handleBump: action - MeleeAttack ${bumpedEntity.id}`)
     }
 

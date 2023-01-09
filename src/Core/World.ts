@@ -9,6 +9,7 @@ import { Point, Pt } from '../Model/Point'
 import { Terrain, TerrainDictionary } from './Terrain'
 import { Game } from './Game'
 
+export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 export class World {
   private state: State // The actual State instance
   current: StateObject // reference to State.current (should be readonly/immutable?)
@@ -25,7 +26,7 @@ export class World {
       this.__createDoors()
       this.__features()
     } else {
-      entities.forEach(e => this.add(e))
+      entities.forEach(e => this.create(e))
     }
 
     this.__populateNPCs()
@@ -44,7 +45,7 @@ export class World {
   __populateNPCs() {
     const level = this.state.current.level
 
-    this.add(templates.player(level.ptInRoom(0), 5))
+    this.create(templates.player(level.ptInRoom(0), 5))
 
     const npcs = ROT.RNG.shuffle([
       'orc',
@@ -65,7 +66,7 @@ export class World {
       if (i === 0 || i >= npcs.length) return
       const pos = level.ptInRoom(i)
       const choice = npcs[i]
-      if (templates[choice]) this.add(templates[choice](pos))
+      if (templates[choice]) this.create(templates[choice](pos))
     })
   }
 
@@ -75,7 +76,7 @@ export class World {
 
     for (const doorPt of level.doors) {
       const door = templates.door(doorPt)
-      this.add(door)
+      this.create(door)
     }
   }
 
@@ -85,7 +86,7 @@ export class World {
     level.rooms.forEach((r, i) => {
       // shrubbery
       if (i % 3 === 0) {
-        for (let j = 0; j < 6; j++) this.add(templates.shrub(level.ptInRoom(i)))
+        for (let j = 0; j < 6; j++) this.create(templates.shrub(level.ptInRoom(i)))
       }
 
       // water
@@ -112,7 +113,7 @@ export class World {
   */
 
   // add new entity to state
-  add(entity: Entity) {
+  create(entity: Entity) {
     // stamp with next id
     const id = entity.id + '-' + this.state.current.nextID++
     const newEntity = { ...entity, id }
@@ -156,7 +157,7 @@ export class World {
   }
 
   // remove entity from the world + turn queue if necessary
-  remove(entity: Entity) {
+  destroy(entity: Entity) {
     console.log('World: remove entity', entity.id)
     this.current.level.entities = this.current.level.entities.filter(e => e.id !== entity.id)
 
@@ -173,11 +174,11 @@ export class World {
     const prev = this.get('tagCurrentTurn')
     if (prev.length > 1) throw new Error('Multiple entities with current turn')
     if (prev.length === 0) console.log('No tagCurrentTurn found')
-    if (prev.length > 0) this.entity(prev[0]).remove('tagCurrentTurn')
+    if (prev.length > 0) this.modify(prev[0]).remove('tagCurrentTurn')
 
     const nextID = this.scheduler.next()
     const next = this.getByID(nextID)
-    this.entity(next).add(tagCurrentTurn())
+    this.modify(next).add(tagCurrentTurn())
 
     // return true if its the player's turn
     const playerTurn = this.get('tagCurrentTurn', 'tagPlayer')
@@ -214,6 +215,7 @@ export class World {
     return opaqueEntities && TerrainDictionary[t].transparent
   }
 
+  // currently unused, may be useful for debug
   EntityComponentException<C extends Components>(error: string, entity: Entity, component: C | C[]) {
     console.error(error)
     objLog(component, 'component')
@@ -224,21 +226,16 @@ export class World {
     console.groupEnd()
   }
 
-  // entity build/manage
-  entity(e: Entity) {
-    return eManager(this.current, e)
+  // entity modifier
+  modify(e: Entity) {
+    return modify(this.current, e)
   }
 }
 
-export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
-
-const eManager = (state: StateObject, target: Entity) => {
+const modify = (state: StateObject, target: Entity) => {
   const newEntity = state.level.entities.find(e => e === target)
-  if (!newEntity) throw new Error('eMan cannot locate' + target.id)
-
+  if (!newEntity) throw new Error('modify cannot locate' + target.id)
   let entity = newEntity
-
-  console.log('eManager:', entity)
 
   const add = <C extends Components>(c: C) => {
     // check it did not already exist
@@ -246,7 +243,8 @@ const eManager = (state: StateObject, target: Entity) => {
 
     entity = { ...entity, ...c }
     updateState(entity)
-    console.log('add', entity, c)
+
+    console.log(`modify: add ${componentName(c)} to ${entity.id}`)
 
     return { entity, add, change, remove }
   }
@@ -257,7 +255,8 @@ const eManager = (state: StateObject, target: Entity) => {
 
     entity = { ...entity, ...c }
     updateState(entity)
-    console.log('update', entity, c)
+    // console.log('update', entity, c)
+    console.log(`modify: update ${entity.id} ${componentName(c)}`)
 
     return { entity, add, change, remove }
   }
@@ -268,7 +267,7 @@ const eManager = (state: StateObject, target: Entity) => {
 
     Reflect.deleteProperty(entity, cName)
     updateState(entity)
-    console.log('remove', entity, cName)
+    console.log(`modify: remove ${entity.id} ${cName}`)
     return { entity, add, change, remove }
   }
 
@@ -276,7 +275,6 @@ const eManager = (state: StateObject, target: Entity) => {
     const index = state.level.entities.findIndex(e => e.id === entity.id)
     if (index < 0) throw new Error('Cannot find that ID')
     state.level.entities[index] = entity
-    console.log('uState:', entity.id)
   }
 
   return { entity, add, change, remove }

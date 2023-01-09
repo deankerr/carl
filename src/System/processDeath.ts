@@ -10,7 +10,7 @@ export const processDeath = (world: World) => {
   console.log('processDeath: reaping')
   for (const entity of currentEntities) {
     console.log('processDeath: removing', entity.id)
-    world.remove(entity)
+    world.destroy(entity)
     console.log('processDeath: removed', entity.id)
   }
 
