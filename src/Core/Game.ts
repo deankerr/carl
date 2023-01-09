@@ -8,7 +8,7 @@ import { State } from './State'
 import { World } from './World'
 import { renderLevel } from './Render'
 
-import { acting } from './Components'
+import { acting } from '../Component'
 import { handleBump, processDeath, handleMovement, processFOV, handleMeleeAttack } from '../System'
 import { actionName, ActionTypes, __randomMove, __wait } from '../Action'
 

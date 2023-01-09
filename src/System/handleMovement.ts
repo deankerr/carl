@@ -1,5 +1,6 @@
 import { World } from '../Core/World'
-import { acting, position } from '../Core/Components'
+import { acting } from '../Component'
+import { position } from '../Component/'
 import { TerrainDictionary } from '../Core/Terrain'
 import { Pt } from '../Model/Point'
 import { Bump, Tread } from '../Action'

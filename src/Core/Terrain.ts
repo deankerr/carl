@@ -1,10 +1,10 @@
-import { render, Render } from '../Component/Render'
+import { render, Graphic } from '../Component/Graphic'
 export type Terrain = {
   title: string
   walkable: boolean
   transparent: boolean
   tread?: string
-} & Render
+} & Graphic
 
 export const TerrainDictionary: { [key: number]: Terrain } = {
   0: {

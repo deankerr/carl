@@ -1,5 +1,5 @@
 import { World } from '../Core/World'
-import { fov, seen } from '../Core/Components'
+import { seen, fov } from '../Component'
 import { Pt } from '../Model/Point'
 import * as ROT from 'rot-js'
 

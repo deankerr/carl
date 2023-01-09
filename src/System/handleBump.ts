@@ -1,5 +1,5 @@
 import { World } from '../Core/World'
-import { tagMeleeAttackTarget, acting, door, tagWalkable } from '../Core/Components'
+import { door, tagMeleeAttackTarget, acting, tagWalkable } from '../Component'
 import { MeleeAttack } from '../Action'
 
 export const handleBump = (world: World) => {

@@ -1,6 +1,7 @@
 // Entity/Component manager. Currently should be the only way to mutate game state
 import * as ROT from 'rot-js'
-import { tagCurrentTurn, Components, componentName } from './Components'
+import { Components, componentName } from './Components'
+import { tagCurrentTurn } from '../Component'
 import { Entity, templates } from './Entity'
 import { State, StateObject } from './State'
 import { objLog, rnd } from '../util/util'

@@ -1,7 +1,7 @@
 // TODO add charMap type safety
 export type BaseGraphic = { char: string; color: string }
 
-export type Render = {
+export type Graphic = {
   render: {
     base: BaseGraphic
     seen?: Partial<BaseGraphic>
@@ -9,7 +9,7 @@ export type Render = {
   }
 }
 
-export const render = (as: Render['render']) => {
+export const render = (as: Graphic['render']) => {
   return {
     render: {
       ...as,
