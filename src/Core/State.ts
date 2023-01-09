@@ -10,7 +10,7 @@ type TurnMessages = [number, string[]]
 
 export type StateObject = {
   level: Level // Active level, reference to a level in levels[]
-  entityCount: number
+  nextID: number
   playerTurns: number
   messages: TurnMessages[]
   levels: Level[]
@@ -40,7 +40,7 @@ export class State {
 
     const initialState = {
       level: initialLevel,
-      entityCount: 0,
+      nextID: 0,
       playerTurns: -1,
       messages: [],
       levels: [initialLevel],
@@ -59,18 +59,18 @@ export class State {
   */
 
   // return the next entity id, increment
-  nextEntityID() {
-    log('nextEntityID: ' + this.current.entityCount, this.current)
-    return this.current.entityCount++
-  }
+  // nextEntityID() {
+  //   log('nextEntityID: ' + this.current.nextID, this.current)
+  //   return this.current.nextID++
+  // }
 
-  addEntity(entity: Entity) {
-    log('Add entity ' + entity.id, this.current)
+  // addEntity(entity: Entity) {
+  //   log('Add entity ' + entity.id, this.current)
 
-    this.current.level.entities.push(entity)
+  //   this.current.level.entities.push(entity)
 
-    log('Result', this.current)
-  }
+  //   log('Result', this.current)
+  // }
 
   // updates an entity - ie. replaces the entity with a new one with the new component
   updateEntity(oldEntity: Entity, newEntity: Entity) {

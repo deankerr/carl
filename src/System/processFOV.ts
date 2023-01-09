@@ -16,14 +16,14 @@ export const processFOV = (world: World) => {
       if (isVisible) newFOV.fov.visible.push(Pt(x, y).s)
     })
 
-    const uEntity = world.updateComponent(entity, newFOV)
+    const uEntity = world.entity(entity).change(newFOV).entity
 
     // update seen if needed
     const hasSeen = world.with(uEntity, 'seen')
     if (hasSeen) {
       const ptSet = new Set<string>([...hasSeen.seen.visible, ...newFOV.fov.visible])
       const newSeen = seen([...ptSet])
-      world.updateComponent(hasSeen, newSeen)
+      world.entity(uEntity).change(newSeen)
     }
 
     didSomething = true

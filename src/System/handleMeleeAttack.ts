@@ -20,8 +20,7 @@ export const handleMeleeAttack = (world: World) => {
   } else if (currentIsPlayer) {
     // kill target
     console.log(`handleMeleeAttack: player killed ${targetEntity.id}`)
-    const newDead = dead()
-    world.addComponent(targetEntity, newDead)
+    world.entity(targetEntity).add(dead())
     world.message(`You obliterate the ${targetEntity?.description?.name ?? targetEntity.id} with your mind!`)
   } else {
     // TODO in player vision/hearing range only
@@ -33,7 +32,7 @@ export const handleMeleeAttack = (world: World) => {
   // ? cleanup
   const taggedEntities = world.get('tagMeleeAttackTarget')
   for (const entity of taggedEntities) {
-    world.removeComponent(entity, 'tagMeleeAttackTarget')
+    world.entity(entity).remove('tagMeleeAttackTarget')
     console.log(`handleMeleeAttack: cleanup - removed tagMeleeAttackTarget from ${entity.id}`)
   }
 }

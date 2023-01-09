@@ -1,6 +1,5 @@
 # TODO
 
-- Split Components into own files
 - Combine State into World, update API
 - ??Something like world.query().entitiesWith('position', 'tagWalkable').optionally('door').without('tagPlayer').at({x: 1, y: 2})
 - Clarify State functionality, logging

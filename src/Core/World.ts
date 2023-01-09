@@ -1,4 +1,4 @@
-// Entity/Component manager. Currently should be the only way to mutate game state
+// Entity/Component manager
 import * as ROT from 'rot-js'
 import { Components, componentName } from './Components'
 import { tagCurrentTurn } from '../Component'
@@ -114,12 +114,12 @@ export class World {
   // add new entity to state
   add(entity: Entity) {
     // stamp with next id
-    const id = entity.id + '-' + this.state.nextEntityID()
+    const id = entity.id + '-' + this.state.current.nextID++
     const newEntity = { ...entity, id }
-    this.state.addEntity(newEntity)
+    this.current.level.entities.push(newEntity)
     // add actors to turn queue
     if ('tagActor' in newEntity) this.scheduler.add(newEntity.id, true)
-    return newEntity
+    // return newEntity // ? remove
   }
 
   // return all entities with specified components
@@ -171,98 +171,15 @@ export class World {
     this.current.graveyard.push(targetEntity.id)
   }
 
-  addComponent<C extends Components>(entity: Entity, component: C) {
-    const entities = this.state.current.level.entities
-    const oldEntity = entities.find(e => e === entity)
-
-    if (!oldEntity) {
-      this.EntityComponentException('addComponent: cannot locate', entity, component)
-      throw new Error()
-    }
-
-    // verify entity doesn't already have this component
-    if (componentName(component) in oldEntity) {
-      this.EntityComponentException('addComponent: already has component', entity, component)
-      throw new Error()
-    }
-
-    const newEntity = { ...oldEntity, ...component }
-    this.state.updateEntity(oldEntity, newEntity)
-
-    return newEntity
-  }
-
-  // gets writable entity from state, updates component, sends back to state
-  updateComponent<C extends Components>(entity: Entity, component: C) {
-    const entities = this.state.current.level.entities
-    const oldEntity = entities.find(e => e === entity)
-
-    if (!oldEntity) {
-      this.EntityComponentException('updateComponent: cannot locate', entity, component)
-      throw new Error()
-    }
-
-    // verify entity had this component
-    if (!(componentName(component) in oldEntity)) {
-      this.EntityComponentException('update: already has', entity, component)
-      throw new Error()
-    }
-
-    // copy old entity, replacing old component with new
-    const newEntity = { ...oldEntity, ...component }
-    this.state.updateEntity(oldEntity, newEntity)
-
-    // return the new entity if further updates needed
-    return newEntity
-  }
-
-  updateComponents<C extends Components>(entity: Entity, components: C) {
-    const entities = this.state.current.level.entities
-    const oldEntity = entities.find(e => e === entity)
-
-    if (!oldEntity) {
-      this.EntityComponentException('updateComponent: cannot locate', entity, components)
-      throw new Error()
-    }
-
-    Object.keys(components).forEach(c => {
-      // verify entity had this component
-      if (!(c in oldEntity)) {
-        this.EntityComponentException('update: did not have', entity, components)
-        throw new Error()
-      }
-    })
-
-    // copy old entity, replacing old component with new
-    const newEntity = { ...oldEntity, ...components }
-    this.state.updateEntity(oldEntity, newEntity)
-
-    // return the new entity if further updates needed
-    return newEntity
-  }
-
-  removeComponent(entity: Entity, componentName: keyof Components) {
-    const oldEntity = this.state.current.level.entities.find(e => e === entity)
-    if (!oldEntity)
-      throw new Error(`removeC: Unable to locate entity "${entity?.id}" to remove component "${componentName}"`)
-
-    const newEntity = { ...oldEntity }
-    Reflect.deleteProperty(newEntity, componentName)
-
-    this.state.updateEntity(oldEntity, newEntity)
-
-    return newEntity
-  }
-
   nextTurn() {
     const prev = this.get('tagCurrentTurn')
     if (prev.length > 1) throw new Error('Multiple entities with current turn')
     if (prev.length === 0) console.log('No tagCurrentTurn found')
-    if (prev.length > 0) this.removeComponent(prev[0], 'tagCurrentTurn')
+    if (prev.length > 0) this.entity(prev[0]).remove('tagCurrentTurn')
 
     const nextID = this.scheduler.next()
     const next = this.getByID(nextID)
-    this.addComponent(next, tagCurrentTurn())
+    this.entity(next).add(tagCurrentTurn())
 
     // return true if its the player's turn
     const playerTurn = this.get('tagCurrentTurn', 'tagPlayer')
@@ -310,7 +227,7 @@ export class World {
   }
 
   // entity build/manage
-  entityManage(e: Entity) {
+  entity(e: Entity) {
     return eManager(this.current, e)
   }
 }
@@ -366,75 +283,3 @@ const eManager = (state: StateObject, target: Entity) => {
 
   return { entity, add, change, remove }
 }
-// const testEnt = templates.karl(Pt(1, 2))
-// console.log('testEnt:', testEnt)
-// const k2 = eManager(testEnt)
-//   .addC(tagBlocksLight())
-//   .updateC(position(Pt(4, 5)))
-//   .removeC('render').e
-
-// console.log('k2:', k2)
-// class WorldEntity {
-//   constructor(private entity: Entity) {}
-
-//   add<C extends Components>(c: C) {
-//     // check for components first
-//     this.entity = { ...this.entity, ...c }
-//     return this
-//   }
-
-//   update<C extends Components>(c: C) {
-//     // check for existing
-//     this.entity = { ...this.entity, ...c }
-//     return this
-//   }
-
-//   remove<N extends keyof Components>(c: N) {
-//     // check for existing
-//     Reflect.deleteProperty(this.entity, c)
-//     return this
-//   }
-
-//   // done() {
-//   // this.current.level.entities.push(entity) //add
-//   // }
-
-//   static manage(entity: Entity) {
-//     return new WorldEntity(entity)
-//   }
-
-//   // static create() {
-//   // return new WorldEntity({id: blah})
-//   // }
-// }
-
-// WorldEntity.manage(teste)
-//   .add({ ...tagBlocksLight(), ...tagWalkable() })
-//   .update({ ...door(true) })
-
-// class WorldQuery {
-//   entities: Entity[] = []
-
-//   get<N extends keyof Components>(c: N) {
-//     //
-//   }
-// }
-/*
-  world.update(doorent)
-    .add(...tagWalkable())
-    .update(...doorOpen(true))
-    .remove('tagBlocksLight')
-    .done()
-
-  world.transform(doorEntity)
-    .add(tagWalkable())
-    .update(doorOpen(true))
-    .remove('tagBlocksLight')
-    .done()
-
-
-    const entities = world.get('position', 'render').filter(e => doors.every(d => d.id !== e.id) && e !== player)
-    const entities = world.get('position', 'render').without('doors').isNot(player)
-*/
-
-// type ttt = keyof Components
