@@ -1,4 +1,4 @@
-import { dead } from '../Component/TagDead'
+import { dead } from '../Component'
 import { World } from '../Core/World'
 
 export const handleMeleeAttack = (world: World) => {
