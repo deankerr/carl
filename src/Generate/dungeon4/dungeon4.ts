@@ -88,7 +88,7 @@ let current: CharMap = []
 
 export function create(newConfig?: Partial<GEN_CONFIG>): [number[][], Room[], Point[]] {
   const time = Date.now()
-  console.groupCollapsed('%c   Welcome to Dungeon4   ', 'background-color: pink; font-weight: bold')
+  console.groupCollapsed('%cDungeon4', 'font-weight: bold')
   CONFIG = { ...DEFAULT_CONFIG, ...newConfig }
   console.log('CONFIG:', CONFIG)
 
@@ -130,8 +130,8 @@ export function create(newConfig?: Partial<GEN_CONFIG>): [number[][], Room[], Po
   snapshot(final, `Complete! Rooms: ${rooms.length}, Corridors: ${corridors.length} Time: ` + t + 'ms', 'done')
 
   console.groupEnd()
-  const logMsg = `%c Dungeon4 Complete (${t}ms), Rooms: ${rooms.length} (${roomTime}ms), Corridors: ${corridors.length} (${corrTime}ms) `
-  consoleLogMap(final, true, logMsg, 'background-color: pink')
+  const logMsg = `Dungeon4 Complete (${t}ms), Rooms: ${rooms.length} (${roomTime}ms), Corridors: ${corridors.length} (${corrTime}ms)`
+  consoleLogMap(final, true, logMsg)
 
   return [terrain, shiftedRooms, doorPts]
 }
@@ -150,15 +150,15 @@ function finalize(rooms: Room[], corridors: Corridor[]): [CharMap, Room[], Point
   if (CONFIG.shiftFinal) {
     const [finalS, dx, dy] = centerLevel(finalD, rooms)
     // feature position info needs to be updated
-    console.log('roomshift?')
-    const shiftedRooms = rooms.map((r) => {
+    // console.log('roomshift?')
+    const shiftedRooms = rooms.map(r => {
       const { x, y, width, height } = r.rect
-      console.log('old rect', r)
+      // console.log('old rect', r)
       const rect = Rect.at(x + dx, y + dy, width, height)
-      console.log('new rect', rect)
+      // console.log('new rect', rect)
       return new Room(rect, r.label, 1)
     })
-    const shiftPts = doorPts.map((pt) => ({ x: pt.x + dx, y: pt.y + dy }))
+    const shiftPts = doorPts.map(pt => ({ x: pt.x + dx, y: pt.y + dy }))
     return [finalS, shiftedRooms, shiftPts]
   }
   return [finalD, rooms, doorPts]
@@ -166,8 +166,8 @@ function finalize(rooms: Room[], corridors: Corridor[]): [CharMap, Room[], Point
 
 function createDoors(level: CharMap, rooms: Room[]): [CharMap, Point[]] {
   // search room borders for '.', should be doorways
-  const doorPts = rooms.map((room) => {
-    return room.border.toPts(true).filter((pt) => inBounds(pt.x, pt.y) && level[pt.y][pt.x] === '.')
+  const doorPts = rooms.map(room => {
+    return room.border.toPts(true).filter(pt => inBounds(pt.x, pt.y) && level[pt.y][pt.x] === '.')
   })
 
   // console.log('doorPts:', doorPts)
@@ -234,7 +234,7 @@ function transposeLevelX(level: CharMap, dir: number) {
 
 function transposeLevelY(level: CharMap, dir: number) {
   if (!(dir === -1 || dir === 1)) {
-    console.warn('transposeLevelY: no', dir)
+    // console.warn('transposeLevelY: no', dir)
     return level
   }
 
@@ -277,7 +277,7 @@ export function createBlankMap(c = ' '): CharMap {
 
 // rot-js style 0/1 terrain map for game
 function generateTerrainData(level: CharMap): number[][] {
-  return level.map((row) => row.map((e) => ('.+'.includes(e) ? 0 : 1)))
+  return level.map(row => row.map(e => ('.+'.includes(e) ? 0 : 1)))
 }
 
 export function consoleLogMap(map: CharMap, group = false, label = 'CharMap', style = '') {

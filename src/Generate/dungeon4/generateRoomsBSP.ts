@@ -18,14 +18,15 @@ let current: CharMap
 // null = abort
 export function generateRoomsBSP(newConfig: GEN_CONFIG): [Room[], number] {
   const timer = Date.now()
-  console.groupCollapsed('%c  generateRoomsBSP() ', 'background-color: cyan')
+
+  //console.groupCollapsed('%c  generateRoomsBSP() ', 'background-color: cyan')
 
   CONFIG = { minSectorW: floor(newConfig.minRoomW * 2), minSectorH: floor(newConfig.minRoomH * 2), ...newConfig }
 
   const roomsTarget = rnd(CONFIG.minRooms, CONFIG.maxRooms)
-  console.log(
-    `Rooms: ${CONFIG.minRooms}<=${roomsTarget}<=${CONFIG.maxRooms}, Min sector size W:${CONFIG.minSectorW}*H:${CONFIG.minSectorH}`
-  )
+  //console.log(
+  // `Rooms: ${CONFIG.minRooms}<=${roomsTarget}<=${CONFIG.maxRooms}, Min sector size W:${CONFIG.minSectorW}*H:${CONFIG.minSectorH}`
+  // )
 
   current = createBlankMap('*')
   const levelMaxX = current[0].length - 1
@@ -55,24 +56,24 @@ export function generateRoomsBSP(newConfig: GEN_CONFIG): [Room[], number] {
   while (i++ < max && complete.length + queue.length < roomsTarget) {
     const parent = queue.shift() // shift/pop? alternate? fun can be had here to create weird dungeons
     if (!parent) {
-      console.groupEnd()
-      console.warn('No more sectors in queue')
+      //console.groupEnd()
+      //console.warn('No more sectors in queue')
       break
     }
 
-    console.groupCollapsed(
-      `%c Sector Loop - Current: ${parent.id}, Queue: ${queue.map(r => r.id)} `,
-      'background-color: orange'
-    )
-    console.log('Parent:', parent)
+    //console.groupCollapsed(
+    // `%c Sector Loop - Current: ${parent.id}, Queue: ${queue.map(r => r.id)} `,
+    // 'background-color: orange'
+    // )
+    //console.log('Parent:', parent)
 
     const children = split(parent)
-    console.log('Children:', children)
+    //console.log('Children:', children)
 
     if (children.length === 0) {
       // Move sector to complete
       complete.push(parent)
-      console.groupEnd()
+      //console.groupEnd()
       continue
     }
 
@@ -91,33 +92,32 @@ export function generateRoomsBSP(newConfig: GEN_CONFIG): [Room[], number] {
 
     // * experiment - sort queue largest -> smallest
     queue.sort((a, b) => b.width * b.height - a.width * a.height)
-    console.table(queue)
-    console.groupEnd()
+    //console.table(queue)
+    //console.groupEnd()
   }
   // === end of main loop ===
 
   // collect completed + remaining enqueued sectors
   const sectors = complete.concat(queue)
 
-  if (i >= max) console.error(`BSP maximum attempts exceeded ${i}/${max}`)
+  if (i >= max)
+    //console.error(`BSP maximum attempts exceeded ${i}/${max}`)
 
-  console.group('Sectors:')
-  console.table(sectors)
-  console.groupEnd()
+    // //console.group('Sectors:')
+    // //console.table(sectors)
 
-  // blank sector space
-  sectors.forEach(s => (current = digRect(current, s, ' ')))
+    // blank sector space
+    sectors.forEach(s => (current = digRect(current, s, ' ')))
   snapshot(current, `Bisect Complete ${sectors.length}/${roomsTarget}`, 'bspsuccess')
 
   const rooms = createRooms(current, sectors)
 
-  console.group('Rooms:')
-  console.table(sectors)
-  console.groupEnd()
+  // //console.group('Rooms:')
+  // //console.table(sectors)
+  //console.groupEnd()
 
   const timerEnd = Date.now() - timer
-  console.log(`Time: ${timerEnd}ms`)
-  console.groupEnd()
+  //console.log(`Time: ${timerEnd}ms`)
 
   return [rooms, timerEnd]
 }
@@ -128,7 +128,7 @@ function split(parent: Rect) {
   const canSplitHori = parent.height > CONFIG.minSectorH * 2 + 1
 
   if (!canSplitVert && !canSplitHori) {
-    console.log('Rect', parent.id, 'can no longer be split')
+    //console.log('Rect', parent.id, 'can no longer be split')
     return []
   }
 
@@ -148,7 +148,7 @@ function split(parent: Rect) {
 
   // Split!
   if (min > max || max < min) throw new Error('Wacky min/max: ' + min + ' ' + max)
-  else console.log(`Splitting sector ${parent.id} Vert=${splitV}`, 'min', min, 'max', max, 'pt:', splitPt)
+  // else //console.log(`Splitting sector ${parent.id} Vert=${splitV}`, 'min', min, 'max', max, 'pt:', splitPt)
 
   // --- visual only - draw line
   const lineRect = splitV
@@ -172,7 +172,7 @@ function split(parent: Rect) {
 
 // TODO better control of room size distribution
 function createRooms(current: CharMap, rects: Rect[]) {
-  console.log('createRooms()')
+  //console.log('createRooms()')
 
   const rooms = rects.map((parent, i) => {
     // blank sector
@@ -184,7 +184,7 @@ function createRooms(current: CharMap, rects: Rect[]) {
     let at = 0
     do {
       if (at++ > 100) {
-        console.warn('bad room!', i)
+        //console.warn('bad room!', i)
         break
       }
       // big big rooms (too big)
