@@ -106,7 +106,7 @@ export class Game {
 
     // Run systems on each entity until it's the player's turn again
     let playerTurn = true
-    this.state.increasePlayerTurns()
+    this.state.current.playerTurns++
     do {
       this.system(playerTurn ? playerAction : __defaultAction())
       playerTurn = world.nextTurn()

@@ -158,9 +158,7 @@ export class World {
   // remove entity from the world + turn queue if necessary
   remove(entity: Entity) {
     console.log('World: remove entity', entity.id)
-    const targetEntity = this.current.level.entities.find(e => e === entity)
-    if (!targetEntity) throw new Error('remove: Unable to locate entity to remove')
-    this.state.deleteEntity(targetEntity)
+    this.current.level.entities = this.current.level.entities.filter(e => e.id !== entity.id)
 
     // turn queue
     const actorEntity = this.with(entity, 'tagActor')
@@ -168,7 +166,7 @@ export class World {
       const result = this.scheduler.remove(actorEntity.id)
       if (!result) throw new Error('World: could not remove entity from turn queue')
     }
-    this.current.graveyard.push(targetEntity.id)
+    this.current.graveyard.push(entity.id)
   }
 
   nextTurn() {
