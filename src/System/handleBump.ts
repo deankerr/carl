@@ -1,6 +1,5 @@
 import { World } from '../Core/World'
 import { tagMeleeAttackTarget, acting, door, tagWalkable } from '../Core/Components'
-import { tagBlocksLight } from '../Component'
 import { MeleeAttack } from '../Action'
 
 export const handleBump = (world: World) => {
@@ -28,8 +27,8 @@ export const handleBump = (world: World) => {
       const doorEntity = world.with(bumpedEntity, 'door')
       if (doorEntity) {
         console.log('handleBump: result - open door')
-        // world.updateComponents(doorEntity, ...door(true), ...tagWalkable(), ...tagBlocksLight() )
-        world.updateComponents(doorEntity, { ...door(true), ...tagWalkable(), ...tagBlocksLight() })
+        world.entityManage(doorEntity).add(tagWalkable()).change(door(true)).remove('tagBlocksLight')
+
         world.message('Your hands tremble as you slowly push or pull the door open.')
         return
       }

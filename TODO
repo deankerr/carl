@@ -1,36 +1,36 @@
 # TODO
 
-- Combine State into World
-- ??? Patch ROT.JS to handle drawOver tiles? ???
-- Doors block vision
-- Add more decoration terrain/items
-- Outdoor level
+- Split Components into own files
+- Combine State into World, update API
+- ??Something like world.query().entitiesWith('position', 'tagWalkable').optionally('door').without('tagPlayer').at({x: 1, y: 2})
+- Clarify State functionality, logging
+- render.current?
+- Move player "seen" tracking to level
 - Void decoration (paths, dead grass etc). Revealed by radius instead of FOV
+- Add more decoration terrain/items - reeds
+- Outdoor level
+
+- ??? Patch ROT.JS to handle drawOver tiles? ???
 - ?xxxEnable view selection + live switching
 - Lighting effects (torches/decreasing light from player)
 - (light bleeds slightly into void? )
 - Add simple animation (npc bobbing)/ Render decouple
 - New UI
-- render.current?
-- Clarify State functionality, logging
 - Unify function declaration style
 - Refactor Generate to improvement corridor placement, flexibility, visualizer integration into Game, entity generation
 - Move TerrainDictionary into Level
-- Split Components into own files
 - ?xxx Refactor world.here() result from tuple to object for better clarity
 - Create logger, Exception handling
-- Something like world.query().entitiesWith('position', 'tagWalkable').optionally('door').without('tagPlayer').at({x: 1, y: 2})
 - Teleport player to mouse click
 - Messages get dimmer as they age
 - Move Messages into different ROT.Display with different font
 - Localestorage random seed saving, easily travel backwards throguh previously generated levels
 - ? Strip Level down to data structure, move terrain info methods to World(?), level gen initition to genereate/world
-- Move player "seen" tracking to level
 - Clean up CONFIG
 - Terrain colour pallettes/themes
 - Viewport doesn't move until you are closer to the side
+- Dev/Prod Configs
 
 === Bugs ===
 
 - Tread triggered on Wait move causes unwanted responses
-- Viewport clamp settings aren't right?

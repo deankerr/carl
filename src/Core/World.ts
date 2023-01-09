@@ -1,13 +1,12 @@
 // Entity/Component manager. Currently should be the only way to mutate game state
 import * as ROT from 'rot-js'
-import { tagCurrentTurn, Components, componentName, tagWalkable, door } from './Components'
+import { tagCurrentTurn, Components, componentName } from './Components'
 import { Entity, templates } from './Entity'
 import { State, StateObject } from './State'
 import { objLog, rnd } from '../util/util'
 import { Point, Pt } from '../Model/Point'
 import { Terrain, TerrainDictionary } from './Terrain'
 import { Game } from './Game'
-import { tagBlocksLight } from '../Component'
 
 export class World {
   private state: State // The actual State instance
@@ -144,6 +143,15 @@ export class World {
     const entitiesHere = entities.filter(e => Pt(e.position.x, e.position.y).s === pt.s) as Entity[]
 
     return [terrain, entitiesHere]
+  }
+
+  hereWith<Key extends keyof Entity>(pt: Point, ...components: Key[]): [Terrain, EntityWith<Entity, Key>[]] {
+    const t = this.state.current.level.terrain.get(pt)
+    // pretend its a wall if out of bounds?
+    const terrain = t ? TerrainDictionary[t] : TerrainDictionary[1]
+    const entitiesHere = this.get('position').filter(e => e.position.s === pt.s) as Entity[]
+    const entitiesWith = entitiesHere.filter(e => components.every(name => name in e)) as EntityWith<Entity, Key>[]
+    return [terrain, entitiesWith]
   }
 
   // remove entity from the world + turn queue if necessary
@@ -299,45 +307,117 @@ export class World {
     objLog(this.current.level.entities, 'all', true)
     console.groupEnd()
   }
+
+  // entity build/manage
+  entityManage(e: Entity) {
+    return eManager(this.current, e)
+  }
 }
 
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 
-class WorldHelper {
-  constructor(private entity: Entity) {}
+const eManager = (state: StateObject, target: Entity) => {
+  const newEntity = state.level.entities.find(e => e === target)
+  if (!newEntity) throw new Error('eMan cannot locate' + target.id)
 
-  add<C extends Components>(c: C) {
-    // check for components first
-    this.entity = { ...this.entity, ...c }
-    return this
+  let entity = newEntity
+
+  console.log('eManager:', entity)
+
+  const add = <C extends Components>(c: C) => {
+    // check it did not already exist
+    if (componentName(c) in entity) throw new Error(`add: Already has component ${entity.id} ${componentName(c)}`)
+
+    entity = { ...entity, ...c }
+    updateState(entity)
+    console.log('add', entity, c)
+
+    return { entity, add, change, remove }
   }
 
-  update<C extends Components>(c: C) {
-    // check for existing
-    this.entity = { ...this.entity, ...c }
-    return this
+  const change = <C extends Components>(c: C) => {
+    // check it currently does exist
+    if (!(componentName(c) in entity)) throw new Error(`change: ${entity.id} does not have ${componentName(c)}`)
+
+    entity = { ...entity, ...c }
+    updateState(entity)
+    console.log('update', entity, c)
+
+    return { entity, add, change, remove }
   }
 
-  remove<N extends keyof Components>(c: N) {
-    // check for existing
-    Reflect.deleteProperty(this.entity, c)
-    return this
+  const remove = <N extends keyof Components>(cName: N) => {
+    // check it currently does exist
+    if (!(cName in entity)) throw new Error(`remove: ${entity.id} does not have ${cName}`)
+
+    Reflect.deleteProperty(entity, cName)
+    updateState(entity)
+    console.log('remove', entity, cName)
+    return { entity, add, change, remove }
   }
 
-  // done() {
-
-  // }
-
-  static do(entity: Entity) {
-    return new WorldHelper(entity)
+  const updateState = (entity: Entity) => {
+    const index = state.level.entities.findIndex(e => e.id === entity.id)
+    if (index < 0) throw new Error('Cannot find that ID')
+    state.level.entities[index] = entity
+    console.log('uState:', entity.id)
   }
+
+  return { entity, add, change, remove }
 }
-const teste = templates.karl(Pt(1, 2))
+// const testEnt = templates.karl(Pt(1, 2))
+// console.log('testEnt:', testEnt)
+// const k2 = eManager(testEnt)
+//   .addC(tagBlocksLight())
+//   .updateC(position(Pt(4, 5)))
+//   .removeC('render').e
 
-WorldHelper.do(teste)
-  .add({ ...tagBlocksLight(), ...tagWalkable() })
-  .update({ ...door(true) })
+// console.log('k2:', k2)
+// class WorldEntity {
+//   constructor(private entity: Entity) {}
 
+//   add<C extends Components>(c: C) {
+//     // check for components first
+//     this.entity = { ...this.entity, ...c }
+//     return this
+//   }
+
+//   update<C extends Components>(c: C) {
+//     // check for existing
+//     this.entity = { ...this.entity, ...c }
+//     return this
+//   }
+
+//   remove<N extends keyof Components>(c: N) {
+//     // check for existing
+//     Reflect.deleteProperty(this.entity, c)
+//     return this
+//   }
+
+//   // done() {
+//   // this.current.level.entities.push(entity) //add
+//   // }
+
+//   static manage(entity: Entity) {
+//     return new WorldEntity(entity)
+//   }
+
+//   // static create() {
+//   // return new WorldEntity({id: blah})
+//   // }
+// }
+
+// WorldEntity.manage(teste)
+//   .add({ ...tagBlocksLight(), ...tagWalkable() })
+//   .update({ ...door(true) })
+
+// class WorldQuery {
+//   entities: Entity[] = []
+
+//   get<N extends keyof Components>(c: N) {
+//     //
+//   }
+// }
 /*
   world.update(doorent)
     .add(...tagWalkable())
@@ -351,6 +431,9 @@ WorldHelper.do(teste)
     .remove('tagBlocksLight')
     .done()
 
+
+    const entities = world.get('position', 'render').filter(e => doors.every(d => d.id !== e.id) && e !== player)
+    const entities = world.get('position', 'render').without('doors').isNot(player)
 */
 
-type ttt = keyof Components
+// type ttt = keyof Components
