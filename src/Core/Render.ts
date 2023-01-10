@@ -141,6 +141,7 @@ export const renderLevel = (d: ROT.Display, world: World, message: string, optio
     d.drawText(2, viewport.y1 + 2, `Dean's Mode`)
     d.drawText(2, viewport.y1 + 3, `offset: ${offsetX}/${offsetY}`)
     d.drawText(2, viewport.y1 + 4, `seed: ${ROT.RNG.getSeed()}`)
+    d.drawText(2, viewport.y1 + 5, `Player: ${player.position.x},${player.position.y}`)
 
     for (let i = 0; i < topPanelSize; i++) {
       d.draw(xMax, i, 't', 'green', null)
