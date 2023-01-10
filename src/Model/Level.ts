@@ -23,6 +23,8 @@ export class Level {
   doors?: Point[]
   width: number
   height: number
+  playerMemory: string[] = [] // previously seen pts
+
   constructor(levelData: LevelData) {
     this.label = levelData.label
     this.entities = levelData.entities

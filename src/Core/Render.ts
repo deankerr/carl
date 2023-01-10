@@ -59,7 +59,7 @@ export const renderLevel = (d: ROT.Display, world: World, message: string, optio
     const color: string[] = []
 
     const visible = player.fov.visible.includes(here.s)
-    const seen = player.seen.visible.includes(here.s) || options.lightsOn
+    const seen = level.playerMemory.includes(here.s) || options.lightsOn
 
     // terrain
     const terrainVisible = terrain.render.base

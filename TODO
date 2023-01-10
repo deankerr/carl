@@ -5,6 +5,7 @@
 - Void decoration (paths, dead grass etc). Revealed by radius instead of FOV
 - Add more decoration terrain/items - reeds
 - Outdoor level
+- Multiple levels, stairs
 
 - ??? Patch ROT.JS to handle drawOver tiles? ???
 - ?xxxEnable view selection + live switching
