@@ -17,8 +17,10 @@ import { Keys } from '../util/Keys'
 import { objLog } from '../util/util'
 import { input } from './Input'
 
-import { Dungeon4Data } from '../Generate/dungeon4/dungeon4'
 import { handleTread } from '../System/handleTread'
+
+import * as Generate from '../Generate'
+import { Level } from '../Model/Level'
 
 export class Game {
   display: ROT.Display
@@ -36,15 +38,24 @@ export class Game {
     debugMode: false,
   }
 
-  constructor(d: ROT.Display, loadLevel?: Dungeon4Data) {
+  constructor(d: ROT.Display) {
     console.log('new Game2')
     const seed = ROT.RNG.getSeed()
     console.log('seed:', seed)
-    if (loadLevel) console.log('Loading level')
+
     this.display = d
 
-    // this.state = new State(loadLevel)
-    this.state = createState(loadLevel)
+    let initialLevel: Level
+    switch (CONFIG.initialLevel) {
+      case 'ruins1':
+        initialLevel = Generate.prefabRuin1()
+        break
+      case 'dungeon4':
+      default:
+        initialLevel = Generate.dungeon4()
+    }
+
+    this.state = createState(initialLevel)
     this.world = new World(this.state, this.options)
 
     // mouse click coords
@@ -54,12 +65,12 @@ export class Game {
     })
 
     this.processMessages()
+
     processFOV(this.world)
-    this.render()
+    objLog(this.state, 'Initial state')
 
     this.keys.add(this.update.bind(this))
-
-    objLog(this.state, 'Initial state')
+    this.render()
   }
 
   update(code: string) {

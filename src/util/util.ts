@@ -40,3 +40,9 @@ export function clamp(min: number, n: number, max: number, debug?: string) {
   if (n > max) return max
   return n
 }
+
+export const pick = <T>(arr: T[]): T => {
+  const picked = ROT.RNG.getItem(arr)
+  if (!picked) throw new Error('Tried to pick from an empty array')
+  return picked
+}

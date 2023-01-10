@@ -1,75 +1,39 @@
 // Represents a game level
-import * as ROT from 'rot-js'
+
 import { Grid } from './Grid'
 import { Entity } from '../Core/Entity'
-import { bigRoom, dungeon4, prefabRuin1 } from '../Generate'
-import { Dungeon4Data, Room } from '../Generate/dungeon4/dungeon4'
-import { Point, Pt } from './Point'
-
-// pointless duplication unless I decide I want to build levels outside of Level
-export type LevelData = {
-  label: string
-  entities: Entity[]
-  terrain: Grid<number>
-  rooms: Room[]
-  doors?: Point[]
-  voidDecor?: Record<string, number>
-}
+import { Point } from './Point'
+import { TerrainType, TerrainNumMap, Terrain } from '../Core/Terrain'
+import { pick } from '../util/util'
 
 export class Level {
-  label: string
-  entities: Entity[]
-  terrain: Grid<number>
-  rooms: Room[]
-  doors?: Point[]
-  width: number
-  height: number
-  playerMemory: string[] = [] // previously seen pts
-  playerVoidMemory: string[] = [] // pts seen through wall
-  voidDecor: Record<string, number> = {}
+  readonly width: number
+  readonly height: number
 
-  constructor(levelData: LevelData) {
-    this.label = levelData.label
-    this.entities = levelData.entities
-    this.terrain = levelData.terrain
-    this.rooms = levelData.rooms
-    this.doors = levelData.doors ? levelData.doors : undefined
-    levelData.voidDecor ? (this.voidDecor = levelData.voidDecor) : ''
+  areaKnown: string[] = []
+  voidAreaKnown: string[] = []
 
-    this.width = this.terrain.width
-    this.height = this.terrain.height
+  constructor(
+    readonly label: string,
+
+    readonly terrainGrid: Grid<number>,
+    readonly voidDecor: Map<string, TerrainType>,
+    readonly rooms: Point[][],
+
+    public entities: Entity[] = []
+  ) {
+    this.width = terrainGrid.width
+    this.height = terrainGrid.height
+  }
+
+  terrain(at: Point): TerrainType {
+    const t = this.terrainGrid.get(at)
+
+    if (!t) return Terrain.endlessVoid
+    return TerrainNumMap[t]
   }
 
   ptInRoom(index: number) {
-    const rect = this.rooms[index].rect
-    return Pt(ROT.RNG.getUniformInt(rect.x, rect.x2), ROT.RNG.getUniformInt(rect.y, rect.y2))
+    return pick(this.rooms[index])
   }
-
-  isInternalWall(pt: Point) {
-    const terrain = this.terrain
-    const neigh = [Pt(-1, -1), Pt(0, -1), Pt(1, -1), Pt(-1, 0), Pt(1, 0), Pt(-1, 1), Pt(0, 1), Pt(1, 1)]
-    // apply neigh coords to current, return true if its another wall, false otherwise (not internal)
-    const result = neigh.every(n => {
-      const t = terrain.get(Pt(pt.x + n.x, pt.y + n.y))
-      if (t === null) return true
-      return t === 1 || t === 2 ? true : false
-    })
-
-    return result
-  }
-
-  static createDungeon4(loadLevel?: Dungeon4Data) {
-    const { terrain, rooms, doors } = dungeon4(loadLevel)
-    return new Level({ label: 'initialLevel', entities: [], terrain, rooms, doors })
-  }
-
-  static createRuin1() {
-    return new Level(prefabRuin1())
-  }
-
-  static createBigRoom() {
-    return new Level(bigRoom())
-  }
-
-  // ? static create(generator: Function) { levelData = generator() }
 }

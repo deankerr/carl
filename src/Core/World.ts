@@ -6,29 +6,28 @@ import { Entity, templates } from './Entity'
 import { StateObject } from './State'
 import { objLog, rnd } from '../util/util'
 import { Point, Pt } from '../Model/Point'
-import { Terrain, TerrainDictionary } from './Terrain'
+import { TerrainType, TerrainNumMap } from './Terrain'
 import { Game } from './Game'
+import { Level } from '../Model/Level'
 
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 export class World {
   state: StateObject
+  active: Level
   readonly scheduler = new ROT.Scheduler.Simple() // ! should be on level?
   options: Game['options']
 
   constructor(state: StateObject, options: Game['options']) {
     this.state = state
     this.options = options
+    this.active = state.active
 
-    const { entities } = this.state.level
-    // debugger
-    if (entities.length === 0) {
-      this.__createDoors()
-      this.__features()
-    } else {
-      // const newEntities = entities
-      this.state.level.entities = []
-      entities.forEach(e => this.create(e))
-    }
+    // initial level set up
+    const { entities, label } = this.active
+
+    this.active.entities = []
+    if (label === 'dungeon4') this.__features()
+    entities.forEach(e => this.create(e))
 
     this.__populateNPCs()
 
@@ -40,11 +39,13 @@ export class World {
     // this.message('1234 567890')
 
     this.nextTurn() // set the currentTurn
+
+    console.log('initialLevel:', this.active)
   }
 
   // TODO Move this responsibility to Generate(?)
   __populateNPCs() {
-    const level = this.state.level
+    const level = this.active
 
     this.create(templates.player(level.ptInRoom(0), 5))
 
@@ -71,18 +72,18 @@ export class World {
     })
   }
 
-  __createDoors() {
-    const level = this.state.level
-    if (!level.doors) return
+  // __createDoors() {
+  //   const level = this.active
+  //   if (!level.doors) return
 
-    for (const doorPt of level.doors) {
-      const door = templates.door(doorPt)
-      this.create(door)
-    }
-  }
+  //   for (const doorPt of level.doors) {
+  //     const door = templates.door(doorPt)
+  //     this.create(door)
+  //   }
+  // }
 
   __features() {
-    const level = this.state.level
+    const level = this.active
 
     level.rooms.forEach((r, i) => {
       // shrubbery
@@ -92,16 +93,17 @@ export class World {
 
       // water
       if (i % 4 === 1) {
-        r.rect.traverse((x, y) => {
-          level.terrain.set(Pt(x, y), 3)
-        })
+        // r.rect.traverse((x, y) => {
+        //   level.terrain.set(Pt(x, y), 3)
+        // })
+        r.forEach(pt => level.terrainGrid.set(pt, 3))
       }
     })
 
     // cracked walls/paths
-    level.terrain.each((pt, t) => {
-      if (t === 0 && rnd(0, 3) === 0) level.terrain.set(pt, rnd(4, 7))
-      if (t === 1 && rnd(0, 16) === 0) level.terrain.set(pt, 2)
+    level.terrainGrid.each((pt, t) => {
+      if (t === 0 && rnd(0, 3) === 0) level.terrainGrid.set(pt, rnd(4, 7))
+      if (t === 1 && rnd(0, 16) === 0) level.terrainGrid.set(pt, 2)
     })
   }
 
@@ -115,7 +117,7 @@ export class World {
     // stamp with next id
     const id = entity.id + '-' + this.state.nextID++
     const newEntity = { ...entity, id }
-    this.state.level.entities.push(newEntity)
+    this.active.entities.push(newEntity)
     // add actors to turn queue
     if ('tagActor' in newEntity) this.scheduler.add(newEntity.id, true)
     // return newEntity // ? remove
@@ -123,7 +125,7 @@ export class World {
 
   // return all entities with specified components
   get<Key extends keyof Entity>(...components: Key[]): EntityWith<Entity, Key>[] {
-    const entities = this.state.level.entities
+    const entities = this.active.entities
     const results = entities.filter(e => components.every(name => name in e)) as EntityWith<Entity, Key>[]
     return results
   }
@@ -135,20 +137,20 @@ export class World {
   }
 
   // return terrain and any entities at this position
-  here(pt: Point): [Terrain, Entity[]] {
-    const t = this.state.level.terrain.get(pt)
+  here(pt: Point): [TerrainType, Entity[]] {
+    const t = this.active.terrainGrid.get(pt)
     // pretend its a wall if out of bounds?
-    const terrain = t !== null ? TerrainDictionary[t] : TerrainDictionary[1]
+    const terrain = t !== null ? TerrainNumMap[t] : TerrainNumMap[1]
     const entities = this.get('position')
     const entitiesHere = entities.filter(e => Pt(e.position.x, e.position.y).s === pt.s) as Entity[]
 
     return [terrain, entitiesHere]
   }
 
-  hereWith<Key extends keyof Entity>(pt: Point, ...components: Key[]): [Terrain, EntityWith<Entity, Key>[]] {
-    const t = this.state.level.terrain.get(pt)
+  hereWith<Key extends keyof Entity>(pt: Point, ...components: Key[]): [TerrainType, EntityWith<Entity, Key>[]] {
+    const t = this.active.terrainGrid.get(pt)
     // pretend its a wall if out of bounds?
-    const terrain = t !== null ? TerrainDictionary[t] : TerrainDictionary[1]
+    const terrain = t !== null ? TerrainNumMap[t] : TerrainNumMap[1]
     const entitiesHere = this.get('position').filter(e => e.position.s === pt.s) as Entity[]
     const entitiesWith = entitiesHere.filter(e => components.every(name => name in e)) as EntityWith<Entity, Key>[]
     return [terrain, entitiesWith]
@@ -157,7 +159,7 @@ export class World {
   // remove entity from the world + turn queue if necessary
   destroy(entity: Entity) {
     console.log('World: remove entity', entity.id)
-    this.state.level.entities = this.state.level.entities.filter(e => e.id !== entity.id)
+    this.active.entities = this.active.entities.filter(e => e.id !== entity.id)
 
     // turn queue
     const actorEntity = this.with(entity, 'tagActor')
@@ -184,7 +186,7 @@ export class World {
   }
 
   getByID(id: string) {
-    const entities = this.state.level.entities
+    const entities = this.active.entities
     const result = entities.filter(e => e.id === id)
 
     if (result.length > 1) throw new Error('Got multiple entities for id ' + id)
@@ -207,10 +209,10 @@ export class World {
 
   isTransparent(x: number, y: number) {
     const here = Pt(x, y)
-    const t = this.state.level.terrain.get(here)
+    const t = this.active.terrainGrid.get(here)
     if (t === null) return false
     const opaqueEntities = this.get('tagBlocksLight', 'position').filter(e => e.position.s === here.s).length === 0
-    return opaqueEntities && TerrainDictionary[t].transparent
+    return opaqueEntities && TerrainNumMap[t].transparent
   }
 
   // currently unused, may be useful for debug
@@ -220,18 +222,18 @@ export class World {
     objLog(entity, 'target')
     objLog(this.getByID(entity.id), 'probably')
     console.groupCollapsed('all entities')
-    objLog(this.state.level.entities, 'all', true)
+    objLog(this.active.entities, 'all', true)
     console.groupEnd()
   }
 
   // entity modifier
   modify(e: Entity) {
-    return modify(this.state, e)
+    return modify(this.active, e)
   }
 }
 
-const modify = (state: StateObject, target: Entity) => {
-  const newEntity = state.level.entities.find(e => e === target)
+const modify = (active: Level, target: Entity) => {
+  const newEntity = active.entities.find(e => e === target)
   if (!newEntity) throw new Error('modify: cannot locate' + target.id)
   let entity = newEntity
 
@@ -269,9 +271,9 @@ const modify = (state: StateObject, target: Entity) => {
   }
 
   const updateState = (entity: Entity) => {
-    const index = state.level.entities.findIndex(e => e.id === entity.id)
+    const index = active.entities.findIndex(e => e.id === entity.id)
     if (index < 0) throw new Error(`modify: Cannot find ID ${entity.id}`)
-    state.level.entities[index] = entity
+    active.entities[index] = entity
   }
 
   return { entity, add, change, remove }

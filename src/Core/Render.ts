@@ -2,7 +2,7 @@ import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
 import { Game } from './Game'
 import { World } from './World'
-import { TerrainDictionary } from './Terrain'
+import { TerrainNumMap } from './Terrain'
 import { half, floor, clamp } from '../util/util'
 import { displayDebugStrings } from '../util/display'
 
@@ -12,7 +12,7 @@ export const renderLevel = (d: ROT.Display, world: World, message: string, optio
   d.clear()
   d.drawText(0, 0, message)
 
-  const { level } = world.state
+  const level = world.active
   const yMax = d.getOptions().height - 1
   const xMax = d.getOptions().width - 1
 
@@ -45,7 +45,7 @@ export const renderLevel = (d: ROT.Display, world: World, message: string, optio
   const doors = world.get('position', 'render', 'door')
   const entities = world.get('position', 'render').filter(e => doors.every(d => d.id !== e.id) && e !== player)
 
-  level.terrain.each((here, t) => {
+  level.terrainGrid.each((here, t) => {
     const render = { x: offsetX + here.x, y: offsetY + here.y }
 
     // skip this location if we're outside of the viewport
@@ -54,34 +54,34 @@ export const renderLevel = (d: ROT.Display, world: World, message: string, optio
     }
 
     // create array stacks of chars and colors of terrain + entities here
-    const terrain = TerrainDictionary[t]
+    const terrain = TerrainNumMap[t]
     const char: string[] = []
     const color: string[] = []
 
     const visible = player.fov.visible.includes(here.s)
-    const seen = level.playerMemory.includes(here.s) || options.lightsOn
-    const voidSeen = level.playerVoidMemory.includes(here.s) || options.lightsOn
+    const seen = level.areaKnown.includes(here.s) || options.lightsOn
+    const voidSeen = level.voidAreaKnown.includes(here.s) || options.lightsOn
 
     // terrain
     const terrainVisible = terrain.render.base
     const terrainSeen = terrain.render.seen
 
     // void decor
-    const voidDecor = level.voidDecor[here.s]
+    const voidDecor = level.voidDecor.get(here.s)
     if (voidSeen && voidDecor) {
       char.push(terrainSeen?.char ?? terrainVisible.char)
       color.push(terrainSeen?.color ?? terrainVisible.color)
     }
 
-    if (!level.isInternalWall(here) || !options.hideInternalWalls) {
-      if (visible) {
-        char.push(terrainVisible.char)
-        color.push(terrainVisible.color)
-      } else if (seen) {
-        char.push(terrainSeen?.char ?? terrainVisible.char)
-        color.push(terrainSeen?.color ?? terrainVisible.color)
-      }
+    // if (!level.isInternalWall(here) || !options.hideInternalWalls) {
+    if (visible) {
+      char.push(terrainVisible.char)
+      color.push(terrainVisible.color)
+    } else if (seen) {
+      char.push(terrainSeen?.char ?? terrainVisible.char)
+      color.push(terrainSeen?.color ?? terrainVisible.color)
     }
+    // }
 
     // door
     const door = doors.filter(d => d.position.s === here.s)[0]

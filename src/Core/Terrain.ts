@@ -1,13 +1,13 @@
 import { render, Graphic } from '../Component/Graphic'
-export type Terrain = {
+export type TerrainType = {
   title: string
   walkable: boolean
   transparent: boolean
   tread?: string
 } & Graphic
 
-export const TerrainDictionary: { [key: number]: Terrain } = {
-  0: {
+export const Terrain = {
+  path: {
     title: 'path',
     walkable: true,
     transparent: true,
@@ -16,7 +16,7 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
       seen: { color: '#111' },
     }),
   },
-  1: {
+  wall: {
     title: 'wall',
     walkable: false,
     transparent: false,
@@ -25,7 +25,7 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
       seen: { color: '#555' },
     }),
   },
-  2: {
+  crackedWall: {
     title: 'cracked wall',
     walkable: false,
     transparent: false,
@@ -34,7 +34,7 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
       seen: { color: '#555' },
     }),
   },
-  3: {
+  water: {
     title: 'water',
     walkable: true,
     transparent: true,
@@ -44,7 +44,7 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
       seen: { color: 'darkcyan' },
     }),
   },
-  4: {
+  crackedPath1: {
     title: 'cracked path',
     walkable: true,
     transparent: true,
@@ -53,7 +53,7 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
       seen: { color: '#111' },
     }),
   },
-  5: {
+  crackedPath2: {
     title: 'cracked path',
     walkable: true,
     transparent: true,
@@ -62,7 +62,7 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
       seen: { color: '#111' },
     }),
   },
-  6: {
+  crackedPath3: {
     title: 'cracked path',
     walkable: true,
     transparent: true,
@@ -71,7 +71,7 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
       seen: { color: '#111' },
     }),
   },
-  7: {
+  crackedPath4: {
     title: 'cracked path',
     walkable: true,
     transparent: true,
@@ -80,7 +80,7 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
       seen: { color: '#111' },
     }),
   },
-  8: {
+  grass: {
     title: 'grass',
     walkable: true,
     transparent: true,
@@ -89,7 +89,7 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
       seen: { color: 'darkgreen' },
     }),
   },
-  9: {
+  deadGrass: {
     title: 'dead grass',
     walkable: true,
     transparent: true,
@@ -98,7 +98,7 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
       seen: { color: '#5f574f' },
     }),
   },
-  10: {
+  void: {
     title: 'void',
     walkable: true,
     transparent: true,
@@ -106,4 +106,28 @@ export const TerrainDictionary: { [key: number]: Terrain } = {
       base: { char: ' ', color: '#000' },
     }),
   },
+  endlessVoid: {
+    // out of bounds terrain
+    title: 'endless void',
+    walkable: false,
+    transparent: false,
+    ...render({
+      base: { char: ' ', color: '#000' },
+    }),
+  },
+}
+
+export const TerrainNumMap: { [key: number]: TerrainType } = {
+  0: Terrain.path,
+  1: Terrain.wall,
+  2: Terrain.crackedWall,
+  3: Terrain.water,
+  4: Terrain.crackedPath1,
+  5: Terrain.crackedPath2,
+  6: Terrain.crackedPath3,
+  7: Terrain.crackedPath4,
+  8: Terrain.grass,
+  9: Terrain.deadGrass,
+  98: Terrain.void,
+  99: Terrain.endlessVoid,
 }

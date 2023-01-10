@@ -1,35 +1,20 @@
 // The central, (not really) immutable repository for all game world state
 import { Level } from '../Model/Level'
-import { Dungeon4Data } from '../Generate/dungeon4/dungeon4'
-import { CONFIG } from '../config'
 
 type TurnMessages = [number, string[]]
 
 export type StateObject = {
-  level: Level // Active level, reference to a level in levels[]
+  active: Level // Active level, reference to a level in levels[]
+  levels: Level[]
   nextID: number
   playerTurns: number
   messages: TurnMessages[]
-  levels: Level[]
   graveyard: string[] // list of entity IDs that have been removed, currently for debug only
 }
 
-export const createState = (loadLevel?: Dungeon4Data) => {
-  let initialLevel
-  switch (CONFIG.initialLevel) {
-    default:
-    case 'dungeon4':
-      initialLevel = Level.createDungeon4(loadLevel)
-      break
-    case 'ruins1':
-      initialLevel = Level.createRuin1()
-      break
-    case 'bigRoom':
-      initialLevel = Level.createBigRoom()
-  }
-
+export const createState = (initialLevel: Level): StateObject => {
   const initialState = {
-    level: initialLevel,
+    active: initialLevel,
     nextID: 0,
     playerTurns: -1,
     messages: [],
@@ -37,6 +22,6 @@ export const createState = (loadLevel?: Dungeon4Data) => {
     graveyard: [],
   }
 
-  console.log('createState', initialState)
+  // console.log('createState', initialState)
   return initialState
 }
