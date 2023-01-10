@@ -8,7 +8,7 @@ export const prefabRuin1 = () => {
   const fakeRooms: Room[] = []
   let fakeRoomI = 0
   const entities: Entity[] = []
-  const voidDecor: Point[] = []
+  const voidDecor: [Point, number][] = []
 
   const terrain: number[][] = ruin1.reduce((acc, row, yi) => {
     const line: number[] = row.split('').map((t, xi) => {
@@ -18,9 +18,10 @@ export const prefabRuin1 = () => {
         fakeRoomI = 0
       }
 
-      // record pts to reveal through walls
+      // record void decor pt and type, return as path
       if (t === ',' || t === ':') {
-        voidDecor.push(Pt(xi, yi))
+        voidDecor.push([Pt(xi, yi), tDict[t]])
+        return 10
       }
 
       if (tDict[t]) return tDict[t]
