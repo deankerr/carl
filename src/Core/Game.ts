@@ -4,7 +4,7 @@
 import { CONFIG } from '../config'
 import * as ROT from 'rot-js'
 
-import { State } from './State'
+import { createState, StateObject } from './State'
 import { World } from './World'
 import { renderLevel } from './Render'
 
@@ -23,7 +23,7 @@ import { handleTread } from '../System/handleTread'
 export class Game {
   display: ROT.Display
   keys = new Keys()
-  state: State
+  state: StateObject
   world: World
 
   messageNew: string[] = [] // messages generated during the last update
@@ -43,7 +43,8 @@ export class Game {
     if (loadLevel) console.log('Loading level')
     this.display = d
 
-    this.state = new State(loadLevel)
+    // this.state = new State(loadLevel)
+    this.state = createState(loadLevel)
     this.world = new World(this.state, this.options)
 
     // mouse click coords
@@ -58,12 +59,12 @@ export class Game {
 
     this.keys.add(this.update.bind(this))
 
-    objLog(this.state.current, 'Initial state')
+    objLog(this.state, 'Initial state')
   }
 
   update(code: string) {
     const timeUpdate = Date.now()
-    const { playerTurns } = this.state.current
+    const { playerTurns } = this.state
     console.groupCollapsed(`# update # key: '${code}', turn: '${playerTurns}'`)
     const world = this.world
 
@@ -106,7 +107,7 @@ export class Game {
 
     // Run systems on each entity until it's the player's turn again
     let playerTurn = true
-    this.state.current.playerTurns++
+    this.state.playerTurns++
     do {
       this.system(playerTurn ? playerAction : __defaultAction())
       playerTurn = world.nextTurn()
@@ -116,7 +117,7 @@ export class Game {
 
     console.groupEnd()
 
-    objLog(this.state.current, `# update complete # ${Date.now() - timeUpdate}ms`, true)
+    objLog(this.state, `# update complete # ${Date.now() - timeUpdate}ms`, true)
 
     this.render()
   }
@@ -126,7 +127,7 @@ export class Game {
   }
 
   processMessages() {
-    const { messages, playerTurns } = this.state.current
+    const { messages, playerTurns } = this.state
     if (messages.length < 1) return
 
     this.messageHistory = [...this.messageNew, ...this.messageHistory]

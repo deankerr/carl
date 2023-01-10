@@ -32,7 +32,7 @@ export const handleMovement = (world: World) => {
     }
 
     // if null (out of bounds) act like its a wall
-    const terrain = world.current.level.terrain.get(Pt(newX, newY)) ?? 1
+    const terrain = world.state.level.terrain.get(Pt(newX, newY)) ?? 1
 
     // terrain walkable check
     if (!TerrainDictionary[terrain].walkable) {

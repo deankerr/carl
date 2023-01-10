@@ -3,7 +3,7 @@ import * as ROT from 'rot-js'
 import { Components, componentName } from './Components'
 import { tagCurrentTurn } from '../Component'
 import { Entity, templates } from './Entity'
-import { State, StateObject } from './State'
+import { StateObject } from './State'
 import { objLog, rnd } from '../util/util'
 import { Point, Pt } from '../Model/Point'
 import { Terrain, TerrainDictionary } from './Terrain'
@@ -11,24 +11,23 @@ import { Game } from './Game'
 
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 export class World {
-  private state: State // The actual State instance
-  current: StateObject // reference to State.current (should be readonly/immutable?)
+  state: StateObject // The actual State instance
+  // current: StateObject // reference to State.current (should be readonly/immutable?)
   readonly scheduler = new ROT.Scheduler.Simple() // ! should be on level?
   options: Game['options']
 
-  constructor(state: State, options: Game['options']) {
+  constructor(state: StateObject, options: Game['options']) {
     this.state = state
-    this.current = state.current
     this.options = options
 
-    const { entities } = this.current.level
+    const { entities } = this.state.level
     // debugger
     if (entities.length === 0) {
       this.__createDoors()
       this.__features()
     } else {
       // const newEntities = entities
-      this.current.level.entities = []
+      this.state.level.entities = []
       entities.forEach(e => this.create(e))
     }
 
@@ -46,7 +45,7 @@ export class World {
 
   // TODO Move this responsibility to Generate(?)
   __populateNPCs() {
-    const level = this.state.current.level
+    const level = this.state.level
 
     this.create(templates.player(level.ptInRoom(0), 5))
 
@@ -74,7 +73,7 @@ export class World {
   }
 
   __createDoors() {
-    const level = this.state.current.level
+    const level = this.state.level
     if (!level.doors) return
 
     for (const doorPt of level.doors) {
@@ -84,7 +83,7 @@ export class World {
   }
 
   __features() {
-    const level = this.state.current.level
+    const level = this.state.level
 
     level.rooms.forEach((r, i) => {
       // shrubbery
@@ -118,9 +117,9 @@ export class World {
   // add new entity to state
   create(entity: Entity) {
     // stamp with next id
-    const id = entity.id + '-' + this.state.current.nextID++
+    const id = entity.id + '-' + this.state.nextID++
     const newEntity = { ...entity, id }
-    this.current.level.entities.push(newEntity)
+    this.state.level.entities.push(newEntity)
     // add actors to turn queue
     if ('tagActor' in newEntity) this.scheduler.add(newEntity.id, true)
     // return newEntity // ? remove
@@ -128,7 +127,7 @@ export class World {
 
   // return all entities with specified components
   get<Key extends keyof Entity>(...components: Key[]): EntityWith<Entity, Key>[] {
-    const entities = this.state.current.level.entities
+    const entities = this.state.level.entities
     const results = entities.filter(e => components.every(name => name in e)) as EntityWith<Entity, Key>[]
     return results
   }
@@ -141,7 +140,7 @@ export class World {
 
   // return terrain and any entities at this position
   here(pt: Point): [Terrain, Entity[]] {
-    const t = this.state.current.level.terrain.get(pt)
+    const t = this.state.level.terrain.get(pt)
     // pretend its a wall if out of bounds?
     const terrain = t ? TerrainDictionary[t] : TerrainDictionary[1]
     const entities = this.get('position')
@@ -151,7 +150,7 @@ export class World {
   }
 
   hereWith<Key extends keyof Entity>(pt: Point, ...components: Key[]): [Terrain, EntityWith<Entity, Key>[]] {
-    const t = this.state.current.level.terrain.get(pt)
+    const t = this.state.level.terrain.get(pt)
     // pretend its a wall if out of bounds?
     const terrain = t ? TerrainDictionary[t] : TerrainDictionary[1]
     const entitiesHere = this.get('position').filter(e => e.position.s === pt.s) as Entity[]
@@ -162,7 +161,7 @@ export class World {
   // remove entity from the world + turn queue if necessary
   destroy(entity: Entity) {
     console.log('World: remove entity', entity.id)
-    this.current.level.entities = this.current.level.entities.filter(e => e.id !== entity.id)
+    this.state.level.entities = this.state.level.entities.filter(e => e.id !== entity.id)
 
     // turn queue
     const actorEntity = this.with(entity, 'tagActor')
@@ -170,7 +169,7 @@ export class World {
       const result = this.scheduler.remove(actorEntity.id)
       if (!result) throw new Error('World: could not remove entity from turn queue')
     }
-    this.current.graveyard.push(entity.id)
+    this.state.graveyard.push(entity.id)
   }
 
   nextTurn() {
@@ -189,7 +188,7 @@ export class World {
   }
 
   getByID(id: string) {
-    const entities = this.state.current.level.entities
+    const entities = this.state.level.entities
     const result = entities.filter(e => e.id === id)
 
     if (result.length > 1) throw new Error('Got multiple entities for id ' + id)
@@ -200,7 +199,7 @@ export class World {
 
   // add a message to the buffer
   message(msg: string) {
-    const { messages, playerTurns } = this.state.current
+    const { messages, playerTurns } = this.state
     console.log('msg:', msg)
     // empty buffer
     if (messages.length === 0) messages.push([playerTurns, [msg]])
@@ -212,7 +211,7 @@ export class World {
 
   isTransparent(x: number, y: number) {
     const here = Pt(x, y)
-    const t = this.state.current.level.terrain.get(here)
+    const t = this.state.level.terrain.get(here)
     if (t === null) return false
     const opaqueEntities = this.get('tagBlocksLight', 'position').filter(e => e.position.s === here.s).length === 0
     return opaqueEntities && TerrainDictionary[t].transparent
@@ -225,13 +224,13 @@ export class World {
     objLog(entity, 'target')
     objLog(this.getByID(entity.id), 'probably')
     console.groupCollapsed('all entities')
-    objLog(this.current.level.entities, 'all', true)
+    objLog(this.state.level.entities, 'all', true)
     console.groupEnd()
   }
 
   // entity modifier
   modify(e: Entity) {
-    return modify(this.current, e)
+    return modify(this.state, e)
   }
 }
 

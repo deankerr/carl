@@ -14,35 +14,29 @@ export type StateObject = {
   graveyard: string[] // list of entity IDs that have been removed, currently for debug only
 }
 
-export class State {
-  current: StateObject
-
-  constructor(loadLevel?: Dungeon4Data) {
-    // Create the initial state
-    let initialLevel
-    switch (CONFIG.initialLevel) {
-      default:
-      case 'dungeon4':
-        initialLevel = Level.createDungeon4(loadLevel)
-        break
-      case 'ruins1':
-        initialLevel = Level.createRuin1()
-        break
-      case 'bigRoom':
-        initialLevel = Level.createBigRoom()
-    }
-
-    const initialState = {
-      level: initialLevel,
-      nextID: 0,
-      playerTurns: -1,
-      messages: [],
-      levels: [initialLevel],
-      graveyard: [],
-    }
-
-    this.current = initialState
-
-    console.log('Initial state', this.current)
+export const createState = (loadLevel?: Dungeon4Data) => {
+  let initialLevel
+  switch (CONFIG.initialLevel) {
+    default:
+    case 'dungeon4':
+      initialLevel = Level.createDungeon4(loadLevel)
+      break
+    case 'ruins1':
+      initialLevel = Level.createRuin1()
+      break
+    case 'bigRoom':
+      initialLevel = Level.createBigRoom()
   }
+
+  const initialState = {
+    level: initialLevel,
+    nextID: 0,
+    playerTurns: -1,
+    messages: [],
+    levels: [initialLevel],
+    graveyard: [],
+  }
+
+  console.log('createState', initialState)
+  return initialState
 }

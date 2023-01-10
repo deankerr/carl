@@ -12,7 +12,7 @@ export const renderLevel = (d: ROT.Display, world: World, message: string, optio
   d.clear()
   d.drawText(0, 0, message)
 
-  const { level } = world.current
+  const { level } = world.state
   const yMax = d.getOptions().height - 1
   const xMax = d.getOptions().width - 1
 
