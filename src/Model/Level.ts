@@ -4,7 +4,6 @@ import { Grid } from './Grid'
 import { Entity } from '../Core/Entity'
 import { bigRoom, dungeon4, prefabRuin1 } from '../Generate'
 import { Dungeon4Data, Room } from '../Generate/dungeon4/dungeon4'
-import { TerrainDictionary } from '../Core/Terrain'
 import { Point, Pt } from './Point'
 
 // pointless duplication unless I decide I want to build levels outside of Level
@@ -33,12 +32,6 @@ export class Level {
 
     this.width = this.terrain.width
     this.height = this.terrain.height
-  }
-
-  isTransparent(x: number, y: number) {
-    const t = this.terrain.get(Pt(x, y))
-    if (t === null) return false
-    return TerrainDictionary[t].transparent
   }
 
   ptInRoom(index: number) {
