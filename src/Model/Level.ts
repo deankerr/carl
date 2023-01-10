@@ -24,6 +24,7 @@ export class Level {
   width: number
   height: number
   playerMemory: string[] = [] // previously seen pts
+  playerVoidDecorMemory: string[] = [] // pts seen through wall
 
   constructor(levelData: LevelData) {
     this.label = levelData.label

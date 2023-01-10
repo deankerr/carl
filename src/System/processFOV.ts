@@ -7,6 +7,7 @@ export const processFOV = (world: World) => {
   // ! currently updating all entities' fov each turn
   const entities = world.get('fov', 'position')
   if (!entities) return
+
   for (const entity of entities) {
     const fovFunction = new ROT.FOV.RecursiveShadowcasting(world.isTransparent.bind(world))
 
@@ -16,10 +17,20 @@ export const processFOV = (world: World) => {
     })
     world.modify(entity).change(newFOV).entity
 
-    // player specific - update area seen memory
+    // player specific
     if ('tagPlayer' in entity) {
-      const ptSet = new Set<string>([...world.state.level.playerMemory, ...newFOV.fov.visible])
-      world.state.level.playerMemory = [...ptSet]
+      // update level memory
+      const memorySet = new Set<string>([...world.state.level.playerMemory, ...newFOV.fov.visible])
+      world.state.level.playerMemory = [...memorySet]
+
+      // see through everything to reveal void decor
+      const voidFunction = new ROT.FOV.RecursiveShadowcasting(() => true)
+      const newVoidPts: string[] = []
+      voidFunction.compute(entity.position.x, entity.position.y, entity.fov.radius, (x, y, _r, isVisible) => {
+        if (isVisible) newVoidPts.push(Pt(x, y).s)
+      })
+      const voidSet = new Set<string>([...world.state.level.playerVoidDecorMemory, ...newVoidPts])
+      world.state.level.playerVoidDecorMemory = [...voidSet]
     }
   }
 
