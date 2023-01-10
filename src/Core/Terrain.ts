@@ -6,7 +6,7 @@ export type TerrainType = {
   tread?: string
 } & Graphic
 
-export const Terrain = {
+export const Terrain: { [key: string]: TerrainType } = {
   path: {
     title: 'path',
     walkable: true,
@@ -22,6 +22,26 @@ export const Terrain = {
     transparent: false,
     ...render({
       base: { char: 'O#', color: '#777' },
+      seen: { color: '#555' },
+    }),
+  },
+  stairsDecending: {
+    title: 'decending stairs',
+    walkable: true,
+    transparent: true,
+    tread: `There's a staircase leading down here.`,
+    ...render({
+      base: { char: 'O>', color: '#777' },
+      seen: { color: '#555' },
+    }),
+  },
+  stairsAscending: {
+    title: 'ascending stairs',
+    walkable: true,
+    transparent: true,
+    tread: `There's a staircase leading up here.`,
+    ...render({
+      base: { char: 'O<', color: '#777' },
       seen: { color: '#555' },
     }),
   },
@@ -128,6 +148,8 @@ export const TerrainNumMap: { [key: number]: TerrainType } = {
   7: Terrain.crackedPath4,
   8: Terrain.grass,
   9: Terrain.deadGrass,
+  10: Terrain.stairsAscending,
+  11: Terrain.stairsDecending,
   98: Terrain.void,
   99: Terrain.endlessVoid,
 }

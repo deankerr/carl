@@ -24,7 +24,7 @@ export const prefabRuin1 = () => {
       if (t === ',' || t === ':') {
         voidDecor.set(here.s, TerrainNumMap[tDict[t]])
       }
-
+      if (t === '>') console.log(xi, yi, t, tDict[t])
       if (tDict[t]) return tDict[t]
 
       switch (t) {
@@ -56,5 +56,6 @@ const tDict: { [key: string]: number } = {
   '~': 3,
   ',': 4,
   ':': 9,
+  '>': 11,
   ' ': 98,
 }
