@@ -60,13 +60,14 @@ export const renderLevel = (d: ROT.Display, world: World, message: string, optio
 
     const visible = player.fov.visible.includes(here.s)
     const seen = level.playerMemory.includes(here.s) || options.lightsOn
+    const voidSeen = level.playerVoidMemory.includes(here.s) || options.lightsOn
 
     // terrain
     const terrainVisible = terrain.render.base
     const terrainSeen = terrain.render.seen
 
     if (!level.isInternalWall(here) || !options.hideInternalWalls) {
-      if (visible) {
+      if (visible || voidSeen) {
         char.push(terrainVisible.char)
         color.push(terrainVisible.color)
       } else if (seen) {

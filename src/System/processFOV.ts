@@ -29,8 +29,8 @@ export const processFOV = (world: World) => {
       voidFunction.compute(entity.position.x, entity.position.y, entity.fov.radius, (x, y, _r, isVisible) => {
         if (isVisible) newVoidPts.push(Pt(x, y).s)
       })
-      const voidSet = new Set<string>([...world.state.level.playerVoidDecorMemory, ...newVoidPts])
-      world.state.level.playerVoidDecorMemory = [...voidSet]
+      const voidSet = new Set<string>([...world.state.level.playerVoidMemory, ...newVoidPts])
+      world.state.level.playerVoidMemory = [...voidSet]
     }
   }
 

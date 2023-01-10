@@ -13,6 +13,7 @@ export type LevelData = {
   terrain: Grid<number>
   rooms: Room[]
   doors?: Point[]
+  voidDecor?: Point[]
 }
 
 export class Level {
@@ -24,7 +25,8 @@ export class Level {
   width: number
   height: number
   playerMemory: string[] = [] // previously seen pts
-  playerVoidDecorMemory: string[] = [] // pts seen through wall
+  playerVoidMemory: string[] = [] // pts seen through wall
+  voidDecor: Point[] = [] // pts to reveal through walls
 
   constructor(levelData: LevelData) {
     this.label = levelData.label
@@ -32,6 +34,7 @@ export class Level {
     this.terrain = levelData.terrain
     this.rooms = levelData.rooms
     this.doors = levelData.doors ? levelData.doors : undefined
+    levelData.voidDecor ? (this.voidDecor = levelData.voidDecor) : ''
 
     this.width = this.terrain.width
     this.height = this.terrain.height
