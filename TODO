@@ -29,6 +29,8 @@
 - Terrain colour pallettes/themes
 - Viewport doesn't move until you are closer to the side
 - Dev/Prod Configs
+- tagCurrentTurn/acting components redundant
+- Remove deprecated text mode remnants
 
 === Bugs ===
 
