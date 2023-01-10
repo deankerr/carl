@@ -138,7 +138,7 @@ export class World {
   here(pt: Point): [Terrain, Entity[]] {
     const t = this.state.level.terrain.get(pt)
     // pretend its a wall if out of bounds?
-    const terrain = t ? TerrainDictionary[t] : TerrainDictionary[1]
+    const terrain = t !== null ? TerrainDictionary[t] : TerrainDictionary[1]
     const entities = this.get('position')
     const entitiesHere = entities.filter(e => Pt(e.position.x, e.position.y).s === pt.s) as Entity[]
 
@@ -148,7 +148,7 @@ export class World {
   hereWith<Key extends keyof Entity>(pt: Point, ...components: Key[]): [Terrain, EntityWith<Entity, Key>[]] {
     const t = this.state.level.terrain.get(pt)
     // pretend its a wall if out of bounds?
-    const terrain = t ? TerrainDictionary[t] : TerrainDictionary[1]
+    const terrain = t !== null ? TerrainDictionary[t] : TerrainDictionary[1]
     const entitiesHere = this.get('position').filter(e => e.position.s === pt.s) as Entity[]
     const entitiesWith = entitiesHere.filter(e => components.every(name => name in e)) as EntityWith<Entity, Key>[]
     return [terrain, entitiesWith]
