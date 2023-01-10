@@ -32,7 +32,6 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
       ...C.tagPlayer(),
       ...C.tagActor(),
       ...C.fov(fov),
-      ...C.seen(),
     }
   },
 

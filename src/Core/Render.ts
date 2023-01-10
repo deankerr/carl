@@ -26,7 +26,7 @@ export const renderLevel = (d: ROT.Display, world: World, message: string, optio
     y2: displayH - botPanelSize - 1,
   }
 
-  const player = world.get('tagPlayer', 'position', 'render', 'fov', 'seen')[0]
+  const [player] = world.get('tagPlayer', 'position', 'render', 'fov')
   const centerX = floor(CONFIG.displayW / 2)
   const centerY = floor(CONFIG.displayH / 2)
 
@@ -117,7 +117,7 @@ export const renderLevel = (d: ROT.Display, world: World, message: string, optio
       )
     } else d.draw(offsetX + here.x, offsetY + here.y, ' ', 'black', null) // blank
 
-    // level border / crosshairs
+    // debug level border / crosshairs
     if (options.debugMode) {
       if (here.x === 0 || here.x === level.width - 1 || here.y === 0 || here.y === level.height - 1)
         d.draw(offsetX + here.x, offsetY + here.y, 'x', 'cyan', null)
@@ -136,7 +136,7 @@ export const renderLevel = (d: ROT.Display, world: World, message: string, optio
     d.drawText(0, yMax, ddb[1])
   }
 
-  // viewport debug
+  // debug display
   if (options.debugMode) {
     d.drawText(2, viewport.y1 + 2, `Dean's Mode`)
     d.drawText(2, viewport.y1 + 3, `offset: ${offsetX}/${offsetY}`)

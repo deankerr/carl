@@ -11,7 +11,6 @@ import {
   TagWalkable,
   TagMeleeAttackTarget,
   TagActor,
-  Seen,
   FOV,
   TagPlayer,
 } from '../Component/'
@@ -21,7 +20,6 @@ export type Components = Partial<
     Graphic &
     TagPlayer &
     FOV &
-    Seen &
     TagCurrentTurn &
     TagWalkable &
     TagActor &
