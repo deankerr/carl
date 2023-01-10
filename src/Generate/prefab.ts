@@ -1,6 +1,6 @@
 import { ruin1 } from './prefab/ruin1'
 import { Entity, templates } from '../Core/Entity'
-import { Point, Pt } from '../Model/Point'
+import { Pt } from '../Model/Point'
 import { Grid } from '../Model/Grid'
 import { Room } from './dungeon4/dungeon4'
 
@@ -8,7 +8,7 @@ export const prefabRuin1 = () => {
   const fakeRooms: Room[] = []
   let fakeRoomI = 0
   const entities: Entity[] = []
-  const voidDecor: [Point, number][] = []
+  const voidDecor: Record<string, number> = {}
 
   const terrain: number[][] = ruin1.reduce((acc, row, yi) => {
     const line: number[] = row.split('').map((t, xi) => {
@@ -20,8 +20,7 @@ export const prefabRuin1 = () => {
 
       // record void decor pt and type, return as path
       if (t === ',' || t === ':') {
-        voidDecor.push([Pt(xi, yi), tDict[t]])
-        return 10
+        voidDecor[Pt(xi, yi).s] = tDict[t]
       }
 
       if (tDict[t]) return tDict[t]

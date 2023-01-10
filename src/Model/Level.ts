@@ -13,7 +13,7 @@ export type LevelData = {
   terrain: Grid<number>
   rooms: Room[]
   doors?: Point[]
-  voidDecor?: [Point, number][]
+  voidDecor?: Record<string, number>
 }
 
 export class Level {
@@ -26,7 +26,7 @@ export class Level {
   height: number
   playerMemory: string[] = [] // previously seen pts
   playerVoidMemory: string[] = [] // pts seen through wall
-  voidDecor: [Point, number][] = []
+  voidDecor: Record<string, number> = {}
 
   constructor(levelData: LevelData) {
     this.label = levelData.label

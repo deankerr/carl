@@ -66,8 +66,15 @@ export const renderLevel = (d: ROT.Display, world: World, message: string, optio
     const terrainVisible = terrain.render.base
     const terrainSeen = terrain.render.seen
 
+    // void decor
+    const voidDecor = level.voidDecor[here.s]
+    if (voidSeen && voidDecor) {
+      char.push(terrainSeen?.char ?? terrainVisible.char)
+      color.push(terrainSeen?.color ?? terrainVisible.color)
+    }
+
     if (!level.isInternalWall(here) || !options.hideInternalWalls) {
-      if (visible || voidSeen) {
+      if (visible) {
         char.push(terrainVisible.char)
         color.push(terrainVisible.color)
       } else if (seen) {

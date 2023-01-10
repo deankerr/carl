@@ -1,9 +1,7 @@
 # TODO
 
 - render.current
-- Move player "seen" tracking to level
-- Void decoration (paths, dead grass etc). Revealed by radius instead of FOV
-- Add more decoration terrain/items - reeds
+- Add more decoration terrain/items/void decor - reeds
 - Outdoor level
 - Multiple levels, stairs
 
@@ -18,10 +16,9 @@
 - Move TerrainDictionary into Level
 - ?xxx Refactor world.here() result from tuple to object for better clarity
 - Create logger, Exception handling
-- Teleport player to mouse click
 - Messages get dimmer as they age
 - Move Messages into different ROT.Display with different font
-- Localestorage random seed saving, easily travel backwards throguh previously generated levels
+- Local storage random seed saving, easily travel backwards through previously generated levels
 - ? Strip Level down to data structure, move terrain info methods to World(?), level gen initition to genereate/world
 - Clean up CONFIG
 - Terrain colour pallettes/themes
