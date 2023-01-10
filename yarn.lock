@@ -263,23 +263,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"CARL!@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "CARL!@workspace:."
-  dependencies:
-    "@types/css-font-loading-module": ^0.0.7
-    "@typescript-eslint/eslint-plugin": ^5.45.0
-    "@typescript-eslint/parser": ^5.45.0
-    eslint: ^8.28.0
-    eslint-config-prettier: ^8.5.0
-    prettier: ^2.8.0
-    rot-js: "github:deankerr/rot.js#b44825c210267099fbaa2686183afa32f6d13f87"
-    ts-essentials: ^9.3.0
-    typescript: ^4.6.4
-    vite: ^3.2.3
-  languageName: unknown
-  linkType: soft
-
 "abbrev@npm:^1.0.0":
   version: 1.1.1
   resolution: "abbrev@npm:1.1.1"
@@ -461,6 +444,23 @@ __metadata:
   checksum: 072d17b6abb459c2ba96598918b55868af677154bec7e73d222ef95a8fdb9bbf7dae96a8421085cdad8cd190d86653b5b6dc55a4484f2e5b2e27d5e0c3fc15b3
   languageName: node
   linkType: hard
+
+"carl@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "carl@workspace:."
+  dependencies:
+    "@types/css-font-loading-module": ^0.0.7
+    "@typescript-eslint/eslint-plugin": ^5.45.0
+    "@typescript-eslint/parser": ^5.45.0
+    eslint: ^8.28.0
+    eslint-config-prettier: ^8.5.0
+    prettier: ^2.8.0
+    rot-js: "github:deankerr/rot.js#b44825c210267099fbaa2686183afa32f6d13f87"
+    ts-essentials: ^9.3.0
+    typescript: ^4.6.4
+    vite: ^3.2.3
+  languageName: unknown
+  linkType: soft
 
 "chalk@npm:^4.0.0":
   version: 4.1.2
