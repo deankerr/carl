@@ -1,13 +1,11 @@
 import { World } from '../Core/World'
 import { acting } from '../Component'
 import { position } from '../Component/'
-import { TerrainDictionary } from '../Core/Terrain'
 import { Pt } from '../Model/Point'
 import { Bump, Tread } from '../Action'
 
 export const handleMovement = (world: World) => {
   const [currentEntity] = world.get('acting', 'position', 'tagCurrentTurn')
-
   const action = currentEntity.acting
 
   if (!('move' in action)) {
@@ -32,21 +30,19 @@ export const handleMovement = (world: World) => {
     return
   }
 
-  // if null (out of bounds) act like its a wall
-  const terrain = world.state.level.terrain.get(newPt) ?? 1
+  const [terrain, entitiesHere] = world.here(newPt)
 
   // terrain walkable check
-  if (!TerrainDictionary[terrain].walkable) {
-    console.log('handleMovement: new action - Bump (terrain)')
+  if (!terrain.walkable) {
+    console.log('handleMovement: new action - Bump (terrain)', terrain)
     const newAction = acting(Bump(newPt))
     world.modify(currentEntity).change(newAction)
     return
   }
 
   // entity blocking check
-  const here = world.here(newPt)
-  const entitiesWalkable = here[1].every(e => 'tagCurrentTurn' in e || 'tagWalkable' in e)
-  if (!entitiesWalkable) {
+  const entitiesAreWalkable = entitiesHere.every(e => 'tagCurrentTurn' in e || 'tagWalkable' in e)
+  if (!entitiesAreWalkable) {
     console.log('handleMovement: new action - Bump (entity)')
     const newAction = acting(Bump(newPt))
     world.modify(currentEntity).change(newAction)

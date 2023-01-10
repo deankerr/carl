@@ -1,9 +1,6 @@
 # TODO
 
-- Combine State into World, update API
-- ??Something like world.query().entitiesWith('position', 'tagWalkable').optionally('door').without('tagPlayer').at({x: 1, y: 2})
-- Clarify State functionality, logging
-- render.current?
+- render.current
 - Move player "seen" tracking to level
 - Void decoration (paths, dead grass etc). Revealed by radius instead of FOV
 - Add more decoration terrain/items - reeds
