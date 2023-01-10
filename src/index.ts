@@ -1,22 +1,21 @@
-import fontURL from '../assets/Inconsolata.otf'
-// import tileSetURL from '../assets/oryx_classic_lc4.png'
+// import fontURL from '../assets/Inconsolata.otf'
 import tileSetURL from '../assets/oryx_classic_lc40.png'
 import { App } from './App'
 
 console.log('it begins')
 
-let fontLoaded = false
-const font = new FontFace('Inconsolata', `url(${fontURL})`)
-document.fonts.add(font)
+// let fontLoaded = false
+// const font = new FontFace('Inconsolata', `url(${fontURL})`)
+// document.fonts.add(font)
 
-font.load().catch((error) => {
-  console.log('Unable to load font: ', error)
-})
+// font.load().catch((error) => {
+//   console.log('Unable to load font: ', error)
+// })
 
-font.loaded.then(() => {
-  fontLoaded = true
-  init()
-})
+// font.loaded.then(() => {
+//   fontLoaded = true
+//   init()
+// })
 
 let tileSetLoaded = false
 const tileSet = new Image()
@@ -33,5 +32,6 @@ function init() {
     return
   }
 
-  if (fontLoaded && tileSetLoaded) App()
+  // if (fontLoaded && tileSetLoaded) App()
+  if (tileSetLoaded) App()
 }
