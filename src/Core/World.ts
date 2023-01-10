@@ -11,8 +11,7 @@ import { Game } from './Game'
 
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 export class World {
-  state: StateObject // The actual State instance
-  // current: StateObject // reference to State.current (should be readonly/immutable?)
+  state: StateObject
   readonly scheduler = new ROT.Scheduler.Simple() // ! should be on level?
   options: Game['options']
 
@@ -109,9 +108,6 @@ export class World {
   /*
     World API
     Everything that happens in the game should occur through this API.
-
-    - Currently has duplicate functionality/concept with State
-    - Consider making entity references id based to reduce old/newEntity boilerplate
   */
 
   // add new entity to state
@@ -236,7 +232,7 @@ export class World {
 
 const modify = (state: StateObject, target: Entity) => {
   const newEntity = state.level.entities.find(e => e === target)
-  if (!newEntity) throw new Error('modify cannot locate' + target.id)
+  if (!newEntity) throw new Error('modify: cannot locate' + target.id)
   let entity = newEntity
 
   const add = <C extends Components>(c: C) => {
@@ -247,7 +243,6 @@ const modify = (state: StateObject, target: Entity) => {
     updateState(entity)
 
     console.log(`modify: add ${componentName(c)} to ${entity.id}`)
-
     return { entity, add, change, remove }
   }
 
@@ -257,9 +252,8 @@ const modify = (state: StateObject, target: Entity) => {
 
     entity = { ...entity, ...c }
     updateState(entity)
-    // console.log('update', entity, c)
-    console.log(`modify: update ${entity.id} ${componentName(c)}`)
 
+    console.log(`modify: update ${entity.id} ${componentName(c)}`)
     return { entity, add, change, remove }
   }
 
@@ -269,13 +263,14 @@ const modify = (state: StateObject, target: Entity) => {
 
     Reflect.deleteProperty(entity, cName)
     updateState(entity)
+
     console.log(`modify: remove ${entity.id} ${cName}`)
     return { entity, add, change, remove }
   }
 
   const updateState = (entity: Entity) => {
     const index = state.level.entities.findIndex(e => e.id === entity.id)
-    if (index < 0) throw new Error('Cannot find that ID')
+    if (index < 0) throw new Error(`modify: Cannot find ID ${entity.id}`)
     state.level.entities[index] = entity
   }
 
