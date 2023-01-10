@@ -16,6 +16,7 @@ export function input(code: string): ActionTypes | null {
     case 'ArrowLeft':
     case 'Numpad4':
       return Move('W')
+    case 'KeyW':
     case 'Numpad5':
       return Move('WAIT')
     case 'ArrowRight':

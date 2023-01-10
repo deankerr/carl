@@ -30,5 +30,3 @@
 - Remove deprecated text mode remnants
 
 === Bugs ===
-
-- Tread triggered on Wait move causes unwanted responses
