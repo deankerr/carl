@@ -1,5 +1,5 @@
 // Represents a game level
-
+import * as ROT from 'rot-js'
 import { Grid } from './Grid'
 import { Entity } from '../Core/Entity'
 import { Point } from './Point'
@@ -12,6 +12,8 @@ export class Level {
 
   areaKnown: string[] = []
   voidAreaKnown: string[] = []
+
+  readonly scheduler = new ROT.Scheduler.Simple()
 
   constructor(
     readonly label: string,

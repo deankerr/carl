@@ -89,6 +89,7 @@ export class Game {
 
     // UI only
     if ('ui' in playerAction) {
+      console.groupEnd()
       switch (playerAction.ui) {
         case 'toggleLightSwitch':
           this.options.lightsOn = !this.options.lightsOn
@@ -108,7 +109,18 @@ export class Game {
       }
 
       this.render()
+      // console.groupEnd()
+      return
+    }
+
+    // * change level *
+    if ('changeLevel' in playerAction) {
       console.groupEnd()
+      this.changeLevel(playerAction.changeLevel.to)
+      objLog(this.state, 'Change level')
+      processFOV(this.world)
+      this.render()
+      // console.groupEnd()
       return
     }
 
@@ -158,6 +170,8 @@ export class Game {
     const { world } = this
     const [entity] = world.get('tagCurrentTurn')
 
+    if (!entity) throw new Error('system: no tagCurrentTurn entity')
+
     world.modify(entity).add(acting(action))
     console.groupCollapsed(`System: '${entity.id}' -> '${actionName(action)}'`)
 
@@ -167,6 +181,7 @@ export class Game {
     handleMeleeAttack(world)
     processDeath(world)
     processFOV(world)
+    // handleLevelTransition?
 
     const [entityDone] = world.get('tagCurrentTurn')
     world.modify(entityDone).remove('acting')
@@ -177,5 +192,41 @@ export class Game {
 
   render() {
     renderLevel(this.display, this.world, this.messages(), this.options)
+  }
+
+  changeLevel(to: string) {
+    const { active, levels } = this.state
+    const currentLevelIndex = levels.findIndex(l => l === active)
+    if (currentLevelIndex === -1) throw new Error('Unable to find current level?')
+
+    let nextIndex: number
+    switch (to) {
+      case 'descend':
+        console.log('Change level down!')
+        nextIndex = currentLevelIndex + 1
+        break
+      case 'ascend':
+        console.log('Change level up!')
+        if (currentLevelIndex === 0) console.error('Cannot ascend: level index is 0')
+        nextIndex = currentLevelIndex - 1
+        break
+      default:
+        throw new Error('Invalid changeLevel action')
+    }
+
+    // nextLevel
+    let nextLevel = levels[nextIndex]
+    console.log('nextLevel?:', nextLevel)
+    if (!nextLevel) {
+      console.log('Generate next level for', nextIndex)
+      nextLevel = Generate.dungeon4()
+      this.state.levels.push(nextLevel)
+    }
+
+    console.log('Changing level to', nextLevel.label)
+    this.state.active = nextLevel
+    this.world.active = nextLevel
+    this.world.registerLevel(nextLevel)
+    this.world.nextTurn()
   }
 }

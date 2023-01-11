@@ -14,7 +14,7 @@ export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 export class World {
   state: StateObject
   active: Level
-  readonly scheduler = new ROT.Scheduler.Simple() // ! should be on level?
+  // readonly scheduler = new ROT.Scheduler.Simple() // ! should be on level?
   options: Game['options']
 
   constructor(state: StateObject, options: Game['options']) {
@@ -22,95 +22,42 @@ export class World {
     this.options = options
     this.active = state.active
 
-    // initial level set up
-    const { entities, label } = this.active
-
-    this.active.entities = []
-    if (label === 'dungeon4') this.__features()
-    entities.forEach(e => this.create(e))
-
-    this.__populateNPCs()
+    this.registerLevel(this.active)
 
     this.message("You begin your queste's.")
 
-    // font test
-    // this.message('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
-    // this.message('abcdefghijklmn opqrstuvwxyz')
-    // this.message('1234 567890')
-
-    this.nextTurn() // set the currentTurn
-
     console.log('initialLevel:', this.active)
+    this.nextTurn() // set the currentTurn
   }
 
   // TODO Move this responsibility to Generate(?)
-  __populateNPCs() {
-    const level = this.active
+  registerLevel(level: Level, levelIsNew: boolean) {
+    // Add entities to world/turn queue
+    // Populate with extra decor/furniture/features etc (should go somewhere else)
+    // TODO check if ent is in state, add with new idea if not? remove from ents and re-add
+    console.log('world: register level', level.label)
+    const { entities } = level
 
-    this.create(templates.player(level.ptInRoom(0), 5))
+    // add player if not present
+    if (this.get('tagPlayer').length === 0) this.create(templates.player(this.active.ptInRoom(0), 5))
 
-    const npcs = ROT.RNG.shuffle([
-      'orc',
-      'spider',
-      'snake',
-      'toad',
-      'crab',
-      'ghost',
-      'demon',
-      'hammerhead',
-      'skeleton',
-      'chicken',
-      'bat',
-      'karl',
-    ])
-
-    level.rooms.forEach((_r, i) => {
-      if (i === 0 || i >= npcs.length) return
-      const pos = level.ptInRoom(i)
-      const choice = npcs[i]
-      if (templates[choice]) this.create(templates[choice](pos))
-    })
-  }
-
-  // __createDoors() {
-  //   const level = this.active
-  //   if (!level.doors) return
-
-  //   for (const doorPt of level.doors) {
-  //     const door = templates.door(doorPt)
-  //     this.create(door)
-  //   }
-  // }
-
-  __features() {
-    const level = this.active
-
-    level.rooms.forEach((r, i) => {
-      // shrubbery
-      if (i % 3 === 0) {
-        for (let j = 0; j < 6; j++) this.create(templates.shrub(level.ptInRoom(i)))
-      }
-
-      // water
-      if (i % 4 === 1) {
-        // r.rect.traverse((x, y) => {
-        //   level.terrain.set(Pt(x, y), 3)
-        // })
-        r.forEach(pt => level.terrainGrid.set(pt, 3))
-      }
+    level.entities = []
+    // if (label === 'dungeon4') this.__features()
+    entities.forEach(e => {
+      const newEntity = this.create(e)
+      if ('tagActor' in newEntity) level.scheduler.add(newEntity.id, true)
     })
 
-    // cracked walls/paths
-    level.terrainGrid.each((pt, t) => {
-      if (t === 0 && rnd(0, 3) === 0) level.terrainGrid.set(pt, rnd(4, 7))
-      if (t === 1 && rnd(0, 16) === 0) level.terrainGrid.set(pt, 2)
-    })
+    this.active = level
   }
 
   /*
     World API
     Everything that happens in the game should occur through this API.
   */
+  // enqueue(entity: Entity) {
+
+  // }
 
   // add new entity to state
   create(entity: Entity) {
@@ -119,8 +66,8 @@ export class World {
     const newEntity = { ...entity, id }
     this.active.entities.push(newEntity)
     // add actors to turn queue
-    if ('tagActor' in newEntity) this.scheduler.add(newEntity.id, true)
-    // return newEntity // ? remove
+    // if ('tagActor' in newEntity) this.scheduler.add(newEntity.id, true)
+    return newEntity // ? remove
   }
 
   // return all entities with specified components
@@ -164,7 +111,7 @@ export class World {
     // turn queue
     const actorEntity = this.with(entity, 'tagActor')
     if (actorEntity) {
-      const result = this.scheduler.remove(actorEntity.id)
+      const result = this.active.scheduler.remove(actorEntity.id)
       if (!result) throw new Error('World: could not remove entity from turn queue')
     }
     this.state.graveyard.push(entity.id)
@@ -176,7 +123,7 @@ export class World {
     if (prev.length === 0) console.log('No tagCurrentTurn found')
     if (prev.length > 0) this.modify(prev[0]).remove('tagCurrentTurn')
 
-    const nextID = this.scheduler.next()
+    const nextID = this.active.scheduler.next()
     const next = this.getByID(nextID)
     this.modify(next).add(tagCurrentTurn())
 
@@ -278,3 +225,8 @@ const modify = (active: Level, target: Entity) => {
 
   return { entity, add, change, remove }
 }
+
+// font test
+// this.message('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+// this.message('abcdefghijklmn opqrstuvwxyz')
+// this.message('1234 567890')

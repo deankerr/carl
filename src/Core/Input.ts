@@ -1,7 +1,7 @@
 // * Translate key code into Action
 
 // import { Move, Direction, Wait, UI, ChangeLevel } from './Actions'
-import { ActionTypes, Move, UI } from '../Action'
+import { ActionTypes, ChangeLevel, Move, UI } from '../Action'
 
 export function input(code: string): ActionTypes | null {
   switch (code) {
@@ -29,6 +29,12 @@ export function input(code: string): ActionTypes | null {
       return Move('S')
     case 'Numpad3':
       return Move('SE')
+
+    // Change Level
+    case 'Period':
+      return ChangeLevel('descend')
+    case 'Comma':
+      return ChangeLevel('ascend')
 
     // UI
     case 'KeyL':
