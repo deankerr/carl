@@ -1,33 +1,36 @@
+import * as ROT from 'rot-js'
+import { templates } from '../Core/Entity'
 import { Level } from '../Model/Level'
 import { rnd } from '../util/util'
 import { EntityTemplate } from './generate'
 
-// TODO
-// export const populateNPCs = (level: Level) => {
-//   templates.player(level.ptInRoom(0), 5)
+export const populateNPCs = (level: Level) => {
+  const entityTemplates: EntityTemplate[] = []
 
-//   const npcs = ROT.RNG.shuffle([
-//     'orc',
-//     'spider',
-//     'snake',
-//     'toad',
-//     'crab',
-//     'ghost',
-//     'demon',
-//     'hammerhead',
-//     'skeleton',
-//     'chicken',
-//     'bat',
-//     'karl',
-//   ])
+  const npcs = ROT.RNG.shuffle([
+    'orc',
+    'spider',
+    'snake',
+    'toad',
+    'crab',
+    'ghost',
+    'demon',
+    'hammerhead',
+    'skeleton',
+    'chicken',
+    'bat',
+    'karl',
+  ]) as Array<keyof typeof templates>
 
-//   level.rooms.forEach((_r, i) => {
-//     if (i === 0 || i >= npcs.length) return
-//     const pos = level.ptInRoom(i)
-//     const choice = npcs[i]
-//     if (templates[choice]) this.create(templates[choice](pos))
-//   })
-// }
+  level.rooms.forEach((_r, i) => {
+    if (i === 0 || i >= npcs.length) return
+    const pos = level.ptInRoom(i)
+    const choice = npcs[i]
+    if (templates[choice]) entityTemplates.push([choice, pos])
+  })
+
+  return entityTemplates
+}
 
 export const decor = (level: Level) => {
   const entityTemplates: EntityTemplate[] = []
@@ -35,7 +38,6 @@ export const decor = (level: Level) => {
   level.rooms.forEach((r, i) => {
     // shrubbery
     if (i % 3 === 0) {
-      // for (let j = 0; j < 6; j++) this.create(templates.shrub(level.ptInRoom(i)))
       for (let j = 0; j < 6; j++) entityTemplates.push(['shrub', level.ptInRoom(i)])
     }
 

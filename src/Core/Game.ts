@@ -125,9 +125,6 @@ export class Game {
       objLog(this.state, 'Change level')
       this.changeLevel(playerAction.changeLevel.to)
 
-      processFOV(this.world)
-      this.render()
-      // console.groupEnd()
       return
     }
 
@@ -242,5 +239,7 @@ export class Game {
     }
 
     this.world.nextTurn()
+    processFOV(this.world)
+    this.render()
   }
 }

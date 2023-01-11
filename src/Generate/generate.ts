@@ -13,7 +13,7 @@ import { Room } from './dungeon4/dungeon4'
 import { half } from '../util/util'
 import { Level } from '../Model/Level'
 import { templates } from '../Core/Entity'
-import { decor } from './features'
+import { decor, populateNPCs } from './features'
 
 const { levelWidthTileset, levelHeightTileset } = CONFIG
 
@@ -43,9 +43,10 @@ export const dungeon4 = (): NewLevel => {
 
   // template name + position of doors
   const doors: EntityTemplate[] = data[2].map(pt => ['door', Pt(pt.x, pt.y)])
-  const features: EntityTemplate[] = decor(level)
+  const features = decor(level)
+  const npcs = populateNPCs(level)
 
-  const entityTemplates: EntityTemplate[] = [...doors, ...features]
+  const entityTemplates: EntityTemplate[] = [...doors, ...features, ...npcs]
 
   return [level, entityTemplates]
 }
