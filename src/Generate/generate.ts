@@ -16,22 +16,6 @@ import { templates } from '../Core/Entity'
 
 const { levelWidthTileset, levelHeightTileset } = CONFIG
 
-// export function dungeon4(loadLevel?: Dungeon4Data) {
-//   const data =
-//     loadLevel ??
-//     create({
-//       width: levelWidthTileset,
-//       height: levelHeightTileset,
-//       minRoomW: 5,
-//       maxRoomW: 9,
-//       minRoomH: 5,
-//       maxRoomH: 9,
-//     })
-//   if (!data) throw new Error('Dungeon gen failed.')
-//   const [terrainData, rooms] = data
-//   const doors = data[2].map(d => Pt(d.x, d.y))
-//   return { terrain: Grid.from(terrainData), rooms, doors }
-// }
 export type EntityTemplate = [keyof typeof templates, Point]
 export type NewLevelWithEntities = [Level, EntityTemplate[]]
 
@@ -46,12 +30,14 @@ export const dungeon4 = (): NewLevelWithEntities => {
   })
 
   const terrainGrid = Grid.from(data[0])
+
+  // no void decor from dungeon4
   const voidDecor = new Map()
+
   // map rooms to arrays of (new style) Points
   const rooms = data[1].map(r => r.rect.toPts().map(pt => Pt(pt.x, pt.y)))
-  // const entities = data[2].map(pt => templates.door(Pt(pt.x, pt.y)))
 
-  // const eTemplates = [['door', Pt(1, 1)]]
+  // template name + position of doors
   const entityTemplates: EntityTemplate[] = data[2].map(pt => ['door', Pt(pt.x, pt.y)])
 
   const label = 'dungeon4'

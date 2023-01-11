@@ -43,10 +43,8 @@ export const prefabRuin1 = () => {
     return [...acc, line]
   }, [] as number[][])
 
-  // const result = { label: 'ruins1', terrain: Grid.from(terrain), entities, rooms: fakeRooms, voidDecor }
-  // console.log('prefab:', result)
   const terrainGrid = Grid.from(terrain)
-  return new Level('ruins1', terrainGrid, voidDecor, fakeRooms, entities)
+  return new Level('ruins1', terrainGrid, voidDecor, fakeRooms)
 }
 
 const tDict: { [key: string]: number } = {

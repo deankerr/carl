@@ -14,15 +14,14 @@ export class Level {
   voidAreaKnown: string[] = []
 
   readonly scheduler = new ROT.Scheduler.Simple()
+  entities: Entity[] = []
 
   constructor(
     readonly label: string,
 
     readonly terrainGrid: Grid<number>,
     readonly voidDecor: Map<string, TerrainType>,
-    readonly rooms: Point[][],
-
-    public entities: Entity[] = []
+    readonly rooms: Point[][]
   ) {
     this.width = terrainGrid.width
     this.height = terrainGrid.height

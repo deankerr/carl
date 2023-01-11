@@ -1,10 +1,9 @@
 // Entity/Component manager
-import * as ROT from 'rot-js'
 import { Components, componentName } from './Components'
-import { position, tagCurrentTurn } from '../Component'
+import { tagCurrentTurn } from '../Component'
 import { Entity, templates } from './Entity'
 import { StateObject } from './State'
-import { objLog, rnd } from '../util/util'
+import { objLog } from '../util/util'
 import { Point, Pt } from '../Model/Point'
 import { TerrainType, TerrainNumMap } from './Terrain'
 import { Game } from './Game'
@@ -15,7 +14,6 @@ export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 export class World {
   state: StateObject
   active: Level
-  // readonly scheduler = new ROT.Scheduler.Simple() // ! should be on level?
   options: Game['options']
 
   constructor(state: StateObject, options: Game['options']) {
@@ -26,33 +24,10 @@ export class World {
     this.message("You begin your queste's.")
   }
 
-  // registerLevel(level: Level) {
-  //   // Add entities to world/turn queue
-  //   // Populate with extra decor/furniture/features etc (should go somewhere else)
-  //   // TODO check if ent is in state, add with new idea if not? remove from ents and re-add
-  //   console.log('world: register level', level.label)
-  //   const { entities } = level
-
-  //   // add player if not present
-  //   if (this.get('tagPlayer').length === 0) this.create(templates.player(this.active.ptInRoom(0), 5))
-
-  //   level.entities = []
-  //   // if (label === 'dungeon4') this.__features()
-  //   entities.forEach(e => {
-  //     const newEntity = this.create(e)
-  //     if ('tagActor' in newEntity) level.scheduler.add(newEntity.id, true)
-  //   })
-
-  //   this.active = level
-  // }
-
   /*
     World API
     Everything that happens in the game should occur through this API.
   */
-  // enqueue(entity: Entity) {
-
-  // }
 
   createTemplates(newTemplates: EntityTemplate[]) {
     for (const templatePos of newTemplates) {
@@ -72,14 +47,11 @@ export class World {
 
   // add new entity to state
   create(entity: Entity) {
-    console.log('create: active = ', this.active)
     // stamp with next id
     const id = entity.id + '-' + this.state.nextID++
     const newEntity = { ...entity, id }
     this.active.entities.push(newEntity)
-    // add actors to turn queue
-    // if ('tagActor' in newEntity) this.scheduler.add(newEntity.id, true)
-    return newEntity // ? remove
+    return newEntity
   }
 
   // return all entities with specified components
