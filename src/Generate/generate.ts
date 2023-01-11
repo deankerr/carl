@@ -20,7 +20,7 @@ const { levelWidthTileset, levelHeightTileset } = CONFIG
 export type EntityTemplate = [keyof typeof templates, Point]
 export type NewLevel = [Level, EntityTemplate[]]
 
-export const dungeon4 = (): NewLevel => {
+export const dungeon4 = (stairsDown = false, stairsUp = false): NewLevel => {
   const data = create({
     width: levelWidthTileset,
     height: levelHeightTileset,
@@ -47,6 +47,22 @@ export const dungeon4 = (): NewLevel => {
   const npcs = populateNPCs(level)
 
   const entityTemplates: EntityTemplate[] = [...doors, ...features, ...npcs]
+
+  // stairs
+  if (stairsDown) {
+    console.log('generate: stairs down')
+    const pt = level.ptInRoom(1)
+    level.terrainGrid.set(pt, 11)
+    console.log('stairs down at', pt.x, pt.y)
+    console.log('level.terrainGrid:', level.terrainGrid)
+  }
+
+  if (stairsUp) {
+    console.log('generate: stairs up')
+    const pt = level.ptInRoom(0)
+    level.terrainGrid.set(pt, 10)
+    console.log('stairs up at', pt.x, pt.y)
+  }
 
   return [level, entityTemplates]
 }

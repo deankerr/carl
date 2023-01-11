@@ -51,7 +51,7 @@ export class Game {
         break
       case 'dungeon4':
       default:
-        initialLevelEntities = Generate.dungeon4()
+        initialLevelEntities = Generate.dungeon4(true)
     }
     const [level, entityTemplates] = initialLevelEntities
 
@@ -226,7 +226,7 @@ export class Game {
     console.log('nextLevel?:', nextLevel)
     if (!nextLevel) {
       console.log('Generate next level for', nextIndex)
-      const [newLevel, newEntities] = Generate.dungeon4()
+      const [newLevel, newEntities] = Generate.dungeon4(true, true)
       this.state.levels.push(newLevel)
       this.state.active = newLevel
       this.world.active = newLevel
