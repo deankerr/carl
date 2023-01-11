@@ -21,6 +21,7 @@ import { handleTread } from '../System/handleTread'
 
 import * as Generate from '../Generate'
 import { Level } from '../Model/Level'
+import { NewLevelWithEntities } from '../Generate'
 
 export class Game {
   display: ROT.Display
@@ -40,23 +41,26 @@ export class Game {
 
   constructor(d: ROT.Display) {
     console.log('new Game2')
+    this.display = d
     const seed = ROT.RNG.getSeed()
     console.log('seed:', seed)
 
-    this.display = d
-
-    let initialLevel: Level
+    // initial level
+    let initialLevelEntities: NewLevelWithEntities
     switch (CONFIG.initialLevel) {
-      case 'ruins1':
-        initialLevel = Generate.prefabRuin1()
-        break
+      // case 'ruins1':
+      //   initialLevel = Generate.prefabRuin1()
+      //   break
       case 'dungeon4':
       default:
-        initialLevel = Generate.dungeon4()
+        initialLevelEntities = Generate.dungeon4()
     }
+    const [level, entityTemplates] = initialLevelEntities
 
-    this.state = createState(initialLevel)
+    this.state = createState(level)
     this.world = new World(this.state, this.options)
+    this.world.createTemplates(entityTemplates)
+    this.world.createPlayer()
 
     // mouse click coords
     mouseClick(d, event => {
@@ -64,13 +68,17 @@ export class Game {
       console.log(`${pt[0]},${pt[1] + CONFIG.topPanelSize}`)
     })
 
+    // set up first turn
     this.processMessages()
-
+    this.world.nextTurn() // set the currentTurn
     processFOV(this.world)
+
     objLog(this.state, 'Initial state')
 
-    this.keys.add(this.update.bind(this))
     this.render()
+
+    // game active
+    this.keys.add(this.update.bind(this))
   }
 
   update(code: string) {
@@ -116,8 +124,9 @@ export class Game {
     // * change level *
     if ('changeLevel' in playerAction) {
       console.groupEnd()
-      this.changeLevel(playerAction.changeLevel.to)
       objLog(this.state, 'Change level')
+      this.changeLevel(playerAction.changeLevel.to)
+
       processFOV(this.world)
       this.render()
       // console.groupEnd()
@@ -207,7 +216,10 @@ export class Game {
         break
       case 'ascend':
         console.log('Change level up!')
-        if (currentLevelIndex === 0) console.error('Cannot ascend: level index is 0')
+        if (currentLevelIndex === 0) {
+          console.error('Cannot ascend: level index is 0')
+          return
+        }
         nextIndex = currentLevelIndex - 1
         break
       default:
@@ -215,18 +227,22 @@ export class Game {
     }
 
     // nextLevel
-    let nextLevel = levels[nextIndex]
+    const nextLevel = levels[nextIndex]
     console.log('nextLevel?:', nextLevel)
     if (!nextLevel) {
       console.log('Generate next level for', nextIndex)
-      nextLevel = Generate.dungeon4()
-      this.state.levels.push(nextLevel)
+      const [newLevel, newEntities] = Generate.dungeon4()
+      this.state.levels.push(newLevel)
+      this.state.active = newLevel
+      this.world.active = newLevel
+      this.world.createTemplates(newEntities)
+      this.world.createPlayer()
+    } else {
+      console.log('Changing level to', nextLevel.label)
+      this.state.active = nextLevel
+      this.world.active = nextLevel
     }
 
-    console.log('Changing level to', nextLevel.label)
-    this.state.active = nextLevel
-    this.world.active = nextLevel
-    this.world.registerLevel(nextLevel)
     this.world.nextTurn()
   }
 }

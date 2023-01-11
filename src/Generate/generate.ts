@@ -7,7 +7,7 @@
 // const max = 5
 import { Grid } from '../Model/Grid'
 import { create } from './dungeon4/'
-import { Pt } from '../Model/Point'
+import { Point, Pt } from '../Model/Point'
 import { CONFIG } from '../config'
 import { Room } from './dungeon4/dungeon4'
 import { half } from '../util/util'
@@ -32,8 +32,10 @@ const { levelWidthTileset, levelHeightTileset } = CONFIG
 //   const doors = data[2].map(d => Pt(d.x, d.y))
 //   return { terrain: Grid.from(terrainData), rooms, doors }
 // }
+export type EntityTemplate = [keyof typeof templates, Point]
+export type NewLevelWithEntities = [Level, EntityTemplate[]]
 
-export const dungeon4 = (): Level => {
+export const dungeon4 = (): NewLevelWithEntities => {
   const data = create({
     width: levelWidthTileset,
     height: levelHeightTileset,
@@ -47,11 +49,14 @@ export const dungeon4 = (): Level => {
   const voidDecor = new Map()
   // map rooms to arrays of (new style) Points
   const rooms = data[1].map(r => r.rect.toPts().map(pt => Pt(pt.x, pt.y)))
-  const entities = data[2].map(pt => templates.door(Pt(pt.x, pt.y)))
+  // const entities = data[2].map(pt => templates.door(Pt(pt.x, pt.y)))
+
+  // const eTemplates = [['door', Pt(1, 1)]]
+  const entityTemplates: EntityTemplate[] = data[2].map(pt => ['door', Pt(pt.x, pt.y)])
 
   const label = 'dungeon4'
 
-  return new Level(label, terrainGrid, voidDecor, rooms, entities)
+  return [new Level(label, terrainGrid, voidDecor, rooms), entityTemplates]
 }
 
 export const bigRoom = () => {

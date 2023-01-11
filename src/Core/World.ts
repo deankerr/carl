@@ -1,7 +1,7 @@
 // Entity/Component manager
 import * as ROT from 'rot-js'
 import { Components, componentName } from './Components'
-import { tagCurrentTurn } from '../Component'
+import { position, tagCurrentTurn } from '../Component'
 import { Entity, templates } from './Entity'
 import { StateObject } from './State'
 import { objLog, rnd } from '../util/util'
@@ -9,6 +9,7 @@ import { Point, Pt } from '../Model/Point'
 import { TerrainType, TerrainNumMap } from './Terrain'
 import { Game } from './Game'
 import { Level } from '../Model/Level'
+import { EntityTemplate } from '../Generate'
 
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 export class World {
@@ -22,34 +23,28 @@ export class World {
     this.options = options
     this.active = state.active
 
-    this.registerLevel(this.active)
-
     this.message("You begin your queste's.")
-
-    console.log('initialLevel:', this.active)
-    this.nextTurn() // set the currentTurn
   }
 
-  // TODO Move this responsibility to Generate(?)
-  registerLevel(level: Level, levelIsNew: boolean) {
-    // Add entities to world/turn queue
-    // Populate with extra decor/furniture/features etc (should go somewhere else)
-    // TODO check if ent is in state, add with new idea if not? remove from ents and re-add
-    console.log('world: register level', level.label)
-    const { entities } = level
+  // registerLevel(level: Level) {
+  //   // Add entities to world/turn queue
+  //   // Populate with extra decor/furniture/features etc (should go somewhere else)
+  //   // TODO check if ent is in state, add with new idea if not? remove from ents and re-add
+  //   console.log('world: register level', level.label)
+  //   const { entities } = level
 
-    // add player if not present
-    if (this.get('tagPlayer').length === 0) this.create(templates.player(this.active.ptInRoom(0), 5))
+  //   // add player if not present
+  //   if (this.get('tagPlayer').length === 0) this.create(templates.player(this.active.ptInRoom(0), 5))
 
-    level.entities = []
-    // if (label === 'dungeon4') this.__features()
-    entities.forEach(e => {
-      const newEntity = this.create(e)
-      if ('tagActor' in newEntity) level.scheduler.add(newEntity.id, true)
-    })
+  //   level.entities = []
+  //   // if (label === 'dungeon4') this.__features()
+  //   entities.forEach(e => {
+  //     const newEntity = this.create(e)
+  //     if ('tagActor' in newEntity) level.scheduler.add(newEntity.id, true)
+  //   })
 
-    this.active = level
-  }
+  //   this.active = level
+  // }
 
   /*
     World API
@@ -59,8 +54,25 @@ export class World {
 
   // }
 
+  createTemplates(newTemplates: EntityTemplate[]) {
+    for (const templatePos of newTemplates) {
+      const [template, pos] = templatePos
+      const e = templates[template](pos)
+
+      const newEntity = this.create(e)
+      if ('tagActor' in newEntity) this.active.scheduler.add(newEntity.id, true)
+    }
+  }
+
+  createPlayer() {
+    if (this.get('tagPlayer').length > 0) return
+    const player = this.create(templates.player(this.active.ptInRoom(0), 5))
+    this.active.scheduler.add(player.id, true)
+  }
+
   // add new entity to state
   create(entity: Entity) {
+    console.log('create: active = ', this.active)
     // stamp with next id
     const id = entity.id + '-' + this.state.nextID++
     const newEntity = { ...entity, id }

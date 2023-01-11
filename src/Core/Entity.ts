@@ -6,7 +6,9 @@ export type EntityID = { readonly id: string }
 
 export type Entity = EntityID & Components
 
-export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } = {
+//: { [key: string]: (pt: Point, fov?: number) => Entity }
+
+export const templates = {
   door: (pt: Point) => {
     return {
       id: 'door',
@@ -168,3 +170,7 @@ export const templates: { [key: string]: (pt: Point, fov?: number) => Entity } =
     }
   },
 }
+
+type Tes = keyof typeof templates
+
+// templates['door']
