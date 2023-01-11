@@ -123,7 +123,13 @@ export class Game {
     if ('changeLevel' in playerAction) {
       console.groupEnd()
       objLog(this.state, 'Change level')
-      this.changeLevel(playerAction.changeLevel.to)
+      const [player] = this.world.get('tagPlayer', 'position')
+      const [terrain] = this.world.here(player.position)
+      if (terrain.title === 'decending stairs' || terrain.title === 'ascending stairs') {
+        this.changeLevel(playerAction.changeLevel.to)
+      } else {
+        console.warn('Not on stairs')
+      }
 
       return
     }
