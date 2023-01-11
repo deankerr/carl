@@ -7,7 +7,7 @@ import { half, floor, clamp } from '../util/util'
 import { displayDebugStrings } from '../util/display'
 
 export const renderLevel = (d: ROT.Display, world: World, message: string, options: Game['options']) => {
-  console.log('Render', world.active)
+  // console.log('Render', world.active)
   const { displayW, displayH, topPanelSize, botPanelSize } = CONFIG
 
   d.clear()

@@ -18,9 +18,9 @@ import { decor } from './features'
 const { levelWidthTileset, levelHeightTileset } = CONFIG
 
 export type EntityTemplate = [keyof typeof templates, Point]
-export type NewLevelWithEntities = [Level, EntityTemplate[]]
+export type NewLevel = [Level, EntityTemplate[]]
 
-export const dungeon4 = (): NewLevelWithEntities => {
+export const dungeon4 = (): NewLevel => {
   const data = create({
     width: levelWidthTileset,
     height: levelHeightTileset,

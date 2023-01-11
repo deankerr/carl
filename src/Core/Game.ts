@@ -20,7 +20,6 @@ import { input } from './Input'
 import { handleTread } from '../System/handleTread'
 
 import * as Generate from '../Generate'
-import { NewLevelWithEntities } from '../Generate'
 
 export class Game {
   display: ROT.Display
@@ -45,11 +44,11 @@ export class Game {
     console.log('seed:', seed)
 
     // initial level
-    let initialLevelEntities: NewLevelWithEntities
+    let initialLevelEntities
     switch (CONFIG.initialLevel) {
-      // case 'ruins1':
-      //   initialLevel = Generate.prefabRuin1()
-      //   break
+      case 'ruins1':
+        initialLevelEntities = Generate.prefabRuin1()
+        break
       case 'dungeon4':
       default:
         initialLevelEntities = Generate.dungeon4()

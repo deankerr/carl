@@ -1,14 +1,14 @@
 import { ruin1 } from './prefab/ruin1'
-import { Entity, templates } from '../Core/Entity'
 import { Point, Pt } from '../Model/Point'
 import { Grid } from '../Model/Grid'
 import { Level } from '../Model/Level'
 import { TerrainNumMap, TerrainType } from '../Core/Terrain'
+import { EntityTemplate, NewLevel } from './generate'
 
-export const prefabRuin1 = () => {
+export const prefabRuin1 = (): NewLevel => {
   const fakeRooms: Point[][] = []
   let fakeRoomI = 0
-  const entities: Entity[] = []
+  const entityTemplates: EntityTemplate[] = []
   const voidDecor = new Map<string, TerrainType>()
 
   const terrain: number[][] = ruin1.reduce((acc, row, yi) => {
@@ -29,10 +29,10 @@ export const prefabRuin1 = () => {
 
       switch (t) {
         case 'v':
-          entities.push(templates.shrub(here))
+          entityTemplates.push(['shrub', here])
           break
         case '+':
-          entities.push(templates.door(here))
+          entityTemplates.push(['door', here])
           break
         // case '>':
         //   entities.push(templates.player(Pt(xi, yi)))
@@ -44,7 +44,8 @@ export const prefabRuin1 = () => {
   }, [] as number[][])
 
   const terrainGrid = Grid.from(terrain)
-  return new Level('ruins1', terrainGrid, voidDecor, fakeRooms)
+  const level = new Level('ruins1', terrainGrid, voidDecor, fakeRooms)
+  return [level, entityTemplates]
 }
 
 const tDict: { [key: string]: number } = {
