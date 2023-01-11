@@ -20,7 +20,6 @@ import { input } from './Input'
 import { handleTread } from '../System/handleTread'
 
 import * as Generate from '../Generate'
-import { Level } from '../Model/Level'
 import { NewLevelWithEntities } from '../Generate'
 
 export class Game {
