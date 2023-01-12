@@ -5,11 +5,21 @@ import { NewLevel } from './generate'
 import { half, rnd, repeat } from '../util/util'
 import { Point, Pt } from '../Model/Point'
 
-export const outdoor = (width = 36, height = 36): NewLevel => {
+export const outdoor = (width = 36, height = 25): NewLevel => {
   console.log('createOutdoor')
 
   const level = Grid.fill(width, height, 0)
-  const center = Pt(half(width), half(height))
+  // const center = Pt(half(width), half(height))
+
+  // place a lot of grass
+  repeat(() => {
+    drawCluster(level.rndPt(), 100, 8)
+  }, 40)
+
+  // place some dead grass
+  repeat(() => {
+    drawCluster(level.rndPt(), 40, 9)
+  }, 20)
 
   // tree test
   // level.each((pt, _v) => {
@@ -17,39 +27,38 @@ export const outdoor = (width = 36, height = 36): NewLevel => {
   // })
 
   //  "CreatingAForest" roguebasin
-  drawForest(center)
-  repeat(() => {
-    drawForest(level.rndPt())
-  }, 10)
+  // repeat(() => {
+  //   drawCluster(level.rndPt(), 100, 12)
+  // }, 1)
 
-  function drawForest(pt: Point) {
-    let xi = pt.x
-    let yi = pt.y
+  function drawCluster(startPt: Point, amount: number, terrain: number) {
+    let xi = startPt.x
+    let yi = startPt.y
 
-    for (let k = 1; k <= 20; k++) {
+    for (let k = 1; k <= amount; k++) {
       const n = rnd(5)
       const e = rnd(5)
       const s = rnd(5)
       const w = rnd(5)
 
       if (n === 1) {
-        xi--
-        level.set(Pt(xi, yi), 12)
-      }
-
-      if (s === 1) {
-        xi++
-        level.set(Pt(xi, yi), 12)
+        yi--
+        level.set(Pt(xi, yi), terrain)
       }
 
       if (e === 1) {
-        yi--
-        level.set(Pt(xi, yi), 12)
+        xi++
+        level.set(Pt(xi, yi), terrain)
+      }
+
+      if (s === 1) {
+        yi++
+        level.set(Pt(xi, yi), terrain)
       }
 
       if (w === 1) {
-        yi++
-        level.set(Pt(xi, yi), 12)
+        xi--
+        level.set(Pt(xi, yi), terrain)
       }
     }
   }
