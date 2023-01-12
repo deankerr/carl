@@ -58,7 +58,7 @@ export const Terrain: { [key: string]: TerrainType } = {
     title: 'water',
     walkable: true,
     transparent: true,
-    tread: 'You splash through the water.',
+    tread: 'You tread water.',
     ...render({
       base: { char: '~', color: 'deepskyblue' },
       seen: { color: 'darkcyan' },
@@ -131,6 +131,7 @@ export const Terrain: { [key: string]: TerrainType } = {
     title: 'mound',
     walkable: true,
     transparent: true,
+    tread: 'You climb the mound.',
     ...render({
       base: { char: 'OM', color: 'saddlebrown' },
       seen: { color: '#592c0c' },
@@ -140,6 +141,7 @@ export const Terrain: { [key: string]: TerrainType } = {
     title: 'peak',
     walkable: true,
     transparent: true,
+    tread: 'You summit the peak.',
     ...render({
       base: { char: 'OP', color: 'forestgreen' },
       seen: { color: 'darkgreen' },
