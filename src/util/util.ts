@@ -22,8 +22,9 @@ export function objLog(obj: object | object[], label = 'Object Log', collapsed =
   }
 }
 
-export function rnd(min: number, max: number) {
-  return ROT.RNG.getUniformInt(min, max)
+export function rnd(min: number, max?: number): number {
+  if (max) return ROT.RNG.getUniformInt(min, max)
+  return ROT.RNG.getUniformInt(0, min)
 }
 
 export function half(n: number) {
