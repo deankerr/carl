@@ -5,7 +5,8 @@ import { NewLevel } from './generate'
 import { half, rnd, repeat } from '../util/util'
 import { Point, Pt } from '../Model/Point'
 
-export const outdoor = (width = 36, height = 25): NewLevel => {
+// 48, 25
+export const outdoor = (width = 48, height = 25): NewLevel => {
   console.log('createOutdoor')
   const level = Grid.fill(width, height, 98)
 
@@ -57,10 +58,15 @@ export const outdoor = (width = 36, height = 25): NewLevel => {
     drawCluster(Pt(rnd(0, westQuartile.x), rPt.y), 80, 3)
   }, 1)
 
+  // debug quartile markers
   level.set(northQuartile, 1)
   level.set(southQuartile, 1)
   level.set(westQuartile, 1)
   level.set(eastQuartile, 1)
+
+  // stairs down
+  const stairPt = center
+  level.set(stairPt, 11)
 
   // tree test
   // level.each((pt, _v) => {
