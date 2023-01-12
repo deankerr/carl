@@ -3,7 +3,7 @@ import { Components, componentName } from './Components'
 import { tagCurrentTurn } from '../Component'
 import { Entity, templates } from './Entity'
 import { StateObject } from './State'
-import { objLog } from '../util/util'
+import { half, objLog } from '../util/util'
 import { Point, Pt } from '../Model/Point'
 import { TerrainType, TerrainNumMap } from './Terrain'
 import { Game } from './Game'
@@ -41,7 +41,15 @@ export class World {
 
   createPlayer() {
     if (this.get('tagPlayer').length > 0) return
-    const pt = this.active.stairsAscending ?? this.active.ptInRoom(0)
+    let pt: Point
+    if (this.active.rooms.length > 0) {
+      // place player in room0 if exists
+      pt = this.active.stairsAscending ?? this.active.ptInRoom(0)
+    } else {
+      // fallback: center of the level
+      pt = Pt(half(this.active.width), half(this.active.height))
+    }
+
     const player = this.create(templates.player(pt))
     this.active.scheduler.add(player.id, true)
   }

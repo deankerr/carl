@@ -46,6 +46,9 @@ export class Game {
     // initial level
     let initialLevelEntities
     switch (CONFIG.initialLevel) {
+      case 'outdoor':
+        initialLevelEntities = Generate.outdoor()
+        break
       case 'ruins1':
         initialLevelEntities = Generate.prefabRuin1()
         break
