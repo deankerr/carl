@@ -1,7 +1,7 @@
 // import * as ROT from 'rot-js'
 import { Level } from '../Model/Level'
 import { Grid } from '../Model/Grid'
-import { NewLevel } from './generate'
+import { EntityTemplate, NewLevel } from './generate'
 import { half, rnd, repeat } from '../util/util'
 import { Point, Pt } from '../Model/Point'
 
@@ -68,16 +68,13 @@ export const outdoor = (width = 48, height = 25): NewLevel => {
   const stairPt = center
   level.set(stairPt, 11)
 
-  // tree test
-  // level.each((pt, _v) => {
-  //   rnd(1) && level.set(pt, 12)
-  // })
+  // some ghosts
+  const entities: EntityTemplate[] = []
+  repeat(() => entities.push(['ghost', center]), 4)
+
+  return [new Level('outdoor', level, new Map(), []), entities]
 
   //  "CreatingAForest" roguebasin
-  // repeat(() => {
-  //   drawCluster(level.rndPt(), 100, 12)
-  // }, 1)
-
   function drawCluster(startPt: Point, amount: number, terrain: number) {
     let xi = startPt.x
     let yi = startPt.y
@@ -109,6 +106,4 @@ export const outdoor = (width = 48, height = 25): NewLevel => {
       }
     }
   }
-
-  return [new Level('outdoor', level, new Map(), []), []]
 }
