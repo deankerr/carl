@@ -41,7 +41,8 @@ export class World {
 
   createPlayer() {
     if (this.get('tagPlayer').length > 0) return
-    const player = this.create(templates.player(this.active.ptInRoom(0), 5))
+    const pt = this.active.stairsAscending ?? this.active.ptInRoom(0)
+    const player = this.create(templates.player(pt))
     this.active.scheduler.add(player.id, true)
   }
 

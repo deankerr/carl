@@ -16,6 +16,10 @@ export class Level {
   readonly scheduler = new ROT.Scheduler.Simple()
   entities: Entity[] = []
 
+  // TODO make more generic, eg. multiple stairs, doors
+  stairsDescending: Point | undefined
+  stairsAscending: Point | undefined
+
   constructor(
     readonly label: string,
 

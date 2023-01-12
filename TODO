@@ -1,9 +1,9 @@
 # TODO
 
-- render.current
-- Add more decoration terrain/items/void decor - reeds
 - Outdoor level
-- Multiple levels, stairs
+- Add more decoration terrain/items/void decor - reeds
+- Responsive canvas/viewport
+- render.current
 
 - ??? Patch ROT.JS to handle drawOver tiles? ???
 - ?xxxEnable view selection + live switching

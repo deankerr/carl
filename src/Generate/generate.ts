@@ -50,17 +50,17 @@ export const dungeon4 = (stairsDown = false, stairsUp = false): NewLevel => {
 
   // stairs
   if (stairsDown) {
-    console.log('generate: stairs down')
     const pt = level.ptInRoom(1)
     level.terrainGrid.set(pt, 11)
+    level.stairsDescending = pt
     console.log('stairs down at', pt.x, pt.y)
-    console.log('level.terrainGrid:', level.terrainGrid)
   }
 
   if (stairsUp) {
     console.log('generate: stairs up')
     const pt = level.ptInRoom(0)
     level.terrainGrid.set(pt, 10)
+    level.stairsAscending = pt
     console.log('stairs up at', pt.x, pt.y)
   }
 
