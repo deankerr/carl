@@ -1,4 +1,4 @@
-import * as ROT from 'rot-js'
+// import * as ROT from 'rot-js'
 import { Level } from '../Model/Level'
 import { Grid } from '../Model/Grid'
 import { NewLevel } from './generate'
@@ -25,15 +25,28 @@ export const outdoor = (width = 36, height = 25): NewLevel => {
     drawCluster(level.rndPt(), 40, 9)
   }, 20)
 
-  // a few mounds
+  // a few northern peaks
   repeat(() => {
-    drawCluster(level.rndPt(), 40, 13)
+    const rPt = level.rndPt()
+    drawCluster(Pt(rPt.x, half(northQuartile.y)), 40, 14)
   }, 20)
 
-  // a few peaks
+  // a few northern mounds
   repeat(() => {
-    drawCluster(level.rndPt(), 40, 14)
-  }, 10)
+    const rPt = level.rndPt()
+    drawCluster(Pt(rPt.x, half(northQuartile.y)), 40, 13)
+  }, 20)
+
+  // the same but southern, and a bit less
+  repeat(() => {
+    const rPt = level.rndPt()
+    drawCluster(Pt(rPt.x, southQuartile.y + half(height - southQuartile.y)), 40, 13)
+  }, 20)
+
+  repeat(() => {
+    const rPt = level.rndPt()
+    drawCluster(Pt(rPt.x, southQuartile.y + half(height - southQuartile.y)), 40, 14)
+  }, 20)
 
   level.set(northQuartile, 1)
   level.set(southQuartile, 1)

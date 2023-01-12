@@ -33,6 +33,7 @@ export class Grid<T> {
     )
   }
 
+  // get a random point in this grid
   rndPt() {
     return Pt(rnd(0, this.width - 1), rnd(0, this.height - 1))
   }
