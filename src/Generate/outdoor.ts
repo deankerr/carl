@@ -7,7 +7,7 @@ import { Point, Pt } from '../Model/Point'
 
 export const outdoor = (width = 36, height = 25): NewLevel => {
   console.log('createOutdoor')
-  const level = Grid.fill(width, height, 0)
+  const level = Grid.fill(width, height, 98)
 
   const center = Pt(half(width), half(height))
   const northQuartile = Pt(center.x, half(center.y))
@@ -25,28 +25,37 @@ export const outdoor = (width = 36, height = 25): NewLevel => {
     drawCluster(level.rndPt(), 40, 9)
   }, 20)
 
+  // TODO rnd flip n/s weighting
   // a few northern peaks
   repeat(() => {
     const rPt = level.rndPt()
-    drawCluster(Pt(rPt.x, half(northQuartile.y)), 40, 14)
-  }, 20)
+    drawCluster(Pt(rPt.x, half(northQuartile.y)), 30, 14)
+  }, 12)
 
   // a few northern mounds
   repeat(() => {
     const rPt = level.rndPt()
-    drawCluster(Pt(rPt.x, half(northQuartile.y)), 40, 13)
-  }, 20)
+    drawCluster(Pt(rPt.x, half(northQuartile.y)), 30, 13)
+  }, 8)
 
   // the same but southern, and a bit less
+  // peaks
   repeat(() => {
     const rPt = level.rndPt()
-    drawCluster(Pt(rPt.x, southQuartile.y + half(height - southQuartile.y)), 40, 13)
-  }, 20)
+    drawCluster(Pt(rPt.x, southQuartile.y + half(height - southQuartile.y)), 20, 14)
+  }, 8)
 
+  // mounds
   repeat(() => {
     const rPt = level.rndPt()
-    drawCluster(Pt(rPt.x, southQuartile.y + half(height - southQuartile.y)), 40, 14)
-  }, 20)
+    drawCluster(Pt(rPt.x, southQuartile.y + half(height - southQuartile.y)), 20, 13)
+  }, 1)
+
+  // a western lake
+  repeat(() => {
+    const rPt = level.rndPt()
+    drawCluster(Pt(rnd(0, westQuartile.x), rPt.y), 80, 3)
+  }, 1)
 
   level.set(northQuartile, 1)
   level.set(southQuartile, 1)
