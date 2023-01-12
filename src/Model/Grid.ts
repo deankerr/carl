@@ -1,5 +1,6 @@
 // essentially a 2D array
 // for storing things at x/y coordinates
+import { rnd } from '../util/util'
 import { Point, Pt } from './Point'
 
 export class Grid<T> {
@@ -30,6 +31,10 @@ export class Grid<T> {
         if (callback(Pt(xi, yi), value) === false) return
       })
     )
+  }
+
+  rndPt() {
+    return Pt(rnd(0, this.width - 1), rnd(0, this.height - 1))
   }
 
   inBounds(pt: Point) {

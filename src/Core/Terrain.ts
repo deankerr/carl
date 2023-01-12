@@ -118,6 +118,15 @@ export const Terrain: { [key: string]: TerrainType } = {
       seen: { color: '#5f574f' },
     }),
   },
+  tree: {
+    title: 'tree',
+    walkable: true,
+    transparent: true,
+    ...render({
+      base: { char: 'OT', color: 'forestgreen' },
+      seen: { color: 'darkgreen' },
+    }),
+  },
   void: {
     title: 'void',
     walkable: true,
@@ -150,6 +159,7 @@ export const TerrainNumMap: { [key: number]: TerrainType } = {
   9: Terrain.deadGrass,
   10: Terrain.stairsAscending,
   11: Terrain.stairsDescending,
+  12: Terrain.tree,
   98: Terrain.void,
   99: Terrain.endlessVoid,
 }

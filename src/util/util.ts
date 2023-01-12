@@ -47,3 +47,9 @@ export const pick = <T>(arr: T[]): T => {
   if (!picked) throw new Error('Tried to pick from an empty array')
   return picked
 }
+
+export const repeat = (callback: () => unknown, times: number) => {
+  for (let i = 0; i < times; i++) {
+    callback()
+  }
+}

@@ -8,7 +8,7 @@ const CONFIG = {
   displayW: 48,
   displayH: 30,
   topPanelSize: 4,
-  botPanelSize: 4,
+  botPanelSize: 1,
   levelWidthTileset: 48,
   levelHeightTileset: 38,
   useTileset: true,
