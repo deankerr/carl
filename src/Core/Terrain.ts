@@ -25,8 +25,8 @@ export const Terrain: { [key: string]: TerrainType } = {
       seen: { color: '#555' },
     }),
   },
-  stairsDecending: {
-    title: 'decending stairs',
+  stairsDescending: {
+    title: 'descending stairs',
     walkable: true,
     transparent: true,
     tread: `There's a staircase leading down here.`,
@@ -149,7 +149,7 @@ export const TerrainNumMap: { [key: number]: TerrainType } = {
   8: Terrain.grass,
   9: Terrain.deadGrass,
   10: Terrain.stairsAscending,
-  11: Terrain.stairsDecending,
+  11: Terrain.stairsDescending,
   98: Terrain.void,
   99: Terrain.endlessVoid,
 }
