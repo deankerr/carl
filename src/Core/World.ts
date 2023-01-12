@@ -80,7 +80,7 @@ export class World {
   here(pt: Point): [TerrainType, Entity[]] {
     const t = this.active.terrainGrid.get(pt)
     // pretend its a wall if out of bounds?
-    const terrain = t !== null ? TerrainNumMap[t] : TerrainNumMap[1]
+    const terrain = t !== null ? TerrainNumMap[t] : TerrainNumMap[99]
     const entities = this.get('position')
     const entitiesHere = entities.filter(e => Pt(e.position.x, e.position.y).s === pt.s) as Entity[]
 
