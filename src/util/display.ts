@@ -134,6 +134,8 @@ const tileMapOryxClassic = {
   'O<': [680, 80],
   'O>': [720, 80],
   OT: [200, 0],
+  OM: [280, 0],
+  OP: [160, 0],
 } satisfies { [key: string]: [number, number] }
 
 export function mouseMove(d: ROT.Display, callback: (event: MouseEvent) => unknown) {

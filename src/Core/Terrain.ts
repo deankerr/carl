@@ -127,6 +127,24 @@ export const Terrain: { [key: string]: TerrainType } = {
       seen: { color: 'darkgreen' },
     }),
   },
+  mound: {
+    title: 'mound',
+    walkable: true,
+    transparent: true,
+    ...render({
+      base: { char: 'OM', color: 'saddlebrown' },
+      seen: { color: '#592c0c' },
+    }),
+  },
+  peak: {
+    title: 'peak',
+    walkable: true,
+    transparent: true,
+    ...render({
+      base: { char: 'OP', color: 'forestgreen' },
+      seen: { color: 'darkgreen' },
+    }),
+  },
   void: {
     title: 'void',
     walkable: true,
@@ -160,6 +178,8 @@ export const TerrainNumMap: { [key: number]: TerrainType } = {
   10: Terrain.stairsAscending,
   11: Terrain.stairsDescending,
   12: Terrain.tree,
+  13: Terrain.mound,
+  14: Terrain.peak,
   98: Terrain.void,
   99: Terrain.endlessVoid,
 }

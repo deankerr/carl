@@ -7,9 +7,13 @@ import { Point, Pt } from '../Model/Point'
 
 export const outdoor = (width = 36, height = 25): NewLevel => {
   console.log('createOutdoor')
-
   const level = Grid.fill(width, height, 0)
-  // const center = Pt(half(width), half(height))
+
+  const center = Pt(half(width), half(height))
+  const northQuartile = Pt(center.x, half(center.y))
+  const southQuartile = Pt(center.x, center.y + half(center.y))
+  const westQuartile = Pt(half(center.x), center.y)
+  const eastQuartile = Pt(center.x + half(center.x), center.y)
 
   // place a lot of grass
   repeat(() => {
@@ -20,6 +24,21 @@ export const outdoor = (width = 36, height = 25): NewLevel => {
   repeat(() => {
     drawCluster(level.rndPt(), 40, 9)
   }, 20)
+
+  // a few mounds
+  repeat(() => {
+    drawCluster(level.rndPt(), 40, 13)
+  }, 20)
+
+  // a few peaks
+  repeat(() => {
+    drawCluster(level.rndPt(), 40, 14)
+  }, 10)
+
+  level.set(northQuartile, 1)
+  level.set(southQuartile, 1)
+  level.set(westQuartile, 1)
+  level.set(eastQuartile, 1)
 
   // tree test
   // level.each((pt, _v) => {
