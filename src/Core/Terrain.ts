@@ -114,8 +114,8 @@ export const Terrain: { [key: string]: TerrainType } = {
     walkable: true,
     transparent: true,
     ...render({
-      base: { char: 'O:', color: '#5f574f' },
-      seen: { color: '#5f574f' },
+      base: { char: 'O:', color: 'saddlebrown' },
+      seen: { color: '#592c0c' },
     }),
   },
   tree: {
