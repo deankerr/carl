@@ -4,7 +4,8 @@ import { Grid } from '../Model/Grid'
 import { EntityTemplate, NewLevel } from './generate'
 import { half, rnd, repeat } from '../util/util'
 import { Point, Pt } from '../Model/Point'
-import { outdoorRuin } from './prefab/outdoorRuin'
+// import { outdoorRuin } from './prefab/outdoorRuin'
+import { stairsTest } from './prefab/stairtest'
 
 // 48, 25
 export const outdoor = (width = 48, height = 25): NewLevel => {
@@ -67,19 +68,21 @@ export const outdoor = (width = 48, height = 25): NewLevel => {
   drawCluster(lakePtS, 20, 3) // water
 
   // ruin at center
-  const ruinWidth = outdoorRuin[0].length
-  const ruinHeight = outdoorRuin.length
+  const prefab = stairsTest
+  const ruinWidth = prefab[0].length
+  const ruinHeight = prefab.length
   const offset = Pt(2, 0)
   const ruinPt = Pt(center.x - half(ruinWidth) + offset.x, center.y - half(ruinHeight) + offset.y)
   const ruinKey: { [key: string]: number } = {
     '#': 1,
     '%': 2,
+    a: 10,
     d: 11,
     v: 98,
     ' ': -1, // skip
   }
 
-  outdoorRuin.forEach((row, yi) => {
+  prefab.forEach((row, yi) => {
     row.split('').forEach((col, xi) => {
       const here = Pt(ruinPt.x + xi, ruinPt.y + yi)
       if (col === '+') {
