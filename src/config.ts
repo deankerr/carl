@@ -22,7 +22,7 @@ const CONFIG = {
   // initialLevel: 'dungeon4',
   // initialLevel: 'bigRoom',
   initialLevel: 'outdoor',
-  lightsOnInitial: PROD ? false : false,
+  lightsOnInitial: PROD ? false : true,
   htmlBGColor: PROD ? '#000' : '#000',
   displayWidthText: 80,
   displayHeightText: 25,

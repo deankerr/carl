@@ -23,7 +23,7 @@ export const templates = {
     }
   },
 
-  player: (pt: Point, fov = 5) => {
+  player: (pt: Point, fov = 10) => {
     return {
       id: 'player',
       ...C.position(pt),
