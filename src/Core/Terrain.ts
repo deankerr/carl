@@ -12,8 +12,8 @@ export const Terrain: { [key: string]: TerrainType } = {
     walkable: true,
     transparent: true,
     ...render({
-      base: { char: 'O.', color: '#222' },
-      seen: { color: '#111' },
+      base: { char: 'O.', color: '#262626' },
+      seen: { color: '#191919' },
     }),
   },
   wall: {
@@ -21,8 +21,8 @@ export const Terrain: { [key: string]: TerrainType } = {
     walkable: false,
     transparent: false,
     ...render({
-      base: { char: 'O#', color: '#777' },
-      seen: { color: '#555' },
+      base: { char: 'O#', color: '#767676' },
+      seen: { color: '#514f53' },
     }),
   },
   stairsDescending: {
@@ -50,8 +50,8 @@ export const Terrain: { [key: string]: TerrainType } = {
     walkable: false,
     transparent: false,
     ...render({
-      base: { char: 'O[', color: '#666' },
-      seen: { color: '#555' },
+      base: { char: 'O[', color: '#767676' },
+      seen: { color: '#514f53' },
     }),
   },
   water: {
@@ -60,8 +60,8 @@ export const Terrain: { [key: string]: TerrainType } = {
     transparent: true,
     tread: 'You tread water.',
     ...render({
-      base: { char: '~', color: 'deepskyblue' },
-      seen: { color: 'darkcyan' },
+      base: { char: '~', color: '#76b8f1' },
+      seen: { color: '#456e9d' },
     }),
   },
   crackedPath1: {
@@ -69,8 +69,8 @@ export const Terrain: { [key: string]: TerrainType } = {
     walkable: true,
     transparent: true,
     ...render({
-      base: { char: 'O.0', color: '#222' },
-      seen: { color: '#111' },
+      base: { char: 'O.0', color: '#262626' },
+      seen: { color: '#191919' },
     }),
   },
   crackedPath2: {
@@ -78,8 +78,8 @@ export const Terrain: { [key: string]: TerrainType } = {
     walkable: true,
     transparent: true,
     ...render({
-      base: { char: 'O.1', color: '#222' },
-      seen: { color: '#111' },
+      base: { char: 'O.1', color: '#262626' },
+      seen: { color: '#191919' },
     }),
   },
   crackedPath3: {
@@ -87,8 +87,8 @@ export const Terrain: { [key: string]: TerrainType } = {
     walkable: true,
     transparent: true,
     ...render({
-      base: { char: 'O.2', color: '#222' },
-      seen: { color: '#111' },
+      base: { char: 'O.2', color: '#262626' },
+      seen: { color: '#191919' },
     }),
   },
   crackedPath4: {
@@ -96,8 +96,8 @@ export const Terrain: { [key: string]: TerrainType } = {
     walkable: true,
     transparent: true,
     ...render({
-      base: { char: 'O.3', color: '#222' },
-      seen: { color: '#111' },
+      base: { char: 'O.3', color: '#262626' },
+      seen: { color: '#191919' },
     }),
   },
   grass: {
@@ -105,8 +105,8 @@ export const Terrain: { [key: string]: TerrainType } = {
     walkable: true,
     transparent: true,
     ...render({
-      base: { char: 'O"', color: 'green' },
-      seen: { color: 'darkgreen' },
+      base: { char: 'O"', color: '#65712b' },
+      seen: { color: '#454c1d' },
     }),
   },
   deadGrass: {
@@ -114,8 +114,8 @@ export const Terrain: { [key: string]: TerrainType } = {
     walkable: true,
     transparent: true,
     ...render({
-      base: { char: 'O:', color: 'saddlebrown' },
-      seen: { color: '#592c0c' },
+      base: { char: 'O:', color: '#664f47' },
+      seen: { color: '#493933' },
     }),
   },
   shrub: {
@@ -123,8 +123,8 @@ export const Terrain: { [key: string]: TerrainType } = {
     walkable: true,
     transparent: true,
     ...render({
-      base: { char: 'Ov', color: 'forestgreen' },
-      seen: { color: 'darkgreen' },
+      base: { char: 'Ov', color: '#58a54a' },
+      seen: { color: '#407936' },
     }),
   },
   tree: {
@@ -142,8 +142,8 @@ export const Terrain: { [key: string]: TerrainType } = {
     transparent: true,
     tread: 'You climb the mound.',
     ...render({
-      base: { char: 'OM', color: 'saddlebrown' },
-      seen: { color: '#592c0c' },
+      base: { char: 'OM', color: '#6a4b39' },
+      seen: { color: '#533b2d' },
     }),
   },
   peak: {
@@ -152,8 +152,8 @@ export const Terrain: { [key: string]: TerrainType } = {
     transparent: true,
     tread: 'You summit the peak.',
     ...render({
-      base: { char: 'OP', color: 'forestgreen' },
-      seen: { color: 'darkgreen' },
+      base: { char: 'OP', color: '#2a5a3e' },
+      seen: { color: '#1c3f2b' },
     }),
   },
   void: {

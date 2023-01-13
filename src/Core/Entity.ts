@@ -12,8 +12,8 @@ export const templates = {
       id: 'door',
       ...C.position(pt),
       ...C.render({
-        base: { char: 'O+', color: 'saddlebrown' },
-        seen: { color: 'saddlebrown' },
+        base: { char: 'O+', color: '#73513d' },
+        seen: { color: '#5b4030' },
         baseDoorOpen: { char: 'O/' },
       }),
       ...C.description('door'),
@@ -160,8 +160,8 @@ export const templates = {
       id: 'shrub',
       ...C.position(pt),
       ...C.render({
-        base: { char: 'Ov', color: 'green' },
-        seen: { color: 'darkgreen' },
+        base: { char: 'Ov', color: '#58a54a' },
+        seen: { color: '#407936' },
       }),
       ...C.tagWalkable(),
       ...C.trodOn('You trample the pathetic shrub.'),

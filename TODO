@@ -3,6 +3,7 @@
 - New UI/Responsive canvas/viewport/Messages get dimmer as they age/Move Messages into different ROT.Display with different font
 - render: move to key + lookup table, allow easier pallette switching. calculate seen color by subtraction rather than hardcode
 - Lighting effects (torches/decreasing light from player)
+- vignette
 - Add more decoration terrain/items/void decor - reeds
 
 - ??? Patch ROT.JS to handle drawOver tiles? ???
