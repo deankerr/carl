@@ -55,9 +55,14 @@ export const outdoor = (width = 48, height = 25): NewLevel => {
   }, 1)
 
   // a western lake/shrubs
-  const lakePt1 = Pt(rnd(0, westQuartile.x), level.rndPt().y)
-  drawCluster(lakePt1, 40, 15) // shrub
-  drawCluster(lakePt1, 80, 3) // water
+  const lakePtW = Pt(rnd(0, westQuartile.x), level.rndPt().y)
+  drawCluster(lakePtW, 40, 15) // shrub
+  drawCluster(lakePtW, 80, 3) // water
+
+  // a southern lake/shrubs
+  const lakePtS = Pt(level.rndPt().x, rnd(southQuartile.y, height - 1))
+  drawCluster(lakePtS, 10, 15) // shrub
+  drawCluster(lakePtS, 20, 3) // water
 
   // ruin at center
   const ruinWidth = outdoorRuin[0].length
@@ -96,7 +101,7 @@ export const outdoor = (width = 48, height = 25): NewLevel => {
     })
   })
 
-  // stairs down
+  // stairs down (now set in prefab)
   // const stairPt = center
   // level.set(stairPt, 11)
 
@@ -110,7 +115,7 @@ export const outdoor = (width = 48, height = 25): NewLevel => {
   // debug markers
   // level.set(center, 3)
   // level.set(northQuartile, 1)
-  // level.set(southQuartile, 1)
+  // level.set(southQuartile, 0)
   // level.set(westQuartile, 1)
   // level.set(eastQuartile, 1)
 
