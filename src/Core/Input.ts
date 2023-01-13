@@ -31,10 +31,11 @@ export function input(code: string): ActionTypes | null {
       return Move('SE')
 
     // Change Level
+    case 'Enter':
+    case 'Space':
     case 'Period':
-      return ChangeLevel('descend')
     case 'Comma':
-      return ChangeLevel('ascend')
+      return ChangeLevel('somewhere')
 
     // UI
     case 'KeyL':
