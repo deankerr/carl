@@ -56,7 +56,7 @@ export function App() {
         startDungeon4()
         break
       case 'KeyP':
-        if (d4Data) startGame(d4Data)
+        if (d4Data) startGame()
         break
       default:
         visual4.control(key)
@@ -80,10 +80,10 @@ export function App() {
     }
   }
 
-  function startGame(d4Data?: Dungeon4Data) {
+  function startGame() {
     if (keys) keys.cleanup()
     if (visual4) visual4.cleanup()
-    window.game = new Game(display, d4Data)
+    window.game = new Game(display)
   }
 }
 
