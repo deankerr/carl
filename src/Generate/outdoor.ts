@@ -58,6 +58,8 @@ export const outdoor = (width = 48, height = 25): NewLevel => {
   const lakePtW = Pt(rnd(0, westQuartile.x), level.rndPt().y)
   drawCluster(lakePtW, 40, 15) // shrub
   drawCluster(lakePtW, 80, 3) // water
+  // some lake snakes
+  repeat(() => entities.push(['snake', lakePtW]), 2)
 
   // a southern lake/shrubs
   const lakePtS = Pt(level.rndPt().x, rnd(southQuartile.y, height - 1))
