@@ -10,7 +10,7 @@ import { create } from './dungeon4/'
 import { Point, Pt } from '../Model/Point'
 import { CONFIG } from '../config'
 import { Room } from './dungeon4/dungeon4'
-import { half } from '../util/util'
+import { floor, half } from '../util/util'
 import { Level } from '../Model/Level'
 import { templates } from '../Core/Entity'
 import { decor, populateNPCs } from './features'
@@ -22,8 +22,8 @@ export type NewLevel = [Level, EntityTemplate[]]
 
 export const dungeon4 = (stairsDown = false, stairsUp = false): NewLevel => {
   const data = create({
-    width: levelWidthTileset,
-    height: levelHeightTileset,
+    width: floor(CONFIG.displayW * 1.2),
+    height: floor(CONFIG.displayH * 1.1),
     minRoomW: 5,
     maxRoomW: 9,
     minRoomH: 5,
