@@ -43,7 +43,7 @@ export const createTileSetDisplay = (width = CONFIG.displayW, height = CONFIG.di
     layout: 'tile-gl',
     width,
     height,
-    // bg: 'black',
+    bg: '#131313',
     tileWidth: 40, // oryx-classic
     tileHeight: 40,
     tileSet: window.tileSet,

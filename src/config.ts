@@ -23,7 +23,7 @@ const CONFIG = {
   // initialLevel: 'bigRoom',
   initialLevel: 'outdoor',
   lightsOnInitial: PROD ? false : true,
-  htmlBGColor: PROD ? '#000' : '#000',
+  htmlBGColor: PROD ? '#131313' : '#131313',
   displayWidthText: 80,
   displayHeightText: 25,
 }

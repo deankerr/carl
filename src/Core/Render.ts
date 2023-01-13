@@ -6,6 +6,8 @@ import { TerrainNumMap } from './Terrain'
 import { half, floor, clamp } from '../util/util'
 import { displayDebugStrings } from '../util/display'
 
+const bg = '#131313' // TODO integrate into config/palette
+
 export const renderLevel = (d: ROT.Display, world: World, message: string, options: Game['options']) => {
   // console.log('Render', world.active)
   const { displayW, displayH, topPanelSize, botPanelSize } = CONFIG
@@ -125,9 +127,9 @@ export const renderLevel = (d: ROT.Display, world: World, message: string, optio
         render.y,
         char,
         color,
-        color.map((_c, i) => (i === 0 ? 'black' : 'transparent'))
+        color.map((_c, i) => (i === 0 ? bg : 'transparent'))
       )
-    } else d.draw(offsetX + here.x, offsetY + here.y, ' ', 'black', null) // blank
+    } else d.draw(offsetX + here.x, offsetY + here.y, ' ', bg, null) // blank
 
     // debug level border / crosshairs
     if (options.debugMode) {
