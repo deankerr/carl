@@ -106,6 +106,9 @@ export const renderLevel = (d: ROT.Display, world: World, message: string, optio
         if (visible || options.lightsOn) {
           char.push(e.render.base.char)
           color.push(e.render.base.color)
+        } else if (seen && e.render.seen?.color) {
+          char.push(e.render.base.char)
+          color.push(e.render.seen.color)
         }
       })
 
