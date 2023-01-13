@@ -68,9 +68,13 @@ export const outdoor = (width = 48, height = 25): NewLevel => {
   const stairPt = center
   level.set(stairPt, 11)
 
-  // some ghosts
   const entities: EntityTemplate[] = []
+  // some ghosts
   repeat(() => entities.push(['ghost', center]), 4)
+
+  // player, SW start position
+  const playerPos = Pt(2, level.height - 4)
+  entities.push(['player', playerPos])
 
   return [new Level('outdoor', level, new Map(), []), entities]
 
