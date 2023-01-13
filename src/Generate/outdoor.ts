@@ -54,11 +54,10 @@ export const outdoor = (width = 48, height = 25): NewLevel => {
     drawCluster(Pt(rPt.x, southQuartile.y + half(height - southQuartile.y)), 20, 13)
   }, 1)
 
-  // a western lake
-  repeat(() => {
-    const rPt = level.rndPt()
-    drawCluster(Pt(rnd(0, westQuartile.x), rPt.y), 80, 3)
-  }, 1)
+  // a western lake/shrubs
+  const lakePt1 = Pt(rnd(0, westQuartile.x), level.rndPt().y)
+  drawCluster(lakePt1, 40, 15) // shrub
+  drawCluster(lakePt1, 80, 3) // water
 
   // ruin at center
   const ruinWidth = outdoorRuin[0].length
