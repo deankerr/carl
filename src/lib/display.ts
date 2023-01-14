@@ -1,12 +1,8 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
-import { floor } from './util'
 
 export const createHTMLWrapper = () => {
-  // const html = document.documentElement
-  // html.style.width = '100vw'
-  // html.style.height = '100vh'
-
   const body = document.body
   body.style.backgroundColor = '#191919'
   body.style.margin = '0'
@@ -14,33 +10,21 @@ export const createHTMLWrapper = () => {
   body.style.boxSizing = 'border-box'
   body.style.width = '100vw'
   body.style.height = '100vh'
-
-  const outer = document.createElement('div')
-  outer.id = 'outer'
-  outer.style.display = 'flex'
-  outer.style.flexDirection = 'column'
-  outer.style.justifyContent = 'center'
-  outer.style.alignItems = 'center'
-  outer.style.width = '100vw'
-  outer.style.height = '100vh'
-  // outer.style.backgroundColor = 'linen'
-  body.appendChild(outer)
+  body.style.display = 'flex'
+  body.style.flexDirection = 'column'
+  body.style.justifyContent = 'center'
+  body.style.alignItems = 'center'
 
   const wrapper = document.createElement('div')
   wrapper.id = 'wrapper'
   wrapper.style.display = 'flex'
   wrapper.style.flexDirection = 'column'
-  // wrapper.style.border = '1px red dotted'
-  wrapper.style.backgroundColor = 'seagreen'
-  // wrapper.style.width = 'vmin'
-  // wrapper.style.height = '99vh'
   wrapper.style.maxWidth = '140vh'
   wrapper.style.maxHeight = '120vw'
-  // wrapper.style.justifyContent = 'center'
 
-  outer.appendChild(wrapper)
+  body.appendChild(wrapper)
 
-  return [outer, wrapper]
+  return wrapper
 }
 
 export const createTileDisplay = (
@@ -65,36 +49,19 @@ export const createTileDisplay = (
 
 export const createGameDisplay = () => {
   const { mainDisplayWidth, mainDisplayHeight, msgDisplayWidth, msgDisplayHeight } = CONFIG
-  const [outer, wrapper] = createHTMLWrapper()
-  // const ratio = msgDisplayHeight / mainDisplayHeight
+  const wrapper = createHTMLWrapper()
 
   const msg = createTileDisplay(msgDisplayWidth, msgDisplayHeight)
   const msgContainer = msg.getContainer()!
-  // msgContainer.style.width = '100%'
-  // msgContainer.style.height = '100%'
-  // msgContainer.style.maxWidth = '140vmin'
-  // msgContainer.style.maxHeight = '98vmin'
-  // msgContainer.style.flex = '0 1 13.33%'
-
   wrapper.appendChild(msgContainer)
-
-  // const msgH = `${floor(88 * ratio)}vh`
-  // msgC.style.height = msgH
 
   const main = createTileDisplay(mainDisplayWidth, mainDisplayHeight)
   const mainContainer = main.getContainer()!
-  // mainContainer.style.height = '100%'
-  // mainContainer.style.maxWidth = '140vmin'
-  // mainContainer.style.maxHeight = '98vmin'
-  // mainContainer.style.flex = '0 1 86.66%'
-
   wrapper.appendChild(mainContainer)
-  // const mainC = main.getContainer()!
-  // const mainH = `${floor(88 - ratio)}vh`
-  // mainC.style.height = mainH
 
   return [msg, main]
 }
+
 // get a range of tiles in the ROT format
 const mapTiles = (chars: string, y: number, tileWidth: number) => {
   return chars.split('').reduce((acc, curr, i) => {
@@ -193,66 +160,4 @@ export function displayDebugStrings(display: ROT.Display) {
 //     // c.style.width = `${dWidth}px`
 //     c.style.height = `${dHeight}px`
 //   }
-// }
-
-// export const createHTMLWrapper = () => {
-//   const html = document.documentElement
-//   html.style.width = '100vw'
-//   html.style.height = '100vh'
-
-//   const body = document.body
-//   body.style.backgroundColor = '#191919'
-//   body.style.margin = '0'
-//   html.style.width = '100vw'
-//   body.style.height = '100vh'
-
-//   const wrapper = document.createElement('div')
-//   wrapper.id = 'wrapper'
-//   // wrapper.style.margin = '0 auto'
-//   wrapper.style.display = 'flex'
-//   wrapper.style.flexDirection = 'column'
-//   wrapper.style.justifyContent = 'center'
-//   wrapper.style.alignItems = 'center'
-//   // wrapper.style.width = '100vw'
-//   wrapper.style.height = '100vh'
-//   // wrapper.style.overflow = 'hidden'
-
-//   wrapper.style.backgroundColor = 'linen'
-//   // wrapper.style.border = '1px green dotted'
-//   body.appendChild(wrapper)
-// }
-
-// export const createTileDisplay = (
-//   width = CONFIG.mainDisplayWidth,
-//   height = CONFIG.mainDisplayHeight,
-//   bg = CONFIG.backgroundColor
-// ) => {
-//   const display = new ROT.Display({
-//     layout: 'tile-gl',
-//     width,
-//     height,
-//     bg,
-//     tileWidth: CONFIG.tileSize, // oryx-classic
-//     tileHeight: CONFIG.tileSize,
-//     tileSet: window.tileSet,
-//     tileColorize: true,
-//     tileMap: tileMapOryxClassic,
-//   })
-
-//   const wrapper = document.getElementById('wrapper')
-//   const c = display.getContainer()
-//   if (c && wrapper) {
-//     c.style.flex = '0 1 auto'
-//     // c.style.flexShrink = '1'
-//     // c.style.width = '100%'
-//     // c.style.height = '100%'
-//     c.style.maxWidth = '88vw'
-//     c.style.maxHeight = '88vh'
-//     // c.removeAttribute('width')
-//     // c.removeAttribute('height')
-//     // c.setAttribute('width', '100vw')
-//     wrapper.appendChild(c)
-//   } else throw new Error('Unable to get ROT.Display container')
-
-//   return display
 // }
