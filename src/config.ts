@@ -5,19 +5,12 @@ const CONFIG = {
   appInitial: 'game',
   // seed: 1234,
   seed: null,
-  displayW: 48,
-  displayH: 30,
+  displayWidth: 48,
+  displayHeight: 30,
   topPanelSize: 4,
   botPanelSize: 1,
-  levelWidthTileset: 48,
-  levelHeightTileset: 38,
-  useTileset: true,
-
-  levelWidthText: 80,
-  levelHeightText: 20,
-  // levelWidthTileset: 48,
-  // levelHeightTileset: 24,
-
+  levelWidth: 48,
+  levelHeight: 38,
   // initialLevel: 'ruins1',
   // initialLevel: 'dungeon4',
   // initialLevel: 'bigRoom',
@@ -29,6 +22,3 @@ const CONFIG = {
 }
 
 export { CONFIG }
-
-// appInitial: PROD ? 'dungeon4' : 'game', // ! d4vis broken with TSDisplay
-// oldMessageTurns: 10, // how old can messages be to still appear in the buffer

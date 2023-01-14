@@ -6,6 +6,7 @@
 # TODO
 
 - Lighting effects (torches/decreasing light from player)
+- Config 'lightsOn' player FOV per level (ie lightson/large fov outdoors, lightsoff lesser fov in dungeon)
 - vignette
 - Add more decoration terrain/items/void decor - reeds
 - Add simple animation (npc bobbing)/ Render decouple

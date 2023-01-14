@@ -15,15 +15,15 @@ import { Level } from '../Model/Level'
 import { templates } from '../Core/Entity'
 import { decor, populateNPCs } from './features'
 
-const { levelWidthTileset, levelHeightTileset } = CONFIG
+const { levelWidth: levelWidthTileset, levelHeight: levelHeightTileset } = CONFIG
 
 export type EntityTemplate = [keyof typeof templates, Point]
 export type NewLevel = [Level, EntityTemplate[]]
 
 export const dungeon4 = (stairsDown = false, stairsUp = false): NewLevel => {
   const data = create({
-    width: floor(CONFIG.displayW * 1.2),
-    height: floor(CONFIG.displayH * 1.1),
+    width: floor(CONFIG.displayWidth * 1.2),
+    height: floor(CONFIG.displayHeight * 1.1),
     minRoomW: 5,
     maxRoomW: 9,
     minRoomH: 5,

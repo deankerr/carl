@@ -10,7 +10,7 @@ const bg = '#131313' // TODO integrate into config/palette
 
 export const renderLevel = (d: ROT.Display, world: World, message: string, options: Game['options']) => {
   // console.log('Render', world.active)
-  const { displayW, displayH, topPanelSize, botPanelSize } = CONFIG
+  const { displayWidth, displayHeight, topPanelSize, botPanelSize } = CONFIG
 
   d.clear()
   d.drawText(0, 0, message)
@@ -21,17 +21,17 @@ export const renderLevel = (d: ROT.Display, world: World, message: string, optio
 
   // * ========== Viewport ========== *
   const viewport = {
-    w: displayW,
-    h: displayH - topPanelSize - botPanelSize,
+    w: displayWidth,
+    h: displayHeight - topPanelSize - botPanelSize,
     x1: 0,
-    x2: displayW - 1,
+    x2: displayWidth - 1,
     y1: topPanelSize,
-    y2: displayH - botPanelSize - 1,
+    y2: displayHeight - botPanelSize - 1,
   }
 
   const [player] = world.get('tagPlayer', 'position', 'render', 'fov')
-  const centerX = floor(CONFIG.displayW / 2)
-  const centerY = floor(CONFIG.displayH / 2)
+  const centerX = floor(CONFIG.displayWidth / 2)
+  const centerY = floor(CONFIG.displayHeight / 2)
 
   const offsetX =
     level.width > viewport.w
@@ -137,7 +137,7 @@ export const renderLevel = (d: ROT.Display, world: World, message: string, optio
         d.draw(offsetX + here.x, offsetY + here.y, 'x', 'cyan', null)
       if (here.x === half(level.width) && here.y == half(level.height))
         d.draw(offsetX + here.x, offsetY + here.y, 'x', 'cyan', null)
-      d.draw(half(viewport.w), half(displayH), 'o', 'orange', null)
+      d.draw(half(viewport.w), half(displayHeight), 'o', 'orange', null)
     }
 
     return true

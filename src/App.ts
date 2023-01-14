@@ -1,7 +1,7 @@
 // Initial set up/loading test modules
 // TODO use window.gameSeed = '111' / localStorage
 import { CONFIG } from './config'
-import { createDisplay, createTileSetDisplay } from './util/display'
+import { createTileSetDisplay } from './util/display'
 import * as ROT from 'rot-js'
 import { Keys } from './util/Keys'
 
@@ -24,9 +24,7 @@ const d4modules = mrModules()
 
 export function App() {
   // main display
-  display = CONFIG.useTileset
-    ? createTileSetDisplay(CONFIG.displayW, CONFIG.displayH)
-    : createDisplay(CONFIG.displayWidthText, CONFIG.displayHeightText)
+  display = createTileSetDisplay(CONFIG.displayWidth, CONFIG.displayHeight)
   window.display = [display]
 
   // dev html background
