@@ -173,7 +173,7 @@ export class Game {
 
     // clip buffer height
     const maxWidth = this.display.getOptions().width
-    while (ROT.Text.measure(this.messages(), maxWidth).height > CONFIG.msgDisplayHeight + 1) {
+    while (ROT.Text.measure(this.messages(), maxWidth).height > CONFIG.messageDisplayHeight + 1) {
       this.messageHistory.pop()
     }
   }

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
+import { tileMapOryx16 } from './tilemap'
 
 export const createHTMLWrapper = () => {
   const body = document.body
@@ -47,11 +48,32 @@ export const createTileDisplay = (
   return display
 }
 
+const msgTileSize = 16
+export const createMessageDisplay = (
+  width = CONFIG.messageDisplayWidth,
+  height = CONFIG.messageDisplayHeight,
+  bg = CONFIG.backgroundColor
+) => {
+  const display = new ROT.Display({
+    layout: 'tile-gl',
+    width,
+    height,
+    bg,
+    tileWidth: msgTileSize,
+    tileHeight: msgTileSize,
+    tileSet: window.tileSet16,
+    tileColorize: true,
+    tileMap: tileMapOryx16,
+  })
+
+  return display
+}
+
 export const createGameDisplay = () => {
-  const { mainDisplayWidth, mainDisplayHeight, msgDisplayWidth, msgDisplayHeight } = CONFIG
+  const { mainDisplayWidth, mainDisplayHeight, messageDisplayWidth, messageDisplayHeight } = CONFIG
   const wrapper = createHTMLWrapper()
 
-  const msg = createTileDisplay(msgDisplayWidth, msgDisplayHeight)
+  const msg = createMessageDisplay(messageDisplayWidth, messageDisplayHeight)
   const msgContainer = msg.getContainer()!
   wrapper.appendChild(msgContainer)
 
@@ -125,15 +147,6 @@ export function mouseClick(d: ROT.Display, callback: (event: MouseEvent) => unkn
   if (ctx) {
     ctx.addEventListener('mousedown', callback)
   }
-}
-
-export function displayDebugStrings(display: ROT.Display) {
-  const cW = document.documentElement.clientWidth
-  console.log('cW:', cW)
-  const cH = document.documentElement.clientHeight
-  const { width: gW, height: gH } = display.getOptions()
-
-  return [`cW:${cW} gW:${gW} cH:${cH} gH:${gH}`, `cR:${(cW / cH).toFixed(2)} gR:${gW / gH}`]
 }
 
 // resizeTileSetDisplay(display)

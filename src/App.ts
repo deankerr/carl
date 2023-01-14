@@ -22,10 +22,7 @@ let d4Data: Dungeon4Data | null
 const d4modules = mrModules()
 
 export function App() {
-  // main display
-  // createHTMLWrapper()
-  // msgDisplay = createTileDisplay(CONFIG.mainDisplayWidth, 4, 'orange')
-  // display = createTileDisplay(CONFIG.mainDisplayWidth, CONFIG.mainDisplayHeight)
+  // messagge and main display
   ;[msgDisplay, display] = createGameDisplay()
   window.display = [display]
 
@@ -110,5 +107,6 @@ declare global {
     game: object
     display: ROT.Display[]
     tileSet: HTMLImageElement
+    tileSet16: HTMLImageElement
   }
 }

@@ -4,7 +4,6 @@ import { Game } from './Game'
 import { World } from './World'
 import { TerrainNumMap } from './Terrain'
 import { half, floor, clamp } from '../lib/util'
-import { displayDebugStrings } from '../lib/display'
 
 export const renderLevel = (d: ROT.Display, world: World, options: Game['options']) => {
   // console.log('Render', world.active)
@@ -141,13 +140,6 @@ export const renderLevel = (d: ROT.Display, world: World, options: Game['options
     return true
   })
 
-  // canvas debug
-  if (options.lightsOn && options.showCanvasDebug) {
-    const ddb = displayDebugStrings(d)
-    d.drawText(0, yMax - 1, ddb[0])
-    d.drawText(0, yMax, ddb[1])
-  }
-
   // debug display
   if (options.debugMode) {
     // top/bottom borders
@@ -170,8 +162,8 @@ export const renderMessage = (d: ROT.Display, message: string, options: Game['op
   d.drawText(0, 0, message)
 
   if (options.debugMode) {
-    for (let i = 0; i < CONFIG.msgDisplayHeight; i++) {
-      d.draw(CONFIG.msgDisplayWidth - 1, i, 't', 'green', null)
+    for (let i = 0; i < CONFIG.messageDisplayHeight; i++) {
+      d.draw(CONFIG.messageDisplayWidth - 1, i, 't', 'green', null)
     }
   }
 }
