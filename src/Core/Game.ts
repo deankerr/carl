@@ -68,7 +68,7 @@ export class Game {
     // mouse click coords
     mouseClick(d, event => {
       const pt = d.eventToPosition(event)
-      console.log(`${pt[0]},${pt[1] + CONFIG.topPanelSize}`)
+      console.log(`${pt[0]},${pt[1]}`)
     })
 
     // set up first turn
@@ -173,7 +173,7 @@ export class Game {
 
     // clip buffer height
     const maxWidth = this.display.getOptions().width
-    while (ROT.Text.measure(this.messages(), maxWidth).height > CONFIG.topPanelSize + 1) {
+    while (ROT.Text.measure(this.messages(), maxWidth).height > CONFIG.msgDisplayHeight + 1) {
       this.messageHistory.pop()
     }
   }
@@ -203,7 +203,7 @@ export class Game {
   }
 
   render() {
-    renderMessage(this.msgDisplay, this.messages())
+    renderMessage(this.msgDisplay, this.messages(), this.options)
     renderLevel(this.display, this.world, this.options)
   }
 

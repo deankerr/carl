@@ -22,8 +22,8 @@ export type NewLevel = [Level, EntityTemplate[]]
 
 export const dungeon4 = (stairsDown = false, stairsUp = false): NewLevel => {
   const data = create({
-    width: floor(CONFIG.displayWidth * 1.2),
-    height: floor(CONFIG.displayHeight * 1.1),
+    width: floor(CONFIG.mainDisplayWidth * 1.2),
+    height: floor(CONFIG.mainDisplayHeight * 1.1),
     minRoomW: 5,
     maxRoomW: 9,
     minRoomH: 5,

@@ -6,31 +6,29 @@ import { TerrainNumMap } from './Terrain'
 import { half, floor, clamp } from '../lib/util'
 import { displayDebugStrings } from '../lib/display'
 
-const bg = '#131313' // TODO integrate into config/palette
-
 export const renderLevel = (d: ROT.Display, world: World, options: Game['options']) => {
   // console.log('Render', world.active)
-  const { displayWidth, displayHeight, topPanelSize, botPanelSize } = CONFIG
+  const { mainDisplayWidth: displayWidth, mainDisplayHeight: displayHeight, backgroundColor } = CONFIG
 
   d.clear()
 
   const level = world.active
   const yMax = d.getOptions().height - 1
-  const xMax = d.getOptions().width - 1
+  // const xMax = d.getOptions().width - 1
 
   // * ========== Viewport ========== *
   const viewport = {
     w: displayWidth,
-    h: displayHeight - topPanelSize - botPanelSize,
+    h: displayHeight,
     x1: 0,
     x2: displayWidth - 1,
-    y1: topPanelSize,
-    y2: displayHeight - botPanelSize - 1,
+    y1: 0,
+    y2: displayHeight - 1,
   }
 
   const [player] = world.get('tagPlayer', 'position', 'render', 'fov')
-  const centerX = floor(CONFIG.displayWidth / 2)
-  const centerY = floor(CONFIG.displayHeight / 2)
+  const centerX = floor(displayWidth / 2)
+  const centerY = floor(displayHeight / 2)
 
   const offsetX =
     level.width > viewport.w
@@ -126,12 +124,13 @@ export const renderLevel = (d: ROT.Display, world: World, options: Game['options
         render.y,
         char,
         color,
-        color.map((_c, i) => (i === 0 ? bg : 'transparent'))
+        color.map((_c, i) => (i === 0 ? backgroundColor : 'transparent'))
       )
-    } else d.draw(offsetX + here.x, offsetY + here.y, ' ', bg, null) // blank
+    } else d.draw(offsetX + here.x, offsetY + here.y, ' ', backgroundColor, null) // blank
 
-    // debug level border / crosshairs
+    // debug border / crosshairs
     if (options.debugMode) {
+      // level border
       if (here.x === 0 || here.x === level.width - 1 || here.y === 0 || here.y === level.height - 1)
         d.draw(offsetX + here.x, offsetY + here.y, 'x', 'cyan', null)
       if (here.x === half(level.width) && here.y == half(level.height))
@@ -151,22 +150,28 @@ export const renderLevel = (d: ROT.Display, world: World, options: Game['options
 
   // debug display
   if (options.debugMode) {
+    // top/bottom borders
+    d.drawText(0, 0, '%c{orange}' + 'd'.repeat(CONFIG.mainDisplayWidth))
+    d.drawText(0, yMax, '%c{orange}' + 'd'.repeat(CONFIG.mainDisplayWidth))
+
     d.drawText(2, viewport.y1 + 2, `Dean's Mode`)
     d.drawText(2, viewport.y1 + 3, `offset: ${offsetX}/${offsetY}`)
     d.drawText(2, viewport.y1 + 4, `seed: ${ROT.RNG.getSeed()}`)
     d.drawText(2, viewport.y1 + 5, `Player: ${player.position.x},${player.position.y}`)
 
-    for (let i = 0; i < topPanelSize; i++) {
-      d.draw(xMax, i, 't', 'green', null)
-    }
-
-    for (let i = 0; i < botPanelSize; i++) {
-      d.draw(xMax, yMax - i, 'b', 'green', null)
-    }
+    // for (let i = 0; i < botPanelSize; i++) {
+    //   d.draw(xMax, yMax - i, 'b', 'green', null)
+    // }
   }
 }
 
-export const renderMessage = (d: ROT.Display, message: string) => {
+export const renderMessage = (d: ROT.Display, message: string, options: Game['options']) => {
   d.clear()
   d.drawText(0, 0, message)
+
+  if (options.debugMode) {
+    for (let i = 0; i < CONFIG.msgDisplayHeight; i++) {
+      d.draw(CONFIG.msgDisplayWidth - 1, i, 't', 'green', null)
+    }
+  }
 }

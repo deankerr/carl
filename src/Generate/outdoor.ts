@@ -1,4 +1,5 @@
 // import * as ROT from 'rot-js'
+import { CONFIG } from '../config'
 import { Level } from '../Model/Level'
 import { Grid } from '../Model/Grid'
 import { EntityTemplate, NewLevel } from './generate'
@@ -7,8 +8,7 @@ import { Point, Pt } from '../Model/Point'
 import { outdoorRuin } from './prefab/outdoorRuin'
 // import { stairsTest } from './prefab/stairtest'
 
-// 48, 25
-export const outdoor = (width = 48, height = 25): NewLevel => {
+export const outdoor = (width = CONFIG.mainDisplayWidth, height = CONFIG.mainDisplayHeight): NewLevel => {
   console.log('createOutdoor')
   const level = Grid.fill(width, height, 98)
   const entities: EntityTemplate[] = []
