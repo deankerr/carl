@@ -1,7 +1,7 @@
 // Entity/Component manager
 import { Components, componentName } from './Components'
 import { tagCurrentTurn } from '../Component'
-import { Entity, templates, hydrateBeing } from './Entity'
+import { Entity, templates, hydrateBeing, beings, decor } from './Entity'
 import { StateObject } from './State'
 import { half, objLog } from '../lib/util'
 import { Point, Pt } from '../Model/Point'
@@ -42,9 +42,11 @@ export class World {
 
     for (const template of newTemplates) {
       const [t, pos] = template
-      const entity = this.create(hydrateBeing(t, pos))
+      if (t in beings && !(t in decor)) {
+        const entity = this.create(hydrateBeing(t, pos))
 
-      if ('tagActor' in entity) this.active.scheduler.add(entity.id, true)
+        if ('tagActor' in entity) this.active.scheduler.add(entity.id, true)
+      }
     }
   }
 

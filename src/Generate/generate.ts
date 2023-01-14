@@ -12,7 +12,7 @@ import { CONFIG } from '../config'
 import { Room } from './dungeon4/dungeon4'
 import { floor, half } from '../lib/util'
 import { Level } from '../Model/Level'
-import { beings, templates } from '../Core/Entity'
+import { beings, templates, Templates2 } from '../Core/Entity'
 import { decor, populateNPCs } from './features'
 
 const { levelWidth: levelWidthTileset, levelHeight: levelHeightTileset } = CONFIG
@@ -67,7 +67,7 @@ export const dungeon4 = (stairsDown = true, stairsUp = false): NewLevel => {
   return [level, entityTemplates]
 }
 
-export type EntityTemplate2 = [keyof typeof beings, Point]
+export type EntityTemplate2 = [Templates2, Point]
 export type NewLevel2 = [Level, EntityTemplate2[]]
 
 export const arena = (): NewLevel2 => {
@@ -85,6 +85,7 @@ export const arena = (): NewLevel2 => {
     ['eye', Pt(half(terrain.width), half(terrain.height))],
     ['zombie', Pt(half(terrain.width), half(terrain.height))],
     ['gary', Pt(half(terrain.width), half(terrain.height))],
+    ['rat', Pt(half(terrain.width), half(terrain.height))],
     ['rat', Pt(half(terrain.width), half(terrain.height))],
   ]
 
