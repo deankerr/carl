@@ -7,6 +7,8 @@ const CONFIG = {
   seed: null,
   displayWidth: 48,
   displayHeight: 30,
+  msgDisplayWidth: 48,
+  msgDisplayHeight: 4,
   topPanelSize: 4,
   botPanelSize: 1,
   levelWidth: 48,
@@ -16,7 +18,8 @@ const CONFIG = {
   // initialLevel: 'bigRoom',
   initialLevel: 'outdoor',
   lightsOnInitial: PROD ? false : true,
-  htmlBGColor: PROD ? '#131313' : '#131313',
+  displayBGColor: '#131313',
+  htmlBGColor: PROD ? '#131313' : '#444',
   displayWidthText: 80,
   displayHeightText: 25,
 }

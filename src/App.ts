@@ -1,11 +1,12 @@
 // Initial set up/loading test modules
 // TODO use window.gameSeed = '111' / localStorage
 import { CONFIG } from './config'
-import { createHTMLWrapper, createTileSetDisplay } from './lib/display'
+import { createHTMLWrapper, createTileDisplay } from './lib/display'
 import * as ROT from 'rot-js'
 import { Keys } from './lib/Keys'
 
 let display: ROT.Display
+let msgDisplay: ROT.Display
 const keys: Keys = new Keys()
 
 // game
@@ -23,7 +24,8 @@ const d4modules = mrModules()
 export function App() {
   // main display
   createHTMLWrapper()
-  display = createTileSetDisplay(CONFIG.displayWidth, CONFIG.displayHeight)
+  msgDisplay = createTileDisplay(CONFIG.displayWidth, 4)
+  display = createTileDisplay(CONFIG.displayWidth, CONFIG.displayHeight)
   window.display = [display]
 
   // dev html background
@@ -80,7 +82,7 @@ export function App() {
   function startGame() {
     if (keys) keys.cleanup()
     if (visual4) visual4.cleanup()
-    window.game = new Game(display)
+    window.game = new Game(display, msgDisplay)
   }
 }
 

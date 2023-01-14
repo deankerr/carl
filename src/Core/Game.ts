@@ -6,7 +6,7 @@ import * as ROT from 'rot-js'
 
 import { createState, StateObject } from './State'
 import { World } from './World'
-import { renderLevel } from './Render'
+import { renderLevel, renderMessage } from './Render'
 
 import { acting } from '../Component'
 import { handleBump, processDeath, handleMovement, processFOV, handleMeleeAttack } from '../System'
@@ -23,6 +23,7 @@ import * as Generate from '../Generate'
 
 export class Game {
   display: ROT.Display
+  msgDisplay: ROT.Display
   keys = new Keys()
   state: StateObject
   world: World
@@ -37,9 +38,10 @@ export class Game {
     debugMode: false,
   }
 
-  constructor(d: ROT.Display) {
+  constructor(d: ROT.Display, msg: ROT.Display) {
     console.log('new Game2')
     this.display = d
+    this.msgDisplay = msg
     const seed = ROT.RNG.getSeed()
     console.log('seed:', seed)
 
@@ -201,7 +203,8 @@ export class Game {
   }
 
   render() {
-    renderLevel(this.display, this.world, this.messages(), this.options)
+    renderMessage(this.msgDisplay, this.messages())
+    renderLevel(this.display, this.world, this.options)
   }
 
   changeLevel(to: string) {

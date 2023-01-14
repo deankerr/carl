@@ -10,6 +10,7 @@ export const createHTMLWrapper = () => {
   wrapper.id = 'wrapper'
   wrapper.style.margin = '0 auto'
   wrapper.style.display = 'flex'
+  wrapper.style.flexDirection = 'column'
   wrapper.style.justifyContent = 'center'
   wrapper.style.alignItems = 'center'
   wrapper.style.width = '98vw'
@@ -17,12 +18,16 @@ export const createHTMLWrapper = () => {
   body.appendChild(wrapper)
 }
 
-export const createTileSetDisplay = (width = CONFIG.displayWidth, height = CONFIG.displayHeight) => {
+export const createTileDisplay = (
+  width = CONFIG.displayWidth,
+  height = CONFIG.displayHeight,
+  bg = CONFIG.displayBGColor
+) => {
   const display = new ROT.Display({
     layout: 'tile-gl',
     width,
     height,
-    bg: '#131313',
+    bg,
     tileWidth: 40, // oryx-classic
     tileHeight: 40,
     tileSet: window.tileSet,

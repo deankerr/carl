@@ -8,12 +8,11 @@ import { displayDebugStrings } from '../lib/display'
 
 const bg = '#131313' // TODO integrate into config/palette
 
-export const renderLevel = (d: ROT.Display, world: World, message: string, options: Game['options']) => {
+export const renderLevel = (d: ROT.Display, world: World, options: Game['options']) => {
   // console.log('Render', world.active)
   const { displayWidth, displayHeight, topPanelSize, botPanelSize } = CONFIG
 
   d.clear()
-  d.drawText(0, 0, message)
 
   const level = world.active
   const yMax = d.getOptions().height - 1
@@ -165,4 +164,9 @@ export const renderLevel = (d: ROT.Display, world: World, message: string, optio
       d.draw(xMax, yMax - i, 'b', 'green', null)
     }
   }
+}
+
+export const renderMessage = (d: ROT.Display, message: string) => {
+  d.clear()
+  d.drawText(0, 0, message)
 }
