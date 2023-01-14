@@ -20,7 +20,7 @@ const { levelWidth: levelWidthTileset, levelHeight: levelHeightTileset } = CONFI
 export type EntityTemplate = [keyof typeof templates, Point]
 export type NewLevel = [Level, EntityTemplate[]]
 
-export const dungeon4 = (stairsDown = false, stairsUp = false): NewLevel => {
+export const dungeon4 = (stairsDown = true, stairsUp = false): NewLevel => {
   const data = create({
     width: floor(CONFIG.mainDisplayWidth * 1.2),
     height: floor(CONFIG.mainDisplayHeight * 1.1),
@@ -65,6 +65,17 @@ export const dungeon4 = (stairsDown = false, stairsUp = false): NewLevel => {
   }
 
   return [level, entityTemplates]
+}
+
+export const arena = (): NewLevel => {
+  const terrain = Grid.fill(9, 9, 0)
+  terrain.each(pt => {
+    if (pt.x === 0 || pt.x === terrain.width - 1 || pt.y === 0 || pt.y === terrain.height - 1) {
+      terrain.set(pt, 1)
+    }
+  })
+
+  return [new Level('arena', terrain, new Map(), []), []]
 }
 
 export const bigRoom = () => {

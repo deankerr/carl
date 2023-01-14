@@ -46,19 +46,22 @@ export class Game {
     console.log('seed:', seed)
 
     // initial level
-    let initialLevelEntities
+    let gen: () => Generate.NewLevel
     switch (CONFIG.initialLevel) {
       case 'outdoor':
-        initialLevelEntities = Generate.outdoor()
+        gen = Generate.outdoor
         break
       case 'ruins1':
-        initialLevelEntities = Generate.prefabRuin1()
+        gen = Generate.prefabRuin1
+        break
+      case 'arena':
+        gen = Generate.arena
         break
       case 'dungeon4':
       default:
-        initialLevelEntities = Generate.dungeon4(true)
+        gen = Generate.dungeon4
     }
-    const [level, entityTemplates] = initialLevelEntities
+    const [level, entityTemplates] = gen()
 
     this.state = createState(level)
     this.world = new World(this.state, this.options)
