@@ -21,9 +21,7 @@ export class World {
     this.options = options
     this.active = state.active
 
-    this.message("You begin your queste's.")
-    this.message('Last chance Hot Dogs! Last chance Hot Dogs! Last chance Hot Dogs!')
-    this.message('Test message display. Test message display. Test message display. Test message display.')
+    this.message('You begin your queste.')
     // this.message('Test message display. Test message display. Test message display. Test message display.')
   }
 
