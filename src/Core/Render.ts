@@ -2,8 +2,10 @@ import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
 import { Game } from './Game'
 import { World } from './World'
+import { TurnMessages } from './State'
 import { TerrainNumMap } from './Terrain'
-import { half, floor, clamp } from '../lib/util'
+import { half, floor, clamp, min } from '../lib/util'
+import { Color } from 'rot-js/lib/color'
 
 export const renderLevel = (d: ROT.Display, world: World, options: Game['options']) => {
   // console.log('Render', world.active)
@@ -157,13 +159,47 @@ export const renderLevel = (d: ROT.Display, world: World, options: Game['options
   }
 }
 
-export const renderMessage = (d: ROT.Display, message: string, options: Game['options']) => {
-  d.clear()
-  d.drawText(0, 0, message)
+export const renderMessages2 = (d: ROT.Display, world: World, options: Game['options']) => {
+  const { messageDisplayWidth, messageDisplayHeight, backgroundColor } = CONFIG
+  const { playerTurns, messages } = world.state
+  console.log('playerTurns:', playerTurns)
+  console.log('message', messages)
+  const buffer: TurnMessages[] = []
 
+  for (const msg of messages) {
+    buffer.push(msg)
+
+    if (
+      ROT.Text.measure(buffer.map(m => m[1].join(' ')).join(' '), messageDisplayWidth).height >
+      messageDisplayHeight + 1
+    )
+      break
+  }
+
+  let msgString = ''
+  for (const msg of buffer) {
+    const diff = playerTurns - msg[0]
+    let color = '#FFF'
+
+    if (diff > 0) {
+      // fade messages as they get older, capped at (the R value of) the level bg color
+      const bgColor = ROT.Color.fromString(backgroundColor)
+      const subtract = diff * diff // ease in
+      const newColor = ROT.Color.fromString(color).map(v => min(bgColor[0], v - subtract)) as Color
+      console.log('newColor:', newColor)
+      color = ROT.Color.toHex(newColor)
+    }
+
+    msgString += ` %c{${color}}` + msg[1].join('  ')
+  }
+
+  d.clear()
+  d.drawText(0, 0, msgString)
+
+  // debug message display marker
   if (options.debugMode) {
     for (let i = 0; i < CONFIG.messageDisplayHeight; i++) {
-      d.draw(CONFIG.messageDisplayWidth - 1, i, 't', 'green', null)
+      d.draw(CONFIG.messageDisplayWidth - 1, i, 'm', 'green', null)
     }
   }
 }

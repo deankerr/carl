@@ -79,7 +79,7 @@ export const createGameDisplay = () => {
   msgContainer.style.aspectRatio = `${messageDisplayWidth / messageDisplayHeight}`
 
   mainContainer.style.aspectRatio = `${mainDisplayWidth / mainDisplayHeight}`
-  mainContainer.style.height = '88vh'
+  mainContainer.style.height = '82vh'
 
   host.appendChild(msgContainer)
   host.appendChild(mainContainer)

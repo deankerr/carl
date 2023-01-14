@@ -6,7 +6,7 @@ import * as ROT from 'rot-js'
 
 import { createState, StateObject } from './State'
 import { World } from './World'
-import { renderLevel, renderMessage } from './Render'
+import { renderLevel, renderMessages2 } from './Render'
 
 import { acting } from '../Component'
 import { handleBump, processDeath, handleMovement, processFOV, handleMeleeAttack } from '../System'
@@ -72,7 +72,6 @@ export class Game {
     })
 
     // set up first turn
-    this.processMessages()
     this.world.nextTurn() // set the currentTurn
     processFOV(this.world)
 
@@ -86,16 +85,14 @@ export class Game {
 
   update(code: string) {
     const timeUpdate = Date.now()
-    const { playerTurns } = this.state
-    console.groupCollapsed(`# update # key: '${code}', turn: '${playerTurns}'`)
-    const world = this.world
 
     const playerAction = input(code)
-    if (!playerAction) {
-      console.log('null action')
-      console.groupEnd()
-      return
-    }
+    if (!playerAction) return
+
+    const { playerTurns } = this.state
+    const world = this.world
+    console.groupCollapsed(`# update # key: '${code}', turn: '${playerTurns}'`)
+
     console.log('playerAction:', playerAction)
 
     // UI only
@@ -148,34 +145,11 @@ export class Game {
       playerTurn = world.nextTurn()
     } while (!playerTurn)
 
-    this.processMessages()
-
     console.groupEnd()
 
     objLog(this.state, `# update complete # ${Date.now() - timeUpdate}ms`, true)
 
     this.render()
-  }
-
-  messages() {
-    return this.messageNew.join('  ') + '%c{#777}  ' + this.messageHistory.join('  ')
-  }
-
-  processMessages() {
-    const { messages, playerTurns } = this.state
-    if (messages.length < 1) return
-
-    this.messageHistory = [...this.messageNew, ...this.messageHistory]
-    this.messageNew = []
-
-    // put new messages from this turn into current
-    if (messages[0][0] === playerTurns) this.messageNew = messages[0][1]
-
-    // clip buffer height
-    const maxWidth = this.display.getOptions().width
-    while (ROT.Text.measure(this.messages(), maxWidth).height > CONFIG.messageDisplayHeight + 1) {
-      this.messageHistory.pop()
-    }
   }
 
   system(action: ActionTypes) {
@@ -203,7 +177,7 @@ export class Game {
   }
 
   render() {
-    renderMessage(this.msgDisplay, this.messages(), this.options)
+    renderMessages2(this.msgDisplay, this.world, this.options)
     renderLevel(this.display, this.world, this.options)
   }
 

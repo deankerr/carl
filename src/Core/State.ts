@@ -1,7 +1,7 @@
 // The central, (not really) immutable repository for all game world state
 import { Level } from '../Model/Level'
 
-type TurnMessages = [number, string[]]
+export type TurnMessages = [number, string[]]
 
 export type StateObject = {
   active: Level // Active level, reference to a level in levels[]
