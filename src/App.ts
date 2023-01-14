@@ -1,7 +1,7 @@
 // Initial set up/loading test modules
 // TODO use window.gameSeed = '111' / localStorage
 import { CONFIG } from './config'
-import { createTileSetDisplay } from './util/display'
+import { createHTMLWrapper, createTileSetDisplay } from './util/display'
 import * as ROT from 'rot-js'
 import { Keys } from './util/Keys'
 
@@ -20,10 +20,9 @@ let visual4: Visualizer4
 let d4Data: Dungeon4Data | null
 const d4modules = mrModules()
 
-// TODO live display switching
-
 export function App() {
   // main display
+  createHTMLWrapper()
   display = createTileSetDisplay(CONFIG.displayWidth, CONFIG.displayHeight)
   window.display = [display]
 
