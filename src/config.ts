@@ -9,7 +9,6 @@ const CONFIG = {
   mainDisplayHeight: 30,
   messageDisplayWidth: 64,
   messageDisplayHeight: 4,
-  tileSize: 40,
   levelWidth: 48,
   levelHeight: 38,
   // initialLevel: 'ruins1',

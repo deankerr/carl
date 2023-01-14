@@ -3,9 +3,9 @@ const punctuation = '!@#$%^&*()-=+.,:;"<>?\\/|-:'
 const numbers = '1234567890'
 
 // get a range of tiles in the ROT format
-const mapRange = (chars: string, y: number, tileWidth: number): { [key: string]: [number, number] } => {
+const mapRange = (chars: string, y: number, tileSize: number): { [key: string]: [number, number] } => {
   return chars.split('').reduce((acc, curr, i) => {
-    return (acc = { ...acc, [curr]: [tileWidth * i, y] })
+    return (acc = { ...acc, [curr]: [tileSize * i, tileSize * y] })
   }, {})
 }
 
@@ -15,20 +15,20 @@ const mapChar = (x: number, y: number, tileSize: number): [number, number] => {
 
 const s = 16
 export const tileMapOryx16 = {
-  ...mapRange(letters, 96, s),
-  ...mapRange(letters.toLowerCase(), 96, s),
-  ...mapRange(punctuation, 80, s),
-  ...mapRange(numbers, 112, s),
+  ...mapRange(letters, 6, s),
+  ...mapRange(letters.toLowerCase(), 6, s),
+  ...mapRange(numbers, 7, s),
+  ...mapRange(punctuation, 5, s),
   "'": mapChar(12, 0, s),
   ' ': mapChar(13, 0, s),
 }
 
 const t = 40
 export const tileMapOryxClassic = {
-  ...mapRange(letters, 240, t),
-  ...mapRange(letters.toLocaleLowerCase(), 240, t),
-  ...mapRange(numbers, 280, t),
-  ...mapRange(punctuation, 200, t),
+  ...mapRange(letters, 6, t),
+  ...mapRange(letters.toLocaleLowerCase(), 6, t),
+  ...mapRange(numbers, 7, t),
+  ...mapRange(punctuation, 5, t),
   "'": mapChar(26, 8, t),
   ' ': mapChar(13, 0, t),
   'O#': mapChar(0, 2, t),

@@ -20,14 +20,16 @@ export const createHTMLWrapper = () => {
   wrapper.id = 'wrapper'
   wrapper.style.display = 'flex'
   wrapper.style.flexDirection = 'column'
-  wrapper.style.maxWidth = '140vh'
-  wrapper.style.maxHeight = '120vw'
+  // wrapper.style.height = '100%'
+  // wrapper.style.maxWidth = '100vw'
+  // wrapper.style.maxHeight = '120vw'
 
   body.appendChild(wrapper)
 
   return wrapper
 }
 
+const mainTileSize = 40
 export const createTileDisplay = (
   width = CONFIG.mainDisplayWidth,
   height = CONFIG.mainDisplayHeight,
@@ -38,8 +40,8 @@ export const createTileDisplay = (
     width,
     height,
     bg,
-    tileWidth: CONFIG.tileSize, // oryx-classic
-    tileHeight: CONFIG.tileSize,
+    tileWidth: mainTileSize,
+    tileHeight: mainTileSize,
     tileSet: window.tileSet,
     tileColorize: true,
     tileMap: tileMapOryxClassic,
@@ -75,10 +77,18 @@ export const createGameDisplay = () => {
 
   const msg = createMessageDisplay(messageDisplayWidth, messageDisplayHeight)
   const msgContainer = msg.getContainer()!
+  // msgContainer.style.width = '98vw'
+  // msgContainer.style.height = '98vh'
+  // msgContainer.style.height = '13%'
   wrapper.appendChild(msgContainer)
 
   const main = createTileDisplay(mainDisplayWidth, mainDisplayHeight)
   const mainContainer = main.getContainer()!
+  // mainContainer.style.width = '98vw'
+  // mainContainer.style.maxHeight = '98vh'
+  // mainContainer.style.width = '98vw'
+  mainContainer.style.height = '87vh'
+  // mainContainer.style.height = '86%'
   wrapper.appendChild(mainContainer)
 
   return [msg, main]
