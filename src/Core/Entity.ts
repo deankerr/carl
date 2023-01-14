@@ -168,3 +168,56 @@ export const templates = {
     }
   },
 }
+
+// entity-key: description, char, color
+export const hydrateBeing = <K extends keyof typeof beings>(key: K, pt: Point) => {
+  // const a = being
+  const template = beings[key]
+
+  const entity = {
+    id: key,
+    ...C.description(template[0]),
+    ...C.render({ base: { char: template[1], color: template[2] } }),
+    ...C.position(pt),
+    ...C.tagActor(),
+  }
+
+  return entity
+}
+
+export const beings = {
+  // beasts
+  spider: ['tarantula', 'Ox', 'cyan'],
+  snake: ['taipan', 'Os', 'green'],
+  toad: ['menacing toad', 'Ot', 'limegreen'],
+  crab: ['turncoat crab', 'Or', 'red'],
+  chicken: ['lil chickadee', 'Oc', 'white'],
+  bat: ['bat of hell', 'Oa', 'red'],
+  rat: ['boy rat', 'R', 'brown'],
+
+  // spooks
+  ghost: ['wailing spirit', 'Og', 'white'],
+  demon: ['SATAN', 'OD', 'red'],
+  skeleton: ['skellybones', 'OS', 'white'],
+  blob: ['mould mastermind', 'blob', 'seagreen'],
+  eye: ['eye of judgement', 'E', 'lime'],
+  zombie: ['zombie', 'Z', 'maroon'],
+
+  // intelligent
+  orc: ['orc porkhoarder', 'O', 'green'],
+  karl: ['Karl', 'K', 'yellow'],
+  gary: ['Gary', 'G', 'orchid'],
+  interest: ['compound interest', '%', 'peru'],
+}
+
+// const beingSchema = [C.description, C.render, C.position, C.tagActor]
+
+// const beingTemplates = { ...beasts, ...ghouls, ...beings }
+
+// type bty<K extends keyof typeof beingTemplates, P> ={ typeof beingTemplates[K]: typeof beingTemplates[K][P]}
+
+// const hydrate = <T, K extends keyof T>(being: K[T], pt: Point) => {
+//   const e = {
+//     id: ' bsrt',
+//   }
+// }

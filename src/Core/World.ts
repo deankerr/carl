@@ -1,14 +1,14 @@
 // Entity/Component manager
 import { Components, componentName } from './Components'
 import { tagCurrentTurn } from '../Component'
-import { Entity, templates } from './Entity'
+import { Entity, templates, hydrateBeing } from './Entity'
 import { StateObject } from './State'
 import { half, objLog } from '../lib/util'
 import { Point, Pt } from '../Model/Point'
 import { TerrainType, TerrainNumMap } from './Terrain'
 import { Game } from './Game'
 import { Level } from '../Model/Level'
-import { EntityTemplate } from '../Generate'
+import { EntityTemplate2 } from '../Generate'
 
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 export class World {
@@ -30,13 +30,21 @@ export class World {
     Everything that happens in the game should occur through this API.
   */
 
-  createTemplates(newTemplates: EntityTemplate[]) {
-    for (const templatePos of newTemplates) {
-      const [template, pos] = templatePos
-      const e = templates[template](pos)
+  // createTemplates(newTemplates: EntityTemplate[]) {
+  createTemplates(newTemplates: EntityTemplate2[]) {
+    // for (const templatePos of newTemplates) {
+    //   const [template, pos] = templatePos
+    //   const e = templates[template](pos)
 
-      const newEntity = this.create(e)
-      if ('tagActor' in newEntity) this.active.scheduler.add(newEntity.id, true)
+    //   const newEntity = this.create(e)
+    //   if ('tagActor' in newEntity) this.active.scheduler.add(newEntity.id, true)
+    // }
+
+    for (const template of newTemplates) {
+      const [t, pos] = template
+      const entity = this.create(hydrateBeing(t, pos))
+
+      if ('tagActor' in entity) this.active.scheduler.add(entity.id, true)
     }
   }
 

@@ -12,7 +12,7 @@ import { CONFIG } from '../config'
 import { Room } from './dungeon4/dungeon4'
 import { floor, half } from '../lib/util'
 import { Level } from '../Model/Level'
-import { templates } from '../Core/Entity'
+import { beings, templates } from '../Core/Entity'
 import { decor, populateNPCs } from './features'
 
 const { levelWidth: levelWidthTileset, levelHeight: levelHeightTileset } = CONFIG
@@ -67,7 +67,10 @@ export const dungeon4 = (stairsDown = true, stairsUp = false): NewLevel => {
   return [level, entityTemplates]
 }
 
-export const arena = (): NewLevel => {
+export type EntityTemplate2 = [keyof typeof beings, Point]
+export type NewLevel2 = [Level, EntityTemplate2[]]
+
+export const arena = (): NewLevel2 => {
   const terrain = Grid.fill(9, 9, 0)
   terrain.each(pt => {
     if (pt.x === 0 || pt.x === terrain.width - 1 || pt.y === 0 || pt.y === terrain.height - 1) {
@@ -75,7 +78,17 @@ export const arena = (): NewLevel => {
     }
   })
 
-  return [new Level('arena', terrain, new Map(), []), []]
+  const templates: EntityTemplate2[] = [
+    ['bat', Pt(half(terrain.width), half(terrain.height))],
+    ['interest', Pt(half(terrain.width), half(terrain.height))],
+    ['blob', Pt(half(terrain.width), half(terrain.height))],
+    ['eye', Pt(half(terrain.width), half(terrain.height))],
+    ['zombie', Pt(half(terrain.width), half(terrain.height))],
+    ['gary', Pt(half(terrain.width), half(terrain.height))],
+    ['rat', Pt(half(terrain.width), half(terrain.height))],
+  ]
+
+  return [new Level('arena', terrain, new Map(), []), templates]
 }
 
 export const bigRoom = () => {

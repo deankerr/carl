@@ -60,4 +60,5 @@ export const tileMapOryxMain = {
   OT: mapChar(5, 0, t),
   OM: mapChar(7, 0, t),
   OP: mapChar(4, 0, t),
+  blob: mapChar(16, 3, t),
 } satisfies { [key: string]: [number, number] }
