@@ -5,7 +5,7 @@ import { tileMapOryxMessages, tileMapOryxMain } from './tilemap'
 
 export const createHTMLWrapper = () => {
   const body = document.body
-  body.style.backgroundColor = '#191919'
+  body.style.backgroundColor = CONFIG.backgroundColor
   body.style.margin = '0'
   body.style.padding = '0'
   body.style.boxSizing = 'border-box'
@@ -20,7 +20,6 @@ export const createHTMLWrapper = () => {
   wrapper.style.display = 'flex'
   wrapper.style.flexDirection = 'column'
   wrapper.style.justifyContent = 'center'
-  wrapper.style.backgroundColor = 'linen'
 
   return wrapper
 }

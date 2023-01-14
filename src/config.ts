@@ -16,9 +16,9 @@ const CONFIG = {
   // initialLevel: 'bigRoom',
   initialLevel: 'outdoor',
   lightsOnInitial: PROD ? false : false,
-  backgroundColor: '#131313',
-  // htmlBGColor: PROD ? '#131313' : 'pink',
-  htmlBGColor: PROD ? '#131313' : '#131313',
+  backgroundColor: '#191919',
+  // htmlBGColor: PROD ? '#191919' : 'pink',
+  htmlBGColor: PROD ? '#191919' : '#191919',
 }
 
 export { CONFIG }
