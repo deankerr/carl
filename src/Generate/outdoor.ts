@@ -2,7 +2,7 @@
 import { Level } from '../Model/Level'
 import { Grid } from '../Model/Grid'
 import { EntityTemplate, NewLevel } from './generate'
-import { half, rnd, repeat } from '../util/util'
+import { half, rnd, repeat } from '../lib/util'
 import { Point, Pt } from '../Model/Point'
 import { outdoorRuin } from './prefab/outdoorRuin'
 // import { stairsTest } from './prefab/stairtest'

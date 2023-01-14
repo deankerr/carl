@@ -1,5 +1,5 @@
 import * as ROT from 'rot-js'
-import { Direction, DIRECTIONS } from './../util/direction'
+import { Direction, DIRECTIONS } from '../lib/direction'
 import { ActionTypes } from './ActionTypes'
 
 export type Move = {

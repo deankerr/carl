@@ -12,9 +12,9 @@ import { acting } from '../Component'
 import { handleBump, processDeath, handleMovement, processFOV, handleMeleeAttack } from '../System'
 import { actionName, ActionTypes, __randomMove, __wait } from '../Action'
 
-import { mouseClick } from '../util/display'
-import { Keys } from '../util/Keys'
-import { objLog } from '../util/util'
+import { mouseClick } from '../lib/display'
+import { Keys } from '../lib/Keys'
+import { objLog } from '../lib/util'
 import { input } from './Input'
 
 import { handleTread } from '../System/handleTread'

@@ -1,9 +1,9 @@
 // Initial set up/loading test modules
 // TODO use window.gameSeed = '111' / localStorage
 import { CONFIG } from './config'
-import { createHTMLWrapper, createTileSetDisplay } from './util/display'
+import { createHTMLWrapper, createTileSetDisplay } from './lib/display'
 import * as ROT from 'rot-js'
-import { Keys } from './util/Keys'
+import { Keys } from './lib/Keys'
 
 let display: ROT.Display
 const keys: Keys = new Keys()

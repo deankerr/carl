@@ -1,7 +1,7 @@
 import * as ROT from 'rot-js'
 import { templates } from '../Core/Entity'
 import { Level } from '../Model/Level'
-import { rnd } from '../util/util'
+import { rnd } from '../lib/util'
 import { EntityTemplate } from './generate'
 
 export const populateNPCs = (level: Level) => {

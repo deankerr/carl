@@ -12,7 +12,7 @@
 import * as ROT from 'rot-js'
 import { Rect } from '../Rectangle'
 import { digCorridor, digRect, digRoom, digPts } from './dig'
-import { copy } from '../../util/util'
+import { copy } from '../../lib/util'
 
 // Modules
 

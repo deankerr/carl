@@ -1,6 +1,6 @@
 // essentially a 2D array
 // for storing things at x/y coordinates
-import { rnd } from '../util/util'
+import { rnd } from '../lib/util'
 import { Point, Pt } from './Point'
 
 export class Grid<T> {

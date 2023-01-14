@@ -3,8 +3,8 @@ import { CONFIG } from '../config'
 import { Game } from './Game'
 import { World } from './World'
 import { TerrainNumMap } from './Terrain'
-import { half, floor, clamp } from '../util/util'
-import { displayDebugStrings } from '../util/display'
+import { half, floor, clamp } from '../lib/util'
+import { displayDebugStrings } from '../lib/display'
 
 const bg = '#131313' // TODO integrate into config/palette
 
