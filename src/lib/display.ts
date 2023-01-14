@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
-import { tileMapOryx16 } from './tilemap'
+import { tileMapOryx16, tileMapOryxClassic } from './tilemap'
 
 export const createHTMLWrapper = () => {
   const body = document.body
@@ -83,57 +83,6 @@ export const createGameDisplay = () => {
 
   return [msg, main]
 }
-
-// get a range of tiles in the ROT format
-const mapTiles = (chars: string, y: number, tileWidth: number) => {
-  return chars.split('').reduce((acc, curr, i) => {
-    return (acc = { ...acc, [curr]: [tileWidth * i, y] })
-  }, {})
-}
-
-const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-const punctuation = '!@#$%^&*()-=+.,:;"<>?\\/|-:'
-const numbers = '1234567890'
-
-const tileMapOryxClassic = {
-  ...mapTiles(letters, 240, 40),
-  ...mapTiles(letters.toLocaleLowerCase(), 240, 40),
-  // ...mapTiles(letters.toLowerCase(), 320, 40), // lowercase font
-
-  ...mapTiles(numbers, 280, 40),
-  ...mapTiles(punctuation, 200, 40),
-  "'": [1040, 320],
-  ' ': [480, 0],
-  'O#': [0, 80],
-  'O[': [40, 80],
-  'O.': [320, 80],
-  'O.0': [360, 80],
-  'O.1': [400, 80],
-  'O.2': [480, 80],
-  'O.3': [480, 80],
-  Oo: [480, 120],
-  Ox: [240, 120],
-  Os: [320, 120],
-  Ot: [760, 120],
-  Or: [400, 120],
-  Og: [880, 120],
-  OD: [160, 120],
-  OH: [440, 120],
-  OS: [200, 120],
-  Oc: [720, 120],
-  Oa: [840, 120],
-  'O+': [520, 80],
-  'O/': [560, 80],
-  Ov: [80, 0],
-  '~': [0, 40],
-  'O"': [0, 0],
-  'O:': [40, 0],
-  'O<': [680, 80],
-  'O>': [720, 80],
-  OT: [200, 0],
-  OM: [280, 0],
-  OP: [160, 0],
-} satisfies { [key: string]: [number, number] }
 
 export function mouseMove(d: ROT.Display, callback: (event: MouseEvent) => unknown) {
   const ctx = d.getContainer()
