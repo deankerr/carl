@@ -5,11 +5,12 @@
 - Lighting effects (torches/decreasing light from player)
 - vignette
 - Add more decoration terrain/items/void decor - reeds
+- Add simple animation (npc bobbing)/ Render decouple
 
+- (W)alk/autoexplore
 - ??? Patch ROT.JS to handle drawOver tiles? ???
 - ?xxxEnable view selection + live switching
 - (light bleeds slightly into void? )
-- Add simple animation (npc bobbing)/ Render decouple
 - Unify function declaration style
 - Refactor Generate to improvement corridor placement, flexibility, visualizer integration into Game, entity generation
 - Move TerrainDictionary into Level
