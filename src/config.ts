@@ -5,9 +5,9 @@ const CONFIG = {
   appInitial: 'game',
   // seed: 1234,
   seed: null,
-  mainDisplayWidth: 48,
-  mainDisplayHeight: 30,
-  messageDisplayWidth: 64,
+  mainDisplayWidth: 56,
+  mainDisplayHeight: 31,
+  messageDisplayWidth: 72,
   messageDisplayHeight: 4,
   levelWidth: 48,
   levelHeight: 38,
@@ -17,6 +17,7 @@ const CONFIG = {
   initialLevel: 'outdoor',
   lightsOnInitial: PROD ? false : true,
   backgroundColor: '#131313',
+  // htmlBGColor: PROD ? '#131313' : 'pink',
   htmlBGColor: PROD ? '#131313' : '#131313',
 }
 

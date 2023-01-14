@@ -108,5 +108,7 @@ declare global {
     display: ROT.Display[]
     tileSet: HTMLImageElement
     tileSet16: HTMLImageElement
+    tileSet24: HTMLImageElement
+    tileSet32: HTMLImageElement
   }
 }

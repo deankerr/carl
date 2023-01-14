@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
-import { tileMapOryx16, tileMapOryxClassic } from './tilemap'
+import { tileMapOryxMessages, tileMapOryxMain } from './tilemap'
 
 export const createHTMLWrapper = () => {
   const body = document.body
@@ -9,7 +9,6 @@ export const createHTMLWrapper = () => {
   body.style.margin = '0'
   body.style.padding = '0'
   body.style.boxSizing = 'border-box'
-  body.style.width = '100vw'
   body.style.height = '100vh'
   body.style.display = 'flex'
   body.style.flexDirection = 'column'
@@ -20,16 +19,13 @@ export const createHTMLWrapper = () => {
   wrapper.id = 'wrapper'
   wrapper.style.display = 'flex'
   wrapper.style.flexDirection = 'column'
-  // wrapper.style.height = '100%'
-  // wrapper.style.maxWidth = '100vw'
-  // wrapper.style.maxHeight = '120vw'
-
-  body.appendChild(wrapper)
+  wrapper.style.justifyContent = 'center'
+  wrapper.style.backgroundColor = 'linen'
 
   return wrapper
 }
 
-const mainTileSize = 40
+const mainTileSize = 24
 export const createTileDisplay = (
   width = CONFIG.mainDisplayWidth,
   height = CONFIG.mainDisplayHeight,
@@ -42,9 +38,9 @@ export const createTileDisplay = (
     bg,
     tileWidth: mainTileSize,
     tileHeight: mainTileSize,
-    tileSet: window.tileSet,
+    tileSet: window.tileSet24,
     tileColorize: true,
-    tileMap: tileMapOryxClassic,
+    tileMap: tileMapOryxMain,
   })
 
   return display
@@ -65,7 +61,7 @@ export const createMessageDisplay = (
     tileHeight: msgTileSize,
     tileSet: window.tileSet16,
     tileColorize: true,
-    tileMap: tileMapOryx16,
+    tileMap: tileMapOryxMessages,
   })
 
   return display
@@ -73,24 +69,21 @@ export const createMessageDisplay = (
 
 export const createGameDisplay = () => {
   const { mainDisplayWidth, mainDisplayHeight, messageDisplayWidth, messageDisplayHeight } = CONFIG
-  const wrapper = createHTMLWrapper()
+  const host = createHTMLWrapper()
 
   const msg = createMessageDisplay(messageDisplayWidth, messageDisplayHeight)
   const msgContainer = msg.getContainer()!
-  // msgContainer.style.width = '98vw'
-  // msgContainer.style.height = '98vh'
-  // msgContainer.style.height = '13%'
-  wrapper.appendChild(msgContainer)
-
   const main = createTileDisplay(mainDisplayWidth, mainDisplayHeight)
   const mainContainer = main.getContainer()!
-  // mainContainer.style.width = '98vw'
-  // mainContainer.style.maxHeight = '98vh'
-  // mainContainer.style.width = '98vw'
-  mainContainer.style.height = '87vh'
-  // mainContainer.style.height = '86%'
-  wrapper.appendChild(mainContainer)
 
+  msgContainer.style.aspectRatio = `${messageDisplayWidth / messageDisplayHeight}`
+
+  mainContainer.style.aspectRatio = `${mainDisplayWidth / mainDisplayHeight}`
+  mainContainer.style.height = '88vh'
+
+  host.appendChild(msgContainer)
+  host.appendChild(mainContainer)
+  document.body.appendChild(host)
   return [msg, main]
 }
 
@@ -107,29 +100,3 @@ export function mouseClick(d: ROT.Display, callback: (event: MouseEvent) => unkn
     ctx.addEventListener('mousedown', callback)
   }
 }
-
-// resizeTileSetDisplay(display)
-
-// window.addEventListener('resize', () => {
-//   resizeTileSetDisplay(display)
-// })
-
-// const resizeTileSetDisplay = (display: ROT.Display) => {
-//   const maxW = document.documentElement.clientWidth
-//   const maxH = document.documentElement.clientHeight
-//   const dWidth = maxW - 60
-//   const dHeight = maxH - 30
-
-//   // display debug
-//   const yMax = display.getOptions().height - 1
-//   const ddb = displayDebugStrings(display)
-
-//   display.drawText(0, yMax - 1, ddb[0])
-//   display.drawText(0, yMax, ddb[1])
-
-//   const c = display.getContainer()
-//   if (c && 'style' in c) {
-//     // c.style.width = `${dWidth}px`
-//     c.style.height = `${dHeight}px`
-//   }
-// }
