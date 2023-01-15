@@ -63,18 +63,19 @@ export const beings = {
 
   // intelligent
   orc: ['orc porkhoarder', 'O', 'green'],
+  orc2: ['orc oystershucker', 'O', 'purple'],
   karl: ['Karl', 'K', 'yellow'],
   giant: ['giant', 'G', 'orchid'],
   interest: ['compound interest', '%', 'peru'],
 } as const
 
-export const hydrateBeing = (key: keyof typeof beings, pt: Point) => {
-  const template = beings[key]
+export type BeingTemplate = typeof beings[keyof typeof beings]
 
+export const hydrateBeing = (t: BeingTemplate, pt: Point) => {
   const entity = {
-    id: key,
-    ...C.description(template[0]),
-    ...C.render({ base: { char: template[1], color: template[2] } }),
+    id: t[0].replaceAll(' ', ''),
+    ...C.description(t[0]),
+    ...C.render({ base: { char: t[1], color: t[2] } }),
     ...C.position(pt),
     ...C.tagActor(),
   }
@@ -87,10 +88,9 @@ export const decor = {
   shrub: ['shrub', 'Ov', '#58a54a', '#407936', 'You trample the pathetic shrub', 'true'],
 } as const
 
-export const hydrateDecor = <K extends keyof typeof decor>(key: K, pt: Point) => {
-  const t = decor[key]
+export const hydrateDecor = (t: DecorTemplate, pt: Point) => {
   let entity = {
-    id: key,
+    id: t[0].replaceAll(' ', ''),
     ...C.description(t[0]),
     ...C.render({ base: { char: t[1], color: t[2] }, seen: { color: t[3] } }),
     ...C.position(pt),
@@ -102,6 +102,8 @@ export const hydrateDecor = <K extends keyof typeof decor>(key: K, pt: Point) =>
   }
   return entity
 }
+
+export type DecorTemplate = typeof decor[keyof typeof decor]
 
 export type Templates2 = keyof typeof beings | keyof typeof decor
 // const beingSchema = [C.description, C.render, C.position, C.tagActor]

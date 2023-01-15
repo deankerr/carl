@@ -12,7 +12,7 @@ import { CONFIG } from '../config'
 import { Room } from './dungeon4/dungeon4'
 import { floor, half } from '../lib/util'
 import { Level } from '../Model/Level'
-import { beings, decor, templates, Templates2 } from '../Core/Entity'
+import { beings, BeingTemplate, decor, DecorTemplate, templates } from '../Core/Entity'
 import { createDecor, populateNPCs } from './features'
 
 const { levelWidth: levelWidthTileset, levelHeight: levelHeightTileset } = CONFIG
@@ -67,8 +67,8 @@ export const dungeon4 = (stairsDown = true, stairsUp = false): NewLevel => {
   return [level, entityTemplates]
 }
 export type EntityTemplates = {
-  beings: [keyof typeof beings, Point | 0][]
-  decor: [keyof typeof decor, Point | 0][]
+  beings: [BeingTemplate, Point | 0][]
+  decor: [DecorTemplate, Point | 0][]
 }
 
 export type NewLevel2 = [Level, EntityTemplates]
@@ -83,22 +83,23 @@ export const arena = (): NewLevel2 => {
 
   const templates: EntityTemplates = {
     beings: [
-      ['bat', 0],
-      ['interest', 0],
-      ['blob', 0],
-      ['blobKing', 0],
-      ['eye', 0],
-      ['zombie', 0],
-      ['giant', 0],
-      ['rat', 0],
+      [beings.bat, 0],
+      [beings.interest, 0],
+      [beings.blob, 0],
+      [beings.blobKing, 0],
+      [beings.eye, 0],
+      [beings.zombie, 0],
+      [beings.giant, 0],
+      [beings.rat, 0],
+      [beings.orc2, 0],
     ],
     decor: [
-      ['shrub', 0],
-      ['shrub', 0],
-      ['shrub', 0],
-      ['shrub', 0],
-      ['shrub', 0],
-      ['shrub', 0],
+      [decor.shrub, 0],
+      [decor.shrub, 0],
+      [decor.shrub, 0],
+      [decor.shrub, 0],
+      [decor.shrub, 0],
+      [decor.shrub, 0],
     ],
   }
 

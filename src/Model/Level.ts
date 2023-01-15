@@ -4,7 +4,7 @@ import { Grid } from './Grid'
 import { Entity } from '../Core/Entity'
 import { Point } from './Point'
 import { TerrainType, TerrainNumMap, Terrain } from '../Core/Terrain'
-import { pick, repeat, repeatUntil } from '../lib/util'
+import { pick, repeatUntil } from '../lib/util'
 
 export class Level {
   readonly width: number
