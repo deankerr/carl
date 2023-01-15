@@ -204,7 +204,7 @@ const templates = {
   endlessVoid: ['endless void', ' ', '#000', 'false', 'false'],
 }
 
-const terrain2: Record<keyof typeof templates, Entity> = Object.entries(templates).reduce((acc, curr) => {
+export const Terrain_NEW: Record<keyof typeof templates, Entity> = Object.entries(templates).reduce((acc, curr) => {
   const [key, template] = curr
   const entity: Entity = {
     id: template[0].replaceAll(' ', ''),
@@ -219,4 +219,25 @@ const terrain2: Record<keyof typeof templates, Entity> = Object.entries(template
   return { ...acc, [key]: entity }
 }, {}) as Record<keyof typeof templates, Entity>
 
-console.log('TTTTTTTTTTT', terrain2)
+console.log('TTTTTTTTTTT', Terrain_NEW)
+
+export const TerrainLegacyMap: { [key: number]: Entity } = {
+  0: Terrain_NEW.path,
+  1: Terrain_NEW.wall,
+  2: Terrain_NEW.crackedWall,
+  3: Terrain_NEW.water,
+  4: Terrain_NEW.crackedPath1,
+  5: Terrain_NEW.crackedPath2,
+  6: Terrain_NEW.crackedPath3,
+  7: Terrain_NEW.crackedPath4,
+  8: Terrain_NEW.grass,
+  9: Terrain_NEW.deadGrass,
+  10: Terrain_NEW.stairsAscending,
+  11: Terrain_NEW.stairsDescending,
+  12: Terrain_NEW.tree,
+  13: Terrain_NEW.mound,
+  14: Terrain_NEW.peak,
+  15: Terrain_NEW.shrub,
+  98: Terrain_NEW.void,
+  99: Terrain_NEW.endlessVoid,
+} as const

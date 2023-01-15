@@ -3,7 +3,7 @@ import * as ROT from 'rot-js'
 import { Grid } from './Grid'
 import { Entity } from '../Core/Entity'
 import { Point } from './Point'
-import { TerrainType, TerrainNumMap, Terrain } from '../Core/Terrain'
+import { TerrainType, TerrainNumMap, Terrain, Terrain_NEW, TerrainLegacyMap } from '../Core/Terrain'
 import { pick, repeatUntil } from '../lib/util'
 
 export class Level {
@@ -16,7 +16,6 @@ export class Level {
   readonly scheduler = new ROT.Scheduler.Simple()
   entities: Entity[] = []
 
-  // TODO make more generic, eg. multiple stairs, doors
   stairsDescending: Point | undefined
   stairsAscending: Point | undefined
 
@@ -31,11 +30,11 @@ export class Level {
     this.height = terrainGrid.height
   }
 
-  terrain(at: Point): TerrainType {
+  terrain(at: Point) {
     const t = this.terrainGrid.get(at)
 
-    if (t === null) return Terrain.endlessVoid
-    return TerrainNumMap[t]
+    if (t === null) return Terrain_NEW.endlessVoid
+    return TerrainLegacyMap[t]
   }
 
   ptInRoom(index?: number) {
