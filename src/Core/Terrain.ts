@@ -1,4 +1,6 @@
 import { render, Graphic } from '../Component/Graphic'
+import * as C from '../Component'
+import { Entity } from './Entity'
 export type TerrainType = {
   title: string
   walkable: boolean
@@ -180,23 +182,41 @@ export const TerrainNumMap: { [key: number]: TerrainType } = {
   99: Terrain.endlessVoid,
 }
 
-export const terrainTemplates = {
-  path: ['path', 'O.', '#262626', true, true],
-  wall: ['wall', 'O.#', '#767676', false, false],
-  stairsDescending: ['descending stairs', 'O>', '#777', true, true, `There's a staircase leading down here.`],
-  stairsAscending: ['ascending stairs', 'O<', '#777', true, true, `There's a staircase leading up here.`],
-  crackedWall: ['cracked wall', 'O[', '#767676', false, false],
-  water: ['water', '~', '#76b8f1', true, true, 'You tread water.'],
-  crackedPath1: ['cracked path', 'O.0', '#262626', true, true],
-  crackedPath2: ['cracked path', 'O.1', '#262626', true, true],
-  crackedPath3: ['cracked path', 'O.2', '#262626', true, true],
-  crackedPath4: ['cracked path', 'O.3', '#262626', true, true],
-  grass: ['grass', 'O"', '#65712b', true, true],
-  deadGrass: ['dead grass', 'O:', '#664f47', true, true],
-  shrub: ['shrub', 'Ov', '#58a54a', true, true],
-  tree: ['tree', 'OT', 'forestgreen', true, true],
-  mound: ['mound', 'OM', '#6a4b39', true, true],
-  peak: ['peak', 'OP', '#2a5a3e', true, true, 'You summit the peak.'],
-  void: ['void', ' ', '#000', true, true],
-  endlessVoid: ['endless void', ' ', '#000', false, false],
+// [name, char, color, walkable, transparent, trodOn?]
+const templates = {
+  path: ['path', 'O.', '#262626', 'true', 'true'],
+  wall: ['wall', 'O.#', '#767676', 'false', 'false'],
+  stairsDescending: ['descending stairs', 'O>', '#777', 'true', 'true', `There's a staircase leading down here.`],
+  stairsAscending: ['ascending stairs', 'O<', '#777', 'true', 'true', `There's a staircase leading up here.`],
+  crackedWall: ['cracked wall', 'O[', '#767676', 'false', 'false'],
+  water: ['water', '~', '#76b8f1', 'true', 'true', 'You tread water.'],
+  crackedPath1: ['cracked path', 'O.0', '#262626', 'true', 'true'],
+  crackedPath2: ['cracked path', 'O.1', '#262626', 'true', 'true'],
+  crackedPath3: ['cracked path', 'O.2', '#262626', 'true', 'true'],
+  crackedPath4: ['cracked path', 'O.3', '#262626', 'true', 'true'],
+  grass: ['grass', 'O"', '#65712b', 'true', 'true'],
+  deadGrass: ['dead grass', 'O:', '#664f47', 'true', 'true'],
+  shrub: ['shrub', 'Ov', '#58a54a', 'true', 'true'],
+  tree: ['tree', 'OT', 'forestgreen', 'true', 'true'],
+  mound: ['mound', 'OM', '#6a4b39', 'true', 'true'],
+  peak: ['peak', 'OP', '#2a5a3e', 'true', 'true', 'You summit the peak.'],
+  void: ['void', ' ', '#000', 'true', 'true'],
+  endlessVoid: ['endless void', ' ', '#000', 'false', 'false'],
 }
+
+const terrain2: Record<keyof typeof templates, Entity> = Object.entries(templates).reduce((acc, curr) => {
+  const [key, template] = curr
+  const entity: Entity = {
+    id: template[0].replaceAll(' ', ''),
+    ...C.description(template[0]),
+    ...C.render({ base: { char: template[1], color: template[2] } }),
+  }
+
+  if (template[3] === 'true') entity.tagWalkable = true
+  if (template[4] === 'true') entity.tagBlocksLight = true
+  if (template[5]) entity.trodOn = C.trodOn(template[5]).trodOn
+
+  return { ...acc, [key]: entity }
+}, {}) as Record<keyof typeof templates, Entity>
+
+console.log('TTTTTTTTTTT', terrain2)
