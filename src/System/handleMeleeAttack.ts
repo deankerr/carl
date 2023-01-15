@@ -1,4 +1,5 @@
 import { dead } from '../Component'
+import { colorName } from '../Core/Entity'
 import { World } from '../Core/World'
 
 export const handleMeleeAttack = (world: World) => {
@@ -21,7 +22,7 @@ export const handleMeleeAttack = (world: World) => {
     // kill target
     console.log(`handleMeleeAttack: player killed ${targetEntity.id}`)
     world.modify(targetEntity).add(dead())
-    world.message(`You obliterate the ${targetEntity?.description?.name ?? targetEntity.id} with your mind!`)
+    world.message(`You obliterate the ${colorName(targetEntity)} with your mind!`)
   } else {
     // TODO in player vision/hearing range only
     world.message(

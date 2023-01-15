@@ -17,7 +17,7 @@ const templates = {
   deadGrass: ['dead grass', 'O:', '#664f47', 'true', 'true'],
   shrub: ['shrub', 'Ov', '#58a54a', 'true', 'true'],
   tree: ['tree', 'OT', 'forestgreen', 'true', 'true'],
-  mound: ['mound', 'OM', '#6a4b39', 'true', 'true'],
+  mound: ['mound', 'OM', '#6a4b39', 'true', 'true', 'You round the mound.'],
   peak: ['peak', 'OP', '#2a5a3e', 'true', 'true', 'You summit the peak.'],
   void: ['void', ' ', '#000', 'true', 'true'],
   endlessVoid: ['endless void', ' ', '#000', 'false', 'false'],

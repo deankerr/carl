@@ -6,7 +6,7 @@ import * as ROT from 'rot-js'
 
 import { createState, StateObject } from './State'
 import { World } from './World'
-import { renderLevel, renderMessages2 } from './Render'
+import { renderLevel, renderMessages } from './Render'
 
 import { acting } from '../Component'
 import { handleBump, processDeath, handleMovement, processFOV, handleMeleeAttack } from '../System'
@@ -182,7 +182,7 @@ export class Game {
   }
 
   render() {
-    renderMessages2(this.msgDisplay, this.world, this.options)
+    renderMessages(this.msgDisplay, this.world, this.options)
     renderLevel(this.display, this.world, this.options)
   }
 

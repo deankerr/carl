@@ -1,6 +1,7 @@
 import { World } from '../Core/World'
 import { door, tagMeleeAttackTarget, acting, tagWalkable } from '../Component'
 import { MeleeAttack } from '../Action'
+import { colorName } from '../Core/Entity'
 
 export const handleBump = (world: World) => {
   const [currentEntity] = world.get('acting', 'position')
@@ -15,7 +16,8 @@ export const handleBump = (world: World) => {
   if (bumpableEntities.length === 0) {
     // no entities, terrain bump
     console.log('handleBump: result - terrain bump')
-    if (currentIsPlayer) world.message(`You bounce off the ${terrain?.description?.name}.`)
+    // if (currentIsPlayer) world.message(`You bounce off the ${terrain?.description?.name}.`)
+    if (currentIsPlayer) world.message(`You bounce off the ${colorName(terrain)}.`)
   } else {
     // entities
     console.log('handleBump: entity bump')

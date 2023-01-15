@@ -163,7 +163,7 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
   }
 }
 
-export const renderMessages2 = (d: ROT.Display, world: World, options: Game['options']) => {
+export const renderMessages = (d: ROT.Display, world: World, options: Game['options']) => {
   const { messageDisplayWidth, messageDisplayHeight, backgroundColor } = CONFIG
   const { playerTurns, messages } = world.state
   const buffer: TurnMessages[] = []

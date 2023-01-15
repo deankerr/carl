@@ -76,7 +76,8 @@ export const beings = {
 
   // intelligent
   orc: ['orc porkhoarder', 'O', 'green'],
-  orc2: ['orc oystershucker', 'O', 'purple'],
+  orc2: ['orc forkstalker', 'O', 'purple'],
+  orc3: ['orc portcorker', 'O', 'goldenrod'],
   karl: ['Karl', 'K', 'yellow'],
   giant: ['giant bloke', 'G', 'orchid'],
   interest: ['compound interest', '%', 'peru'],
@@ -119,3 +120,9 @@ export const hydrateFeature = (t: FeatureTemplate, pt: Point) => {
 
 export const templates = { ...beings, ...features }
 export type FeatureTemplate = typeof features[keyof typeof features]
+
+export const colorName = (entity: Entity) => {
+  const name = entity.description?.name ?? 'MISSINGNAME'
+  const color = entity.render?.base.color ?? 'red'
+  return `%c{${color}}${name}%c{}`
+}
