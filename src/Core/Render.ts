@@ -4,7 +4,6 @@ import { Game } from './Game'
 import { EntityWith, World } from './World'
 import { TurnMessages } from './State'
 import { half, floor, clamp, min } from '../lib/util'
-import { Color } from 'rot-js/lib/color'
 import { Entity } from './Entity'
 
 // Seen terrain memory color modifiers
@@ -184,16 +183,15 @@ export const renderMessages2 = (d: ROT.Display, world: World, options: Game['opt
     let color = '#FFF'
 
     if (diff > 0) {
-      // fade messages as they get older, capped at (the R value of) the level bg color
-      const bgColor = ROT.Color.fromString(backgroundColor)
-      const subtract = diff * diff // ease in
-      const newColor = ROT.Color.fromString(color).map(v => min(bgColor[0], v - subtract)) as Color
-      color = ROT.Color.toHex(newColor)
+      // fade messages as they get older
+      const bgLum = ROT.Color.rgb2hsl(ROT.Color.fromString(backgroundColor))[2]
+      const subtractLum = (diff * diff) / 100 // ease in
+      color = darken(color, 0, subtractLum, bgLum)
     }
 
     msgString += ` %c{${color}}` + msg[1].join('  ')
   }
-
+  console.log('msgString:', msgString)
   d.clear()
   d.drawText(0, 0, msgString)
 
