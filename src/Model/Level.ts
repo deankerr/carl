@@ -4,7 +4,7 @@ import { Grid } from './Grid'
 import { Entity } from '../Core/Entity'
 import { Point } from './Point'
 import { TerrainType, TerrainNumMap, Terrain } from '../Core/Terrain'
-import { pick } from '../lib/util'
+import { pick, repeat, repeatUntil } from '../lib/util'
 
 export class Level {
   readonly width: number
@@ -34,11 +34,29 @@ export class Level {
   terrain(at: Point): TerrainType {
     const t = this.terrainGrid.get(at)
 
-    if (!t) return Terrain.endlessVoid
+    if (t === null) return Terrain.endlessVoid
     return TerrainNumMap[t]
   }
 
-  ptInRoom(index: number) {
+  ptInRoom(index?: number) {
+    if (index === undefined) {
+      // choose a random room if none provided
+      if (this.rooms.length > 0) {
+        const room = pick(this.rooms)
+        return pick(room)
+      } else {
+        // if they are no rooms, find any open pt
+        let result
+        repeatUntil(() => {
+          const pt = this.terrainGrid.rndPt()
+          if (!this.terrain(pt).walkable) return false
+          result = pt
+          return true
+        }, 1000)
+        if (!result) throw new Error('Could find random walkable in level')
+        return result
+      }
+    }
     return pick(this.rooms[index])
   }
 }

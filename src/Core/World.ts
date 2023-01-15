@@ -1,14 +1,14 @@
 // Entity/Component manager
 import { Components, componentName } from './Components'
 import { tagCurrentTurn } from '../Component'
-import { Entity, templates, hydrateBeing, beings, decor } from './Entity'
+import { Entity, templates, hydrateBeing, hydrateDecor } from './Entity'
 import { StateObject } from './State'
 import { half, objLog } from '../lib/util'
 import { Point, Pt } from '../Model/Point'
 import { TerrainType, TerrainNumMap } from './Terrain'
 import { Game } from './Game'
 import { Level } from '../Model/Level'
-import { EntityTemplate2 } from '../Generate'
+import { EntityTemplates } from '../Generate'
 
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 export class World {
@@ -31,7 +31,7 @@ export class World {
   */
 
   // createTemplates(newTemplates: EntityTemplate[]) {
-  createTemplates(newTemplates: EntityTemplate2[]) {
+  createTemplates(newTemplates: EntityTemplates) {
     // for (const templatePos of newTemplates) {
     //   const [template, pos] = templatePos
     //   const e = templates[template](pos)
@@ -40,13 +40,15 @@ export class World {
     //   if ('tagActor' in newEntity) this.active.scheduler.add(newEntity.id, true)
     // }
 
-    for (const template of newTemplates) {
-      const [t, pos] = template
-      if (t in beings && !(t in decor)) {
-        const entity = this.create(hydrateBeing(t, pos))
+    for (const being of newTemplates.beings) {
+      const [t, pos] = being
+      const entity = this.create(hydrateBeing(t, pos === 0 ? this.active.ptInRoom() : pos))
+      if ('tagActor' in entity) this.active.scheduler.add(entity.id, true)
+    }
 
-        if ('tagActor' in entity) this.active.scheduler.add(entity.id, true)
-      }
+    for (const decor of newTemplates.decor) {
+      const [t, pos] = decor
+      this.create(hydrateDecor(t, pos === 0 ? this.active.ptInRoom() : pos))
     }
   }
 

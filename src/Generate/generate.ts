@@ -12,8 +12,8 @@ import { CONFIG } from '../config'
 import { Room } from './dungeon4/dungeon4'
 import { floor, half } from '../lib/util'
 import { Level } from '../Model/Level'
-import { beings, templates, Templates2 } from '../Core/Entity'
-import { decor, populateNPCs } from './features'
+import { beings, decor, templates, Templates2 } from '../Core/Entity'
+import { createDecor, populateNPCs } from './features'
 
 const { levelWidth: levelWidthTileset, levelHeight: levelHeightTileset } = CONFIG
 
@@ -43,7 +43,7 @@ export const dungeon4 = (stairsDown = true, stairsUp = false): NewLevel => {
 
   // template name + position of doors
   const doors: EntityTemplate[] = data[2].map(pt => ['door', Pt(pt.x, pt.y)])
-  const features = decor(level)
+  const features = createDecor(level)
   const npcs = populateNPCs(level)
 
   const entityTemplates: EntityTemplate[] = [...doors, ...features, ...npcs]
@@ -66,9 +66,12 @@ export const dungeon4 = (stairsDown = true, stairsUp = false): NewLevel => {
 
   return [level, entityTemplates]
 }
+export type EntityTemplates = {
+  beings: [keyof typeof beings, Point | 0][]
+  decor: [keyof typeof decor, Point | 0][]
+}
 
-export type EntityTemplate2 = [Templates2, Point]
-export type NewLevel2 = [Level, EntityTemplate2[]]
+export type NewLevel2 = [Level, EntityTemplates]
 
 export const arena = (): NewLevel2 => {
   const terrain = Grid.fill(9, 9, 0)
@@ -78,17 +81,26 @@ export const arena = (): NewLevel2 => {
     }
   })
 
-  const templates: EntityTemplate2[] = [
-    ['bat', Pt(half(terrain.width), half(terrain.height))],
-    ['interest', Pt(half(terrain.width), half(terrain.height))],
-    ['blob', Pt(half(terrain.width), half(terrain.height))],
-    ['blobKing', Pt(half(terrain.width), half(terrain.height))],
-    ['eye', Pt(half(terrain.width), half(terrain.height))],
-    ['zombie', Pt(half(terrain.width), half(terrain.height))],
-    ['gary', Pt(half(terrain.width), half(terrain.height))],
-    ['rat', Pt(half(terrain.width), half(terrain.height))],
-    ['rat', Pt(half(terrain.width), half(terrain.height))],
-  ]
+  const templates: EntityTemplates = {
+    beings: [
+      ['bat', 0],
+      ['interest', 0],
+      ['blob', 0],
+      ['blobKing', 0],
+      ['eye', 0],
+      ['zombie', 0],
+      ['giant', 0],
+      ['rat', 0],
+    ],
+    decor: [
+      ['shrub', 0],
+      ['shrub', 0],
+      ['shrub', 0],
+      ['shrub', 0],
+      ['shrub', 0],
+      ['shrub', 0],
+    ],
+  }
 
   return [new Level('arena', terrain, new Map(), []), templates]
 }

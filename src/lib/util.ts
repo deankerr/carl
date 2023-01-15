@@ -57,3 +57,10 @@ export const repeat = (callback: () => unknown, times: number) => {
     callback()
   }
 }
+
+// exit repeat loop if callback returned true
+export const repeatUntil = (callback: () => unknown, times: number) => {
+  for (let i = 0; i < times; i++) {
+    if (callback()) break
+  }
+}

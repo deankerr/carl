@@ -32,7 +32,7 @@ export const populateNPCs = (level: Level) => {
   return entityTemplates
 }
 
-export const decor = (level: Level) => {
+export const createDecor = (level: Level) => {
   const entityTemplates: EntityTemplate[] = []
 
   level.rooms.forEach((r, i) => {
