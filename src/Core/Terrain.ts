@@ -179,3 +179,24 @@ export const TerrainNumMap: { [key: number]: TerrainType } = {
   98: Terrain.void,
   99: Terrain.endlessVoid,
 }
+
+export const terrainTemplates = {
+  path: ['path', 'O.', '#262626', true, true],
+  wall: ['wall', 'O.#', '#767676', false, false],
+  stairsDescending: ['descending stairs', 'O>', '#777', true, true, `There's a staircase leading down here.`],
+  stairsAscending: ['ascending stairs', 'O<', '#777', true, true, `There's a staircase leading up here.`],
+  crackedWall: ['cracked wall', 'O[', '#767676', false, false],
+  water: ['water', '~', '#76b8f1', true, true, 'You tread water.'],
+  crackedPath1: ['cracked path', 'O.0', '#262626', true, true],
+  crackedPath2: ['cracked path', 'O.1', '#262626', true, true],
+  crackedPath3: ['cracked path', 'O.2', '#262626', true, true],
+  crackedPath4: ['cracked path', 'O.3', '#262626', true, true],
+  grass: ['grass', 'O"', '#65712b', true, true],
+  deadGrass: ['dead grass', 'O:', '#664f47', true, true],
+  shrub: ['shrub', 'Ov', '#58a54a', true, true],
+  tree: ['tree', 'OT', 'forestgreen', true, true],
+  mound: ['mound', 'OM', '#6a4b39', true, true],
+  peak: ['peak', 'OP', '#2a5a3e', true, true, 'You summit the peak.'],
+  void: ['void', ' ', '#000', true, true],
+  endlessVoid: ['endless void', ' ', '#000', false, false],
+}
