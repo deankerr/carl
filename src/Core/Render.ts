@@ -5,16 +5,16 @@ import { World } from './World'
 import { TurnMessages } from './State'
 import { TerrainNumMap } from './Terrain'
 import { half, floor, clamp, min } from '../lib/util'
-import { Color } from 'rot-js/lib/color'
+import { Color, fromString } from 'rot-js/lib/color'
 
-export const renderLevel = (d: ROT.Display, world: World, options: Game['options']) => {
+export const renderLevel = (display: ROT.Display, world: World, options: Game['options']) => {
   // console.log('Render', world.active)
   const { mainDisplayWidth: displayWidth, mainDisplayHeight: displayHeight, backgroundColor } = CONFIG
 
-  d.clear()
+  display.clear()
 
   const level = world.active
-  const yMax = d.getOptions().height - 1
+  const yMax = display.getOptions().height - 1
   // const xMax = d.getOptions().width - 1
 
   // * ========== Viewport ========== *
@@ -59,13 +59,26 @@ export const renderLevel = (d: ROT.Display, world: World, options: Game['options
     const char: string[] = []
     const color: string[] = []
 
-    const visible = player.fov.visible.includes(here.s) || options.lightsOn
-    const seen = level.areaKnown.includes(here.s)
+    const visible = player.fov.visible.includes(here.s)
+    const seen = level.areaKnown.includes(here.s) || options.lightsOn
     const voidSeen = level.voidAreaKnown.includes(here.s) || options.lightsOn
 
     // terrain
     const terrainVisible = terrain.render.base
     const terrainSeen = terrain.render.seen
+
+    //TODO
+    const bgL = ROT.Color.rgb2hsl(ROT.Color.fromString(backgroundColor))[2]
+
+    const cc = ROT.Color.fromString(terrainVisible.color)
+    const dd = ROT.Color.rgb2hsl(cc)
+    const ee = [dd[0], min(0, dd[1] - 0.1), min(0.12, dd[2] - 0.1)] as Color
+    // const ee = [dd[0], dd[1], min(0.12, dd[2] - 0.1)] as Color
+    const ff = ROT.Color.hsl2rgb(ee)
+    const gg = ROT.Color.toHex(ff)
+    console.log('bgHSL:', bgL, 'origHEX:', terrainVisible.color, 'origHSL:', dd, 'new:', ee, 'newHex:', gg)
+    if (terrainSeen?.color) terrainSeen.color = gg
+    // const tSeen2 =
 
     // void decor
     const voidDecor = level.voidDecor.get(here.s)
@@ -120,23 +133,23 @@ export const renderLevel = (d: ROT.Display, world: World, options: Game['options
 
     // draw the stack, or a blank character if empty
     if (char.length > 0) {
-      d.draw(
+      display.draw(
         render.x,
         render.y,
         char,
         color,
         color.map((_c, i) => (i === 0 ? backgroundColor : 'transparent'))
       )
-    } else d.draw(offsetX + here.x, offsetY + here.y, ' ', backgroundColor, null) // blank
+    } else display.draw(offsetX + here.x, offsetY + here.y, ' ', backgroundColor, null) // blank
 
     // debug border / crosshairs
     if (options.debugMode) {
       // level border
       if (here.x === 0 || here.x === level.width - 1 || here.y === 0 || here.y === level.height - 1)
-        d.draw(offsetX + here.x, offsetY + here.y, 'x', 'cyan', null)
+        display.draw(offsetX + here.x, offsetY + here.y, 'x', 'cyan', null)
       if (here.x === half(level.width) && here.y == half(level.height))
-        d.draw(offsetX + here.x, offsetY + here.y, 'x', 'cyan', null)
-      d.draw(half(viewport.w), half(displayHeight), 'o', 'orange', null)
+        display.draw(offsetX + here.x, offsetY + here.y, 'x', 'cyan', null)
+      display.draw(half(viewport.w), half(displayHeight), 'o', 'orange', null)
     }
 
     return true
@@ -145,13 +158,13 @@ export const renderLevel = (d: ROT.Display, world: World, options: Game['options
   // debug display
   if (options.debugMode) {
     // top/bottom borders
-    d.drawText(0, 0, '%c{orange}' + 'd'.repeat(CONFIG.mainDisplayWidth))
-    d.drawText(0, yMax, '%c{orange}' + 'd'.repeat(CONFIG.mainDisplayWidth))
+    display.drawText(0, 0, '%c{orange}' + 'd'.repeat(CONFIG.mainDisplayWidth))
+    display.drawText(0, yMax, '%c{orange}' + 'd'.repeat(CONFIG.mainDisplayWidth))
 
-    d.drawText(2, viewport.y1 + 2, `Dean's Mode`)
-    d.drawText(2, viewport.y1 + 3, `offset: ${offsetX}/${offsetY}`)
-    d.drawText(2, viewport.y1 + 4, `seed: ${ROT.RNG.getSeed()}`)
-    d.drawText(2, viewport.y1 + 5, `Player: ${player.position.x},${player.position.y}`)
+    display.drawText(2, viewport.y1 + 2, `Dean's Mode`)
+    display.drawText(2, viewport.y1 + 3, `offset: ${offsetX}/${offsetY}`)
+    display.drawText(2, viewport.y1 + 4, `seed: ${ROT.RNG.getSeed()}`)
+    display.drawText(2, viewport.y1 + 5, `Player: ${player.position.x},${player.position.y}`)
 
     // for (let i = 0; i < botPanelSize; i++) {
     //   d.draw(xMax, yMax - i, 'b', 'green', null)
@@ -199,3 +212,7 @@ export const renderMessages2 = (d: ROT.Display, world: World, options: Game['opt
     }
   }
 }
+
+// function subtractColor(from: string, by: number, min?: string) {
+
+// }

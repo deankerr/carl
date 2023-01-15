@@ -3,8 +3,8 @@ const PROD = import.meta.env.PROD
 
 const CONFIG = {
   appInitial: 'game',
-  // seed: 1234,
-  seed: null,
+  seed: 1234,
+  // seed: null,
   mainDisplayWidth: 56,
   mainDisplayHeight: 31,
   messageDisplayWidth: 74,
@@ -12,9 +12,9 @@ const CONFIG = {
   levelWidth: 48,
   levelHeight: 38,
   // initialLevel: 'ruins1',
-  // initialLevel: 'dungeon4',
+  initialLevel: 'dungeon4',
   // initialLevel: 'bigRoom',
-  initialLevel: 'outdoor',
+  // initialLevel: 'outdoor',
   // initialLevel: 'arena',
   lightsOnInitial: PROD ? false : true,
   backgroundColor: '#191919',
