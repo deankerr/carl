@@ -5,7 +5,12 @@ import { World } from './World'
 import { TurnMessages } from './State'
 import { TerrainNumMap } from './Terrain'
 import { half, floor, clamp, min } from '../lib/util'
-import { Color, fromString } from 'rot-js/lib/color'
+import { Color } from 'rot-js/lib/color'
+
+// Seen terrain memory color modifiers
+const darkenSat = 0.1
+const darkenLum = 0.1
+const darkenLumMin = 0.12
 
 export const renderLevel = (display: ROT.Display, world: World, options: Game['options']) => {
   // console.log('Render', world.active)
@@ -67,18 +72,8 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
     const terrainVisible = terrain.render.base
     const terrainSeen = terrain.render.seen
 
-    //TODO
-    const bgL = ROT.Color.rgb2hsl(ROT.Color.fromString(backgroundColor))[2]
-
-    const cc = ROT.Color.fromString(terrainVisible.color)
-    const dd = ROT.Color.rgb2hsl(cc)
-    const ee = [dd[0], min(0, dd[1] - 0.1), min(0.12, dd[2] - 0.1)] as Color
-    // const ee = [dd[0], dd[1], min(0.12, dd[2] - 0.1)] as Color
-    const ff = ROT.Color.hsl2rgb(ee)
-    const gg = ROT.Color.toHex(ff)
-    console.log('bgHSL:', bgL, 'origHEX:', terrainVisible.color, 'origHSL:', dd, 'new:', ee, 'newHex:', gg)
-    if (terrainSeen?.color) terrainSeen.color = gg
-    // const tSeen2 =
+    // TODO Remove seen color from entities
+    if (terrainSeen?.color) terrainSeen.color = darken(terrainVisible.color, darkenSat, darkenLum, darkenLumMin)
 
     // void decor
     const voidDecor = level.voidDecor.get(here.s)
@@ -213,6 +208,9 @@ export const renderMessages2 = (d: ROT.Display, world: World, options: Game['opt
   }
 }
 
-// function subtractColor(from: string, by: number, min?: string) {
-
-// }
+function darken(color: string, saturation: number, luminosity: number, minLum: number) {
+  const c = ROT.Color.rgb2hsl(ROT.Color.fromString(color))
+  c[1] = min(0, c[1] - saturation)
+  c[2] = min(minLum, c[2] - luminosity)
+  return ROT.Color.toHex(ROT.Color.hsl2rgb(c))
+}
