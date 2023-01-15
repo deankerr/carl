@@ -70,6 +70,9 @@ export const outdoor = (width = CONFIG.mainDisplayWidth, height = CONFIG.mainDis
   // a toad
   entities.beings.push([templates.toad, lakePtS])
 
+  // sparse shrubs
+  repeat(() => drawSparseCluster(level.rndPt(), 5, 15), 4)
+
   // ruin at center
   const prefab = outdoorRuin
   const ruinWidth = prefab[0].length
@@ -79,9 +82,9 @@ export const outdoor = (width = CONFIG.mainDisplayWidth, height = CONFIG.mainDis
   const ruinKey: { [key: string]: number } = {
     '#': 1,
     '%': 2,
-    a: 10,
-    d: 11,
-    v: 98,
+    '<': 10,
+    '>': 11,
+    '.': 98,
     ' ': -1, // skip
   }
 
@@ -91,7 +94,7 @@ export const outdoor = (width = CONFIG.mainDisplayWidth, height = CONFIG.mainDis
       if (col === '+') {
         entities.doors.push(here)
         level.set(here, 98)
-      } else if (col === 'm') {
+      } else if (col === ',') {
         // remove mounds/peaks, leave grass
         const t = level.get(here)
         if (t === 13 || t === 14) level.set(here, 98)
@@ -118,7 +121,6 @@ export const outdoor = (width = CONFIG.mainDisplayWidth, height = CONFIG.mainDis
 
   // player, SW start position
   entities.player = Pt(2, level.height - 4)
-  // const entities = { player, beings, doors }
 
   // debug markers
   // level.set(center, 3)
@@ -160,5 +162,9 @@ export const outdoor = (width = CONFIG.mainDisplayWidth, height = CONFIG.mainDis
         level.set(Pt(xi, yi), terrain)
       }
     }
+  }
+
+  function drawSparseCluster(startPt: Point, amount: number, terrain: number) {
+    repeat(() => level.set(startPt.add(Pt(rnd(2, 6), rnd(2, 6))), terrain), amount)
   }
 }

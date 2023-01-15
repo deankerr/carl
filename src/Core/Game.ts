@@ -143,7 +143,9 @@ export class Game {
     // Run systems on each entity until it's the player's turn again
     let playerTurn = true
     this.state.playerTurns++
+    let infiniteLoop = 0
     do {
+      if (infiniteLoop++ > 200) throw new Error('System loop exceeded limit')
       this.system(playerTurn ? playerAction : __defaultAction())
       playerTurn = world.nextTurn()
     } while (!playerTurn)

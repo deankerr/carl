@@ -3,7 +3,7 @@ import { Components, componentName } from './Components'
 import { tagCurrentTurn } from '../Component'
 import { Entity, hydrateBeing, hydrateDecor, createPlayer, EntityTemplates, createDoor } from './Entity'
 import { StateObject } from './State'
-import { half, objLog } from '../lib/util'
+import { objLog } from '../lib/util'
 import { Point, Pt } from '../Model/Point'
 import { TerrainType, TerrainNumMap } from './Terrain'
 import { Game } from './Game'
@@ -27,6 +27,11 @@ export class World {
   //  World API - Everything that happens in the game should occur through this API.
 
   createTemplates(newTemplates: EntityTemplates) {
+    if (newTemplates.player) {
+      const pt = newTemplates.player
+      this.createPlayer(pt)
+    }
+
     if (newTemplates.beings) {
       for (const being of newTemplates.beings) {
         const [t, pos] = being
@@ -49,18 +54,10 @@ export class World {
     }
   }
 
-  createPlayer() {
+  createPlayer(pt?: Point) {
     if (this.get('tagPlayer').length > 0) return
-    let pt: Point
-    if (this.active.rooms.length > 0) {
-      // place player in room0 if exists
-      pt = this.active.stairsAscending ?? this.active.ptInRoom(0)
-    } else {
-      // fallback: center of the level
-      pt = Pt(half(this.active.width), half(this.active.height))
-    }
 
-    const player = this.create(createPlayer(pt))
+    const player = this.create(createPlayer(pt ?? this.active.stairsAscending ?? this.active.ptInRoom()))
     this.active.scheduler.add(player.id, true)
   }
 

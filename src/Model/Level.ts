@@ -39,7 +39,7 @@ export class Level {
   }
 
   ptInRoom(index?: number) {
-    if (index === undefined) {
+    if (index === undefined || this.rooms[index] === undefined) {
       // choose a random room if none provided
       if (this.rooms.length > 0) {
         const room = pick(this.rooms)
