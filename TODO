@@ -3,6 +3,7 @@
 - render: move to key + lookup table, allow easier pallette switching. calculate seen color by subtraction rather than hardcode
 - Make all terrain into entities?
 - integrate messages/ui as widgets on top of level?
+- use entity color with their names in messages
 
 # TODO
 

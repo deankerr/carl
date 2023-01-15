@@ -184,16 +184,21 @@ export const beings = {
   ghost: ['wailing spirit', 'Og', 'white'],
   demon: ['SATAN', 'OD', 'red'],
   skeleton: ['skellybones', 'OS', 'white'],
-  blob: ['mould mastermind', 'blob', 'seagreen'],
-  eye: ['eye of judgement', 'E', 'lime'],
+  blob: ['polyp henchmen', 'blob', 'seagreen'],
+  blobKing: ['polyp mastermind', 'blob', 'magenta'],
+  eye: ['eye of sight crime', 'E', 'lime'],
   zombie: ['zombie', 'Z', 'maroon'],
+  redJelly: ['strawberry jelly', 'j', 'red'],
+  greenJelly: ['cucumber jelly', 'j', 'green'],
+  grapeJelly: ['grape jelly', 'j', 'purple'],
+  bananaJelly: ['banana jelly', 'j', 'yellow'],
 
   // intelligent
   orc: ['orc porkhoarder', 'O', 'green'],
   karl: ['Karl', 'K', 'yellow'],
   gary: ['Gary', 'G', 'orchid'],
   interest: ['compound interest', '%', 'peru'],
-}
+} as const
 
 export const hydrateBeing = <K extends keyof typeof beings>(key: K, pt: Point) => {
   // const a = being
@@ -213,7 +218,7 @@ export const hydrateBeing = <K extends keyof typeof beings>(key: K, pt: Point) =
 // [desc, char, color, trod, walkable]
 export const decor = {
   shrub: ['shrub', 'Ov', '#58a54a', '#407936', 'You trample the pathetic shrub', 'true'],
-}
+} as const
 
 export const hydrateDecor = <K extends keyof typeof decor>(key: K, pt: Point) => {
   const t = decor[key]

@@ -82,6 +82,7 @@ export const arena = (): NewLevel2 => {
     ['bat', Pt(half(terrain.width), half(terrain.height))],
     ['interest', Pt(half(terrain.width), half(terrain.height))],
     ['blob', Pt(half(terrain.width), half(terrain.height))],
+    ['blobKing', Pt(half(terrain.width), half(terrain.height))],
     ['eye', Pt(half(terrain.width), half(terrain.height))],
     ['zombie', Pt(half(terrain.width), half(terrain.height))],
     ['gary', Pt(half(terrain.width), half(terrain.height))],
