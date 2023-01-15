@@ -13,6 +13,7 @@ import {
   TagActor,
   FOV,
   TagPlayer,
+  TagMemorable,
 } from '../Component/'
 
 export type Components = Partial<
@@ -29,7 +30,8 @@ export type Components = Partial<
     Door &
     TrodOn &
     Description &
-    TagBlocksLight
+    TagBlocksLight &
+    TagMemorable
 >
 
 export const componentName = <C extends Components>(component: C) => {

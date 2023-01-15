@@ -72,9 +72,6 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
     const terrainVisible = terrain.render.base
     const terrainSeenColor = darken(terrainVisible.color, darkenSat, darkenLum, darkenLumMin)
 
-    // TODO Remove seen color from entities
-    // if (terrainSeen?.color) terrainSeen.color =
-
     // void decor
     const voidDecor = level.voidDecor.get(here.s)
     if (voidSeen && voidDecor) {
@@ -103,7 +100,7 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
         color.push(door.render.base.color)
       } else if (seen) {
         char.push(doorChar)
-        color.push(door.render.seen?.color ?? door.render.base.color)
+        color.push(darken(door.render.base.color, darkenSat, darkenLum, darkenLumMin))
       }
     }
 
@@ -114,9 +111,9 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
         if (visible || options.lightsOn) {
           char.push(e.render.base.char)
           color.push(e.render.base.color)
-        } else if (seen && e.render.seen?.color) {
+        } else if (seen && e.tagMemorable) {
           char.push(e.render.base.char)
-          color.push(e.render.seen.color)
+          color.push(darken(e.render.base.color, darkenSat, darkenLum, darkenLumMin))
         }
       })
 

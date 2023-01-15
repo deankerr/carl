@@ -23,6 +23,11 @@ export const tagMeleeAttackTarget = (): TagMeleeAttackTarget => {
   return { tagMeleeAttackTarget: true }
 }
 
+export type TagMemorable = { tagMemorable: true }
+export const tagMemorable = (): TagMemorable => {
+  return { tagMemorable: true }
+}
+
 export type TagPlayer = { tagPlayer: true }
 export const tagPlayer = (): TagPlayer => {
   return { tagPlayer: true }

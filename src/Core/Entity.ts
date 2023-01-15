@@ -37,13 +37,13 @@ export const createDoor = (pt: Point) => {
     ...C.position(pt),
     ...C.render({
       base: { char: 'O+', color: '#73513d' },
-      seen: { color: '#5b4030' },
       baseDoorOpen: { char: 'O/' },
     }),
     ...C.description('door'),
     ...C.door(),
     ...C.trodOn('You carefully navigate through the door.'),
     ...C.tagBlocksLight(),
+    ...C.tagMemorable(),
   }
 }
 
@@ -98,19 +98,20 @@ export const hydrateBeing = (t: BeingTemplate, pt: Point) => {
 
 // [name, char, color, trod, walkable]
 export const features = {
-  shrub: ['shrub', 'Ov', '#58a54a', '#407936', 'You trample the pathetic shrub', 'true'],
+  shrub: ['shrub', 'Ov', '#58a54a', 'You trample the pathetic shrub', 'true'],
 } as const
 
-export const hydrateDecor = (t: FeatureTemplate, pt: Point) => {
+export const hydrateFeature = (t: FeatureTemplate, pt: Point) => {
   let entity = {
     id: t[0].replaceAll(' ', ''),
     ...C.description(t[0]),
-    ...C.render({ base: { char: t[1], color: t[2] }, seen: { color: t[3] } }),
+    ...C.render({ base: { char: t[1], color: t[2] } }),
     ...C.position(pt),
-    ...C.trodOn(t[4]),
+    ...C.trodOn(t[3]),
+    ...C.tagMemorable(),
   }
 
-  if (t[5] === 'true') {
+  if (t[4] === 'true') {
     entity = { ...entity, ...C.tagWalkable() }
   }
   return entity

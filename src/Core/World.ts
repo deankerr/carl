@@ -1,7 +1,7 @@
 // Entity/Component manager
 import { Components, componentName } from './Components'
 import { tagCurrentTurn } from '../Component'
-import { Entity, hydrateBeing, hydrateDecor, createPlayer, EntityTemplates, createDoor } from './Entity'
+import { Entity, hydrateBeing, hydrateFeature, createPlayer, EntityTemplates, createDoor } from './Entity'
 import { StateObject } from './State'
 import { objLog } from '../lib/util'
 import { Point, Pt } from '../Model/Point'
@@ -30,7 +30,7 @@ export class World {
     if (newTemplates.features) {
       for (const feature of newTemplates.features) {
         const [t, pos] = feature
-        this.create(hydrateDecor(t, pos === 0 ? this.active.ptInRoom() : pos))
+        this.create(hydrateFeature(t, pos === 0 ? this.active.ptInRoom() : pos))
       }
     }
 
