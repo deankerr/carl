@@ -49,7 +49,7 @@ export const createMessageDisplay = (
 
 export const createHTMLWrapper = () => {
   const body = document.body
-  body.style.backgroundColor = CONFIG.backgroundColor
+  body.style.backgroundColor = CONFIG.htmlBGColor
   body.style.margin = '0'
   body.style.padding = '0'
   body.style.boxSizing = 'border-box'
@@ -62,7 +62,7 @@ export const createHTMLWrapper = () => {
   wrapper.id = 'wrapper'
   wrapper.style.display = 'flex'
   wrapper.style.flexDirection = 'column'
-  wrapper.style.aspectRatio = `${mainDisplayWidth + 2.2} / ${messageDisplayHeight + mainDisplayHeight}`
+  wrapper.style.aspectRatio = `${mainDisplayWidth + 1.5} / ${messageDisplayHeight + mainDisplayHeight}`
   wrapper.style.height = '100vh'
   wrapper.style.maxWidth = '100vw'
   wrapper.style.justifyContent = 'center'
