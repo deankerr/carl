@@ -25,8 +25,8 @@ export const handleTread = (world: World) => {
         world.message(treaddable.trodOn.message)
       }
     }
-  } else if (terrainHere.tread) {
-    world.message(terrainHere.tread)
+  } else if (terrainHere.trodOn) {
+    world.message(terrainHere.trodOn.message)
   }
 
   console.log('handleTread: done')

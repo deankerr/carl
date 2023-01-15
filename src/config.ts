@@ -3,8 +3,8 @@ const PROD = import.meta.env.PROD
 
 const CONFIG = {
   appInitial: 'game',
-  seed: 1234,
-  // seed: null,
+  // seed: 1234,
+  seed: null,
   mainDisplayWidth: 56,
   mainDisplayHeight: 31,
   messageDisplayWidth: 74,

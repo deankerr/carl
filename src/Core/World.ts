@@ -5,7 +5,6 @@ import { Entity, hydrateBeing, hydrateFeature, createPlayer, EntityTemplates, cr
 import { StateObject } from './State'
 import { objLog } from '../lib/util'
 import { Point, Pt } from '../Model/Point'
-import { TerrainType, TerrainNumMap } from './Terrain'
 import { Game } from './Game'
 import { Level } from '../Model/Level'
 
@@ -84,24 +83,25 @@ export class World {
   }
 
   // return terrain and any entities at this position
-  here(pt: Point): [TerrainType, Entity[]] {
-    const t = this.active.terrainGrid.get(pt)
+  here(pt: Point): [Entity, Entity[]] {
+    const terrain = this.active.terrain(pt)
     // pretend its a wall if out of bounds?
-    const terrain = t !== null ? TerrainNumMap[t] : TerrainNumMap[99]
+    // ? endless void should be fine
+    // const terrain = t !== null ? TerrainNumMap[t] : TerrainNumMap[99]
     const entities = this.get('position')
     const entitiesHere = entities.filter(e => Pt(e.position.x, e.position.y).s === pt.s) as Entity[]
 
     return [terrain, entitiesHere]
   }
 
-  hereWith<Key extends keyof Entity>(pt: Point, ...components: Key[]): [TerrainType, EntityWith<Entity, Key>[]] {
-    const t = this.active.terrainGrid.get(pt)
-    // pretend its a wall if out of bounds?
-    const terrain = t !== null ? TerrainNumMap[t] : TerrainNumMap[1]
-    const entitiesHere = this.get('position').filter(e => e.position.s === pt.s) as Entity[]
-    const entitiesWith = entitiesHere.filter(e => components.every(name => name in e)) as EntityWith<Entity, Key>[]
-    return [terrain, entitiesWith]
-  }
+  // hereWith<Key extends keyof Entity>(pt: Point, ...components: Key[]): [TerrainType, EntityWith<Entity, Key>[]] {
+  //   const t = this.active.terrainGrid.get(pt)
+  //   // pretend its a wall if out of bounds?
+  //   const terrain = t !== null ? TerrainNumMap[t] : TerrainNumMap[1]
+  //   const entitiesHere = this.get('position').filter(e => e.position.s === pt.s) as Entity[]
+  //   const entitiesWith = entitiesHere.filter(e => components.every(name => name in e)) as EntityWith<Entity, Key>[]
+  //   return [terrain, entitiesWith]
+  // }
 
   // remove entity from the world + turn queue if necessary
   destroy(entity: Entity) {
@@ -156,10 +156,10 @@ export class World {
 
   isTransparent(x: number, y: number) {
     const here = Pt(x, y)
-    const t = this.active.terrainGrid.get(here)
-    if (t === null) return false
+    const t = this.active.terrain(here)
+    if (t.tagBlocksLight) return false
     const opaqueEntities = this.get('tagBlocksLight', 'position').filter(e => e.position.s === here.s).length === 0
-    return opaqueEntities && TerrainNumMap[t].transparent
+    return opaqueEntities
   }
 
   // currently unused, may be useful for debug

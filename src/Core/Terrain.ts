@@ -211,9 +211,9 @@ export const Terrain_NEW: Record<keyof typeof templates, Entity> = Object.entrie
     ...C.description(template[0]),
     ...C.render({ base: { char: template[1], color: template[2] } }),
   }
-
+  console.log('template[4]:', template[4])
   if (template[3] === 'true') entity.tagWalkable = true
-  if (template[4] === 'true') entity.tagBlocksLight = true
+  if (template[4] === 'false') entity.tagBlocksLight = true
   if (template[5]) entity.trodOn = C.trodOn(template[5]).trodOn
 
   return { ...acc, [key]: entity }

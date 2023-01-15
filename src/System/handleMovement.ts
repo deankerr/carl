@@ -33,7 +33,7 @@ export const handleMovement = (world: World) => {
   const [terrain, entitiesHere] = world.here(newPt)
 
   // terrain walkable check
-  if (!terrain.walkable) {
+  if (!terrain.tagWalkable) {
     console.log('handleMovement: new action - Bump (terrain)', terrain)
     const newAction = acting(Bump(newPt))
     world.modify(currentEntity).change(newAction)
