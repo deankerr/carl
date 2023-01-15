@@ -26,7 +26,6 @@ export const prefabRuin1 = (): NewLevel => {
       if (t === ',' || t === ':') {
         voidDecor.set(here.s, TerrainNumMap[tDict[t]])
       }
-      if (t === '>') console.log(xi, yi, t, tDict[t])
       if (tDict[t]) return tDict[t]
 
       switch (t) {

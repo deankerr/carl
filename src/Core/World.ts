@@ -27,19 +27,6 @@ export class World {
   //  World API - Everything that happens in the game should occur through this API.
 
   createTemplates(newTemplates: EntityTemplates) {
-    if (newTemplates.player) {
-      const pt = newTemplates.player
-      this.createPlayer(pt)
-    }
-
-    if (newTemplates.beings) {
-      for (const being of newTemplates.beings) {
-        const [t, pos] = being
-        const entity = this.create(hydrateBeing(t, pos === 0 ? this.active.ptInRoom() : pos))
-        if ('tagActor' in entity) this.active.scheduler.add(entity.id, true)
-      }
-    }
-
     if (newTemplates.features) {
       for (const feature of newTemplates.features) {
         const [t, pos] = feature
@@ -51,6 +38,19 @@ export class World {
       for (const pt of newTemplates.doors) {
         this.create(createDoor(pt))
       }
+    }
+
+    if (newTemplates.beings) {
+      for (const being of newTemplates.beings) {
+        const [t, pos] = being
+        const entity = this.create(hydrateBeing(t, pos === 0 ? this.active.ptInRoom() : pos))
+        if ('tagActor' in entity) this.active.scheduler.add(entity.id, true)
+      }
+    }
+
+    if (newTemplates.player) {
+      const pt = newTemplates.player
+      this.createPlayer(pt)
     }
   }
 
@@ -120,7 +120,7 @@ export class World {
   nextTurn() {
     const prev = this.get('tagCurrentTurn')
     if (prev.length > 1) throw new Error('Multiple entities with current turn')
-    if (prev.length === 0) console.log('No tagCurrentTurn found')
+    // if (prev.length === 0) console.log('No tagCurrentTurn found')
     if (prev.length > 0) this.modify(prev[0]).remove('tagCurrentTurn')
 
     const nextID = this.active.scheduler.next()

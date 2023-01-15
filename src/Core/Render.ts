@@ -162,13 +162,10 @@ export const renderLevel = (d: ROT.Display, world: World, options: Game['options
 export const renderMessages2 = (d: ROT.Display, world: World, options: Game['options']) => {
   const { messageDisplayWidth, messageDisplayHeight, backgroundColor } = CONFIG
   const { playerTurns, messages } = world.state
-  console.log('playerTurns:', playerTurns)
-  console.log('message', messages)
   const buffer: TurnMessages[] = []
 
   for (const msg of messages) {
     buffer.push(msg)
-
     if (
       ROT.Text.measure(buffer.map(m => m[1].join(' ')).join(' '), messageDisplayWidth).height >
       messageDisplayHeight + 1
@@ -186,7 +183,6 @@ export const renderMessages2 = (d: ROT.Display, world: World, options: Game['opt
       const bgColor = ROT.Color.fromString(backgroundColor)
       const subtract = diff * diff // ease in
       const newColor = ROT.Color.fromString(color).map(v => min(bgColor[0], v - subtract)) as Color
-      console.log('newColor:', newColor)
       color = ROT.Color.toHex(newColor)
     }
 
