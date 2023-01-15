@@ -70,16 +70,16 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
 
     // terrain
     const terrainVisible = terrain.render.base
-    const terrainSeen = terrain.render.seen
+    const terrainSeenColor = darken(terrainVisible.color, darkenSat, darkenLum, darkenLumMin)
 
     // TODO Remove seen color from entities
-    if (terrainSeen?.color) terrainSeen.color = darken(terrainVisible.color, darkenSat, darkenLum, darkenLumMin)
+    // if (terrainSeen?.color) terrainSeen.color =
 
     // void decor
     const voidDecor = level.voidDecor.get(here.s)
     if (voidSeen && voidDecor) {
-      char.push(terrainSeen?.char ?? terrainVisible.char)
-      color.push(terrainSeen?.color ?? terrainVisible.color)
+      char.push(terrainVisible.char)
+      color.push(terrainSeenColor)
     }
 
     // if (!level.isInternalWall(here) || !options.hideInternalWalls) {
@@ -87,8 +87,8 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
       char.push(terrainVisible.char)
       color.push(terrainVisible.color)
     } else if (seen) {
-      char.push(terrainSeen?.char ?? terrainVisible.char)
-      color.push(terrainSeen?.color ?? terrainVisible.color)
+      char.push(terrainVisible.char)
+      color.push(terrainSeenColor)
     }
     // }
 
