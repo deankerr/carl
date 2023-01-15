@@ -3,28 +3,9 @@ import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
 import { tileMapOryxMessages, tileMapOryxMain } from './tilemap'
 
-export const createHTMLWrapper = () => {
-  const body = document.body
-  body.style.backgroundColor = CONFIG.backgroundColor
-  body.style.margin = '0'
-  body.style.padding = '0'
-  body.style.boxSizing = 'border-box'
-  body.style.height = '100vh'
-  body.style.display = 'flex'
-  body.style.flexDirection = 'column'
-  body.style.justifyContent = 'center'
-  body.style.alignItems = 'center'
+const { mainDisplayWidth, mainDisplayHeight, messageDisplayWidth, messageDisplayHeight } = CONFIG
 
-  const wrapper = document.createElement('div')
-  wrapper.id = 'wrapper'
-  wrapper.style.display = 'flex'
-  wrapper.style.flexDirection = 'column'
-  wrapper.style.justifyContent = 'center'
-
-  return wrapper
-}
-
-const mainTileSize = 24
+const mainTileSize = 32
 export const createTileDisplay = (
   width = CONFIG.mainDisplayWidth,
   height = CONFIG.mainDisplayHeight,
@@ -37,7 +18,7 @@ export const createTileDisplay = (
     bg,
     tileWidth: mainTileSize,
     tileHeight: mainTileSize,
-    tileSet: window.tileSet24,
+    tileSet: window.tileSet32,
     tileColorize: true,
     tileMap: tileMapOryxMain,
   })
@@ -45,7 +26,7 @@ export const createTileDisplay = (
   return display
 }
 
-const msgTileSize = 16
+const msgTileSize = 24
 export const createMessageDisplay = (
   width = CONFIG.messageDisplayWidth,
   height = CONFIG.messageDisplayHeight,
@@ -58,7 +39,7 @@ export const createMessageDisplay = (
     bg,
     tileWidth: msgTileSize,
     tileHeight: msgTileSize,
-    tileSet: window.tileSet16,
+    tileSet: window.tileSet24,
     tileColorize: true,
     tileMap: tileMapOryxMessages,
   })
@@ -66,23 +47,46 @@ export const createMessageDisplay = (
   return display
 }
 
-export const createGameDisplay = () => {
-  const { mainDisplayWidth, mainDisplayHeight, messageDisplayWidth, messageDisplayHeight } = CONFIG
-  const host = createHTMLWrapper()
+export const createHTMLWrapper = () => {
+  const body = document.body
+  body.style.backgroundColor = CONFIG.backgroundColor
+  body.style.margin = '0'
+  body.style.padding = '0'
+  body.style.boxSizing = 'border-box'
+  body.style.display = 'flex'
+  body.style.flexDirection = 'column'
+  body.style.justifyContent = 'center'
+  body.style.alignItems = 'center'
 
+  const wrapper = document.createElement('div')
+  wrapper.id = 'wrapper'
+  wrapper.style.display = 'flex'
+  wrapper.style.flexDirection = 'column'
+  wrapper.style.aspectRatio = `${mainDisplayWidth + 2.2} / ${messageDisplayHeight + mainDisplayHeight}`
+  wrapper.style.height = '100vh'
+  wrapper.style.maxWidth = '100vw'
+  wrapper.style.justifyContent = 'center'
+  wrapper.style.alignItems = 'center'
+
+  return wrapper
+}
+
+export const createGameDisplay = () => {
+  const wrapper = createHTMLWrapper()
+
+  // message display canvas
   const msg = createMessageDisplay(messageDisplayWidth, messageDisplayHeight)
   const msgContainer = msg.getContainer()!
+  msgContainer.style.width = '100%'
+  wrapper.appendChild(msgContainer)
+
+  // main game display canvas
   const main = createTileDisplay(mainDisplayWidth, mainDisplayHeight)
   const mainContainer = main.getContainer()!
+  mainContainer.style.width = '100%'
+  wrapper.appendChild(mainContainer)
 
-  msgContainer.style.aspectRatio = `${messageDisplayWidth / messageDisplayHeight}`
-
-  mainContainer.style.aspectRatio = `${mainDisplayWidth / mainDisplayHeight}`
-  mainContainer.style.height = '82vh'
-
-  host.appendChild(msgContainer)
-  host.appendChild(mainContainer)
-  document.body.appendChild(host)
+  document.body.appendChild(wrapper)
   return [msg, main]
 }
 

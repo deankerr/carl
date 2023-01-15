@@ -1,6 +1,6 @@
 // import fontURL from '../assets/Inconsolata.otf'
-import tileSetURL from '../assets/oryx_classic_lc40.png'
-import tileSet16URL from '../assets/oryx16.png'
+// import tileSet8URL from '../assets/oryx8.png'
+// import tileSet16URL from '../assets/oryx16.png'
 import tileSet24URL from '../assets/oryx24.png'
 import tileSet32URL from '../assets/oryx32.png'
 import { App } from './App'
@@ -20,23 +20,23 @@ console.log('it begins')
 //   init()
 // })
 
-let tileSetLoaded = false
-const tileSet = new Image()
-tileSet.src = tileSetURL
-tileSet.onload = () => {
-  window.tileSet = tileSet
-  tileSetLoaded = true
-  init()
-}
+// let tileSet8Loaded = false
+// const tileSet8 = new Image()
+// tileSet8.src = tileSet8URL
+// tileSet8.onload = () => {
+//   window.tileSet8 = tileSet8
+//   tileSet8Loaded = true
+//   init()
+// }
 
-let tileSet16Loaded = false
-const tileSet16 = new Image()
-tileSet16.src = tileSet16URL
-tileSet16.onload = () => {
-  window.tileSet16 = tileSet16
-  tileSet16Loaded = true
-  init()
-}
+// let tileSet16Loaded = false
+// const tileSet16 = new Image()
+// tileSet16.src = tileSet16URL
+// tileSet16.onload = () => {
+//   window.tileSet16 = tileSet16
+//   tileSet16Loaded = true
+//   init()
+// }
 
 let tileSet24Loaded = false
 const tileSet24 = new Image()
@@ -62,5 +62,15 @@ function init() {
     return
   }
 
-  if (tileSetLoaded && tileSet16Loaded && tileSet24Loaded && tileSet32Loaded) App()
+  // if (tileSet8Loaded && tileSet16Loaded && tileSet24Loaded && tileSet32Loaded) App()
+  if (tileSet24Loaded && tileSet32Loaded) App()
+}
+
+declare global {
+  interface Window {
+    // tileSet8: HTMLImageElement
+    // tileSet16: HTMLImageElement
+    tileSet24: HTMLImageElement
+    tileSet32: HTMLImageElement
+  }
 }

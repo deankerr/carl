@@ -13,7 +13,9 @@ const mapChar = (x: number, y: number, tileSize: number): [number, number] => {
   return [x * tileSize, y * tileSize]
 }
 
-const s = 16
+const t = 32 // main tileset size
+const s = 24 // msg tileset size
+
 export const tileMapOryxMessages = {
   ...mapRange(letters, 6, s),
   ...mapRange(letters.toLowerCase(), 6, s),
@@ -23,7 +25,6 @@ export const tileMapOryxMessages = {
   ' ': mapChar(13, 0, s),
 }
 
-const t = 24
 export const tileMapOryxMain = {
   ...mapRange(letters, 6, t),
   ...mapRange(letters.toLocaleLowerCase(), 6, t),

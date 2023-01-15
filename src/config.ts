@@ -7,7 +7,7 @@ const CONFIG = {
   seed: null,
   mainDisplayWidth: 56,
   mainDisplayHeight: 31,
-  messageDisplayWidth: 72,
+  messageDisplayWidth: 84,
   messageDisplayHeight: 4,
   levelWidth: 48,
   levelHeight: 38,
