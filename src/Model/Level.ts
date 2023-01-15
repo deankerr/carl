@@ -3,7 +3,7 @@ import * as ROT from 'rot-js'
 import { Grid } from './Grid'
 import { Entity } from '../Core/Entity'
 import { Point } from './Point'
-import { Terrain_NEW, TerrainLegacyMap } from '../Core/Terrain'
+import { Terrain, TerrainLegacyMap } from '../Core/Terrain'
 import { pick, repeatUntil } from '../lib/util'
 
 export class Level {
@@ -33,7 +33,7 @@ export class Level {
   terrain(at: Point) {
     const t = this.terrainGrid.get(at)
 
-    if (t === null) return Terrain_NEW.endlessVoid
+    if (t === null) return Terrain.endlessVoid
     return TerrainLegacyMap[t]
   }
 

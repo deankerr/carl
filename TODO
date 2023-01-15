@@ -1,8 +1,6 @@
 ## UI/Render/Entity Templates/ (Class/Species?)
 
 - localStorage saves debug/init options so i dont have to keep changing the config file
-- render: move to key + lookup table, allow easier pallette switching. calculate seen color by subtraction rather than hardcode
-- Make all terrain into entities?
 - integrate messages/ui as widgets on top of level?
 - use entity color with their names in messages
 
@@ -14,6 +12,7 @@
 - Add more decoration terrain/items/void decor - reeds
 - Add simple animation (npc bobbing)/ Render decouple
 
+- render: move to key + lookup table, allow easier pallette switching.
 - Async update loop
 - Improve State/World init (remove state active?), World level switching/creation
 - (W)alk/autoexplore
