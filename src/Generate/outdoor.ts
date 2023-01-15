@@ -2,16 +2,17 @@
 import { CONFIG } from '../config'
 import { Level } from '../Model/Level'
 import { Grid } from '../Model/Grid'
-import { EntityTemplate, NewLevel } from './generate'
+import { NewLevel } from './generate'
 import { half, rnd, repeat } from '../lib/util'
 import { Point, Pt } from '../Model/Point'
 import { outdoorRuin } from './prefab/outdoorRuin'
-// import { stairsTest } from './prefab/stairtest'
+import { createTemplates, templates } from '../Core/Entity'
 
 export const outdoor = (width = CONFIG.mainDisplayWidth, height = CONFIG.mainDisplayHeight): NewLevel => {
   console.log('createOutdoor')
   const level = Grid.fill(width, height, 98)
-  const entities: EntityTemplate[] = []
+
+  const entities = createTemplates()
 
   const center = Pt(half(width), half(height))
   const northQuartile = Pt(center.x, half(center.y))
@@ -60,12 +61,14 @@ export const outdoor = (width = CONFIG.mainDisplayWidth, height = CONFIG.mainDis
   drawCluster(lakePtW, 40, 15) // shrub
   drawCluster(lakePtW, 80, 3) // water
   // some lake snakes
-  repeat(() => entities.push(['snake', lakePtW]), 2)
+  repeat(() => entities.beings.push([templates.snake, lakePtW]), 2)
 
   // a southern lake/shrubs
   const lakePtS = Pt(level.rndPt().x, rnd(southQuartile.y, height - 1))
   drawCluster(lakePtS, 10, 15) // shrub
   drawCluster(lakePtS, 20, 3) // water
+  // a toad
+  entities.beings.push([templates.toad, lakePtS])
 
   // ruin at center
   const prefab = outdoorRuin
@@ -86,7 +89,7 @@ export const outdoor = (width = CONFIG.mainDisplayWidth, height = CONFIG.mainDis
     row.split('').forEach((col, xi) => {
       const here = Pt(ruinPt.x + xi, ruinPt.y + yi)
       if (col === '+') {
-        entities.push(['door', here])
+        entities.doors.push(here)
         level.set(here, 98)
       } else if (col === 'm') {
         // remove mounds/peaks, leave grass
@@ -94,7 +97,7 @@ export const outdoor = (width = CONFIG.mainDisplayWidth, height = CONFIG.mainDis
         if (t === 13 || t === 14) level.set(here, 98)
       } else if (col === 'S') {
         // a skellybones
-        entities.push(['skeleton', here])
+        entities.beings.push([templates.skeleton, here])
         level.set(here, 98)
       } else {
         const t = ruinKey[col] ?? -1
@@ -111,11 +114,11 @@ export const outdoor = (width = CONFIG.mainDisplayWidth, height = CONFIG.mainDis
   // level.set(stairPt, 11)
 
   // some ghosts
-  repeat(() => entities.push(['ghost', center]), 4)
+  repeat(() => entities.beings.push([templates.ghost, center]), 4)
 
   // player, SW start position
-  const playerPos = Pt(2, level.height - 4)
-  entities.push(['player', playerPos])
+  entities.player = Pt(2, level.height - 4)
+  // const entities = { player, beings, doors }
 
   // debug markers
   // level.set(center, 3)

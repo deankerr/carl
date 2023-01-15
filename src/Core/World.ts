@@ -1,14 +1,13 @@
 // Entity/Component manager
 import { Components, componentName } from './Components'
 import { tagCurrentTurn } from '../Component'
-import { Entity, templates, hydrateBeing, hydrateDecor } from './Entity'
+import { Entity, hydrateBeing, hydrateDecor, createPlayer, EntityTemplates, createDoor } from './Entity'
 import { StateObject } from './State'
 import { half, objLog } from '../lib/util'
 import { Point, Pt } from '../Model/Point'
 import { TerrainType, TerrainNumMap } from './Terrain'
 import { Game } from './Game'
 import { Level } from '../Model/Level'
-import { EntityTemplates } from '../Generate'
 
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 export class World {
@@ -25,30 +24,28 @@ export class World {
     // this.message('Test message display. Test message display. Test message display. Test message display.')
   }
 
-  /*
-    World API
-    Everything that happens in the game should occur through this API.
-  */
+  //  World API - Everything that happens in the game should occur through this API.
 
-  // createTemplates(newTemplates: EntityTemplate[]) {
   createTemplates(newTemplates: EntityTemplates) {
-    // for (const templatePos of newTemplates) {
-    //   const [template, pos] = templatePos
-    //   const e = templates[template](pos)
-
-    //   const newEntity = this.create(e)
-    //   if ('tagActor' in newEntity) this.active.scheduler.add(newEntity.id, true)
-    // }
-
-    for (const being of newTemplates.beings) {
-      const [t, pos] = being
-      const entity = this.create(hydrateBeing(t, pos === 0 ? this.active.ptInRoom() : pos))
-      if ('tagActor' in entity) this.active.scheduler.add(entity.id, true)
+    if (newTemplates.beings) {
+      for (const being of newTemplates.beings) {
+        const [t, pos] = being
+        const entity = this.create(hydrateBeing(t, pos === 0 ? this.active.ptInRoom() : pos))
+        if ('tagActor' in entity) this.active.scheduler.add(entity.id, true)
+      }
     }
 
-    for (const decor of newTemplates.decor) {
-      const [t, pos] = decor
-      this.create(hydrateDecor(t, pos === 0 ? this.active.ptInRoom() : pos))
+    if (newTemplates.features) {
+      for (const feature of newTemplates.features) {
+        const [t, pos] = feature
+        this.create(hydrateDecor(t, pos === 0 ? this.active.ptInRoom() : pos))
+      }
+    }
+
+    if (newTemplates.doors) {
+      for (const pt of newTemplates.doors) {
+        this.create(createDoor(pt))
+      }
     }
   }
 
@@ -63,7 +60,7 @@ export class World {
       pt = Pt(half(this.active.width), half(this.active.height))
     }
 
-    const player = this.create(templates.player(pt))
+    const player = this.create(createPlayer(pt))
     this.active.scheduler.add(player.id, true)
   }
 

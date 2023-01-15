@@ -3,13 +3,14 @@ import { Point, Pt } from '../Model/Point'
 import { Grid } from '../Model/Grid'
 import { Level } from '../Model/Level'
 import { TerrainNumMap, TerrainType } from '../Core/Terrain'
-import { EntityTemplate, NewLevel } from './generate'
+import { NewLevel } from './generate'
 import { populateNPCs } from './features'
+import { createTemplates, templates } from '../Core/Entity'
 
 export const prefabRuin1 = (): NewLevel => {
   const fakeRooms: Point[][] = []
   let fakeRoomI = 0
-  const furnitureTemplates: EntityTemplate[] = []
+  const entities = createTemplates()
   const voidDecor = new Map<string, TerrainType>()
 
   const terrain: number[][] = ruin1.reduce((acc, row, yi) => {
@@ -30,10 +31,10 @@ export const prefabRuin1 = (): NewLevel => {
 
       switch (t) {
         case 'v':
-          furnitureTemplates.push(['shrub', here])
+          entities.features.push([templates.shrub, here])
           break
         case '+':
-          furnitureTemplates.push(['door', here])
+          entities.doors.push(here)
           break
         // case '>':
         //   entities.push(templates.player(Pt(xi, yi)))
@@ -46,8 +47,10 @@ export const prefabRuin1 = (): NewLevel => {
 
   const terrainGrid = Grid.from(terrain)
   const level = new Level('ruins1', terrainGrid, voidDecor, fakeRooms)
-  const entityTemplates = [...furnitureTemplates, ...populateNPCs(level)]
-  return [level, entityTemplates]
+
+  entities.beings = populateNPCs(level)
+
+  return [level, entities]
 }
 
 const tDict: { [key: string]: number } = {

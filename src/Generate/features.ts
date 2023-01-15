@@ -1,44 +1,21 @@
-import * as ROT from 'rot-js'
-import { templates } from '../Core/Entity'
 import { Level } from '../Model/Level'
 import { rnd } from '../lib/util'
-import { EntityTemplate } from './generate'
+import { BeingTemplate, beings, features, FeatureTemplate } from '../Core/Entity'
+import { Point } from '../Model/Point'
 
 export const populateNPCs = (level: Level) => {
-  const entityTemplates: EntityTemplate[] = []
+  const newBeings: [BeingTemplate, Point | 0][] = Object.entries(beings).map(b => [b[1], level.ptInRoom()])
 
-  const npcs = ROT.RNG.shuffle([
-    'orc',
-    'spider',
-    'snake',
-    'toad',
-    'crab',
-    'ghost',
-    'demon',
-    'hammerhead',
-    'skeleton',
-    'chicken',
-    'bat',
-    'karl',
-  ]) as Array<keyof typeof templates>
-
-  level.rooms.forEach((_r, i) => {
-    if (i === 0 || i >= npcs.length) return
-    const pos = level.ptInRoom(i)
-    const choice = npcs[i]
-    if (templates[choice]) entityTemplates.push([choice, pos])
-  })
-
-  return entityTemplates
+  return newBeings
 }
 
 export const createDecor = (level: Level) => {
-  const entityTemplates: EntityTemplate[] = []
+  const newFeatures: [FeatureTemplate, Point | 0][] = []
 
   level.rooms.forEach((r, i) => {
     // shrubbery
     if (i % 3 === 0) {
-      for (let j = 0; j < 6; j++) entityTemplates.push(['shrub', level.ptInRoom(i)])
+      for (let j = 0; j < 6; j++) newFeatures.push([features.shrub, level.ptInRoom(i)])
     }
 
     // water
@@ -53,5 +30,5 @@ export const createDecor = (level: Level) => {
     if (t === 1 && rnd(0, 16) === 0) level.terrainGrid.set(pt, 2)
   })
 
-  return entityTemplates
+  return newFeatures
 }
