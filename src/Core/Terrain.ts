@@ -161,31 +161,31 @@ export const Terrain: { [key: string]: TerrainType } = {
   },
 }
 
-export const TerrainNumMap: { [key: number]: TerrainType } = {
-  0: Terrain.path,
-  1: Terrain.wall,
-  2: Terrain.crackedWall,
-  3: Terrain.water,
-  4: Terrain.crackedPath1,
-  5: Terrain.crackedPath2,
-  6: Terrain.crackedPath3,
-  7: Terrain.crackedPath4,
-  8: Terrain.grass,
-  9: Terrain.deadGrass,
-  10: Terrain.stairsAscending,
-  11: Terrain.stairsDescending,
-  12: Terrain.tree,
-  13: Terrain.mound,
-  14: Terrain.peak,
-  15: Terrain.shrub,
-  98: Terrain.void,
-  99: Terrain.endlessVoid,
-}
+// export const TerrainNumMap: { [key: number]: TerrainType } = {
+//   0: Terrain.path,
+//   1: Terrain.wall,
+//   2: Terrain.crackedWall,
+//   3: Terrain.water,
+//   4: Terrain.crackedPath1,
+//   5: Terrain.crackedPath2,
+//   6: Terrain.crackedPath3,
+//   7: Terrain.crackedPath4,
+//   8: Terrain.grass,
+//   9: Terrain.deadGrass,
+//   10: Terrain.stairsAscending,
+//   11: Terrain.stairsDescending,
+//   12: Terrain.tree,
+//   13: Terrain.mound,
+//   14: Terrain.peak,
+//   15: Terrain.shrub,
+//   98: Terrain.void,
+//   99: Terrain.endlessVoid,
+// }
 
 // [name, char, color, walkable, transparent, trodOn?]
 const templates = {
   path: ['path', 'O.', '#262626', 'true', 'true'],
-  wall: ['wall', 'O.#', '#767676', 'false', 'false'],
+  wall: ['wall', 'O#', '#767676', 'false', 'false'],
   stairsDescending: ['descending stairs', 'O>', '#777', 'true', 'true', `There's a staircase leading down here.`],
   stairsAscending: ['ascending stairs', 'O<', '#777', 'true', 'true', `There's a staircase leading up here.`],
   crackedWall: ['cracked wall', 'O[', '#767676', 'false', 'false'],

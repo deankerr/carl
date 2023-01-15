@@ -1,11 +1,11 @@
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
 import { Game } from './Game'
-import { World } from './World'
+import { EntityWith, World } from './World'
 import { TurnMessages } from './State'
-import { TerrainNumMap } from './Terrain'
 import { half, floor, clamp, min } from '../lib/util'
 import { Color } from 'rot-js/lib/color'
+import { Entity } from './Entity'
 
 // Seen terrain memory color modifiers
 const darkenSat = 0.1
@@ -51,7 +51,7 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
   const doors = world.get('position', 'render', 'door')
   const entities = world.get('position', 'render').filter(e => doors.every(d => d.id !== e.id) && e !== player)
 
-  level.terrainGrid.each((here, t) => {
+  level.terrainGrid.each(here => {
     const render = { x: offsetX + here.x, y: offsetY + here.y }
 
     // skip this location if we're outside of the viewport
@@ -60,7 +60,7 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
     }
 
     // create array stacks of chars and colors of terrain + entities here
-    const terrain = TerrainNumMap[t]
+    const terrain = level.terrain(here) as EntityWith<Entity, 'render'>
     const char: string[] = []
     const color: string[] = []
 

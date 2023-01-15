@@ -3,7 +3,7 @@ import * as ROT from 'rot-js'
 import { Grid } from './Grid'
 import { Entity } from '../Core/Entity'
 import { Point } from './Point'
-import { TerrainType, Terrain_NEW, TerrainLegacyMap } from '../Core/Terrain'
+import { Terrain_NEW, TerrainLegacyMap } from '../Core/Terrain'
 import { pick, repeatUntil } from '../lib/util'
 
 export class Level {
@@ -23,7 +23,7 @@ export class Level {
     readonly label: string,
 
     readonly terrainGrid: Grid<number>,
-    readonly voidDecor: Map<string, TerrainType>,
+    readonly voidDecor: Map<string, Entity>,
     readonly rooms: Point[][]
   ) {
     this.width = terrainGrid.width

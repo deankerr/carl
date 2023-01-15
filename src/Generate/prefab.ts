@@ -2,16 +2,16 @@ import { ruin1 } from './prefab/ruin1'
 import { Point, Pt } from '../Model/Point'
 import { Grid } from '../Model/Grid'
 import { Level } from '../Model/Level'
-import { TerrainNumMap, TerrainType } from '../Core/Terrain'
+import { TerrainLegacyMap } from '../Core/Terrain'
 import { NewLevel } from './generate'
 import { populateNPCs } from './features'
-import { createTemplates, templates } from '../Core/Entity'
+import { createTemplates, Entity, templates } from '../Core/Entity'
 
 export const prefabRuin1 = (): NewLevel => {
   const fakeRooms: Point[][] = []
   let fakeRoomI = 0
   const entities = createTemplates()
-  const voidDecor = new Map<string, TerrainType>()
+  const voidDecor = new Map<string, Entity>()
 
   const terrain: number[][] = ruin1.reduce((acc, row, yi) => {
     const line: number[] = row.split('').map((t, xi) => {
@@ -24,7 +24,7 @@ export const prefabRuin1 = (): NewLevel => {
 
       // record void decor pt and type, return as path
       if (t === ',' || t === ':') {
-        voidDecor.set(here.s, TerrainNumMap[tDict[t]])
+        voidDecor.set(here.s, TerrainLegacyMap[tDict[t]])
       }
       if (tDict[t]) return tDict[t]
 
