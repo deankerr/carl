@@ -7,6 +7,7 @@ import { objLog } from '../lib/util'
 import { Point, Pt } from '../Model/Point'
 import { Game } from './Game'
 import { Level } from '../Model/Level'
+import { colorMessage } from '../lib/messages'
 
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 export class World {
@@ -143,9 +144,11 @@ export class World {
   }
 
   // add a message to the buffer
-  message(msg: string) {
+  message(newMsg: string) {
     const { messages, playerTurns } = this.state
-    console.log('msg:', msg)
+
+    const msg = colorMessage(newMsg)
+
     // empty buffer
     if (messages.length === 0) messages.push([playerTurns, [msg]])
     // add to existing buffer for this turn

@@ -164,7 +164,7 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
 }
 
 export const renderMessages = (d: ROT.Display, world: World, options: Game['options']) => {
-  const { messageDisplayWidth, messageDisplayHeight, backgroundColor } = CONFIG
+  const { messageDisplayWidth, messageDisplayHeight } = CONFIG
   const { playerTurns, messages } = world.state
   const buffer: TurnMessages[] = []
 
@@ -177,23 +177,27 @@ export const renderMessages = (d: ROT.Display, world: World, options: Game['opti
       break
   }
 
-  let msgString = ''
+  let combinedMsg = ''
   for (const msg of buffer) {
     const diff = playerTurns - msg[0]
-    let color = '#FFF'
+
+    let color = CONFIG.messageColor
+
+    // highlight entity names with their color
+    // const entityMsg = msg[1].s
 
     if (diff > 0) {
       // fade messages as they get older
-      const bgLum = ROT.Color.rgb2hsl(ROT.Color.fromString(backgroundColor))[2]
+      const bgLum = ROT.Color.rgb2hsl(ROT.Color.fromString(CONFIG.backgroundColor))[2]
       const subtractLum = (diff * diff) / 100 // ease in
       color = darken(color, 0, subtractLum, bgLum)
     }
 
-    msgString += ` %c{${color}}` + msg[1].join('  ')
+    combinedMsg += ` %c{${color}}` + msg[1].join('  ')
   }
-  console.log('msgString:', msgString)
+  console.log('msgString:', combinedMsg)
   d.clear()
-  d.drawText(0, 0, msgString)
+  d.drawText(0, 0, combinedMsg)
 
   // debug message display marker
   if (options.debugMode) {

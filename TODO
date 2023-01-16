@@ -31,4 +31,6 @@
 - tagCurrentTurn/acting components redundant
 
 === Bugs ===
-Levels don't start on player turn after gen/level change
+
+- Levels don't start on player turn after gen/level change
+- Apostrophe missing in msg charset

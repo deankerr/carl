@@ -21,6 +21,7 @@ const CONFIG = {
   backgroundColor: '#191919',
   // htmlBGColor: PROD ? '#191919' : 'pink',
   htmlBGColor: PROD ? '#191919' : '#191919',
+  messageColor: '#FFFFFF',
 }
 
 export { CONFIG }
