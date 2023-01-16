@@ -2,14 +2,17 @@ import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
 import { Game } from './Game'
 import { EntityWith, World } from './World'
-import { TurnMessages } from './State'
 import { half, floor, clamp, min } from '../lib/util'
 import { Entity } from './Entity'
+import { Message } from '../lib/messages'
 
 // Seen terrain memory color modifiers
 const darkenSat = 0.1
 const darkenLum = 0.1
 const darkenLumMin = 0.12
+
+// luminance of background color (used as min value)
+const bgLum = ROT.Color.rgb2hsl(ROT.Color.fromString(CONFIG.backgroundColor))[2]
 
 export const renderLevel = (display: ROT.Display, world: World, options: Game['options']) => {
   // console.log('Render', world.active)
@@ -166,34 +169,37 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
 export const renderMessages = (d: ROT.Display, world: World, options: Game['options']) => {
   const { messageDisplayWidth, messageDisplayHeight } = CONFIG
   const { playerTurns, messages } = world.state
-  const buffer: TurnMessages[] = []
+  const buffer: Message[] = []
 
+  console.log('messages:', messages)
+
+  // TODO improve?
   for (const msg of messages) {
     buffer.push(msg)
-    if (
-      ROT.Text.measure(buffer.map(m => m[1].join(' ')).join(' '), messageDisplayWidth).height >
-      messageDisplayHeight + 1
-    )
-      break
+    if (ROT.Text.measure(buffer.map(m => m.raw).join(' '), messageDisplayWidth).height > messageDisplayHeight + 1) break
   }
 
   let combinedMsg = ''
   for (const msg of buffer) {
-    const diff = playerTurns - msg[0]
-
-    let color = CONFIG.messageColor
-
-    // highlight entity names with their color
-    // const entityMsg = msg[1].s
+    const diff = playerTurns - msg.turn
+    let baseColor = CONFIG.messageColor
+    let colors = msg.colors
 
     if (diff > 0) {
       // fade messages as they get older
-      const bgLum = ROT.Color.rgb2hsl(ROT.Color.fromString(CONFIG.backgroundColor))[2]
       const subtractLum = (diff * diff) / 100 // ease in
-      color = darken(color, 0, subtractLum, bgLum)
+
+      baseColor = transformHSL(baseColor, 1 - subtractLum, bgLum)
+      colors = colors.map(c => transformHSL(c, (1 - subtractLum) * 0.5, bgLum))
     }
 
-    combinedMsg += ` %c{${color}}` + msg[1].join('  ')
+    let colorMsg = msg.display
+    // add entity colors %E
+    colors.forEach(c => (colorMsg = colorMsg.replace('%E', `%c{${c}}`)))
+    // base color %O
+    colorMsg = colorMsg.replaceAll('%O', `%c{${baseColor}}`)
+
+    combinedMsg += ` %c{${baseColor}}` + colorMsg
   }
   console.log('msgString:', combinedMsg)
   d.clear()
@@ -209,7 +215,15 @@ export const renderMessages = (d: ROT.Display, world: World, options: Game['opti
 
 function darken(color: string, saturation: number, luminosity: number, minLum: number) {
   const c = ROT.Color.rgb2hsl(ROT.Color.fromString(color))
+
   c[1] = min(0, c[1] - saturation)
   c[2] = min(minLum, c[2] - luminosity)
+  return ROT.Color.toHex(ROT.Color.hsl2rgb(c))
+}
+
+// return a hex color with set luminance
+function transformHSL(color: string, lum: number, minLum: number) {
+  const c = ROT.Color.rgb2hsl(ROT.Color.fromString(color))
+  c[2] = min(minLum, lum)
   return ROT.Color.toHex(ROT.Color.hsl2rgb(c))
 }

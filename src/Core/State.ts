@@ -1,5 +1,6 @@
 // The central, (not really) immutable repository for all game world state
 import { Level } from '../Model/Level'
+import { Message } from '../lib/messages'
 
 export type TurnMessages = [number, string[]]
 
@@ -8,7 +9,7 @@ export type StateObject = {
   levels: Level[]
   nextID: number
   playerTurns: number
-  messages: TurnMessages[]
+  messages: Message[]
   graveyard: string[] // list of entity IDs that have been removed, currently for debug only
 }
 
