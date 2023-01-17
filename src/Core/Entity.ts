@@ -63,7 +63,7 @@ export const beings = {
 
   // spooks
   ghost: ['wailing spirit', 'Og', 'white'],
-  demon: ['SATAN', 'OD', 'red'],
+  demon: ['Natas, the mysterious wanderer', 'OD', 'red'],
   skeleton: ['skellybones', 'OS', 'white'],
   blob: ['polyp henchmen', 'blob', 'seagreen'],
   blobAssassin: ['polyp assassin', 'blob', 'lightsalmon'],
@@ -72,14 +72,15 @@ export const beings = {
   zombie: ['zombie', 'Z', 'maroon'],
   redJelly: ['strawberry jelly', 'j', 'red'],
   greenJelly: ['cucumber jelly', 'j', 'green'],
-  grapeJelly: ['grape jelly', 'j', 'purple'],
-  bananaJelly: ['banana jelly', 'j', 'yellow'],
+  whiteJelly: ['milk jelly', 'j', 'silver'],
+  yellowJelly: ['cheese jelly', 'j', 'yellow'],
 
   // intelligent
   orc: ['orc porkhoarder', 'O', 'green'],
   orc2: ['orc forkstalker', 'O', 'purple'],
-  orc3: ['orc portcorker', 'O', 'goldenrod'],
-  karl: ['Karl', 'K', 'yellow'],
+  orc3: ['orc portworker', 'O', 'goldenrod'],
+  orc4: ['orc curdchurner', 'O', 'olive'],
+  karl: ['Karl The Clown', 'K', 'yellow'],
   giant: ['giant bloke', 'G', 'orchid'],
   interest: ['compound interest', '%', 'peru'],
 }

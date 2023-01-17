@@ -37,8 +37,10 @@
 - ?tagCurrentTurn/acting components redundant
 - enemy: chuckler, beetle, horsefly
 - level: voronoi map - bee hive/crystal cavern
+- Standard colors (standard sat/lum?)
 
 # Known Bugs
 
 - Levels don't start on player turn after gen/level change
 - Apostrophe missing in msg charset
+- Message entity colors rematches names that are substrings of other names
