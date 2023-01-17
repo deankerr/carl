@@ -2,8 +2,6 @@
 import { Level } from '../Model/Level'
 import { Message } from '../lib/messages'
 
-export type TurnMessages = [number, string[]]
-
 export type StateObject = {
   active: Level // Active level, reference to a level in levels[]
   levels: Level[]

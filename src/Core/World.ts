@@ -23,9 +23,9 @@ export class World {
     this.message('You begin your queste.')
     // this.message('Test message display. Test message display. Test message display. Test message display.')
 
-    this.message(
-      'turncoat crab plus Door to the strawberry jelly to the water with the mound and the zombie. Also, the Karl and the path and the grape jelly.'
-    )
+    // this.message(
+    //   'turncoat crab plus Door to the strawberry jelly to the water with the mound and the zombie. Also, the Karl and the path and the grape jelly.'
+    // )
     this.message(
       'Door to the strawberry jelly to the water with the mound and the zombie. Also, the Karl and the path and the grape jelly.'
     )
@@ -156,12 +156,10 @@ export class World {
   message(newMsg: string) {
     const { messages, playerTurns } = this.state
     const colors = colorizeMessage(newMsg)
-    console.log('WORLD colors:', colors)
 
     // add to existing buffer for this turn
     if (messages.length > 0 && messages[0].turn === playerTurns) {
       messages[0].colors = [...messages[0].colors, ...colors]
-      console.log('WORLD combined colors:', messages[0].colors)
       messages[0].raw += ' ' + newMsg
     }
     // new buffer for this turn
