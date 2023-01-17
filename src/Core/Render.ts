@@ -182,16 +182,17 @@ export const renderMessages = (d: ROT.Display, world: World, options: Game['opti
   let combinedMsg = ''
   for (const msg of buffer) {
     const diff = playerTurns - msg.turn
-    let baseColor = CONFIG.messageColor
+    // let baseColor = CONFIG.messageColor
+    let baseColor = '#DDD'
     let colors = msg.colors
 
-    if (diff > 0) {
-      // fade messages as they get older
-      const subtractLum = (diff * diff) / 100 // ease in
+    // if (diff > 0) {
+    // fade messages as they get older
+    const subtractLum = (diff * diff) / 100 // ease in
 
-      baseColor = transformHSL(baseColor, 1 - subtractLum, bgLum)
-      colors = colors.map(c => transformHSL(c, (1 - subtractLum) * 0.5, bgLum))
-    }
+    baseColor = transformHSL(baseColor, 1 - subtractLum, bgLum)
+    colors = colors.map(c => transformHSL(c, (1 - subtractLum) * 0.5, bgLum))
+    // }
 
     let colorMsg = msg.display
     // add entity colors %E

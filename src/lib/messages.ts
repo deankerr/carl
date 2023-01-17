@@ -9,7 +9,7 @@ const createRegex = (val: string) => {
 }
 
 // [regex, entityName, color]
-const entityColors = [
+const entityColor = [
   ...Object.entries(templates).map(e => [createRegex(e[1][0]), e[1][0], hex(e[1][2])]),
   ...Object.entries(terrainTemplates).map(e => [createRegex(e[1][0]), e[1][0], hex(e[1][2])]),
   [createRegex('door'), 'door', '#73513d'],
@@ -18,6 +18,7 @@ const entityColors = [
   const nameB = b[1] as string
   return nameB.length - nameA.length
 })
+console.log('LIST:', entityColor)
 
 export type Message = {
   turn: number
@@ -28,11 +29,10 @@ export type Message = {
 
 // add the entity's color before its name
 export function colorizeMessage(msg: string) {
-  console.log('LIST:', entityColors)
   let result2 = msg
 
   const foundColors: [number, string][] = []
-  for (const entity of entityColors) {
+  for (const entity of entityColor) {
     const matches = msg.matchAll(entity[0] as RegExp)
 
     for (const match of matches) {
@@ -52,4 +52,18 @@ export function colorizeMessage(msg: string) {
   console.log('msgObj:', msgObj)
 
   return msgObj
+}
+
+export function colorizeMessage2(msg: string) {
+  let searchString = msg
+  const matchedTextColor: [RegExp, string][] = []
+
+  for (const entity of entityColor) {
+    const matches = msg.matchAll(entity[0] as RegExp)
+    for (const match of matches) {
+      console.log('match:', match, 'entity:', entity[1], 'color:', entity[2])
+      matchedTextColor.push([entity[0] as RegExp, entity[2] as string]) // TODO
+      // replace
+    }
+  }
 }
