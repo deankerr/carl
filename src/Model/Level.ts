@@ -20,11 +20,12 @@ export class Level {
   stairsAscending: Point | undefined
 
   constructor(
-    readonly label: string,
+    // bare level defaults as workaround until refactor
+    readonly label = 'bare',
 
-    readonly terrainGrid: Grid<number>,
-    readonly voidDecor: Map<string, Entity>,
-    readonly rooms: Point[][]
+    readonly terrainGrid = Grid.fill(1, 1, 0),
+    readonly voidDecor = new Map<string, Entity>(),
+    readonly rooms: Point[][] = []
   ) {
     this.width = terrainGrid.width
     this.height = terrainGrid.height

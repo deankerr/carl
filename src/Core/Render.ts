@@ -162,18 +162,20 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
   }
 }
 
+const msgDisplayMargin = 4 // space between each side of message and display edge
 const maxMessageAge = 16 // disappear after this many turns
 const minColorizedLum = 0.5 // colorized entity name min luminance
 export const renderMessages = (d: ROT.Display, world: World, options: Game['options']) => {
-  const { messageDisplayWidth, messageDisplayHeight } = CONFIG
-  const { playerTurns, messages } = world.state
+  const width = CONFIG.messageDisplayWidth - msgDisplayMargin * 2
+  const height = CONFIG.messageDisplayHeight
+  const { playerTurns, messages } = world
   const buffer: Message[] = []
 
   // find messages to display which are not too old, or overflow the display area
   for (const msg of messages) {
     if (playerTurns - msg.turn > maxMessageAge) break
     buffer.push(msg)
-    if (ROT.Text.measure(buffer.map(m => m.raw).join(' '), messageDisplayWidth).height > messageDisplayHeight + 1) break
+    if (ROT.Text.measure(buffer.map(m => m.raw).join(' '), width).height > height + 1) break
   }
 
   // combine each message into a single string, while coloring entity names
@@ -207,7 +209,7 @@ export const renderMessages = (d: ROT.Display, world: World, options: Game['opti
   }
 
   d.clear()
-  d.drawText(0, 0, combinedMsg)
+  d.drawText(msgDisplayMargin, 0, combinedMsg, width)
 
   // debug message display marker
   if (options.debugMode) {

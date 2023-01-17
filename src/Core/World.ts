@@ -2,28 +2,89 @@
 import { Components, componentName } from './Components'
 import { tagCurrentTurn } from '../Component'
 import { Entity, hydrateBeing, hydrateFeature, createPlayer, EntityTemplates, createDoor } from './Entity'
-import { StateObject } from './State'
 import { objLog } from '../lib/util'
 import { Point, Pt } from '../Model/Point'
 import { Game } from './Game'
 import { Level } from '../Model/Level'
-import { colorizeMessage } from '../lib/messages'
+import { colorizeMessage, Message } from '../lib/messages'
+import { RootOfTheWorld, TheWorld } from '../Templates/TheWorld'
 
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
+
 export class World {
-  state: StateObject
   active: Level
+  activeIndex = 0
   options: Game['options']
 
-  constructor(state: StateObject, options: Game['options']) {
-    this.state = state
+  // Game state
+  domains = TheWorld
+  activeDomain: typeof this.domains[keyof typeof this.domains]
+  messages: Message[] = [] // TODO rename messageLog
+  playerTurns = -1 // TODO start on 0
+  nextEntityID = 0
+
+  constructor(options: Game['options']) {
     this.options = options
-    this.active = state.active
+
+    this.domains = TheWorld
+
+    this.active = this.domains[RootOfTheWorld].levels[0]
+    this.activeDomain = this.domains[RootOfTheWorld]
+
+    this.setCurrentLevel(this.activeDomain, 0)
 
     this.message('You begin your queste.')
   }
 
   //  World API - Everything that happens in the game should occur through this API.
+
+  setCurrentLevel(location: typeof this.domains[keyof typeof this.domains], index: number) {
+    // generate a level if it does not yet exist
+    console.log('set level:', location.label, index, location)
+    if (index > location.levels.length - 1) {
+      console.log('world create level', location.generator)
+      const [level, entityTemplates] = location.generator()
+
+      location.levels.push(level)
+      this.active = location.levels[index]
+
+      this.createTemplates(entityTemplates)
+      this.createPlayer()
+    } else {
+      console.log('world change level')
+      this.active = location.levels[index]
+    }
+  }
+
+  changeLevel(dir: string) {
+    let nextIndex: number
+    if (dir === 'descend') {
+      nextIndex = this.activeIndex + 1
+    } else if (dir === 'ascend') {
+      nextIndex = this.activeIndex - 1
+    } else {
+      throw new Error('Invalid level change')
+    }
+
+    let nextDomain: typeof this.domains[keyof typeof this.domains]
+    if (nextIndex < 0) {
+      // change domain
+      // TODO temp
+      nextDomain = this.activeDomain.bottom as typeof this.activeDomain
+      nextIndex = 0
+    } else if (dir === 'descend') {
+      nextDomain = this.activeDomain.descend as typeof this.activeDomain
+      nextIndex = 0
+    } else if (dir === 'ascend') {
+      nextDomain = this.activeDomain.ascend as typeof this.activeDomain
+      nextIndex = 0
+    } else {
+      nextDomain = this.activeDomain
+      nextIndex = 0
+    }
+
+    this.setCurrentLevel(nextDomain, nextIndex)
+  }
 
   createTemplates(newTemplates: EntityTemplates) {
     if (newTemplates.features) {
@@ -63,7 +124,7 @@ export class World {
   // add new entity to state
   create(entity: Entity) {
     // stamp with next id
-    const id = entity.id + '-' + this.state.nextID++
+    const id = entity.id + '-' + this.nextEntityID++
     const newEntity = { ...entity, id }
     this.active.entities.push(newEntity)
     return newEntity
@@ -114,10 +175,10 @@ export class World {
       const result = this.active.scheduler.remove(actorEntity.id)
       if (!result) throw new Error('World: could not remove entity from turn queue')
     }
-    this.state.graveyard.push(entity.id)
   }
 
   nextTurn() {
+    console.log('this.active:', this.active)
     const prev = this.get('tagCurrentTurn')
     if (prev.length > 1) throw new Error('Multiple entities with current turn')
     // if (prev.length === 0) console.log('No tagCurrentTurn found')
@@ -144,16 +205,16 @@ export class World {
 
   // add a message to the buffer
   message(newMsg: string) {
-    const { messages, playerTurns } = this.state
+    const { messages } = this
     const colors = colorizeMessage(newMsg)
 
     // add to existing buffer for this turn
-    if (messages.length > 0 && messages[0].turn === playerTurns) {
+    if (messages.length > 0 && messages[0].turn === this.playerTurns) {
       messages[0].colors = [...messages[0].colors, ...colors]
       messages[0].raw += ' ' + newMsg
     }
     // new buffer for this turn
-    else messages.unshift({ turn: playerTurns, colors, raw: newMsg })
+    else messages.unshift({ turn: this.playerTurns, colors, raw: newMsg })
   }
 
   isTransparent(x: number, y: number) {
