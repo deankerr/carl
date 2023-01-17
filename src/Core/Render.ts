@@ -169,8 +169,6 @@ export const renderMessages = (d: ROT.Display, world: World, options: Game['opti
   const { playerTurns, messages } = world.state
   const buffer: Message[] = []
 
-  console.log('messages:', messages)
-
   // find messages to display which are not too old, or overflow the display area
   for (const msg of messages) {
     if (playerTurns - msg.turn > maxMessageAge) break

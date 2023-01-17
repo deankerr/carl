@@ -1,18 +1,23 @@
-## UI/Render/Entity Templates/ (Class/Species?)
-
-- localStorage saves debug/init options so i dont have to keep changing the config file
-- integrate messages/ui as widgets on top of level?
-- use entity color with their names in messages
-
 # TODO
+
+## Now
+
+- localStorage saves debug/init options so I don't have to keep changing the config file
+- Define world structure/level connections. (Debug - fast level switching with num keys)
+
+## Soon
 
 - Lighting effects (torches/decreasing light from player)
 - Config 'lightsOn' player FOV per level (ie lightson/large fov outdoors, lightsoff lesser fov in dungeon). Better debug controls
-- vignette
+- vignette/player position effects luminance level wide
 - Add more decoration terrain/items/void decor - reeds
 - Add simple animation (npc bobbing)/ Render decouple
 - stairs to Prefab ruin1 above outdoor, render outdoor "below"
+- Create logger, Exception handling
 
+## Someday
+
+- Test ROT-JS patch, submit PR
 - Level: create walkable pt list during generate for spawning
 - ? rename World to Engine, "world" describes level/dungeon connections, globals. messageLog
 - render: move to key + lookup table, allow easier pallette switching.
@@ -24,18 +29,16 @@
 - (light bleeds slightly into void? )
 - Unify function declaration style
 - Refactor Generate to improvement corridor placement, flexibility, visualizer integration into Game, entity generation
-- Move TerrainDictionary into Level
 - ?xxx Refactor world.here() result from tuple to object for better clarity
-- Create logger, Exception handling
-- Local storage random seed saving, easily travel backwards through previously generated levels
+- ?Local storage random seed saving, easily travel backwards through previously generated levels
 - Clean up CONFIG
 - Viewport doesn't move until you are closer to the side
 - Dev/Prod Configs
-- tagCurrentTurn/acting components redundant
+- ?tagCurrentTurn/acting components redundant
 - enemy: chuckler, beetle, horsefly
 - level: voronoi map - bee hive/crystal cavern
 
-=== Bugs ===
+# Known Bugs
 
 - Levels don't start on player turn after gen/level change
 - Apostrophe missing in msg charset

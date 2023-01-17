@@ -12,7 +12,6 @@ import { acting } from '../Component'
 import { handleBump, processDeath, handleMovement, processFOV, handleMeleeAttack } from '../System'
 import { actionName, ActionTypes, __randomMove, __wait } from '../Action'
 
-import { mouseClick } from '../lib/display'
 import { Keys } from '../lib/Keys'
 import { objLog } from '../lib/util'
 import { input } from './Input'
@@ -67,12 +66,6 @@ export class Game {
     this.world = new World(this.state, this.options)
     this.world.createTemplates(entityTemplates)
     this.world.createPlayer()
-
-    // mouse click coords
-    mouseClick(d, event => {
-      const pt = d.eventToPosition(event)
-      console.log(`${pt[0]},${pt[1]}`)
-    })
 
     // set up first turn
     this.world.nextTurn() // set the currentTurn

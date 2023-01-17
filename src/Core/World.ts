@@ -21,16 +21,6 @@ export class World {
     this.active = state.active
 
     this.message('You begin your queste.')
-    // this.message('Test message display. Test message display. Test message display. Test message display.')
-
-    // this.message(
-    //   'turncoat crab plus Door to the strawberry jelly to the water with the mound and the zombie. Also, the Karl and the path and the grape jelly.'
-    // )
-    this.message(
-      'Door to the strawberry jelly to the water with the mound and the zombie. Also, the Karl and the path and the grape jelly.'
-    )
-
-    // this.message('Door water mound peak grass dead grass')
   }
 
   //  World API - Everything that happens in the game should occur through this API.
