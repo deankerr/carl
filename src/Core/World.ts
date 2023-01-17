@@ -155,16 +155,17 @@ export class World {
   // add a message to the buffer
   message(newMsg: string) {
     const { messages, playerTurns } = this.state
-    const [display, colors] = colorizeMessage(newMsg)
+    const colors = colorizeMessage(newMsg)
+    console.log('WORLD colors:', colors)
 
     // add to existing buffer for this turn
     if (messages.length > 0 && messages[0].turn === playerTurns) {
-      messages[0].display += ' ' + display
       messages[0].colors = [...messages[0].colors, ...colors]
+      console.log('WORLD combined colors:', messages[0].colors)
       messages[0].raw += ' ' + newMsg
     }
     // new buffer for this turn
-    else messages.unshift({ turn: playerTurns, display, colors, raw: newMsg })
+    else messages.unshift({ turn: playerTurns, colors, raw: newMsg })
   }
 
   isTransparent(x: number, y: number) {

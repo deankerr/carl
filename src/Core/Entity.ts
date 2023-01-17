@@ -82,7 +82,7 @@ export const beings = {
   karl: ['Karl', 'K', 'yellow'],
   giant: ['giant bloke', 'G', 'orchid'],
   interest: ['compound interest', '%', 'peru'],
-} as const
+}
 
 export type BeingTemplate = typeof beings[keyof typeof beings]
 
@@ -101,7 +101,7 @@ export const hydrateBeing = (t: BeingTemplate, pt: Point) => {
 // [name, char, color, trod, walkable]
 export const features = {
   shrub: ['shrub', 'Ov', '#58a54a', 'You trample the pathetic shrub', 'true'],
-} as const
+}
 
 export const hydrateFeature = (t: FeatureTemplate, pt: Point) => {
   let entity = {

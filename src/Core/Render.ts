@@ -188,19 +188,19 @@ export const renderMessages = (d: ROT.Display, world: World, options: Game['opti
 
     // if (diff > 0) {
     // fade messages as they get older
-    const subtractLum = (diff * diff) / 100 // ease in
+    // const subtractLum = (diff * diff) / 100 // ease in
 
-    baseColor = transformHSL(baseColor, 1 - subtractLum, bgLum)
-    colors = colors.map(c => transformHSL(c, (1 - subtractLum) * 0.5, bgLum))
+    // baseColor = transformHSL(baseColor, 1 - subtractLum, bgLum)
+    // colors = colors.map(c => transformHSL(c, (1 - subtractLum) * 0.5, bgLum))
     // }
 
-    let colorMsg = msg.display
+    // let colorMsg = msg.display
     // add entity colors %E
-    colors.forEach(c => (colorMsg = colorMsg.replace('%E', `%c{${c}}`)))
+    // colors.forEach(c => (colorMsg = colorMsg.replace('%E', `%c{${c}}`)))
     // base color %O
-    colorMsg = colorMsg.replaceAll('%O', `%c{${baseColor}}`)
+    // colorMsg = colorMsg.replaceAll('%O', `%c{${baseColor}}`)
 
-    combinedMsg += ` %c{${baseColor}}` + colorMsg
+    combinedMsg += ` %c{${baseColor}}` + msg.raw
   }
   console.log('msgString:', combinedMsg)
   d.clear()
