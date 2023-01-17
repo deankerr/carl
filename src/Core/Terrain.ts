@@ -2,7 +2,7 @@ import * as C from '../Component'
 import { Entity } from './Entity'
 
 // [name, char, color, walkable, transparent, trodOn?]
-const templates = {
+export const terrainTemplates = {
   path: ['path', 'O.', '#262626', 'true', 'true'],
   wall: ['wall', 'O#', '#767676', 'false', 'false'],
   stairsDescending: ['descending stairs', 'O>', '#777', 'true', 'true', `There's a staircase leading down here.`],
@@ -17,26 +17,29 @@ const templates = {
   deadGrass: ['dead grass', 'O:', '#664f47', 'true', 'true'],
   shrub: ['shrub', 'Ov', '#58a54a', 'true', 'true'],
   tree: ['tree', 'OT', 'forestgreen', 'true', 'true'],
-  mound: ['mound', 'OM', '#6a4b39', 'true', 'true'],
+  mound: ['mound', 'OM', '#6a4b39', 'true', 'true', 'You round the mound.'],
   peak: ['peak', 'OP', '#2a5a3e', 'true', 'true', 'You summit the peak.'],
   void: ['void', ' ', '#000', 'true', 'true'],
   endlessVoid: ['endless void', ' ', '#000', 'false', 'false'],
 }
 
-export const Terrain: Record<keyof typeof templates, Entity> = Object.entries(templates).reduce((acc, curr) => {
-  const [key, template] = curr
-  const entity: Entity = {
-    id: template[0].replaceAll(' ', ''),
-    ...C.description(template[0]),
-    ...C.render({ base: { char: template[1], color: template[2] } }),
-  }
-  console.log('template[4]:', template[4])
-  if (template[3] === 'true') entity.tagWalkable = true
-  if (template[4] === 'false') entity.tagBlocksLight = true
-  if (template[5]) entity.trodOn = C.trodOn(template[5]).trodOn
+export const Terrain: Record<keyof typeof terrainTemplates, Entity> = Object.entries(terrainTemplates).reduce(
+  (acc, curr) => {
+    const [key, template] = curr
+    const entity: Entity = {
+      id: template[0].replaceAll(' ', ''),
+      ...C.description(template[0]),
+      ...C.render({ base: { char: template[1], color: template[2] } }),
+    }
 
-  return { ...acc, [key]: entity }
-}, {}) as Record<keyof typeof templates, Entity>
+    if (template[3] === 'true') entity.tagWalkable = true
+    if (template[4] === 'false') entity.tagBlocksLight = true
+    if (template[5]) entity.trodOn = C.trodOn(template[5]).trodOn
+
+    return { ...acc, [key]: entity }
+  },
+  {}
+) as Record<keyof typeof terrainTemplates, Entity>
 
 export const TerrainLegacyMap: { [key: number]: Entity } = {
   0: Terrain.path,

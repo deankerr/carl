@@ -55,7 +55,8 @@ export const beings = {
   spider: ['tarantula', 'Ox', 'cyan'],
   snake: ['taipan', 'Os', 'green'],
   toad: ['menacing toad', 'Ot', 'limegreen'],
-  crab: ['turncoat crab', 'Or', 'red'],
+  crab: ['crab', 'Or', 'red'],
+  crab2: ['turncoat crab', 'Or', 'green'],
   chicken: ['lil chickadee', 'Oc', 'white'],
   bat: ['bat of hell', 'Oa', 'red'],
   rat: ['boy rat', 'R', 'brown'],
@@ -76,11 +77,12 @@ export const beings = {
 
   // intelligent
   orc: ['orc porkhoarder', 'O', 'green'],
-  orc2: ['orc oystershucker', 'O', 'purple'],
+  orc2: ['orc forkstalker', 'O', 'purple'],
+  orc3: ['orc portcorker', 'O', 'goldenrod'],
   karl: ['Karl', 'K', 'yellow'],
   giant: ['giant bloke', 'G', 'orchid'],
   interest: ['compound interest', '%', 'peru'],
-} as const
+}
 
 export type BeingTemplate = typeof beings[keyof typeof beings]
 
@@ -99,7 +101,7 @@ export const hydrateBeing = (t: BeingTemplate, pt: Point) => {
 // [name, char, color, trod, walkable]
 export const features = {
   shrub: ['shrub', 'Ov', '#58a54a', 'You trample the pathetic shrub', 'true'],
-} as const
+}
 
 export const hydrateFeature = (t: FeatureTemplate, pt: Point) => {
   let entity = {
@@ -119,3 +121,9 @@ export const hydrateFeature = (t: FeatureTemplate, pt: Point) => {
 
 export const templates = { ...beings, ...features }
 export type FeatureTemplate = typeof features[keyof typeof features]
+
+export const colorName = (entity: Entity) => {
+  const name = entity.description?.name ?? 'MISSINGNAME'
+  const color = entity.render?.base.color ?? 'red'
+  return `%c{${color}}${name}%c{}`
+}

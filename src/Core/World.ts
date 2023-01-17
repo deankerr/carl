@@ -7,6 +7,7 @@ import { objLog } from '../lib/util'
 import { Point, Pt } from '../Model/Point'
 import { Game } from './Game'
 import { Level } from '../Model/Level'
+import { colorizeMessage } from '../lib/messages'
 
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 export class World {
@@ -21,6 +22,15 @@ export class World {
 
     this.message('You begin your queste.')
     // this.message('Test message display. Test message display. Test message display. Test message display.')
+
+    // this.message(
+    //   'turncoat crab plus Door to the strawberry jelly to the water with the mound and the zombie. Also, the Karl and the path and the grape jelly.'
+    // )
+    this.message(
+      'Door to the strawberry jelly to the water with the mound and the zombie. Also, the Karl and the path and the grape jelly.'
+    )
+
+    // this.message('Door water mound peak grass dead grass')
   }
 
   //  World API - Everything that happens in the game should occur through this API.
@@ -143,15 +153,17 @@ export class World {
   }
 
   // add a message to the buffer
-  message(msg: string) {
+  message(newMsg: string) {
     const { messages, playerTurns } = this.state
-    console.log('msg:', msg)
-    // empty buffer
-    if (messages.length === 0) messages.push([playerTurns, [msg]])
+    const colors = colorizeMessage(newMsg)
+
     // add to existing buffer for this turn
-    else if (messages[0][0] === playerTurns) messages[0][1].push(msg)
+    if (messages.length > 0 && messages[0].turn === playerTurns) {
+      messages[0].colors = [...messages[0].colors, ...colors]
+      messages[0].raw += ' ' + newMsg
+    }
     // new buffer for this turn
-    else messages.unshift([playerTurns, [msg]])
+    else messages.unshift({ turn: playerTurns, colors, raw: newMsg })
   }
 
   isTransparent(x: number, y: number) {

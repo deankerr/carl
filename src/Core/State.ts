@@ -1,14 +1,13 @@
 // The central, (not really) immutable repository for all game world state
 import { Level } from '../Model/Level'
-
-export type TurnMessages = [number, string[]]
+import { Message } from '../lib/messages'
 
 export type StateObject = {
   active: Level // Active level, reference to a level in levels[]
   levels: Level[]
   nextID: number
   playerTurns: number
-  messages: TurnMessages[]
+  messages: Message[]
   graveyard: string[] // list of entity IDs that have been removed, currently for debug only
 }
 

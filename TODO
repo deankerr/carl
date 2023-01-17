@@ -7,11 +7,14 @@
 # TODO
 
 - Lighting effects (torches/decreasing light from player)
-- Config 'lightsOn' player FOV per level (ie lightson/large fov outdoors, lightsoff lesser fov in dungeon)
+- Config 'lightsOn' player FOV per level (ie lightson/large fov outdoors, lightsoff lesser fov in dungeon). Better debug controls
 - vignette
 - Add more decoration terrain/items/void decor - reeds
 - Add simple animation (npc bobbing)/ Render decouple
+- stairs to Prefab ruin1 above outdoor, render outdoor "below"
 
+- Level: create walkable pt list during generate for spawning
+- ? rename World to Engine, "world" describes level/dungeon connections, globals. messageLog
 - render: move to key + lookup table, allow easier pallette switching.
 - Async update loop
 - Improve State/World init (remove state active?), World level switching/creation
@@ -29,6 +32,10 @@
 - Viewport doesn't move until you are closer to the side
 - Dev/Prod Configs
 - tagCurrentTurn/acting components redundant
+- enemy: chuckler, beetle, horsefly
+- level: voronoi map - bee hive/crystal cavern
 
 === Bugs ===
-Levels don't start on player turn after gen/level change
+
+- Levels don't start on player turn after gen/level change
+- Apostrophe missing in msg charset

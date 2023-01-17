@@ -2,14 +2,17 @@ import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
 import { Game } from './Game'
 import { EntityWith, World } from './World'
-import { TurnMessages } from './State'
 import { half, floor, clamp, min } from '../lib/util'
 import { Entity } from './Entity'
+import { Message, createWordRegex } from '../lib/messages'
 
 // Seen terrain memory color modifiers
 const darkenSat = 0.1
 const darkenLum = 0.1
 const darkenLumMin = 0.12
+
+// luminance of background color (used as min value)
+const bgLum = hexLuminance(CONFIG.backgroundColor)
 
 export const renderLevel = (display: ROT.Display, world: World, options: Game['options']) => {
   // console.log('Render', world.active)
@@ -156,44 +159,57 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
     display.drawText(2, viewport.y1 + 3, `offset: ${offsetX}/${offsetY}`)
     display.drawText(2, viewport.y1 + 4, `seed: ${ROT.RNG.getSeed()}`)
     display.drawText(2, viewport.y1 + 5, `Player: ${player.position.x},${player.position.y}`)
-
-    // for (let i = 0; i < botPanelSize; i++) {
-    //   d.draw(xMax, yMax - i, 'b', 'green', null)
-    // }
   }
 }
 
-export const renderMessages2 = (d: ROT.Display, world: World, options: Game['options']) => {
-  const { messageDisplayWidth, messageDisplayHeight, backgroundColor } = CONFIG
+const maxMessageAge = 16 // disappear after this many turns
+const minColorizedLum = 0.5 // colorized entity name min luminance
+export const renderMessages = (d: ROT.Display, world: World, options: Game['options']) => {
+  const { messageDisplayWidth, messageDisplayHeight } = CONFIG
   const { playerTurns, messages } = world.state
-  const buffer: TurnMessages[] = []
+  const buffer: Message[] = []
 
+  console.log('messages:', messages)
+
+  // find messages to display which are not too old, or overflow the display area
   for (const msg of messages) {
+    if (playerTurns - msg.turn > maxMessageAge) break
     buffer.push(msg)
-    if (
-      ROT.Text.measure(buffer.map(m => m[1].join(' ')).join(' '), messageDisplayWidth).height >
-      messageDisplayHeight + 1
-    )
-      break
+    if (ROT.Text.measure(buffer.map(m => m.raw).join(' '), messageDisplayWidth).height > messageDisplayHeight + 1) break
   }
 
-  let msgString = ''
+  // combine each message into a single string, while coloring entity names
+  let combinedMsg = ''
   for (const msg of buffer) {
-    const diff = playerTurns - msg[0]
-    let color = '#FFF'
+    // fade messages by decreasing luminance based on age
+    const turnDiff = playerTurns - msg.turn
+    const normalizedDiff = 1 - turnDiff / maxMessageAge
+    const easedDiff = normalizedDiff * normalizedDiff // ease in
 
-    if (diff > 0) {
-      // fade messages as they get older
-      const bgLum = ROT.Color.rgb2hsl(ROT.Color.fromString(backgroundColor))[2]
-      const subtractLum = (diff * diff) / 100 // ease in
-      color = darken(color, 0, subtractLum, bgLum)
+    const baseLum = hexLuminance(CONFIG.messageColor)
+
+    // reduce luminance by 0% (new message) -> 100% (maxMessageAge)
+    const baseColorFaded = transformHSL(CONFIG.messageColor, baseLum * easedDiff, bgLum)
+    // boost the starting point of low luminance entity colors to a minimum (0.5) for readability
+    const colorMapFaded = msg.colors.map(e => [
+      e[0],
+      transformHSL(e[1], min(minColorizedLum, hexLuminance(e[1])) * easedDiff, bgLum),
+    ])
+
+    // surround entity names with opening and closing ROT.JS color tags
+    let colorizedMsg = msg.raw
+    for (const item of colorMapFaded) {
+      const [name, color] = item
+      const target = createWordRegex(name)
+      const colorized = `%c{${color}}${name}%c{${baseColorFaded}}`
+      colorizedMsg = colorizedMsg.replaceAll(target, colorized)
     }
 
-    msgString += ` %c{${color}}` + msg[1].join('  ')
+    combinedMsg += ` %c{${baseColorFaded}}` + colorizedMsg
   }
-  console.log('msgString:', msgString)
+
   d.clear()
-  d.drawText(0, 0, msgString)
+  d.drawText(0, 0, combinedMsg)
 
   // debug message display marker
   if (options.debugMode) {
@@ -205,7 +221,24 @@ export const renderMessages2 = (d: ROT.Display, world: World, options: Game['opt
 
 function darken(color: string, saturation: number, luminosity: number, minLum: number) {
   const c = ROT.Color.rgb2hsl(ROT.Color.fromString(color))
+
   c[1] = min(0, c[1] - saturation)
   c[2] = min(minLum, c[2] - luminosity)
   return ROT.Color.toHex(ROT.Color.hsl2rgb(c))
+}
+
+// return a hex color with set luminance
+function transformHSL(color: string, lum: number, minLum: number) {
+  const c = ROT.Color.rgb2hsl(ROT.Color.fromString(color))
+  c[2] = min(minLum, lum)
+  return ROT.Color.toHex(ROT.Color.hsl2rgb(c))
+}
+
+function hexLuminance(color: string) {
+  const hsl = hexToHSL(color)
+  return hsl[2]
+}
+
+function hexToHSL(color: string) {
+  return ROT.Color.rgb2hsl(ROT.Color.fromString(color))
 }
