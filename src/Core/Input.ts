@@ -55,6 +55,10 @@ export function input(code: string): ActionTypes | null {
     case 'KeyR':
       return UI('render')
 
+    // Debug log world
+    case 'KeyQ':
+      return UI('debug_logworld')
+
     // case 'KeyN':
     //   return UI('newMap')
 

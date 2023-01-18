@@ -81,6 +81,9 @@ export class Game {
           this.render()
           console.log('UI: render')
           break
+        case 'debug_logworld':
+          this.world.__clog()
+          return
         default:
           console.log('UI: Action not implemented', playerAction)
       }
