@@ -41,9 +41,8 @@ export class World {
 
   setCurrentLevel(domain: Domain, index: number) {
     // generate a level if it does not yet exist
-    console.log('set level:', domain.label, index, domain)
     if (index > domain.levels.length - 1) {
-      console.log('world create level', domain.generator)
+      console.log('create', domain?.label, index)
       const [level, entityTemplates] = domain.generator()
 
       domain.levels.push(level)
@@ -51,13 +50,10 @@ export class World {
       this.activeIndex = index
       this.domain = domain
 
-      console.log('NEW this.active:', this.active)
-      console.log('NEW this.domain:', this.domain)
-
       this.createTemplates(entityTemplates)
       this.createPlayer()
     } else {
-      console.log('world change level')
+      console.log('change', domain?.label, index)
       this.active = domain.levels[index]
       this.activeIndex = index
     }
@@ -215,7 +211,6 @@ export class World {
   }
 
   nextTurn() {
-    console.log('this.active:', this.active)
     const prev = this.get('tagCurrentTurn')
     if (prev.length > 1) throw new Error('Multiple entities with current turn')
     // if (prev.length === 0) console.log('No tagCurrentTurn found')
@@ -278,8 +273,8 @@ export class World {
     return modify(this.active, e)
   }
 
-  __clog() {
-    console.group('World')
+  __clog(collapse = false) {
+    collapse ? console.groupCollapsed('World') : console.group('World')
     console.log('domainMap', this.domainMap)
     console.log('domain', this.domain)
     console.log('active', this.active)

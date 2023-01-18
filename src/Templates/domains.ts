@@ -1,20 +1,5 @@
 // define domains
 
-// type DomainTemplate = {
-
-//     label: string;
-//     root?: true;
-//     revealed: boolean;
-//     playerFOV: number;
-//     generator: string;
-//   connections: {
-//     top?: string
-//     ascend?:
-//         descend: string;
-//     };
-
-// }
-
 export const domains = [
   {
     label: 'outdoor',

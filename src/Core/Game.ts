@@ -44,7 +44,7 @@ export class Game {
     this.world.nextTurn() // set the currentTurn
     processFOV(this.world)
 
-    this.world.__clog()
+    this.world.__clog(true)
 
     this.render()
 

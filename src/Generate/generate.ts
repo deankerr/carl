@@ -25,7 +25,6 @@ export type NewLevel = [Level, EntityTemplates]
 
 export const dungeon4 = (stairsDown = true, stairsUp = false): NewLevel => {
   const data = create({
-    // width: floor(CONFIG.mainDisplayWidth * 1.2),
     width: floor(CONFIG.mainDisplayWidth),
     height: floor(CONFIG.mainDisplayHeight),
     minRoomW: 5,
@@ -103,13 +102,3 @@ export const arena = (): NewLevel => {
 
   return [new Level('arena', terrain, new Map(), []), templates]
 }
-
-// export const bigRoom = () => {
-//   const terrain = Grid.fill(levelWidthTileset, levelHeightTileset, 0)
-//   return {
-//     terrain,
-//     rooms: [Room.scaled(half(levelWidthTileset), half(levelHeightTileset), 1, 1)],
-//     entities: [],
-//     label: 'big room',
-//   }
-// }
