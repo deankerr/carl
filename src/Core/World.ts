@@ -2,28 +2,120 @@
 import { Components, componentName } from './Components'
 import { tagCurrentTurn } from '../Component'
 import { Entity, hydrateBeing, hydrateFeature, createPlayer, EntityTemplates, createDoor } from './Entity'
-import { StateObject } from './State'
 import { objLog } from '../lib/util'
 import { Point, Pt } from '../Model/Point'
 import { Game } from './Game'
 import { Level } from '../Model/Level'
-import { colorizeMessage } from '../lib/messages'
+import { colorizeMessage, Message } from '../lib/messages'
+import { createDomains, Domain, DomainMap } from '../Generate/domains'
 
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
+
 export class World {
-  state: StateObject
-  active: Level
   options: Game['options']
 
-  constructor(state: StateObject, options: Game['options']) {
-    this.state = state
+  // Game state
+  domainMap: DomainMap
+  domain: Domain
+  active: Level
+  activeIndex = 0
+
+  messages: Message[] = [] // TODO rename messageLog
+  playerTurns = -1 // TODO start on 0
+  nextEntityID = 0
+
+  constructor(options: Game['options']) {
     this.options = options
-    this.active = state.active
+
+    // initialize world structure, set root level as active
+    const [domainMap, root] = createDomains()
+    this.domainMap = domainMap
+    this.domain = root
+    this.setCurrentLevel(this.domain, 0)
+    this.active = this.domain.levels[0]
 
     this.message('You begin your queste.')
   }
 
   //  World API - Everything that happens in the game should occur through this API.
+
+  setCurrentLevel(domain: Domain, index: number) {
+    // generate a level if it does not yet exist
+    if (index > domain.levels.length - 1) {
+      console.log('create', domain?.label, index)
+      const [level, entityTemplates] = domain.generator()
+
+      domain.levels.push(level)
+      this.active = domain.levels[index]
+      this.activeIndex = index
+      this.domain = domain
+
+      this.createTemplates(entityTemplates)
+      this.createPlayer()
+    } else {
+      console.log('change', domain?.label, index)
+      this.active = domain.levels[index]
+      this.activeIndex = index
+    }
+  }
+
+  changeLevel(dir: number) {
+    console.log('changeLevel:', dir)
+    let nextDomain: Domain | undefined
+    let nextIndex: number | undefined
+
+    const { top, ascend, descend, bottom } = this.domain.connections
+
+    // descend
+    if (dir === 1) {
+      console.log('changeLevel down')
+      if (descend) {
+        if (descend !== this.domain) {
+          console.log('changeLevel descend domain')
+          // descend to another domain
+          nextDomain = descend
+          nextIndex = 0
+          // ????
+        } else if (this.activeIndex === 50 && bottom) {
+          console.log('changeLevel bottom')
+          // descend out of dungeon
+          nextDomain = bottom
+          nextIndex = 0
+        } else {
+          console.log('changeLevel descend')
+          nextDomain = descend
+          nextIndex = this.activeIndex + 1
+        }
+      }
+    }
+
+    // ascend
+    if (dir === -1) {
+      console.log('changeLevel up')
+      if (ascend) {
+        if (ascend !== this.domain) {
+          console.log('changeLevel ascend domain')
+          // ascend to another domain
+          nextDomain = ascend
+          nextIndex = 0
+        } else if (this.activeIndex === 0 && top) {
+          console.log('changeLevel top')
+          // ascend out of dungeon
+          nextDomain = top
+          nextIndex = 0
+        } else {
+          console.log('changeLevel ascend ')
+          nextDomain = ascend
+          nextIndex = this.activeIndex - 1
+        }
+      }
+    }
+
+    console.log('changelevel to:', nextDomain, nextIndex)
+    if (!nextDomain || nextIndex === undefined) throw new Error('Could not determine where to go')
+
+    this.setCurrentLevel(nextDomain, nextIndex)
+  }
 
   createTemplates(newTemplates: EntityTemplates) {
     if (newTemplates.features) {
@@ -56,14 +148,16 @@ export class World {
   createPlayer(pt?: Point) {
     if (this.get('tagPlayer').length > 0) return
 
-    const player = this.create(createPlayer(pt ?? this.active.stairsAscending ?? this.active.ptInRoom()))
+    const player = this.create(
+      createPlayer(pt ?? this.active.stairsAscendingPt ?? this.active.ptInRoom(), this.domain.playerFOV)
+    )
     this.active.scheduler.add(player.id, true)
   }
 
   // add new entity to state
   create(entity: Entity) {
     // stamp with next id
-    const id = entity.id + '-' + this.state.nextID++
+    const id = entity.id + '-' + this.nextEntityID++
     const newEntity = { ...entity, id }
     this.active.entities.push(newEntity)
     return newEntity
@@ -114,7 +208,6 @@ export class World {
       const result = this.active.scheduler.remove(actorEntity.id)
       if (!result) throw new Error('World: could not remove entity from turn queue')
     }
-    this.state.graveyard.push(entity.id)
   }
 
   nextTurn() {
@@ -144,16 +237,16 @@ export class World {
 
   // add a message to the buffer
   message(newMsg: string) {
-    const { messages, playerTurns } = this.state
+    const { messages } = this
     const colors = colorizeMessage(newMsg)
 
     // add to existing buffer for this turn
-    if (messages.length > 0 && messages[0].turn === playerTurns) {
+    if (messages.length > 0 && messages[0].turn === this.playerTurns) {
       messages[0].colors = [...messages[0].colors, ...colors]
       messages[0].raw += ' ' + newMsg
     }
     // new buffer for this turn
-    else messages.unshift({ turn: playerTurns, colors, raw: newMsg })
+    else messages.unshift({ turn: this.playerTurns, colors, raw: newMsg })
   }
 
   isTransparent(x: number, y: number) {
@@ -178,6 +271,18 @@ export class World {
   // entity modifier
   modify(e: Entity) {
     return modify(this.active, e)
+  }
+
+  __clog(collapse = false) {
+    collapse ? console.groupCollapsed('World') : console.group('World')
+    console.log('domainMap', this.domainMap)
+    console.log('domain', this.domain)
+    console.log('active', this.active)
+    console.log('activeIndex', this.activeIndex)
+    console.log('messages', this.messages)
+    console.log('playerTurns', this.playerTurns)
+    console.log('nextEntityID', this.nextEntityID)
+    console.groupEnd()
   }
 }
 

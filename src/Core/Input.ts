@@ -35,7 +35,17 @@ export function input(code: string): ActionTypes | null {
     case 'Space':
     case 'Period':
     case 'Comma':
-      return ChangeLevel('somewhere')
+      return ChangeLevel('anywhere')
+
+    // Debug change level
+    case 'Equal':
+      return ChangeLevel('debug_down')
+    case 'Minus':
+      return ChangeLevel('debug_up')
+    case 'KeyO':
+      return ChangeLevel('debug_outdoor')
+    case 'KeyP':
+      return ChangeLevel('debug_dungeon')
 
     // UI
     case 'KeyL':
@@ -44,6 +54,10 @@ export function input(code: string): ActionTypes | null {
       return UI('toggleInternalWalls')
     case 'KeyR':
       return UI('render')
+
+    // Debug log world
+    case 'KeyQ':
+      return UI('debug_logworld')
 
     // case 'KeyN':
     //   return UI('newMap')

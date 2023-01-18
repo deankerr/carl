@@ -4,7 +4,6 @@
 import { CONFIG } from '../config'
 import * as ROT from 'rot-js'
 
-import { createState, StateObject } from './State'
 import { World } from './World'
 import { renderLevel, renderMessages } from './Render'
 
@@ -13,18 +12,14 @@ import { handleBump, processDeath, handleMovement, processFOV, handleMeleeAttack
 import { actionName, ActionTypes, __randomMove, __wait } from '../Action'
 
 import { Keys } from '../lib/Keys'
-import { objLog } from '../lib/util'
 import { input } from './Input'
 
 import { handleTread } from '../System/handleTread'
-
-import * as Generate from '../Generate'
 
 export class Game {
   display: ROT.Display
   msgDisplay: ROT.Display
   keys = new Keys()
-  state: StateObject
   world: World
 
   messageNew: string[] = [] // messages generated during the last update
@@ -38,40 +33,18 @@ export class Game {
   }
 
   constructor(d: ROT.Display, msg: ROT.Display) {
-    console.log('new Game2')
     this.display = d
     this.msgDisplay = msg
     const seed = ROT.RNG.getSeed()
-    console.log('seed:', seed)
+    console.log('CARL! seed:', seed)
 
-    // initial level
-    let gen: () => Generate.NewLevel
-    switch (CONFIG.initialLevel) {
-      case 'outdoor':
-        gen = Generate.outdoor
-        break
-      case 'ruins1':
-        gen = Generate.prefabRuin1
-        break
-      case 'arena':
-        gen = Generate.arena
-        break
-      case 'dungeon4':
-      default:
-        gen = Generate.dungeon4
-    }
-    const [level, entityTemplates] = gen()
-
-    this.state = createState(level)
-    this.world = new World(this.state, this.options)
-    this.world.createTemplates(entityTemplates)
-    this.world.createPlayer()
+    this.world = new World(this.options)
 
     // set up first turn
     this.world.nextTurn() // set the currentTurn
     processFOV(this.world)
 
-    objLog(this.state, 'Initial state')
+    this.world.__clog(true)
 
     this.render()
 
@@ -85,7 +58,7 @@ export class Game {
     const playerAction = input(code)
     if (!playerAction) return
 
-    const { playerTurns } = this.state
+    const { playerTurns } = this.world
     const world = this.world
     console.groupCollapsed(`# update # key: '${code}', turn: '${playerTurns}'`)
 
@@ -108,6 +81,9 @@ export class Game {
           this.render()
           console.log('UI: render')
           break
+        case 'debug_logworld':
+          this.world.__clog()
+          return
         default:
           console.log('UI: Action not implemented', playerAction)
       }
@@ -120,12 +96,34 @@ export class Game {
     // * change level *
     if ('changeLevel' in playerAction) {
       console.groupEnd()
-      objLog(this.state, 'Change level')
+
+      // debug
+      if (playerAction.changeLevel.to.startsWith('debug_')) {
+        console.log(playerAction.changeLevel.to)
+        if (playerAction.changeLevel.to === 'debug_down') world.changeLevel(1)
+        if (playerAction.changeLevel.to === 'debug_up') world.changeLevel(-1)
+        if (playerAction.changeLevel.to === 'debug_outdoor') world.setCurrentLevel(world.domainMap['outdoor'], 0)
+        if (playerAction.changeLevel.to === 'debug_dungeon') world.setCurrentLevel(world.domainMap['dungeon'], 0)
+        world.nextTurn()
+        processFOV(world)
+        this.render()
+
+        return
+      }
+
+      // actual
       const [player] = this.world.get('tagPlayer', 'position')
       const [terrain] = this.world.here(player.position)
-      if (terrain?.description?.name === 'descending stairs') this.changeLevel('descend')
-      else if (terrain?.description?.name === 'ascending stairs') this.changeLevel('ascend')
-      else console.warn('Not on stairs')
+      if (terrain?.description?.name === 'descending stairs') {
+        world.changeLevel(1)
+      } else if (terrain?.description?.name === 'ascending stairs') {
+        world.changeLevel(-1)
+      } else console.warn('Not on stairs')
+
+      world.nextTurn()
+      processFOV(world)
+      this.render()
+
       return
     }
 
@@ -135,7 +133,7 @@ export class Game {
 
     // Run systems on each entity until it's the player's turn again
     let playerTurn = true
-    this.state.playerTurns++
+    this.world.playerTurns++
     let infiniteLoop = 0
     do {
       if (infiniteLoop++ > 200) throw new Error('System loop exceeded limit')
@@ -143,9 +141,8 @@ export class Game {
       playerTurn = world.nextTurn()
     } while (!playerTurn)
 
+    console.log(`# update complete # ${Date.now() - timeUpdate}ms`)
     console.groupEnd()
-
-    objLog(this.state, `# update complete # ${Date.now() - timeUpdate}ms`, true)
 
     this.render()
   }
@@ -177,50 +174,5 @@ export class Game {
   render() {
     renderMessages(this.msgDisplay, this.world, this.options)
     renderLevel(this.display, this.world, this.options)
-  }
-
-  changeLevel(to: string) {
-    const { active, levels } = this.state
-    const currentLevelIndex = levels.findIndex(l => l === active)
-    if (currentLevelIndex === -1) throw new Error('Unable to find current level?')
-
-    let nextIndex: number
-    switch (to) {
-      case 'descend':
-        console.log('Change level down!')
-        nextIndex = currentLevelIndex + 1
-        break
-      case 'ascend':
-        console.log('Change level up!')
-        if (currentLevelIndex === 0) {
-          console.error('Cannot ascend: level index is 0')
-          return
-        }
-        nextIndex = currentLevelIndex - 1
-        break
-      default:
-        throw new Error('Invalid changeLevel action')
-    }
-
-    // nextLevel
-    const nextLevel = levels[nextIndex]
-    console.log('nextLevel?:', nextLevel)
-    if (!nextLevel) {
-      console.log('Generate next level for', nextIndex)
-      const [newLevel, newEntities] = Generate.dungeon4(true, true)
-      this.state.levels.push(newLevel)
-      this.state.active = newLevel
-      this.world.active = newLevel
-      this.world.createTemplates(newEntities)
-      this.world.createPlayer()
-    } else {
-      console.log('Changing level to', nextLevel.label)
-      this.state.active = nextLevel
-      this.world.active = nextLevel
-    }
-
-    this.world.nextTurn()
-    processFOV(this.world)
-    this.render()
   }
 }

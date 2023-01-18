@@ -67,7 +67,7 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
     const color: string[] = []
 
     const visible = player.fov.visible.includes(here.s)
-    const seen = level.areaKnown.includes(here.s) || options.lightsOn
+    const seen = level.areaKnown.includes(here.s) || options.lightsOn || world.domain.revealed
     const voidSeen = level.voidAreaKnown.includes(here.s) || options.lightsOn
 
     // terrain
@@ -168,7 +168,7 @@ const minColorizedLum = 0.5 // colorized entity name min luminance
 export const renderMessages = (d: ROT.Display, world: World, options: Game['options']) => {
   const width = CONFIG.messageDisplayWidth - msgDisplayMargin * 2
   const height = CONFIG.messageDisplayHeight
-  const { playerTurns, messages } = world.state
+  const { playerTurns, messages } = world
   const buffer: Message[] = []
 
   // find messages to display which are not too old, or overflow the display area
