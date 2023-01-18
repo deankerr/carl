@@ -1,10 +1,16 @@
 import { Level } from '../Model/Level'
-import { rnd } from '../lib/util'
+import { rnd, repeat, pick } from '../lib/util'
 import { BeingTemplate, beings, features, FeatureTemplate } from '../Core/Entity'
 import { Point } from '../Model/Point'
 
 export const populateNPCs = (level: Level) => {
-  const newBeings: [BeingTemplate, Point | 0][] = Object.entries(beings).map(b => [b[1], level.ptInRoom()])
+  const newBeings: [BeingTemplate, Point | 0][] = []
+  const npcs = Object.entries(beings)
+  repeat(() => {
+    newBeings.push([pick(npcs)[1], level.ptInRoom()])
+  }, 12)
+
+  // Object.entries(beings).map(b => [b[1], level.ptInRoom()])
 
   return newBeings
 }
