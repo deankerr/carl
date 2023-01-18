@@ -8,7 +8,7 @@ export const terrainTemplates = {
   stairsDescending: ['descending stairs', 'O>', '#777', 'true', 'true', `There's a staircase leading down here.`],
   stairsAscending: ['ascending stairs', 'O<', '#777', 'true', 'true', `There's a staircase leading up here.`],
   crackedWall: ['cracked wall', 'O[', '#767676', 'false', 'false'],
-  water: ['water', '~', '#76b8f1', 'true', 'true', 'You tread water.'],
+  water: ['water', '~', '#4084bf', 'true', 'true', 'You tread water.'],
   crackedPath1: ['cracked path', 'O.0', '#262626', 'true', 'true'],
   crackedPath2: ['cracked path', 'O.1', '#262626', 'true', 'true'],
   crackedPath3: ['cracked path', 'O.2', '#262626', 'true', 'true'],
