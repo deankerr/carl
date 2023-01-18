@@ -124,7 +124,8 @@ export const outdoor = (width = CONFIG.mainDisplayWidth, height = CONFIG.mainDis
   repeat(() => entities.beings.push([templates.ghost, center]), 4)
 
   // player, SW start position
-  entities.player = Pt(2, level.height - 4)
+  // entities.player = Pt(2, level.height - 4) // bl corner
+  entities.player = center
 
   // debug markers
   // level.set(center, 3)

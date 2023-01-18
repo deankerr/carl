@@ -5,6 +5,7 @@ import { Entity } from '../Core/Entity'
 import { Point } from './Point'
 import { Terrain, TerrainLegacyMap } from '../Core/Terrain'
 import { pick, repeatUntil } from '../lib/util'
+import { Color } from 'rot-js/lib/color'
 
 export class Level {
   readonly width: number
@@ -18,6 +19,8 @@ export class Level {
 
   stairsDescendingPt: Point | undefined
   stairsAscendingPt: Point | undefined
+
+  lighting = new Map<string, Color>()
 
   constructor(
     // bare level defaults as workaround until refactor

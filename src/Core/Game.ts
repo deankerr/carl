@@ -22,6 +22,7 @@ import { Keys } from '../lib/Keys'
 import { input } from './Input'
 
 import { handleTread } from '../System/handleTread'
+import { processLighting } from '../System/processLighting'
 
 export class Game {
   display: ROT.Display
@@ -50,6 +51,7 @@ export class Game {
     // set up first turn
     this.world.nextTurn() // set the currentTurn
     processFOV(this.world)
+    processLighting(this.world) // ! lighting where?
 
     this.world.__clog(true)
 

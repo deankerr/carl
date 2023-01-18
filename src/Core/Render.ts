@@ -70,6 +70,16 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
     const seen = level.areaKnown.includes(here.s) || options.lightsOn || world.domain.revealed
     const voidSeen = level.voidAreaKnown.includes(here.s) || options.lightsOn
 
+    // ROT.JS lighting
+    const lighting = level.lighting.get(here.s)
+
+    function addLight(color: string) {
+      if (!lighting) return color
+      const rgb = ROT.Color.fromString(color)
+      const c = ROT.Color.add(rgb, lighting)
+      return ROT.Color.toHex(c)
+    }
+
     // terrain
     const terrainVisible = terrain.render.base
     const terrainSeenColor = darken(terrainVisible.color, darkenSat, darkenLum, darkenLumMin)
@@ -84,9 +94,10 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
     // if (!level.isInternalWall(here) || !options.hideInternalWalls) {
     if (visible) {
       char.push(terrainVisible.char)
-      color.push(terrainVisible.color)
+      color.push(addLight(terrainVisible.color))
     } else if (seen) {
       char.push(terrainVisible.char)
+      // color.push(addLight(terrainSeenColor))
       color.push(terrainSeenColor)
     }
     // }
