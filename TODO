@@ -47,3 +47,4 @@
 - Levels don't start on player turn after gen/level change
 - Apostrophe missing in msg charset
 - Message entity colors rematches names that are substrings of other names
+- Message entity colors don't fade away completely like normal text

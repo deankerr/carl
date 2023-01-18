@@ -124,7 +124,11 @@ export const hydrateFeature = (t: FeatureTemplate, pt: Point) => {
   }
 
   if (t[0] === 'flames') {
-    entity = { ...entity, ...C.cycleGraphic([entity.render.base, { char: 'flame2', color: '#fc7703' }]) }
+    entity = {
+      ...entity,
+      ...C.cycleGraphic([entity.render.base, { char: 'flame2', color: '#fc7703' }]),
+      ...C.emitLight('#8a4000'),
+    }
   }
   return entity
 }

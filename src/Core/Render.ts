@@ -66,8 +66,8 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
     const char: string[] = []
     const color: string[] = []
 
-    const visible = player.fov.visible.includes(here.s)
-    const seen = level.areaKnown.includes(here.s) || options.lightsOn || world.domain.revealed
+    const visible = player.fov.visible.includes(here.s) || options.lightsOn
+    const seen = level.areaKnown.includes(here.s) || world.domain.revealed
     const voidSeen = level.voidAreaKnown.includes(here.s) || options.lightsOn
 
     // ROT.JS lighting

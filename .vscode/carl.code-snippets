@@ -78,5 +78,11 @@
       "}"
     ],
     "description": "2D XY For loop"
+  },
+
+  "import ROT.JS": {
+    "prefix": "impROTJS",
+    "body": "import * as ROT from 'rot-js",
+    "description": "Import out favourite roguelike library."
   }
 }

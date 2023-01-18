@@ -3,6 +3,7 @@ import {
   CycleGraphic,
   Description,
   Door,
+  EmitLight,
   FOV,
   Graphic,
   Position,
@@ -23,6 +24,7 @@ export type Components = Partial<
     CycleGraphic &
     Description &
     Door &
+    EmitLight &
     FOV &
     Graphic &
     TagActor &

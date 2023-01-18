@@ -181,7 +181,7 @@ export class Game {
   }
 
   render() {
-    if (this.world.active.lighting.size === 0) processLighting(this.world)
+    processLighting(this.world)
     processFOV(this.world)
     renderMessages(this.msgDisplay, this.world, this.options)
     renderLevel(this.display, this.world, this.options)
