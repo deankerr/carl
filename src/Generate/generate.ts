@@ -23,7 +23,7 @@ export type NewLevel = [Level, EntityTemplates]
 //   stairsDesc: false,
 // }
 
-export const dungeon4 = (stairsDown = true, stairsUp = false): NewLevel => {
+export const dungeon4 = (stairsDown = true, stairsUp = true): NewLevel => {
   const data = create({
     width: floor(CONFIG.mainDisplayWidth),
     height: floor(CONFIG.mainDisplayHeight),

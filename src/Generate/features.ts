@@ -12,16 +12,16 @@ export const populateNPCs = (level: Level) => {
 export const createDecor = (level: Level) => {
   const newFeatures: [FeatureTemplate, Point | 0][] = []
 
-  level.rooms.forEach((r, i) => {
+  level.rooms.forEach((_r, i) => {
     // shrubbery
     if (i % 3 === 0) {
       for (let j = 0; j < 6; j++) newFeatures.push([features.shrub, level.ptInRoom(i)])
     }
 
     // water
-    if (i % 4 === 1) {
-      r.forEach(pt => level.terrainGrid.set(pt, 3))
-    }
+    // if (i % 4 === 1) {
+    //   r.forEach(pt => level.terrainGrid.set(pt, 3))
+    // }
   })
 
   // cracked walls/paths
