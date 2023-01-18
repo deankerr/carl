@@ -175,7 +175,7 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
   }
 }
 
-const msgDisplayMargin = 4 // space between each side of message and display edge
+const msgDisplayMargin = 0 // space between each side of message and display edge
 const maxMessageAge = 16 // disappear after this many turns
 const minColorizedLum = 0.5 // colorized entity name min luminance
 export const renderMessages = (d: ROT.Display, world: World, options: Game['options']) => {

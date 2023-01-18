@@ -30,7 +30,7 @@ const msgTileSize = 24
 export const createMessageDisplay = (
   width = CONFIG.messageDisplayWidth,
   height = CONFIG.messageDisplayHeight,
-  bg = CONFIG.backgroundColor
+  bg = CONFIG.msgBgColor
 ) => {
   const display = new ROT.Display({
     layout: 'tile-gl',
@@ -52,6 +52,7 @@ export const createHTMLWrapper = () => {
   body.style.backgroundColor = CONFIG.htmlBGColor
   body.style.margin = '0'
   body.style.padding = '0'
+  body.style.height = '100vh'
   body.style.boxSizing = 'border-box'
   body.style.display = 'flex'
   body.style.flexDirection = 'column'
@@ -62,10 +63,9 @@ export const createHTMLWrapper = () => {
   wrapper.id = 'wrapper'
   wrapper.style.display = 'flex'
   wrapper.style.flexDirection = 'column'
-  wrapper.style.aspectRatio = `${mainDisplayWidth + 1.5} / ${messageDisplayHeight + mainDisplayHeight}`
-  wrapper.style.height = '100vh'
+  // wrapper.style.height = '99vh'
   wrapper.style.maxWidth = '100vw'
-  wrapper.style.justifyContent = 'center'
+  wrapper.style.justifyContent = 'flex-end'
   wrapper.style.alignItems = 'center'
 
   return wrapper
@@ -75,19 +75,26 @@ export const createGameDisplay = () => {
   const wrapper = createHTMLWrapper()
 
   // message display canvas
-  const msg = createMessageDisplay(messageDisplayWidth, messageDisplayHeight)
-  const msgContainer = msg.getContainer()!
-  msgContainer.style.width = '100%'
-  wrapper.appendChild(msgContainer)
+  const msgDisplay = createMessageDisplay(messageDisplayWidth, messageDisplayHeight)
+  const msg = msgDisplay.getContainer()!
+  msg.style.width = '99vw'
+  msg.style.position = 'absolute'
+
+  // msg.style.bottom = '0'
+  // msg.style.top = '140px'
+  // msg.style.height = '300px'
 
   // main game display canvas
-  const main = createTileDisplay(mainDisplayWidth, mainDisplayHeight)
-  const mainContainer = main.getContainer()!
-  mainContainer.style.width = '100%'
-  wrapper.appendChild(mainContainer)
+  const mainDisplay = createTileDisplay(mainDisplayWidth, mainDisplayHeight)
+  const main = mainDisplay.getContainer()!
+  main.style.width = '99vw'
+  main.style.maxHeight = '99vh'
+
+  wrapper.appendChild(msg)
+  wrapper.appendChild(main)
 
   document.body.appendChild(wrapper)
-  return [msg, main]
+  return [msgDisplay, mainDisplay]
 }
 
 export function mouseMove(d: ROT.Display, callback: (event: MouseEvent) => unknown) {
