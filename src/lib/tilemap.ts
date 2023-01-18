@@ -62,4 +62,6 @@ export const tileMapOryxMain = {
   OM: mapChar(7, 0, t),
   OP: mapChar(4, 0, t),
   blob: mapChar(16, 3, t),
+  flame1: mapChar(4, 1, t),
+  flame2: mapChar(5, 1, t),
 } satisfies { [key: string]: [number, number] }

@@ -99,9 +99,10 @@ export const hydrateBeing = (t: BeingTemplate, pt: Point) => {
   return entity
 }
 
-// [name, char, color, trod, walkable]
+// [name, char, color, trod, walkable, memorable]
 export const features = {
-  shrub: ['shrub', 'Ov', '#58a54a', 'You trample the pathetic shrub', 'true'],
+  shrub: ['shrub', 'Ov', '#58a54a', 'You trample the pathetic shrub', 'true', 'true'],
+  flames: ['flames', 'flame1', '#FCA102', 'You crisp up nicely as you wade through the flames.', 'true', 'true'],
 }
 
 export const hydrateFeature = (t: FeatureTemplate, pt: Point) => {
@@ -111,11 +112,19 @@ export const hydrateFeature = (t: FeatureTemplate, pt: Point) => {
     ...C.render({ base: { char: t[1], color: t[2] } }),
     ...C.position(pt),
     ...C.trodOn(t[3]),
-    ...C.tagMemorable(),
   }
 
+  // TODO avoid this with better templating
   if (t[4] === 'true') {
     entity = { ...entity, ...C.tagWalkable() }
+  }
+
+  if (t[3] === 'true') {
+    entity = { ...entity, ...C.tagMemorable() }
+  }
+
+  if (t[0] === 'flames') {
+    entity = { ...entity, ...C.cycleGraphic([entity.render.base, { char: 'flame2', color: t[2] }]) }
   }
   return entity
 }

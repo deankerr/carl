@@ -102,6 +102,10 @@ export const outdoor = (width = CONFIG.mainDisplayWidth, height = CONFIG.mainDis
         // a skellybones
         entities.beings.push([templates.skeleton, here])
         level.set(here, 98)
+      } else if (col === 'F') {
+        // fires
+        entities.features.push([templates.flames, here])
+        level.set(here, 98)
       } else {
         const t = ruinKey[col] ?? -1
         if (t > -1) level.set(here, t)
