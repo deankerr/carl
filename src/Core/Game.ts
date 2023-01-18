@@ -50,8 +50,6 @@ export class Game {
 
     // set up first turn
     this.world.nextTurn() // set the currentTurn
-    processFOV(this.world)
-    processLighting(this.world) // ! lighting where?
 
     this.world.__clog(true)
 
@@ -114,7 +112,6 @@ export class Game {
         if (playerAction.changeLevel.to === 'debug_outdoor') world.setCurrentLevel(world.domainMap['outdoor'], 0)
         if (playerAction.changeLevel.to === 'debug_dungeon') world.setCurrentLevel(world.domainMap['dungeon'], 0)
         world.nextTurn()
-        processFOV(world)
         this.render()
 
         return
@@ -173,7 +170,7 @@ export class Game {
     handleBump(world)
     handleMeleeAttack(world)
     processDeath(world)
-    processFOV(world)
+    // processFOV(world)
     // handleLevelTransition?
 
     const [entityDone] = world.get('tagCurrentTurn')
@@ -184,6 +181,8 @@ export class Game {
   }
 
   render() {
+    if (this.world.active.lighting.size === 0) processLighting(this.world)
+    processFOV(this.world)
     renderMessages(this.msgDisplay, this.world, this.options)
     renderLevel(this.display, this.world, this.options)
   }
