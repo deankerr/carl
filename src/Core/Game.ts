@@ -148,6 +148,9 @@ export class Game {
       playerTurn = world.nextTurn()
     } while (!playerTurn)
 
+    // Once per player turn system
+    processGraphicUpdate(world)
+
     console.log(`# update complete # ${Date.now() - timeUpdate}ms`)
     console.groupEnd()
 
@@ -167,7 +170,6 @@ export class Game {
     handleTread(world)
     handleBump(world)
     handleMeleeAttack(world)
-    processGraphicUpdate(world)
     processDeath(world)
     processFOV(world)
     // handleLevelTransition?
