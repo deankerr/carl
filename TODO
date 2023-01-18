@@ -2,8 +2,6 @@
 
 ## Now
 
-- localStorage saves debug/init options so I don't have to keep changing the config file
-
 ## Soon
 
 - Lighting effects (torches/decreasing light from player)
