@@ -94,18 +94,33 @@ export class Game {
     if ('changeLevel' in playerAction) {
       console.groupEnd()
 
-      // const [player] = this.world.get('tagPlayer', 'position')
-      // const [terrain] = this.world.here(player.position)
-      // if (terrain?.description?.name === 'descending stairs') world.changeLevel(1)
-      // else if (terrain?.description?.name === 'ascending stairs') world.changeLevel(-1)
-      // else console.warn('Not on stairs')
+      // debug
+      if (playerAction.changeLevel.to.startsWith('debug_')) {
+        console.log(playerAction.changeLevel.to)
+        if (playerAction.changeLevel.to === 'debug_down') world.changeLevel(1)
+        if (playerAction.changeLevel.to === 'debug_up') world.changeLevel(-1)
+        if (playerAction.changeLevel.to === 'debug_outdoor') world.setCurrentLevel(world.domainMap['outdoor'], 0)
+        if (playerAction.changeLevel.to === 'debug_dungeon') world.setCurrentLevel(world.domainMap['dungeon'], 0)
+        world.nextTurn()
+        processFOV(world)
+        this.render()
 
-      if (playerAction.changeLevel.to === 'debug_down') world.changeLevel(1)
-      if (playerAction.changeLevel.to === 'debug_up') world.changeLevel(-1)
+        return
+      }
+
+      // actual
+      const [player] = this.world.get('tagPlayer', 'position')
+      const [terrain] = this.world.here(player.position)
+      if (terrain?.description?.name === 'descending stairs') {
+        world.changeLevel(1)
+      } else if (terrain?.description?.name === 'ascending stairs') {
+        world.changeLevel(-1)
+      } else console.warn('Not on stairs')
 
       world.nextTurn()
       processFOV(world)
       this.render()
+
       return
     }
 

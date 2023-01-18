@@ -3,7 +3,6 @@
 ## Now
 
 - localStorage saves debug/init options so I don't have to keep changing the config file
-- Define world structure/level connections. (Debug - fast level switching with num keys)
 
 ## Soon
 
@@ -14,6 +13,9 @@
 - Add simple animation (npc bobbing)/ Render decouple
 - stairs to Prefab ruin1 above outdoor, render outdoor "below"
 - Create logger, Exception handling
+
+- Domains: generate levels with "set piece" connectors, or auto depth stairs. Component on connector describes where it leads
+- Refactor Level, generators to properly support domain switching/implement domain connection schema
 
 ## Someday
 
