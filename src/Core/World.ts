@@ -7,18 +7,19 @@ import { Point, Pt } from '../Model/Point'
 import { Game } from './Game'
 import { Level } from '../Model/Level'
 import { colorizeMessage, Message } from '../lib/messages'
-import { RootOfTheWorld, TheWorld } from '../Templates/TheWorld'
+import { createDomains, Domain, DomainMap } from '../Generate/domains'
 
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 
 export class World {
-  active: Level
-  activeIndex = 0
   options: Game['options']
 
   // Game state
-  domains = TheWorld
-  activeDomain: typeof this.domains[keyof typeof this.domains]
+  domainMap: DomainMap
+  domain: Domain
+  active: Level
+  activeIndex = 0
+
   messages: Message[] = [] // TODO rename messageLog
   playerTurns = -1 // TODO start on 0
   nextEntityID = 0
@@ -26,65 +27,40 @@ export class World {
   constructor(options: Game['options']) {
     this.options = options
 
-    this.domains = TheWorld
-
-    this.active = this.domains[RootOfTheWorld].levels[0]
-    this.activeDomain = this.domains[RootOfTheWorld]
-
-    this.setCurrentLevel(this.activeDomain, 0)
+    // initialize world structure, set root level as active
+    const [domainMap, root] = createDomains()
+    this.domainMap = domainMap
+    this.domain = root
+    this.setCurrentLevel(this.domain, 0)
+    this.active = this.domain.levels[0]
 
     this.message('You begin your queste.')
   }
 
   //  World API - Everything that happens in the game should occur through this API.
 
-  setCurrentLevel(location: typeof this.domains[keyof typeof this.domains], index: number) {
+  setCurrentLevel(domain: Domain, index: number) {
     // generate a level if it does not yet exist
-    console.log('set level:', location.label, index, location)
-    if (index > location.levels.length - 1) {
-      console.log('world create level', location.generator)
-      const [level, entityTemplates] = location.generator()
+    console.log('set level:', domain.label, index, domain)
+    if (index > domain.levels.length - 1) {
+      console.log('world create level', domain.generator)
+      const [level, entityTemplates] = domain.generator()
 
-      location.levels.push(level)
-      this.active = location.levels[index]
+      domain.levels.push(level)
+      this.active = domain.levels[index]
 
       this.createTemplates(entityTemplates)
       this.createPlayer()
     } else {
       console.log('world change level')
-      this.active = location.levels[index]
+      this.active = domain.levels[index]
     }
   }
 
-  changeLevel(dir: string) {
-    let nextIndex: number
-    if (dir === 'descend') {
-      nextIndex = this.activeIndex + 1
-    } else if (dir === 'ascend') {
-      nextIndex = this.activeIndex - 1
-    } else {
-      throw new Error('Invalid level change')
-    }
+  // TODO
+  // changeLevel(dir: string) {
 
-    let nextDomain: typeof this.domains[keyof typeof this.domains]
-    if (nextIndex < 0) {
-      // change domain
-      // TODO temp
-      nextDomain = this.activeDomain.bottom as typeof this.activeDomain
-      nextIndex = 0
-    } else if (dir === 'descend') {
-      nextDomain = this.activeDomain.descend as typeof this.activeDomain
-      nextIndex = 0
-    } else if (dir === 'ascend') {
-      nextDomain = this.activeDomain.ascend as typeof this.activeDomain
-      nextIndex = 0
-    } else {
-      nextDomain = this.activeDomain
-      nextIndex = 0
-    }
-
-    this.setCurrentLevel(nextDomain, nextIndex)
-  }
+  // }
 
   createTemplates(newTemplates: EntityTemplates) {
     if (newTemplates.features) {
@@ -239,6 +215,18 @@ export class World {
   // entity modifier
   modify(e: Entity) {
     return modify(this.active, e)
+  }
+
+  __clog() {
+    console.group('World')
+    console.log('domainMap', this.domainMap)
+    console.log('domain', this.domain)
+    console.log('active', this.active)
+    console.log('activeIndex', this.activeIndex)
+    console.log('messages', this.messages)
+    console.log('playerTurns', this.playerTurns)
+    console.log('nextEntityID', this.nextEntityID)
+    console.groupEnd()
   }
 }
 

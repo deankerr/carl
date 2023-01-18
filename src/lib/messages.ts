@@ -26,7 +26,6 @@ const entityColorMap: EntityColorPair[] = [
   const nameB = b[1]
   return nameB.length - nameA.length
 })
-console.log('LIST:', entityColorMap)
 
 export type Message = {
   turn: number
