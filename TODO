@@ -4,6 +4,7 @@
 
 ## Soon
 
+- Standardize entity template definitions (move beings/features to Templates)
 - Lighting effects (torches/decreasing light from player)
 - Config 'lightsOn' player FOV per level (ie lightson/large fov outdoors, lightsoff lesser fov in dungeon). Better debug controls
 - vignette/player position effects luminance level wide
@@ -14,15 +15,13 @@
 
 - Domains: generate levels with "set piece" connectors, or auto depth stairs. Component on connector describes where it leads
 - Refactor Level, generators to properly support domain switching/implement domain connection schema
+- Test ROT-JS patch, submit PR
 
 ## Someday
 
-- Test ROT-JS patch, submit PR
 - Level: create walkable pt list during generate for spawning
-- ? rename World to Engine, "world" describes level/dungeon connections, globals. messageLog
 - render: move to key + lookup table, allow easier pallette switching.
 - Async update loop
-- Improve State/World init (remove state active?), World level switching/creation
 - (W)alk/autoexplore
 - ??? Patch ROT.JS to handle drawOver tiles? ???
 - ?xxxEnable view selection + live switching
@@ -30,7 +29,6 @@
 - Unify function declaration style
 - Refactor Generate to improvement corridor placement, flexibility, visualizer integration into Game, entity generation
 - ?xxx Refactor world.here() result from tuple to object for better clarity
-- ?Local storage random seed saving, easily travel backwards through previously generated levels
 - Clean up CONFIG
 - Viewport doesn't move until you are closer to the side
 - Dev/Prod Configs

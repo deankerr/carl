@@ -41,7 +41,7 @@ export const createDoor = (pt: Point) => {
     }),
     ...C.description('door'),
     ...C.door(),
-    ...C.trodOn('You carefully navigate through the door.'),
+    // ...C.trodOn('You carefully navigate through the door.'),
     ...C.tagBlocksLight(),
     ...C.tagMemorable(),
   }
