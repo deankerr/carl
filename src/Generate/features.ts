@@ -28,6 +28,12 @@ export const createDecor = (level: Level) => {
     // if (i % 4 === 1) {
     //   r.forEach(pt => level.terrainGrid.set(pt, 3))
     // }
+
+    // fire
+    if (i % 4 === 1) {
+      const opts = [features.flames, features.flamesBlue, features.flamesGreen]
+      newFeatures.push([pick(opts), level.ptInRoom(i)])
+    }
   })
 
   // cracked walls/paths

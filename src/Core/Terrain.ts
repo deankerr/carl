@@ -29,7 +29,7 @@ export const Terrain: Record<keyof typeof terrainTemplates, Entity> = Object.ent
     const entity: Entity = {
       id: template[0].replaceAll(' ', ''),
       ...C.description(template[0]),
-      ...C.render({ base: { char: template[1], color: template[2] } }),
+      ...C.baseGraphic(template[1], template[2]),
     }
 
     if (template[3] === 'true') entity.tagWalkable = true

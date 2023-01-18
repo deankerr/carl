@@ -1,18 +1,10 @@
 // TODO add charMap type safety
-export type BaseGraphic = { char: string; color: string }
-
-export type Graphic = {
-  render: {
-    base: BaseGraphic
-    seen?: Partial<BaseGraphic>
-    baseDoorOpen?: Partial<BaseGraphic>
-  }
+export type Graphic = { char: string; color: string }
+export const graphic = (char: string, color: string) => {
+  return { char, color }
 }
 
-export const render = (as: Graphic['render']) => {
-  return {
-    render: {
-      ...as,
-    },
-  }
+export type BaseGraphic = { base: Graphic }
+export const baseGraphic = (char: string, color: string) => {
+  return { char, color, base: { char, color } }
 }

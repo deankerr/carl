@@ -1,6 +1,8 @@
 import { Components } from './Components'
 import * as C from '../Component'
 import { Point } from '../Model/Point'
+import { transformHSL } from '../lib/color'
+import { graphic } from '../Component'
 
 export type EntityID = { readonly id: string }
 
@@ -21,7 +23,7 @@ export const createPlayer = (pt: Point, fov = 4) => {
   return {
     id: 'player',
     ...C.position(pt),
-    ...C.render({ base: { char: '@', color: 'violet' } }),
+    ...C.baseGraphic('@', 'violet'),
     ...C.description('yourself'),
     ...C.tagPlayer(),
     ...C.tagActor(),
@@ -35,12 +37,10 @@ export const createDoor = (pt: Point) => {
   return {
     id: 'door',
     ...C.position(pt),
-    ...C.render({
-      base: { char: 'O+', color: '#73513d' },
-      baseDoorOpen: { char: 'O/' },
-    }),
+    ...C.baseGraphic('O+', '#73513d'),
     ...C.description('door'),
-    ...C.door(),
+    ...C.tagDoor(),
+    ...C.doorGraphic(graphic('O+', '#73513d'), graphic('O/', '#73513d')),
     // ...C.trodOn('You carefully navigate through the door.'),
     ...C.tagBlocksLight(),
     ...C.tagMemorable(),
@@ -91,7 +91,7 @@ export const hydrateBeing = (t: BeingTemplate, pt: Point) => {
   const entity = {
     id: t[0].replaceAll(' ', ''),
     ...C.description(t[0]),
-    ...C.render({ base: { char: t[1], color: t[2] } }),
+    ...C.baseGraphic(t[1], t[2]),
     ...C.position(pt),
     ...C.tagActor(),
   }
@@ -102,14 +102,47 @@ export const hydrateBeing = (t: BeingTemplate, pt: Point) => {
 // [name, char, color, trod, walkable, memorable]
 export const features = {
   shrub: ['shrub', 'Ov', '#58a54a', 'You trample the pathetic shrub', 'true', 'true'],
-  flames: ['flames', 'flame1', '#fd9117', 'You crisp up nicely as you wade through the flames.', 'true', 'true'],
+  flames: ['flames', '', '#fc7703'],
+  flamesBlue: ['blue flames', 'blue', '#141cff'],
+  flamesGreen: ['green flames', 'green', '#0df20d'],
+}
+
+const flames = (color: string, pt: Point) => {
+  let color1 = '#fc7703'
+  let color2 = transformHSL(color1, 0.6, 0)
+  switch (color) {
+    case 'blue':
+      color1 = features.flamesBlue[2]
+      color2 = transformHSL(color1, 0.5, 0)
+      break
+    case 'green':
+      color1 = '#0df20d'
+      color2 = transformHSL(color1, 0.6, 0)
+      break
+  }
+
+  return {
+    id: 'flames',
+    ...C.description('flames'),
+    ...C.baseGraphic('flame1', color1),
+    ...C.position(pt),
+    ...C.trodOn('You begin to crisp up nicely while standing in the flames'),
+    ...C.tagWalkable(),
+    ...C.tagMemorable(),
+    ...C.cycleGraphic([
+      { char: 'flame1', color: color1 },
+      { char: 'flame2', color: color2 },
+    ]),
+    ...C.emitLight(color1),
+  }
 }
 
 export const hydrateFeature = (t: FeatureTemplate, pt: Point) => {
+  if (t[0].includes('flames')) return flames(t[1], pt)
   let entity = {
     id: t[0].replaceAll(' ', ''),
     ...C.description(t[0]),
-    ...C.render({ base: { char: t[1], color: t[2] } }),
+    ...C.baseGraphic(t[1], t[2]),
     ...C.position(pt),
     ...C.trodOn(t[3]),
   }
@@ -123,21 +156,8 @@ export const hydrateFeature = (t: FeatureTemplate, pt: Point) => {
     entity = { ...entity, ...C.tagMemorable() }
   }
 
-  if (t[0] === 'flames') {
-    entity = {
-      ...entity,
-      ...C.cycleGraphic([entity.render.base, { char: 'flame2', color: '#fc7703' }]),
-      ...C.emitLight('#8a4000'),
-    }
-  }
   return entity
 }
 
 export const templates = { ...beings, ...features }
 export type FeatureTemplate = typeof features[keyof typeof features]
-
-export const colorName = (entity: Entity) => {
-  const name = entity.description?.name ?? 'MISSINGNAME'
-  const color = entity.render?.base.color ?? 'red'
-  return `%c{${color}}${name}%c{}`
-}

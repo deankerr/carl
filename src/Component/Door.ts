@@ -1,4 +1,6 @@
-export type Door = { door: { open: boolean } }
-export const door = (open = false) => {
-  return { door: { open } }
+import { Graphic } from './Graphic'
+
+export type DoorGraphic = { doorGraphic: { closed: Graphic; open: Graphic } }
+export const doorGraphic = (closed: Graphic, open: Graphic) => {
+  return { doorGraphic: { closed, open } }
 }

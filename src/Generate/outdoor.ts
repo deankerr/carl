@@ -18,7 +18,8 @@ export const outdoor = (width = CONFIG.mainDisplayWidth, height = CONFIG.mainDis
   const northQuartile = Pt(center.x, half(center.y))
   const southQuartile = Pt(center.x, center.y + half(center.y))
   const westQuartile = Pt(half(center.x), center.y)
-  // const eastQuartile = Pt(center.x + half(center.x), center.y)
+  const eastQuartile = Pt(center.x + half(center.x), center.y)
+  const sec = { northQuartile, southQuartile, westQuartile, eastQuartile }
 
   // place a lot of grass
   repeat(() => {
@@ -34,7 +35,7 @@ export const outdoor = (width = CONFIG.mainDisplayWidth, height = CONFIG.mainDis
   // a few northern peaks
   repeat(() => {
     const rPt = level.rndPt()
-    drawCluster(Pt(rPt.x, half(northQuartile.y)), 30, 14)
+    drawCluster(Pt(rPt.x, half(sec.northQuartile.y)), 30, 14)
   }, 12)
 
   // a few northern mounds
@@ -119,6 +120,9 @@ export const outdoor = (width = CONFIG.mainDisplayWidth, height = CONFIG.mainDis
   // stairs down (now set in prefab)
   // const stairPt = center
   // level.set(stairPt, 11)
+
+  // entities.features.push([templates.flamesBlue, Pt(eastQuartile.x + 5, center.y)])
+  // entities.features.push([templates.flamesGreen, Pt(westQuartile.x - 5, center.y)])
 
   // some ghosts
   repeat(() => entities.beings.push([templates.ghost, center]), 4)

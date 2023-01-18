@@ -2,7 +2,6 @@
 
 ## Now
 
-- Lighting effects (torches/decreasing light from player)
 - Refactor render/Graphic, use processGraphicUpdate for door graphic handling
 - Move message display to bottom, one message per line centred
 
@@ -41,6 +40,8 @@
 - level: voronoi map - bee hive/crystal cavern
 - Standard colors (standard sat/lum?)
 - vignette/player position effects luminance level wide
+- Precalculate lighting animation (flames flickering etc)
+- Lessen emitter colors indoors
 
 # Known Bugs
 
@@ -48,3 +49,4 @@
 - Apostrophe missing in msg charset
 - Message entity colors rematches names that are substrings of other names
 - Message entity colors don't fade away completely like normal text
+- Lighting doesn't flow through open doors

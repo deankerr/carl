@@ -18,6 +18,16 @@ export const dead = (): TagDead => {
   return { tagDead: true }
 }
 
+export type TagDoor = { tagDoor: true }
+export const tagDoor = (): TagDoor => {
+  return { tagDoor: true }
+}
+
+export type TagDoorOpen = { tagDoorOpen: true }
+export const tagDoorOpen = (): TagDoorOpen => {
+  return { tagDoorOpen: true }
+}
+
 export type TagMeleeAttackTarget = { tagMeleeAttackTarget: true }
 export const tagMeleeAttackTarget = (): TagMeleeAttackTarget => {
   return { tagMeleeAttackTarget: true }

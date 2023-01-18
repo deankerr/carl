@@ -1,21 +1,22 @@
 import { World } from '../Core/World'
 import * as C from '../Component'
+import { graphic } from '../Component'
 
 export const processGraphicUpdate = (world: World) => {
-  const cyclers = world.get('render', 'cycleGraphic')
+  const cyclers = world.get('char', 'color', 'cycleGraphic')
 
   for (const entity of cyclers) {
-    const { render, cycleGraphic, id } = entity
+    const { char, color, cycleGraphic, id } = entity
     console.log('processGraphicUpdate:', id)
-    console.log('render:', render)
+    // console.log('render:', render)
     console.log('cycleGraphic:', cycleGraphic)
 
-    const i = cycleGraphic.current + 1 >= cycleGraphic.list.length ? 0 : cycleGraphic.current + 1
-    const nextGraphic = cycleGraphic.list[i]
+    const lastGraphic = graphic(char, color)
+    const nextGraphic = cycleGraphic.pop()
     if (!nextGraphic) throw new Error('Unable to find next cycle graphic')
 
-    const newRender = C.render({ base: nextGraphic })
-    const newCycle = C.cycleGraphic(cycleGraphic.list, i)
+    const newRender = C.graphic(nextGraphic.char, nextGraphic.color)
+    const newCycle = C.cycleGraphic([lastGraphic, ...cycleGraphic])
     world.modify(entity).change(newRender).change(newCycle)
     console.log('processGraphicUpdate: graphic updated')
   }

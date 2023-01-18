@@ -1,6 +1,6 @@
 // Entity/Component manager
 import { Components, componentName } from './Components'
-import { tagCurrentTurn } from '../Component'
+import { Graphic, tagCurrentTurn } from '../Component'
 import { Entity, hydrateBeing, hydrateFeature, createPlayer, EntityTemplates, createDoor } from './Entity'
 import { objLog } from '../lib/util'
 import { Point, Pt } from '../Model/Point'
@@ -291,7 +291,7 @@ const modify = (active: Level, target: Entity) => {
   if (!newEntity) throw new Error('modify: cannot locate' + target.id)
   let entity = newEntity
 
-  const add = <C extends Components>(c: C) => {
+  const add = <C extends Components | Graphic>(c: C) => {
     // check it did not already exist
     if (componentName(c) in entity) throw new Error(`add: Already has component ${entity.id} ${componentName(c)}`)
 
@@ -302,9 +302,13 @@ const modify = (active: Level, target: Entity) => {
     return { entity, add, change, remove }
   }
 
-  const change = <C extends Components>(c: C) => {
+  const change = <C extends Components | Graphic>(c: C) => {
     // check it currently does exist
-    if (!(componentName(c) in entity)) throw new Error(`change: ${entity.id} does not have ${componentName(c)}`)
+    const isGraphic = 'char' in c && 'color' in c
+    if (!isGraphic && !(componentName(c) in entity)) {
+      console.log('c:', c)
+      throw new Error(`change: ${entity.id} does not have ${componentName(c)}`)
+    }
 
     entity = { ...entity, ...c }
     updateState(entity)
@@ -313,7 +317,7 @@ const modify = (active: Level, target: Entity) => {
     return { entity, add, change, remove }
   }
 
-  const remove = <N extends keyof Components>(cName: N) => {
+  const remove = <N extends keyof Components | keyof Graphic>(cName: N) => {
     // check it currently does exist
     if (!(cName in entity)) throw new Error(`remove: ${entity.id} does not have ${cName}`)
 

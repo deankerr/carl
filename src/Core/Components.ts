@@ -1,8 +1,9 @@
 import {
   Acting,
+  BaseGraphic,
   CycleGraphic,
   Description,
-  Door,
+  DoorGraphic,
   EmitLight,
   FOV,
   Graphic,
@@ -11,6 +12,8 @@ import {
   TagBlocksLight,
   TagCurrentTurn,
   TagDead,
+  TagDoor,
+  TagDoorOpen,
   TagMeleeAttackTarget,
   TagMemorable,
   TagPlayer,
@@ -19,18 +22,21 @@ import {
 } from '../Component/'
 
 export type Components = Partial<
-  Position &
+  Graphic &
+    Position &
     Acting &
+    BaseGraphic &
     CycleGraphic &
     Description &
-    Door &
+    DoorGraphic &
     EmitLight &
     FOV &
-    Graphic &
     TagActor &
     TagBlocksLight &
     TagCurrentTurn &
     TagDead &
+    TagDoor &
+    TagDoorOpen &
     TagMeleeAttackTarget &
     TagMemorable &
     TagPlayer &

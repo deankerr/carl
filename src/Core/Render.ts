@@ -1,10 +1,11 @@
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
 import { Game } from './Game'
-import { EntityWith, World } from './World'
+import { World } from './World'
 import { half, floor, clamp, min } from '../lib/util'
-import { Entity } from './Entity'
 import { Message, createWordRegex } from '../lib/messages'
+import { hexLuminance, transformHSL } from '../lib/color'
+import { Graphic } from '../Component'
 
 // Seen terrain memory color modifiers
 const darkenSat = 0.04 // orig dark vals: 0.1
@@ -15,7 +16,7 @@ const darkenLumMin = 0.12
 const bgLum = hexLuminance(CONFIG.backgroundColor)
 
 export const renderLevel = (display: ROT.Display, world: World, options: Game['options']) => {
-  // console.log('Render', world.active)
+  // console.log('char', 'color', world.active)
   const { mainDisplayWidth: displayWidth, mainDisplayHeight: displayHeight, backgroundColor } = CONFIG
 
   display.clear()
@@ -34,7 +35,7 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
     y2: displayHeight - 1,
   }
 
-  const [player] = world.get('tagPlayer', 'position', 'render', 'fov')
+  const [player] = world.get('tagPlayer', 'position', 'char', 'color', 'fov')
   const centerX = floor(displayWidth / 2)
   const centerY = floor(displayHeight / 2)
 
@@ -50,8 +51,8 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
 
   // * ========== Rendering ========== *
 
-  const doors = world.get('position', 'render', 'door')
-  const entities = world.get('position', 'render').filter(e => doors.every(d => d.id !== e.id) && e !== player)
+  const doors = world.get('position', 'char', 'color', 'tagDoor', 'doorGraphic')
+  const entities = world.get('position', 'char', 'color').filter(e => doors.every(d => d.id !== e.id) && e !== player)
 
   level.terrainGrid.each(here => {
     const render = { x: offsetX + here.x, y: offsetY + here.y }
@@ -62,7 +63,7 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
     }
 
     // create array stacks of chars and colors of terrain + entities here
-    const terrain = level.terrain(here) as EntityWith<Entity, 'render'>
+    const terrain = level.terrain(here)
     const char: string[] = []
     const color: string[] = []
 
@@ -81,7 +82,8 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
     }
 
     // terrain
-    const terrainVisible = terrain.render.base
+
+    const terrainVisible = { char: terrain.char, color: terrain.color } as Graphic
     const terrainSeenColor = darken(terrainVisible.color, darkenSat, darkenLum, darkenLumMin)
 
     // void decor
@@ -105,15 +107,15 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
     // door
     const door = doors.filter(d => d.position.s === here.s)[0]
     if (door) {
-      const open = door.door.open
-      const doorChar = open ? door.render?.baseDoorOpen?.char ?? door.render.base.char : door.render.base.char
+      const open = 'tagDoorOpen' in door
+      const doorChar = open ? door.doorGraphic.open.char : door.doorGraphic.closed.char
 
       if (visible) {
         char.push(doorChar)
-        color.push(door.render.base.color)
+        color.push(door.color)
       } else if (seen) {
         char.push(doorChar)
-        color.push(darken(door.render.base.color, darkenSat, darkenLum, darkenLumMin))
+        color.push(darken(door.color, darkenSat, darkenLum, darkenLumMin))
       }
     }
 
@@ -122,18 +124,18 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
       .filter(e => e.position.s === here.s)
       .forEach(e => {
         if (visible || options.lightsOn) {
-          char.push(e.render.base.char)
-          color.push(e.render.base.color)
+          char.push(e.char)
+          color.push(e.color)
         } else if (seen && e.tagMemorable) {
-          char.push(e.render.base.char)
-          color.push(darken(e.render.base.color, darkenSat, darkenLum, darkenLumMin))
+          char.push(e.char)
+          color.push(darken(e.color, darkenSat, darkenLum, darkenLumMin))
         }
       })
 
     // player
     if (player.position.s === here.s) {
-      char.push(player.render.base.char)
-      color.push(player.render.base.color)
+      char.push(player.char)
+      color.push(player.color)
     }
 
     // draw the stack, or a blank character if empty
@@ -236,20 +238,4 @@ function darken(color: string, saturation: number, luminosity: number, minLum: n
   c[1] = min(0, c[1] - saturation)
   c[2] = min(minLum, c[2] - luminosity)
   return ROT.Color.toHex(ROT.Color.hsl2rgb(c))
-}
-
-// return a hex color with set luminance
-function transformHSL(color: string, lum: number, minLum: number) {
-  const c = ROT.Color.rgb2hsl(ROT.Color.fromString(color))
-  c[2] = min(minLum, lum)
-  return ROT.Color.toHex(ROT.Color.hsl2rgb(c))
-}
-
-function hexLuminance(color: string) {
-  const hsl = hexToHSL(color)
-  return hsl[2]
-}
-
-function hexToHSL(color: string) {
-  return ROT.Color.rgb2hsl(ROT.Color.fromString(color))
 }
