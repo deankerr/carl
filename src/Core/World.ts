@@ -63,7 +63,6 @@ export class World {
     }
   }
 
-  // TODO
   changeLevel(dir: number) {
     console.log('changeLevel:', dir)
     let nextDomain: Domain | undefined
@@ -153,7 +152,9 @@ export class World {
   createPlayer(pt?: Point) {
     if (this.get('tagPlayer').length > 0) return
 
-    const player = this.create(createPlayer(pt ?? this.active.stairsAscendingPt ?? this.active.ptInRoom()))
+    const player = this.create(
+      createPlayer(pt ?? this.active.stairsAscendingPt ?? this.active.ptInRoom(), this.domain.playerFOV)
+    )
     this.active.scheduler.add(player.id, true)
   }
 

@@ -17,7 +17,7 @@ export const createTemplates = (): EntityTemplates => {
   return { beings: [], features: [], doors: [] }
 }
 
-export const createPlayer = (pt: Point, fov = 10) => {
+export const createPlayer = (pt: Point, fov = 4) => {
   return {
     id: 'player',
     ...C.position(pt),

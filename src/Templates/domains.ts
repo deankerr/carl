@@ -30,7 +30,7 @@ export const domains = [
   {
     label: 'dungeon',
     revealed: false,
-    playerFOV: 8,
+    playerFOV: 7,
     generator: 'dungeon4',
     connections: {
       top: 'outdoor',
