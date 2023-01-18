@@ -4,12 +4,8 @@ import { graphic } from '../Component'
 
 export const processGraphicUpdate = (world: World) => {
   const cyclers = world.get('char', 'color', 'cycleGraphic')
-
   for (const entity of cyclers) {
-    const { char, color, cycleGraphic, id } = entity
-    console.log('processGraphicUpdate:', id)
-    // console.log('render:', render)
-    console.log('cycleGraphic:', cycleGraphic)
+    const { char, color, cycleGraphic } = entity
 
     const lastGraphic = graphic(char, color)
     const nextGraphic = cycleGraphic.pop()

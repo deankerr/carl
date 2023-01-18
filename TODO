@@ -2,7 +2,6 @@
 
 ## Now
 
-- Refactor render/Graphic, use processGraphicUpdate for door graphic handling
 - Move message display to bottom, one message per line centred
 
 ## Soon
