@@ -175,24 +175,33 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
   }
 }
 
-const msgDisplayMargin = 0 // space between each side of message and display edge
+// const msgDisplayMargin = 0 // space between each side of message and display edge
 const maxMessageAge = 16 // disappear after this many turns
 const minColorizedLum = 0.5 // colorized entity name min luminance
 export const renderMessages = (d: ROT.Display, world: World, options: Game['options']) => {
-  const width = CONFIG.messageDisplayWidth - msgDisplayMargin * 2
+  const width = CONFIG.messageDisplayWidth
   const height = CONFIG.messageDisplayHeight
   const { playerTurns, messages } = world
   const buffer: Message[] = []
+  d.clear()
 
+  // TODO keep left aligned/old display mode available
   // find messages to display which are not too old, or overflow the display area
+  // for (const msg of messages) {
+  //   if (playerTurns - msg.turn > maxMessageAge) break
+  //   buffer.push(msg)
+  //   if (ROT.Text.measure(buffer.map(m => m.raw).join(' '), width).height > height + 1) break
+  // }
+
+  // one message per line per height available
   for (const msg of messages) {
-    if (playerTurns - msg.turn > maxMessageAge) break
+    if (playerTurns - msg.turn > maxMessageAge * 0.75) break
     buffer.push(msg)
-    if (ROT.Text.measure(buffer.map(m => m.raw).join(' '), width).height > height + 1) break
+    if (buffer.length > height) break
   }
 
   // combine each message into a single string, while coloring entity names
-  let combinedMsg = ''
+  const colorizedBuffer = []
   for (const msg of buffer) {
     // fade messages by decreasing luminance based on age
     const turnDiff = playerTurns - msg.turn
@@ -200,9 +209,13 @@ export const renderMessages = (d: ROT.Display, world: World, options: Game['opti
     const easedDiff = normalizedDiff * normalizedDiff // ease in
 
     const baseLum = hexLuminance(CONFIG.messageColor)
-
     // reduce luminance by 0% (new message) -> 100% (maxMessageAge)
     const baseColorFaded = transformHSL(CONFIG.messageColor, baseLum * easedDiff, bgLum)
+
+    const msgbg = '#282828'
+    const baseMsgBg = hexLuminance(msgbg)
+    const bg = transformHSL(msgbg, baseMsgBg * easedDiff, bgLum)
+    console.log('bg:', bg)
     // boost the starting point of low luminance entity colors to a minimum (0.5) for readability
     const colorMapFaded = msg.colors.map(e => [
       e[0],
@@ -218,16 +231,18 @@ export const renderMessages = (d: ROT.Display, world: World, options: Game['opti
       colorizedMsg = colorizedMsg.replaceAll(target, colorized)
     }
 
-    combinedMsg += ` %c{${baseColorFaded}}` + colorizedMsg
+    colorizedBuffer.push(` %b{${bg}}%c{${baseColorFaded}}` + colorizedMsg)
   }
 
-  d.clear()
-  d.drawText(msgDisplayMargin, 0, combinedMsg, width)
+  colorizedBuffer.forEach((msg, i) => {
+    d.drawText(min(0, half(width) - half(buffer[i].raw.length)), i, msg)
+  })
 
   // debug message display marker
   if (options.debugMode) {
     for (let i = 0; i < CONFIG.messageDisplayHeight; i++) {
-      d.draw(CONFIG.messageDisplayWidth - 1, i, 'm', 'green', null)
+      d.draw(0, i, 'M', 'lime', null)
+      d.draw(CONFIG.messageDisplayWidth - 1, i, 'M', 'lime', null)
     }
   }
 }
