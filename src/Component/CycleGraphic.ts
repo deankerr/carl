@@ -1,7 +1,7 @@
 import { BaseGraphic } from './Graphic'
 
-export type CycleGraphic = { cycleGraphic: BaseGraphic[] }
+export type CycleGraphic = { cycleGraphic: { list: BaseGraphic[]; current: number } }
 
-export const cycleGraphic = (graphics: BaseGraphic[]): CycleGraphic => {
-  return { cycleGraphic: graphics }
+export const cycleGraphic = (list: BaseGraphic[], current = 0): CycleGraphic => {
+  return { cycleGraphic: { list, current } }
 }

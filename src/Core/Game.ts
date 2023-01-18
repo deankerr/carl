@@ -8,7 +8,14 @@ import { World } from './World'
 import { renderLevel, renderMessages } from './Render'
 
 import { acting } from '../Component'
-import { handleBump, processDeath, handleMovement, processFOV, handleMeleeAttack } from '../System'
+import {
+  handleBump,
+  processDeath,
+  handleMovement,
+  processFOV,
+  handleMeleeAttack,
+  processGraphicUpdate,
+} from '../System'
 import { actionName, ActionTypes, __randomMove, __wait } from '../Action'
 
 import { Keys } from '../lib/Keys'
@@ -160,6 +167,7 @@ export class Game {
     handleTread(world)
     handleBump(world)
     handleMeleeAttack(world)
+    processGraphicUpdate(world)
     processDeath(world)
     processFOV(world)
     // handleLevelTransition?

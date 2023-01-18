@@ -1,37 +1,39 @@
 import {
-  Graphic,
   Acting,
-  TagBlocksLight,
-  Door,
-  TrodOn,
+  CycleGraphic,
   Description,
-  TagDead,
-  Position,
-  TagCurrentTurn,
-  TagWalkable,
-  TagMeleeAttackTarget,
-  TagActor,
+  Door,
   FOV,
-  TagPlayer,
+  Graphic,
+  Position,
+  TagActor,
+  TagBlocksLight,
+  TagCurrentTurn,
+  TagDead,
+  TagMeleeAttackTarget,
   TagMemorable,
+  TagPlayer,
+  TagWalkable,
+  TrodOn,
 } from '../Component/'
 
 export type Components = Partial<
   Position &
-    Graphic &
-    TagPlayer &
-    FOV &
-    TagCurrentTurn &
-    TagWalkable &
-    TagActor &
     Acting &
-    TagMeleeAttackTarget &
-    TagDead &
-    Door &
-    TrodOn &
+    CycleGraphic &
     Description &
+    Door &
+    FOV &
+    Graphic &
+    TagActor &
     TagBlocksLight &
-    TagMemorable
+    TagCurrentTurn &
+    TagDead &
+    TagMeleeAttackTarget &
+    TagMemorable &
+    TagPlayer &
+    TagWalkable &
+    TrodOn
 >
 
 export const componentName = <C extends Components>(component: C) => {
