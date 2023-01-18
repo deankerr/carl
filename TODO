@@ -5,27 +5,28 @@
 ## Soon
 
 - Standardize entity template definitions (move beings/features to Templates)
+- Move message display to bottom, one message per line centred
+- Decouple render from update
+- Add simple animation (npc bobbing)
 - Lighting effects (torches/decreasing light from player)
-- Config 'lightsOn' player FOV per level (ie lightson/large fov outdoors, lightsoff lesser fov in dungeon). Better debug controls
-- vignette/player position effects luminance level wide
-- Add more decoration terrain/items/void decor - reeds
-- Add simple animation (npc bobbing)/ Render decouple
 - stairs to Prefab ruin1 above outdoor, render outdoor "below"
-- Create logger, Exception handling
-
 - Domains: generate levels with "set piece" connectors, or auto depth stairs. Component on connector describes where it leads
 - Refactor Level, generators to properly support domain switching/implement domain connection schema
+- Restore visualizer
+- Level: create walkable pt list during generate for spawning
 - Test ROT-JS patch, submit PR
+- Add more decoration terrain/items/void decor - reeds
+- Player/NPC abilities
+- ECS debug dialog - change entity components to demo ECS
 
 ## Someday
 
-- Level: create walkable pt list during generate for spawning
+- Create logger, Exception handling
 - render: move to key + lookup table, allow easier pallette switching.
 - Async update loop
 - (W)alk/autoexplore
 - ??? Patch ROT.JS to handle drawOver tiles? ???
-- ?xxxEnable view selection + live switching
-- (light bleeds slightly into void? )
+- light bleeds slightly into void?
 - Unify function declaration style
 - Refactor Generate to improvement corridor placement, flexibility, visualizer integration into Game, entity generation
 - ?xxx Refactor world.here() result from tuple to object for better clarity
@@ -36,6 +37,7 @@
 - enemy: chuckler, beetle, horsefly
 - level: voronoi map - bee hive/crystal cavern
 - Standard colors (standard sat/lum?)
+- vignette/player position effects luminance level wide
 
 # Known Bugs
 

@@ -21,7 +21,7 @@ export const tileMapOryxMessages = {
   ...mapRange(letters.toLowerCase(), 6, s),
   ...mapRange(numbers, 7, s),
   ...mapRange(punctuation, 5, s),
-  "'": mapChar(12, 0, s),
+  "'": mapChar(27, 3, s),
   ' ': mapChar(13, 0, s),
 }
 
@@ -30,7 +30,7 @@ export const tileMapOryxMain = {
   ...mapRange(letters.toLocaleLowerCase(), 6, t),
   ...mapRange(numbers, 7, t),
   ...mapRange(punctuation, 5, t),
-  "'": mapChar(26, 8, t),
+  "'": mapChar(27, 3, t),
   ' ': mapChar(13, 0, t),
   'O#': mapChar(0, 2, t),
   'O[': mapChar(1, 2, t),
