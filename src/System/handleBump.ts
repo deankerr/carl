@@ -29,7 +29,7 @@ export const handleBump = (world: World) => {
         console.log('handleBump: result - open door')
         world.modify(doorEntity).add(tagWalkable()).add(tagDoorOpen()).remove('tagBlocksLight')
 
-        world.message('Your hands tremble as you slowly push or pull the door open.')
+        world.message('You slowly push or pull the door open.')
         return
       }
 

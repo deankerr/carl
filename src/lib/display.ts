@@ -63,8 +63,6 @@ export const createHTMLWrapper = () => {
   wrapper.id = 'wrapper'
   wrapper.style.display = 'flex'
   wrapper.style.flexDirection = 'column'
-  // wrapper.style.height = '99vh'
-  wrapper.style.maxWidth = '100vw'
   wrapper.style.justifyContent = 'flex-end'
   wrapper.style.alignItems = 'center'
 
@@ -87,7 +85,7 @@ export const createGameDisplay = () => {
   // main game display canvas
   const mainDisplay = createTileDisplay(mainDisplayWidth, mainDisplayHeight)
   const main = mainDisplay.getContainer()!
-  main.style.width = '99vw'
+  main.style.maxWidth = '99vw'
   main.style.maxHeight = '99vh'
 
   wrapper.appendChild(msg)

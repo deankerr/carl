@@ -8,7 +8,10 @@ import { Point, Pt } from '../Model/Point'
 import { outdoorRuin } from './prefab/outdoorRuin'
 import { createTemplates, templates } from '../Core/Entity'
 
-export const outdoor = (width = CONFIG.mainDisplayWidth, height = CONFIG.mainDisplayHeight): NewLevel => {
+const lwidth = CONFIG.genLevelsAtDisplaySize ? CONFIG.mainDisplayWidth : CONFIG.levelWidth
+const lheight = CONFIG.genLevelsAtDisplaySize ? CONFIG.mainDisplayHeight : CONFIG.levelHeight
+
+export const outdoor = (width = lwidth, height = lheight): NewLevel => {
   console.log('createOutdoor')
   const level = Grid.fill(width, height, 98)
 

@@ -126,7 +126,7 @@ const flames = (color: string, pt: Point) => {
     ...C.description('flames'),
     ...C.baseGraphic('flame1', color1),
     ...C.position(pt),
-    ...C.trodOn('You begin to crisp up nicely while standing in the flames'),
+    ...C.trodOn('You begin to crisp up nicely while standing in the flames.'),
     ...C.tagWalkable(),
     ...C.tagMemorable(),
     ...C.cycleGraphic([

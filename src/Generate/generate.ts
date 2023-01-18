@@ -7,7 +7,6 @@ import { Grid } from '../Model/Grid'
 import { create } from './dungeon4/'
 import { Pt } from '../Model/Point'
 import { CONFIG } from '../config'
-import { floor } from '../lib/util'
 import { Level } from '../Model/Level'
 import { EntityTemplates, beings, features, createTemplates } from '../Core/Entity'
 import { createDecor, populateNPCs } from './features'
@@ -22,11 +21,13 @@ export type NewLevel = [Level, EntityTemplates]
 //   height: CONFIG.mainDisplayHeight,
 //   stairsDesc: false,
 // }
+const lwidth = CONFIG.genLevelsAtDisplaySize ? CONFIG.mainDisplayWidth : CONFIG.levelWidth
+const lheight = CONFIG.genLevelsAtDisplaySize ? CONFIG.mainDisplayHeight : CONFIG.levelHeight
 
 export const dungeon4 = (stairsDown = true, stairsUp = true): NewLevel => {
   const data = create({
-    width: floor(CONFIG.mainDisplayWidth),
-    height: floor(CONFIG.mainDisplayHeight),
+    width: lwidth,
+    height: lheight,
     minRoomW: 5,
     maxRoomW: 9,
     minRoomH: 5,

@@ -2,13 +2,12 @@
 
 ## Now
 
-- Move message display to bottom, one message per line centred
-
-## Soon
-
 - Standardize entity template definitions (move beings/features to Templates)
 - Decouple render from update
 - Add simple animation (npc bobbing)
+
+## Soon
+
 - Refactor Game - extract meta action processing (UI etc), clarify system loop
 - stairs to Prefab ruin1 above outdoor, render outdoor "below"
 - Domains: generate levels with "set piece" connectors, or auto depth stairs. Component on connector describes where it leads
