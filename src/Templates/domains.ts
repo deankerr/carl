@@ -34,6 +34,7 @@ export const domains = [
     generator: 'dungeon4',
     connections: {
       top: 'outdoor',
+      ascend: 'dungeon',
       descend: 'dungeon',
       // bottom: 5 specify dungeon depth?
     },

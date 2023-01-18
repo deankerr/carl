@@ -33,9 +33,11 @@ export function input(code: string): ActionTypes | null {
     // Change Level
     case 'Enter':
     case 'Space':
+      return ChangeLevel('anywhere')
     case 'Period':
+      return ChangeLevel('debug_down')
     case 'Comma':
-      return ChangeLevel('somewhere')
+      return ChangeLevel('debug_up')
 
     // UI
     case 'KeyL':

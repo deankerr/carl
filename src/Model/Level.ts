@@ -16,8 +16,8 @@ export class Level {
   readonly scheduler = new ROT.Scheduler.Simple()
   entities: Entity[] = []
 
-  stairsDescending: Point | undefined
-  stairsAscending: Point | undefined
+  stairsDescendingPt: Point | undefined
+  stairsAscendingPt: Point | undefined
 
   constructor(
     // bare level defaults as workaround until refactor

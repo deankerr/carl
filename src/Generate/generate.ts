@@ -1,8 +1,6 @@
 /* generate - handles the level generator(s), returning only what we need
  might be unnecessary but I hated how much level data specific typing ended
  up in the main game functions
-
- later, something like: function generateLevel(Enum.Dungeon) {} ?
  */
 
 import { Grid } from '../Model/Grid'
@@ -14,12 +12,16 @@ import { Level } from '../Model/Level'
 import { EntityTemplates, beings, features, createTemplates } from '../Core/Entity'
 import { createDecor, populateNPCs } from './features'
 
-// const { levelWidth: levelWidthTileset, levelHeight: levelHeightTileset } = CONFIG
-
-// export type EntityTemplate = [keyof typeof templates, Point]
-// export type NewLevel = [Level, EntityTemplate[]]
-
 export type NewLevel = [Level, EntityTemplates]
+
+// TODO
+// export type LevelGenerator = () => NewLevel
+
+// const defaultGenConfig = {
+//   width: CONFIG.mainDisplayWidth,
+//   height: CONFIG.mainDisplayHeight,
+//   stairsDesc: false,
+// }
 
 export const dungeon4 = (stairsDown = true, stairsUp = false): NewLevel => {
   const data = create({
@@ -54,7 +56,7 @@ export const dungeon4 = (stairsDown = true, stairsUp = false): NewLevel => {
   if (stairsDown) {
     const pt = level.ptInRoom(1)
     level.terrainGrid.set(pt, 11)
-    level.stairsDescending = pt
+    level.stairsDescendingPt = pt
     console.log('stairs down at', pt.x, pt.y)
   }
 
@@ -62,7 +64,7 @@ export const dungeon4 = (stairsDown = true, stairsUp = false): NewLevel => {
     console.log('generate: stairs up')
     const pt = level.ptInRoom(0)
     level.terrainGrid.set(pt, 10)
-    level.stairsAscending = pt
+    level.stairsAscendingPt = pt
     console.log('stairs up at', pt.x, pt.y)
   }
 

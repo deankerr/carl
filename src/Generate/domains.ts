@@ -26,8 +26,9 @@ export function createDomains(): [DomainMap, Domain] {
   // iterate through the templates again, connecting the node references
   Templates.domains.forEach(t => {
     const node = nodeMap[t.label]
-    const { top, descend } = t.connections
+    const { top, ascend, descend } = t.connections
     node.connections.top = top ? nodeMap[top] : undefined
+    node.connections.ascend = ascend ? nodeMap[ascend] : undefined
     node.connections.descend = descend ? nodeMap[descend] : undefined
   })
 
