@@ -7,8 +7,8 @@ import { Entity } from './Entity'
 import { Message, createWordRegex } from '../lib/messages'
 
 // Seen terrain memory color modifiers
-const darkenSat = 0.1
-const darkenLum = 0.1
+const darkenSat = 0.04 // orig dark vals: 0.1
+const darkenLum = 0.08 //                 0.1
 const darkenLumMin = 0.12
 
 // luminance of background color (used as min value)
