@@ -57,6 +57,7 @@ export class World {
       console.log('change', domain?.label, index)
       this.active = domain.levels[index]
       this.activeIndex = index
+      this.domain = domain
     }
   }
 
