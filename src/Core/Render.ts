@@ -237,7 +237,7 @@ export const renderMessages = (d: ROT.Display, world: World, options: Game['opti
   })
 
   // debug message (framerate)
-  if (debugMsg) d.drawText(0, height - 1, debugMsg)
+  if (debugMsg) d.drawText(0, height - 1, `${spinner.next()} ${debugMsg}`)
 
   // debug mode display size marker
   if (options.debugMode) {
@@ -248,6 +248,18 @@ export const renderMessages = (d: ROT.Display, world: World, options: Game['opti
   }
 }
 
+const createSpinner = () => {
+  const g = ['-', '\\', '|', '/']
+  let i = 0
+  const next = () => {
+    i = i >= g.length - 1 ? 0 : i + 1
+    return `%c{#333}${g[i]}%c{}`
+  }
+
+  return { next }
+}
+
+const spinner = createSpinner()
 function darken(color: string, saturation: number, luminosity: number, minLum: number) {
   const c = ROT.Color.rgb2hsl(ROT.Color.fromString(color))
 
