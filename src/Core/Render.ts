@@ -147,7 +147,7 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
         color,
         color.map((_c, i) => (i === 0 ? backgroundColor : 'transparent'))
       )
-    } else display.draw(offsetX + here.x, offsetY + here.y, ' ', backgroundColor, null) // blank
+    } //else display.draw(offsetX + here.x, offsetY + here.y, 'tree', backgroundColor, null) // blank
 
     // debug border / crosshairs
     if (options.debugMode) {

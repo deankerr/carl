@@ -257,7 +257,7 @@ export class World {
   isTransparent(x: number, y: number) {
     const here = Pt(x, y)
     const t = this.active.terrain(here)
-    if (t.tagBlocksLight) return false
+    if ('tagBlocksLight' in t) return false
     const opaqueEntities = this.get('tagBlocksLight', 'position').filter(e => e.position.s === here.s).length === 0
     return opaqueEntities
   }

@@ -1,9 +1,10 @@
 import { Components } from './Components'
 import * as C from '../Component'
 import { Point } from '../Model/Point'
-import { graphic } from '../Component'
+import { Graphic, graphic } from '../Component'
 import { BeingTemplate } from '../Templates'
 import { FeatureTemplate } from '../Templates/Features'
+import { TerrainTemplate } from '../Templates/Terrain'
 
 export type EntityID = { readonly id: string; name: string; char: string; color: string }
 
@@ -20,20 +21,6 @@ export const createTemplates = (): EntityTemplates => {
   return { beings: [], features: [], doors: [] }
 }
 
-// export const createPlayer = (pt: Point, fov = 4) => {
-//   return {
-//     id: 'player',
-//     ...C.position(pt),
-//     ...C.baseGraphic('@', 'violet'),
-//     ...C.name('yourself'),
-//     ...C.tagPlayer(),
-//     ...C.tagActor(),
-//     ...C.fov(fov),
-//   }
-// }
-
-// export type PlayerTemplate = ReturnType<typeof createPlayer>
-
 export const createDoor = (pt: Point) => {
   return {
     id: 'door',
@@ -48,115 +35,33 @@ export const createDoor = (pt: Point) => {
   }
 }
 
-// export type DoorTemplate = ReturnType<typeof createDoor>
+export function hydrate(t: TerrainTemplate, pt?: Point): Entity {
+  const { id, name, char, color } = t
 
-// [name, char, color]
-// export const beings = {
-//   // beasts
-//   spider: ['tarantula', 'Ox', 'cyan'],
-//   snake: ['taipan', 'Os', 'green'],
-//   toad: ['menacing toad', 'Ot', 'limegreen'],
-//   crab: ['crab', 'Or', 'red'],
-//   crab2: ['turncoat crab', 'Or', 'green'],
-//   chicken: ['lil chickadee', 'Oc', 'white'],
-//   bat: ['bat of hell', 'Oa', 'red'],
-//   rat: ['boy rat', 'R', 'brown'],
+  let entity = {
+    id,
+    name,
+    char,
+    color,
+  }
 
-//   // spooks
-//   ghost: ['wailing spirit', 'Og', 'white'],
-//   demon: ['Natas, the mysterious wanderer', 'OD', 'red'],
-//   skeleton: ['skellybones', 'OS', 'white'],
-//   blob: ['polyp henchmen', 'blob', 'seagreen'],
-//   blobAssassin: ['polyp assassin', 'blob', 'lightsalmon'],
-//   blobKing: ['polyp mastermind', 'blob', 'magenta'],
-//   eye: ['eye of sight crime', 'E', 'lime'],
-//   zombie: ['zombie', 'Z', 'maroon'],
-//   redJelly: ['strawberry jelly', 'j', 'red'],
-//   greenJelly: ['cucumber jelly', 'j', 'green'],
-//   whiteJelly: ['milk jelly', 'j', 'silver'],
-//   yellowJelly: ['cheese jelly', 'j', 'yellow'],
+  if (pt) entity = { ...entity, ...C.position(pt) }
 
-//   // intelligent
-//   orc: ['orc porkhoarder', 'O', 'green'],
-//   orc2: ['orc forkstalker', 'O', 'purple'],
-//   orc3: ['orc portworker', 'O', 'goldenrod'],
-//   orc4: ['orc curdchurner', 'O', 'olive'],
-//   karl: ['Karl The Clown', 'K', 'yellow'],
-//   giant: ['giant bloke', 'G', 'orchid'],
-//   interest: ['compound interest', '%', 'peru'],
-// }
+  if ('walkable' in t) entity = { ...entity, ...C.tagWalkable() }
+  if ('memorable' in t) entity = { ...entity, ...C.tagMemorable() }
+  if ('trodOn' in t) entity = { ...entity, ...C.trodOn(t.trodOn) }
+  if ('blocksLight' in t) entity = { ...entity, ...C.tagBlocksLight() }
 
-// export const hydrateBeing = (t: BeingTemplate, pt: Point) => {
-//   const entity = {
-//     id: t[0].replaceAll(' ', ''),
-//     ...C.description(t[0]),
-//     ...C.baseGraphic(t[1], t[2]),
-//     ...C.position(pt),
-//     ...C.tagActor(),
-//   }
+  if ('cycleGraphic' in t && Array.isArray(t.cycleGraphic)) {
+    const cycle = t.cycleGraphic.map(g => {
+      return graphic(g, color)
+    }) as Graphic[]
+    entity = { ...entity, ...C.cycleGraphic(cycle) }
+  }
 
-//   return entity
-// }
+  if ('emitLight' in t) {
+    entity = { ...entity, ...C.emitLight(entity.color) }
+  }
 
-// [name, char, color, trod, walkable, memorable]
-// export const features = {
-//   shrub: ['shrub', 'shrub', '#58a54a', 'You trample the pathetic shrub', 'true', 'true'],
-//   flames: ['flames', '', '#fc7703'],
-//   flamesBlue: ['blue flames', 'blue', '#141cff'],
-//   flamesGreen: ['green flames', 'green', '#0df20d'],
-// }
-
-// const flames = (color: string, pt: Point) => {
-//   let color1 = '#fc7703'
-//   let color2 = setLuminance(color1, 0.6, 0)
-//   switch (color) {
-//     case 'blue':
-//       color1 = features.flamesBlue[2]
-//       color2 = setLuminance(color1, 0.5, 0)
-//       break
-//     case 'green':
-//       color1 = '#0df20d'
-//       color2 = setLuminance(color1, 0.6, 0)
-//       break
-//   }
-
-//   return {
-//     id: 'flames',
-//     ...C.name('flames'),
-//     ...C.baseGraphic('flame1', color1),
-//     ...C.position(pt),
-//     ...C.trodOn('You begin to crisp up nicely while standing in the flames.'),
-//     ...C.tagWalkable(),
-//     ...C.tagMemorable(),
-//     ...C.cycleGraphic([
-//       { char: 'flame1', color: color1 },
-//       { char: 'flame2', color: color2 },
-//     ]),
-//     ...C.emitLight(color1),
-//   }
-// }
-
-// export const hydrateFeature = (t: FeatureTemplate, pt: Point) => {
-//   if (t[0].includes('flames')) return flames(t[1], pt)
-//   let entity = {
-//     id: t[0].replaceAll(' ', ''),
-//     ...C.name(t[0]),
-//     ...C.baseGraphic(t[1], t[2]),
-//     ...C.position(pt),
-//     ...C.trodOn(t[3]),
-//   }
-
-//   // TODO avoid this with better templating
-//   if (t[4] === 'true') {
-//     entity = { ...entity, ...C.tagWalkable() }
-//   }
-
-//   if (t[3] === 'true') {
-//     entity = { ...entity, ...C.tagMemorable() }
-//   }
-
-//   return entity
-// }
-
-// export const templates = { ...features }
-// export type FeatureTemplate = typeof features[keyof typeof features]
+  return entity
+}

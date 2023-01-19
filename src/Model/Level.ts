@@ -3,7 +3,7 @@ import * as ROT from 'rot-js'
 import { Grid } from './Grid'
 import { Entity } from '../Core/Entity'
 import { Point } from './Point'
-import { Terrain, TerrainLegacyMap } from '../Core/Terrain'
+import { Terrain, TerrainLegacyMap } from '../Templates/Terrain'
 import { pick, repeatUntil } from '../lib/util'
 import { Color } from 'rot-js/lib/color'
 
@@ -52,7 +52,7 @@ export class Level {
         let result
         repeatUntil(() => {
           const pt = this.terrainGrid.rndPt()
-          if (!this.terrain(pt).tagWalkable) return false
+          if (!('tagWalkable' in this.terrain(pt))) return false
           result = pt
           return true
         }, 1000)

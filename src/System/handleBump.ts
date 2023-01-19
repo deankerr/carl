@@ -15,7 +15,7 @@ export const handleBump = (world: World) => {
   if (bumpableEntities.length === 0) {
     // no entities, terrain bump
     console.log('handleBump: result - terrain bump')
-    if (currentIsPlayer) world.message(`You bounce off the ${terrain?.name?.name}.`)
+    if (currentIsPlayer) world.message(`You bounce off the ${terrain.name}.`)
   } else {
     // entities
     console.log('handleBump: entity bump')
