@@ -23,6 +23,7 @@ import { input } from './Input'
 
 import { handleTread } from '../System/handleTread'
 import { processLighting } from '../System/processLighting'
+import { mouseMove } from '../lib/display'
 
 export class Game {
   display: ROT.Display
@@ -32,6 +33,7 @@ export class Game {
 
   messageNew: string[] = [] // messages generated during the last update
   messageHistory: string[] = [] // previous messages that still fit in the buffer visually
+  mouseXY: number[] = [0, 0] // mouse X Y on screen display
 
   options = {
     lightsOn: CONFIG.lightsOnInitial, // reveal level debug flag
@@ -51,11 +53,16 @@ export class Game {
     // set up first turn
     this.world.nextTurn() // set the currentTurn
 
+    // debug
     this.world.__clog(true)
 
-    this.render()
+    // mouse click coords
+    mouseMove(d, ev => (this.mouseXY = d.eventToPosition(ev)))
 
+    processLighting(this.world)
+    processFOV(this.world)
     // game active
+    this.render()
     this.keys.add(this.update.bind(this))
   }
 
@@ -85,7 +92,6 @@ export class Game {
         case 'render':
           // this.options.showDisplayDebug = true
           this.options.debugMode = !this.options.debugMode
-          this.render()
           console.log('UI: render')
           break
         case 'debug_logworld':
@@ -95,8 +101,7 @@ export class Game {
           console.log('UI: Action not implemented', playerAction)
       }
 
-      this.render()
-      // console.groupEnd()
+      // this.render()
       return
     }
 
@@ -111,9 +116,11 @@ export class Game {
         if (playerAction.changeLevel.to === 'debug_up') world.changeLevel(-1)
         if (playerAction.changeLevel.to === 'debug_outdoor') world.setCurrentLevel(world.domainMap['outdoor'], 0)
         if (playerAction.changeLevel.to === 'debug_dungeon') world.setCurrentLevel(world.domainMap['dungeon'], 0)
-        world.nextTurn()
-        this.render()
 
+        world.nextTurn()
+        processLighting(this.world)
+        processFOV(this.world)
+        // this.render()
         return
       }
 
@@ -127,7 +134,9 @@ export class Game {
       } else console.warn('Not on stairs')
 
       world.nextTurn()
-      this.render()
+      processLighting(this.world)
+      processFOV(this.world)
+      // this.render()
 
       return
     }
@@ -146,13 +155,15 @@ export class Game {
       playerTurn = world.nextTurn()
     } while (!playerTurn)
 
-    // Once per player turn system
+    // Once per player turn
     processGraphicUpdate(world)
+    processLighting(this.world)
+    processFOV(this.world)
 
-    console.log(`# update complete # ${Date.now() - timeUpdate}ms`)
     console.groupEnd()
+    console.log(`# update complete # ${Date.now() - timeUpdate}ms`)
 
-    this.render()
+    // this.render()
   }
 
   system(action: ActionTypes) {
@@ -169,7 +180,7 @@ export class Game {
     handleBump(world)
     handleMeleeAttack(world)
     processDeath(world)
-    // processFOV(world)
+    processFOV(world)
     // handleLevelTransition?
 
     const [entityDone] = world.get('tagCurrentTurn')
@@ -179,10 +190,24 @@ export class Game {
     // this.render()
   }
 
+  lastFrameTime = 0
+  lastFrameSec = 0
+  // doRender = true
+  fpsMsg = ''
   render() {
-    processLighting(this.world)
-    processFOV(this.world)
-    renderMessages(this.msgDisplay, this.world, this.options)
+    const t = Date.now()
+    const tLast = t - this.lastFrameTime
+    this.lastFrameTime = t
+
+    const sec = new Date().getSeconds()
+    if (this.lastFrameSec !== sec) {
+      this.lastFrameSec = sec
+      this.fpsMsg = `${(1000 / tLast).toFixed(0)}`
+    }
+
+    renderMessages(this.msgDisplay, this.world, this.options, `${this.fpsMsg} ${this.mouseXY}`)
     renderLevel(this.display, this.world, this.options)
+    // setTimeout(() => requestAnimationFrame(this.render.bind(this)), CONFIG.renderInterval)
+    requestAnimationFrame(this.render.bind(this))
   }
 }

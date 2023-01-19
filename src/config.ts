@@ -7,8 +7,8 @@ const CONFIG = {
   seed: null,
   mainDisplayWidth: 60,
   mainDisplayHeight: 29,
-  messageDisplayWidth: 59,
-  messageDisplayHeight: 5,
+  messageDisplayWidth: 60,
+  messageDisplayHeight: 4,
   genLevelsAtDisplaySize: true,
   levelWidth: 60,
   levelHeight: 38,
@@ -18,6 +18,7 @@ const CONFIG = {
   // msgBgColor: ' rgb(10,30,20,1)',
   msgBgColor: 'transparent', //' rgb(80,120,0,1)',
   htmlBGColor: PROD ? '#191919' : '#191919',
+  renderInterval: 500,
 }
 
 export { CONFIG }

@@ -75,7 +75,7 @@ export const createGameDisplay = () => {
   // message display canvas
   const msgDisplay = createMessageDisplay(messageDisplayWidth, messageDisplayHeight)
   const msg = msgDisplay.getContainer()!
-  msg.style.width = '99vw'
+  msg.style.maxWidth = '99vw'
   msg.style.position = 'absolute'
 
   // msg.style.bottom = '0'
@@ -95,14 +95,14 @@ export const createGameDisplay = () => {
   return [msgDisplay, mainDisplay]
 }
 
-export function mouseMove(d: ROT.Display, callback: (event: MouseEvent) => unknown) {
+export function mouseMove(d: ROT.Display, callback: (ev: MouseEvent) => unknown) {
   const ctx = d.getContainer()
   if (ctx) {
     ctx.addEventListener('mousemove', callback)
   }
 }
 
-export function mouseClick(d: ROT.Display, callback: (event: MouseEvent) => unknown) {
+export function mouseClick(d: ROT.Display, callback: (ev: MouseEvent) => unknown) {
   const ctx = d.getContainer()
   if (ctx) {
     ctx.addEventListener('mousedown', callback)

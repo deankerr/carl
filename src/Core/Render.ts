@@ -176,7 +176,7 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
 // const msgDisplayMargin = 0 // space between each side of message and display edge
 const maxMessageAge = 16 // disappear after this many turns
 const minColorizedLum = 0.5 // colorized entity name min luminance
-export const renderMessages = (d: ROT.Display, world: World, options: Game['options']) => {
+export const renderMessages = (d: ROT.Display, world: World, options: Game['options'], debugMsg?: string) => {
   const width = CONFIG.messageDisplayWidth
   const height = CONFIG.messageDisplayHeight
   const { playerTurns, messages } = world
@@ -210,7 +210,7 @@ export const renderMessages = (d: ROT.Display, world: World, options: Game['opti
     // reduce luminance by 0% (new message) -> 100% (maxMessageAge)
     const baseColorFaded = setLuminance(CONFIG.messageColor, baseLum * easedDiff, bgLum)
 
-    const msgbg = '#282828'
+    const msgbg = CONFIG.backgroundColor //'#282828'
     const baseMsgBg = hexLuminance(msgbg)
     const bg = setLuminance(msgbg, baseMsgBg * easedDiff, bgLum)
     // console.log('bg:', bg)
@@ -236,7 +236,10 @@ export const renderMessages = (d: ROT.Display, world: World, options: Game['opti
     d.drawText(min(0, half(width) - half(buffer[i].raw.length)), i, msg)
   })
 
-  // debug message display marker
+  // debug message (framerate)
+  if (debugMsg) d.drawText(0, height - 1, debugMsg)
+
+  // debug mode display size marker
   if (options.debugMode) {
     for (let i = 0; i < CONFIG.messageDisplayHeight; i++) {
       d.draw(0, i, 'M', 'lime', null)
