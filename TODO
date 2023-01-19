@@ -46,4 +46,3 @@
 - Apostrophe missing in msg charset
 - Message entity colors rematches names that are substrings of other names
 - Message entity colors don't fade away completely like normal text
-- Lighting doesn't flow through open doors

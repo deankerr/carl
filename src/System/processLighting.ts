@@ -4,7 +4,7 @@ import { World } from '../Core/World'
 import { Pt } from '../Model/Point'
 
 export const processLighting = (world: World) => {
-  const entitylightingUpdate = world.get('tagLightingUpdated')
+  const entitylightingUpdate = world.get('tagLightPathUpdated')
   if (entitylightingUpdate.length === 0 && world.active.lighting.size > 0) return
   const t = Date.now()
 
@@ -39,7 +39,7 @@ export const processLighting = (world: World) => {
   lighting.compute(lightingCallback)
 
   // remove update tag from entities if any
-  entitylightingUpdate.forEach(e => world.modify(e).remove('tagLightingUpdated'))
+  entitylightingUpdate.forEach(e => world.modify(e).remove('tagLightPathUpdated'))
 
   console.log(`processLighting complete ${Date.now() - t}ms`)
 }

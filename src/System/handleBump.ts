@@ -1,5 +1,5 @@
 import { World } from '../Core/World'
-import { tagMeleeAttackTarget, acting, tagWalkable, tagDoorOpen, tagLightingUpdated } from '../Component'
+import { tagMeleeAttackTarget, acting, tagWalkable, tagDoorOpen, tagLightPathUpdated } from '../Component'
 import { MeleeAttack } from '../Action'
 
 export const handleBump = (world: World) => {
@@ -30,7 +30,7 @@ export const handleBump = (world: World) => {
           .modify(bumpedEntity)
           .add(tagWalkable())
           .add(tagDoorOpen())
-          .add(tagLightingUpdated())
+          .add(tagLightPathUpdated())
           .remove('tagBlocksLight')
 
         world.message('You slowly push or pull the door open.')

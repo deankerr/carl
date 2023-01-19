@@ -43,9 +43,9 @@ export const tagPlayer = (): TagPlayer => {
   return { tagPlayer: true }
 }
 
-export type TagLightingUpdated = { tagLightingUpdated: true }
-export const tagLightingUpdated = (): TagLightingUpdated => {
-  return { tagLightingUpdated: true }
+export type TagLightPathUpdated = { tagLightPathUpdated: true }
+export const tagLightPathUpdated = (): TagLightPathUpdated => {
+  return { tagLightPathUpdated: true }
 }
 
 export type TagWalkable = { tagWalkable: true }
