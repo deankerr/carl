@@ -1,6 +1,13 @@
 export type FeatureTemplate = typeof Features[keyof typeof Features]
 
 export const Features = {
+  door: {
+    id: 'door',
+    name: 'door',
+    char: 'doorClosed',
+    color: '#73513d',
+    tag: ['door', 'blocksLight', 'memorable'],
+  },
   shrub: {
     id: 'shrub',
     name: 'shrub',

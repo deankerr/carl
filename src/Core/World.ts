@@ -1,8 +1,8 @@
 // Entity/Component manager
 import { Components, componentName } from './Components'
 import { Graphic, tagCurrentTurn } from '../Component'
-import { Entity, EntityTemplates, createDoor, hydrate } from './Entity'
-import { Beings } from '../Templates'
+import { Entity, EntityTemplates, hydrate } from './Entity'
+import { Beings, Features } from '../Templates'
 import { objLog } from '../lib/util'
 import { Point, Pt } from '../Model/Point'
 import { Game } from './Game'
@@ -128,7 +128,7 @@ export class World {
 
     if (newTemplates.doors) {
       for (const pt of newTemplates.doors) {
-        this.create(createDoor(pt))
+        this.create(hydrate(Features.door, pt))
       }
     }
 

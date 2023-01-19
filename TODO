@@ -2,9 +2,8 @@
 
 ## Now
 
-- Standardize entity template definitions (move beings/features to Templates)
 - Decouple render from update
-- Add simple animation (npc bobbing)
+- Add simple animation (npc bobbing, light flickering)
 
 ## Soon
 

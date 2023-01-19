@@ -10,40 +10,25 @@ export type EntityID = { readonly id: string; name: string; char: string; color:
 
 export type Entity = EntityID & Components
 
+export type EntityTemplate = BeingTemplate | FeatureTemplate | TerrainTemplate
+
 export type EntityTemplates = {
   player?: Point
   beings: [BeingTemplate, Point | 0][]
   features: [FeatureTemplate, Point | 0][]
   doors: Point[]
 }
-export type ETemplate = BeingTemplate | FeatureTemplate | TerrainTemplate
 
 export const createTemplates = (): EntityTemplates => {
   return { beings: [], features: [], doors: [] }
 }
 
-export const createDoor = (pt: Point) => {
-  return {
-    id: 'door',
-    ...C.position(pt),
-    ...C.baseGraphic('O+', '#73513d'),
-    ...C.name('door'),
-    ...C.tagDoor(),
-    ...C.doorGraphic(graphic('O+', '#73513d'), graphic('O/', '#73513d')),
-    // ...C.trodOn('You carefully navigate through the door.'),
-    ...C.tagBlocksLight(),
-    ...C.tagMemorable(),
-  }
-}
-
-export function hydrate(t: ETemplate, pt?: Point, fov?: number): Entity {
-  const { id, name, char, color } = t
-
+export function hydrate(t: EntityTemplate, pt?: Point, fov?: number): Entity {
   let entity = {
-    id,
-    name,
-    char,
-    color,
+    id: t.id,
+    name: t.name,
+    char: t.char,
+    color: t.color,
   }
 
   if (pt) entity = { ...entity, ...C.position(pt) }
@@ -57,13 +42,20 @@ export function hydrate(t: ETemplate, pt?: Point, fov?: number): Entity {
     if (t.tag.includes('blocksLight')) entity = { ...entity, ...C.tagBlocksLight() }
     if (t.tag.includes('actor')) entity = { ...entity, ...C.tagActor() }
     if (t.tag.includes('player')) entity = { ...entity, ...C.tagPlayer() }
+    if (t.tag.includes('door')) {
+      entity = {
+        ...entity,
+        ...C.tagDoor(),
+        ...C.doorGraphic(graphic('O+', '#73513d'), graphic('O/', '#73513d')),
+      }
+    }
   }
 
   if ('trodOn' in t) entity = { ...entity, ...C.trodOn(t.trodOn) }
 
   if ('cycleGraphic' in t && Array.isArray(t.cycleGraphic)) {
     const cycle = t.cycleGraphic.map(g => {
-      return graphic(g, color)
+      return graphic(g, t.color)
     }) as Graphic[]
     entity = { ...entity, ...C.cycleGraphic(cycle) }
   }
