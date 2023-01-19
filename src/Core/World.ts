@@ -1,14 +1,14 @@
 // Entity/Component manager
+import { Game } from './Game'
+import { Entity, EntityTemplates, hydrate } from './Entity'
 import { Components, componentName } from './Components'
 import { Graphic, tagCurrentTurn } from '../Component'
-import { Entity, EntityTemplates, hydrate } from './Entity'
 import { Beings, Features } from '../Templates'
-import { objLog } from '../lib/util'
-import { Point, Pt } from '../Model/Point'
-import { Game } from './Game'
-import { Level } from '../Model/Level'
-import { colorizeMessage, Message } from '../lib/messages'
 import { createDomains, Domain, DomainMap } from '../Generate/domains'
+import { Level } from '../Model/Level'
+import { Point, Pt } from '../Model/Point'
+import { objLog } from '../lib/util'
+import { colorizeMessage, Message } from '../lib/messages'
 
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 

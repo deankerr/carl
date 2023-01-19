@@ -1,10 +1,7 @@
 import { Components } from './Components'
 import * as C from '../Component'
 import { Point } from '../Model/Point'
-import { Graphic, graphic } from '../Component'
-import { BeingTemplate } from '../Templates'
-import { FeatureTemplate } from '../Templates/Features'
-import { TerrainTemplate } from '../Templates/Terrain'
+import { BeingTemplate, FeatureTemplate, TerrainTemplate } from '../Templates'
 
 export type EntityID = { readonly id: string; name: string; char: string; color: string }
 
@@ -36,7 +33,6 @@ export function hydrate(t: EntityTemplate, pt?: Point, fov?: number): Entity {
 
   // TODO map components to templates to avoid doing this manually
   if ('tag' in t) {
-    console.log(t.name, t.tag, t.tag.includes('walkable'))
     if (t.tag.includes('walkable')) entity = { ...entity, ...C.tagWalkable() }
     if (t.tag.includes('memorable')) entity = { ...entity, ...C.tagMemorable() }
     if (t.tag.includes('blocksLight')) entity = { ...entity, ...C.tagBlocksLight() }
@@ -46,7 +42,7 @@ export function hydrate(t: EntityTemplate, pt?: Point, fov?: number): Entity {
       entity = {
         ...entity,
         ...C.tagDoor(),
-        ...C.doorGraphic(graphic('O+', '#73513d'), graphic('O/', '#73513d')),
+        ...C.doorGraphic(C.graphic('doorClosed', entity.color), C.graphic('doorOpen', entity.color)),
       }
     }
   }
@@ -55,8 +51,8 @@ export function hydrate(t: EntityTemplate, pt?: Point, fov?: number): Entity {
 
   if ('cycleGraphic' in t && Array.isArray(t.cycleGraphic)) {
     const cycle = t.cycleGraphic.map(g => {
-      return graphic(g, t.color)
-    }) as Graphic[]
+      return C.graphic(g, t.color)
+    }) as C.Graphic[]
     entity = { ...entity, ...C.cycleGraphic(cycle) }
   }
 

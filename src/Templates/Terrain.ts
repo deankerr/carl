@@ -156,5 +156,3 @@ export const TerrainLegacyMap: { [key: number]: Entity } = {
   98: hydrate(Terrain.void),
   99: hydrate(Terrain.endlessVoid),
 }
-
-console.log(TerrainLegacyMap)
