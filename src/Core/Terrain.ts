@@ -15,7 +15,7 @@ export const terrainTemplates = {
   crackedPath4: ['cracked path', 'O.3', '#262626', 'true', 'true'],
   grass: ['grass', 'O"', '#65712b', 'true', 'true'],
   deadGrass: ['dead grass', 'O:', '#664f47', 'true', 'true'],
-  shrub: ['shrub', 'Ov', '#58a54a', 'true', 'true'],
+  shrub: ['shrub', 'shrub', '#58a54a', 'true', 'true'],
   tree: ['tree', 'OT', 'forestgreen', 'true', 'true'],
   mound: ['mound', 'OM', '#6a4b39', 'true', 'true', 'You round the mound.'],
   peak: ['peak', 'OP', '#2a5a3e', 'true', 'true', 'You summit the peak.'],
@@ -28,7 +28,7 @@ export const Terrain: Record<keyof typeof terrainTemplates, Entity> = Object.ent
     const [key, template] = curr
     const entity: Entity = {
       id: template[0].replaceAll(' ', ''),
-      ...C.description(template[0]),
+      ...C.name(template[0]),
       ...C.baseGraphic(template[1], template[2]),
     }
 

@@ -8,8 +8,10 @@ import { create } from './dungeon4/'
 import { Pt } from '../Model/Point'
 import { CONFIG } from '../config'
 import { Level } from '../Model/Level'
-import { EntityTemplates, beings, features, createTemplates } from '../Core/Entity'
+import { EntityTemplates, createTemplates } from '../Core/Entity'
 import { createDecor, populateNPCs } from './features'
+import { Beings } from '../Templates'
+import { Features } from '../Templates/Features'
 
 export type NewLevel = [Level, EntityTemplates]
 
@@ -81,24 +83,24 @@ export const arena = (): NewLevel => {
 
   const templates = createTemplates()
   templates.beings = [
-    [beings.bat, 0],
-    [beings.interest, 0],
-    [beings.blob, 0],
-    [beings.blobKing, 0],
-    [beings.eye, 0],
-    [beings.zombie, 0],
-    [beings.giant, 0],
-    [beings.rat, 0],
-    [beings.orc2, 0],
+    [Beings.bat, 0],
+    [Beings.interest, 0],
+    [Beings.blob, 0],
+    [Beings.blob3, 0],
+    [Beings.eye, 0],
+    [Beings.zombie, 0],
+    [Beings.giant, 0],
+    [Beings.rat, 0],
+    [Beings.orc2, 0],
   ]
 
   templates.features = [
-    [features.shrub, 0],
-    [features.shrub, 0],
-    [features.shrub, 0],
-    [features.shrub, 0],
-    [features.shrub, 0],
-    [features.shrub, 0],
+    [Features.shrub, 0],
+    [Features.shrub, 0],
+    [Features.shrub, 0],
+    [Features.shrub, 0],
+    [Features.shrub, 0],
+    [Features.shrub, 0],
   ]
 
   return [new Level('arena', terrain, new Map(), []), templates]

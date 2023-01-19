@@ -21,12 +21,10 @@ export const handleMeleeAttack = (world: World) => {
     // kill target
     console.log(`handleMeleeAttack: player killed ${targetEntity.id}`)
     world.modify(targetEntity).add(dead())
-    world.message(`You obliterate the ${targetEntity?.description?.name ?? targetEntity.id} with your mind!`)
+    world.message(`You obliterate the ${targetEntity.name} with your mind!`)
   } else {
     // TODO in player vision/hearing range only
-    world.message(
-      `The ${currentEntity?.description?.name ?? currentEntity.id} glares helplessly at the ${targetEntity.id}`
-    )
+    world.message(`The ${currentEntity.name} glares helplessly at the ${targetEntity.id}`)
   }
 
   // ? cleanup

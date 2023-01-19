@@ -2,7 +2,7 @@ import {
   Acting,
   BaseGraphic,
   CycleGraphic,
-  Description,
+  Name,
   DoorGraphic,
   EmitLight,
   FOV,
@@ -27,7 +27,7 @@ export type Components = Partial<
     Acting &
     BaseGraphic &
     CycleGraphic &
-    Description &
+    Name &
     DoorGraphic &
     EmitLight &
     FOV &

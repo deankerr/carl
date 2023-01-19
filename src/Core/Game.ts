@@ -120,9 +120,9 @@ export class Game {
       // actual
       const [player] = this.world.get('tagPlayer', 'position')
       const [terrain] = this.world.here(player.position)
-      if (terrain?.description?.name === 'descending stairs') {
+      if (terrain.name === 'descending stairs') {
         world.changeLevel(1)
-      } else if (terrain?.description?.name === 'ascending stairs') {
+      } else if (terrain.name === 'ascending stairs') {
         world.changeLevel(-1)
       } else console.warn('Not on stairs')
 

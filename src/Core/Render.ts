@@ -4,7 +4,7 @@ import { Game } from './Game'
 import { World } from './World'
 import { half, floor, clamp, min } from '../lib/util'
 import { Message, createWordRegex } from '../lib/messages'
-import { hexLuminance, transformHSL } from '../lib/color'
+import { hexLuminance, setLuminance } from '../lib/color'
 import { Graphic } from '../Component'
 
 // Seen terrain memory color modifiers
@@ -210,16 +210,16 @@ export const renderMessages = (d: ROT.Display, world: World, options: Game['opti
 
     const baseLum = hexLuminance(CONFIG.messageColor)
     // reduce luminance by 0% (new message) -> 100% (maxMessageAge)
-    const baseColorFaded = transformHSL(CONFIG.messageColor, baseLum * easedDiff, bgLum)
+    const baseColorFaded = setLuminance(CONFIG.messageColor, baseLum * easedDiff, bgLum)
 
     const msgbg = '#282828'
     const baseMsgBg = hexLuminance(msgbg)
-    const bg = transformHSL(msgbg, baseMsgBg * easedDiff, bgLum)
+    const bg = setLuminance(msgbg, baseMsgBg * easedDiff, bgLum)
     console.log('bg:', bg)
     // boost the starting point of low luminance entity colors to a minimum (0.5) for readability
     const colorMapFaded = msg.colors.map(e => [
       e[0],
-      transformHSL(e[1], min(minColorizedLum, hexLuminance(e[1])) * easedDiff, bgLum),
+      setLuminance(e[1], min(minColorizedLum, hexLuminance(e[1])) * easedDiff, bgLum),
     ])
 
     // surround entity names with opening and closing ROT.JS color tags

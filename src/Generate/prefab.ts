@@ -5,7 +5,8 @@ import { Level } from '../Model/Level'
 import { TerrainLegacyMap } from '../Core/Terrain'
 import { NewLevel } from './generate'
 import { populateNPCs } from './features'
-import { createTemplates, Entity, templates } from '../Core/Entity'
+import { createTemplates, Entity } from '../Core/Entity'
+import { Features } from '../Templates'
 
 export const prefabRuin1 = (): NewLevel => {
   const fakeRooms: Point[][] = []
@@ -30,7 +31,7 @@ export const prefabRuin1 = (): NewLevel => {
 
       switch (t) {
         case 'v':
-          entities.features.push([templates.shrub, here])
+          entities.features.push([Features.shrub, here])
           break
         case '+':
           entities.doors.push(here)

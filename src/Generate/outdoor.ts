@@ -6,7 +6,9 @@ import { NewLevel } from './generate'
 import { half, rnd, repeat } from '../lib/util'
 import { Point, Pt } from '../Model/Point'
 import { outdoorRuin } from './prefab/outdoorRuin'
-import { createTemplates, templates } from '../Core/Entity'
+import { createTemplates } from '../Core/Entity'
+import { Beings } from '../Templates'
+import { Features } from '../Templates/Features'
 
 const lwidth = CONFIG.genLevelsAtDisplaySize ? CONFIG.mainDisplayWidth : CONFIG.levelWidth
 const lheight = CONFIG.genLevelsAtDisplaySize ? CONFIG.mainDisplayHeight : CONFIG.levelHeight
@@ -65,14 +67,14 @@ export const outdoor = (width = lwidth, height = lheight): NewLevel => {
   drawCluster(lakePtW, 40, 15) // shrub
   drawCluster(lakePtW, 80, 3) // water
   // some lake snakes
-  repeat(() => entities.beings.push([templates.snake, lakePtW]), 2)
+  repeat(() => entities.beings.push([Beings.snake, lakePtW]), 2)
 
   // a southern lake/shrubs
   const lakePtS = Pt(level.rndPt().x, rnd(southQuartile.y, height - 1))
   drawCluster(lakePtS, 10, 15) // shrub
   drawCluster(lakePtS, 20, 3) // water
   // a toad
-  entities.beings.push([templates.toad, lakePtS])
+  entities.beings.push([Beings.toad, lakePtS])
 
   // sparse shrubs
   repeat(() => drawSparseCluster(level.rndPt(), 5, 15), 4)
@@ -104,11 +106,11 @@ export const outdoor = (width = lwidth, height = lheight): NewLevel => {
         if (t === 13 || t === 14) level.set(here, 98)
       } else if (col === 'S') {
         // a skellybones
-        entities.beings.push([templates.skeleton, here])
+        entities.beings.push([Beings.skeleton, here])
         level.set(here, 98)
       } else if (col === 'F') {
         // fires
-        entities.features.push([templates.flames, here])
+        entities.features.push([Features.flames, here])
         level.set(here, 98)
       } else {
         const t = ruinKey[col] ?? -1
@@ -124,11 +126,11 @@ export const outdoor = (width = lwidth, height = lheight): NewLevel => {
   // const stairPt = center
   // level.set(stairPt, 11)
 
-  // entities.features.push([templates.flamesBlue, Pt(eastQuartile.x + 5, center.y)])
-  // entities.features.push([templates.flamesGreen, Pt(westQuartile.x - 5, center.y)])
+  // entities.features.push([Beings.flamesBlue, Pt(eastQuartile.x + 5, center.y)])
+  // entities.features.push([Beings.flamesGreen, Pt(westQuartile.x - 5, center.y)])
 
   // some ghosts
-  repeat(() => entities.beings.push([templates.ghost, center]), 4)
+  repeat(() => entities.beings.push([Beings.ghost, center]), 4)
 
   // player, SW start position
   // entities.player = Pt(2, level.height - 4) // bl corner
@@ -140,8 +142,9 @@ export const outdoor = (width = lwidth, height = lheight): NewLevel => {
   // level.set(southQuartile, 0)
   // level.set(westQuartile, 1)
   // level.set(eastQuartile, 1)
-
-  return [new Level('outdoor', level, new Map(), []), entities]
+  const newLevel = new Level('outdoor', level, new Map(), [])
+  // entities.beings.push(...populateALLNPCs(newLevel))
+  return [newLevel, entities]
 
   //  "CreatingAForest" roguebasin
   function drawCluster(startPt: Point, amount: number, terrain: number) {

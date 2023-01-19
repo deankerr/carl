@@ -1,11 +1,12 @@
 import { Level } from '../Model/Level'
 import { rnd, repeat, pick } from '../lib/util'
-import { BeingTemplate, beings, features, FeatureTemplate } from '../Core/Entity'
+import { FeatureTemplate, Features } from '../Templates/Features'
+import * as Template from '../Templates'
 import { Point } from '../Model/Point'
 
 export const populateNPCs = (level: Level) => {
-  const newBeings: [BeingTemplate, Point | 0][] = []
-  const npcs = Object.entries(beings)
+  const newBeings: [Template.BeingTemplate, Point | 0][] = []
+  const npcs = Object.entries(Template.Beings)
   repeat(() => {
     newBeings.push([pick(npcs)[1], level.ptInRoom()])
   }, 12)
@@ -15,13 +16,17 @@ export const populateNPCs = (level: Level) => {
   return newBeings
 }
 
+export const populateALLNPCs = (level: Level): [Template.BeingTemplate, Point | 0][] => {
+  return Object.entries(Template.Beings).map(b => [b[1], level.ptInRoom()])
+}
+
 export const createDecor = (level: Level) => {
   const newFeatures: [FeatureTemplate, Point | 0][] = []
 
   level.rooms.forEach((_r, i) => {
     // shrubbery
     if (i % 3 === 0) {
-      for (let j = 0; j < 6; j++) newFeatures.push([features.shrub, level.ptInRoom(i)])
+      for (let j = 0; j < 6; j++) newFeatures.push([Features.shrub, level.ptInRoom(i)])
     }
 
     // water
@@ -31,7 +36,7 @@ export const createDecor = (level: Level) => {
 
     // fire
     if (i % 4 === 1) {
-      const opts = [features.flames, features.flamesBlue, features.flamesGreen]
+      const opts = [Features.flames, Features.blueFlames, Features.greenFlames]
       newFeatures.push([pick(opts), level.ptInRoom(i)])
     }
   })

@@ -1,6 +1,6 @@
 import * as ROT from 'rot-js'
-import { templates } from '../Core/Entity'
-import { terrainTemplates } from '../Core/Terrain'
+import { Beings, Features } from '../Templates'
+// import { terrainTemplates } from '../Core/Terrain'
 
 const hex = (c: string) => ROT.Color.toHex(ROT.Color.fromString(c))
 
@@ -10,16 +10,18 @@ export const createWordRegex = (val: string) => {
 
 type EntityColorPair = [string, string]
 
-function deriveEntityColorMap<T extends typeof templates | typeof terrainTemplates>(list: T): EntityColorPair[] {
+type ECMTemplates = typeof Beings | typeof Features //| typeof terrainTemplates
+function deriveEntityColorMap<T extends ECMTemplates>(list: T): EntityColorPair[] {
   const entries = Object.entries(list)
-  return entries.map(e => [e[1][0], hex(e[1][2])])
+  return entries.map(e => [e[1].name, hex(e[1].color)])
 }
 
 // sorted mapping of entity name Regex, name, color
 // [name, color]
 const entityColorMap: EntityColorPair[] = [
-  ...deriveEntityColorMap(templates),
-  ...deriveEntityColorMap(terrainTemplates),
+  ...deriveEntityColorMap(Beings),
+  ...deriveEntityColorMap(Features),
+  // ...deriveEntityColorMap(terrainTemplates),
   ['door', '#73513d'] as EntityColorPair,
 ].sort((a, b) => {
   const nameA = a[0]
