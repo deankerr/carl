@@ -23,7 +23,10 @@ export const Features = {
     color: '#fc7703',
     tag: ['walkable'],
     trodOn: 'You crisp up nicely as you stand in the flames.',
-    cycleGraphic: ['flames1', 'flames2'],
+    cycleGraphic: {
+      list: ['flames1', 'flames2'],
+      frequency: 120,
+    },
     emitLight: true,
   },
   blueFlames: {
@@ -33,7 +36,10 @@ export const Features = {
     color: '#141cff',
     tag: ['walkable'],
     trodOn: 'You crisp up nicely as you stand in the flames.',
-    cycleGraphic: ['flames1', 'flames2'],
+    cycleGraphic: {
+      list: ['flames1', 'flames2'],
+      frequency: 120,
+    },
     emitLight: true,
   },
   greenFlames: {
@@ -43,7 +49,10 @@ export const Features = {
     color: '#0df20d',
     tag: ['walkable'],
     trodOn: 'You crisp up nicely as you stand in the flames.',
-    cycleGraphic: ['flames1', 'flames2'],
+    cycleGraphic: {
+      list: ['flames1', 'flames2'],
+      frequency: 120,
+    },
     emitLight: true,
   },
 }

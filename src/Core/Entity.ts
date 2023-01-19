@@ -49,11 +49,11 @@ export function hydrate(t: EntityTemplate, pt?: Point, fov?: number): Entity {
 
   if ('trodOn' in t) entity = { ...entity, ...C.trodOn(t.trodOn) }
 
-  if ('cycleGraphic' in t && Array.isArray(t.cycleGraphic)) {
-    const cycle = t.cycleGraphic.map(g => {
+  if ('cycleGraphic' in t) {
+    const list = t.cycleGraphic.list.map(g => {
       return C.graphic(g, t.color)
-    }) as C.Graphic[]
-    entity = { ...entity, ...C.cycleGraphic(cycle) }
+    })
+    entity = { ...entity, ...C.cycleGraphic(list, t.cycleGraphic.frequency) }
   }
 
   if ('emitLight' in t) {

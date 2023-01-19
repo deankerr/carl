@@ -289,6 +289,7 @@ export class World {
 }
 
 const modify = (active: Level, target: Entity) => {
+  let log = true
   const newEntity = active.entities.find(e => e === target)
   if (!newEntity) throw new Error('modify: cannot locate' + target.id)
   let entity = newEntity
@@ -300,7 +301,7 @@ const modify = (active: Level, target: Entity) => {
     entity = { ...entity, ...c }
     updateState(entity)
 
-    console.log(`modify: add ${componentName(c)} to ${entity.id}`)
+    log && console.log(`modify: add ${componentName(c)} to ${entity.id}`)
     return { entity, add, change, remove }
   }
 
@@ -314,7 +315,7 @@ const modify = (active: Level, target: Entity) => {
     entity = { ...entity, ...c }
     updateState(entity)
 
-    console.log(`modify: update ${entity.id} ${componentName(c)}`)
+    log && console.log(`modify: update ${entity.id} ${componentName(c)}`)
     return { entity, add, change, remove }
   }
 
@@ -325,7 +326,7 @@ const modify = (active: Level, target: Entity) => {
     Reflect.deleteProperty(entity, cName)
     updateState(entity)
 
-    console.log(`modify: remove ${entity.id} ${cName}`)
+    log && console.log(`modify: remove ${entity.id} ${cName}`)
     return { entity, add, change, remove }
   }
 
@@ -335,7 +336,13 @@ const modify = (active: Level, target: Entity) => {
     active.entities[index] = entity
   }
 
-  return { entity, add, change, remove }
+  // silence the usually useful console.logs for animation updates
+  const noLog = () => {
+    log = false
+    return { entity, add, change, remove }
+  }
+
+  return { entity, add, change, remove, noLog }
 }
 
 // font test

@@ -1,29 +1,28 @@
 // Game: should handle the initial invocation of World etc.
 // the main update/render/input loop. Executes Systems loop
 
-import { CONFIG } from '../config'
 import * as ROT from 'rot-js'
+import { CONFIG } from '../config'
 
-import { World } from './World'
 import { renderLevel, renderMessages } from './Render'
+import { World } from './World'
 
+import { actionName, ActionTypes, __randomMove, __wait } from '../Action'
 import { acting } from '../Component'
 import {
   handleBump,
-  processDeath,
-  handleMovement,
-  processFOV,
   handleMeleeAttack,
-  processGraphicUpdate,
+  handleMovement,
+  handleTread,
+  processAnimation,
+  processDeath,
+  processFOV,
+  processLighting,
 } from '../System'
-import { actionName, ActionTypes, __randomMove, __wait } from '../Action'
 
+import { mouseMove } from '../lib/display'
 import { Keys } from '../lib/Keys'
 import { input } from './Input'
-
-import { handleTread } from '../System/handleTread'
-import { processLighting } from '../System/processLighting'
-import { mouseMove } from '../lib/display'
 
 export class Game {
   display: ROT.Display
@@ -156,7 +155,7 @@ export class Game {
     } while (!playerTurn)
 
     // Once per player turn
-    processGraphicUpdate(world)
+    // processGraphicUpdate(world)
     processLighting(this.world)
     processFOV(this.world)
 
@@ -205,6 +204,7 @@ export class Game {
       this.fpsMsg = `${(1000 / tLast).toFixed(0)}`
     }
 
+    processAnimation(this.world)
     renderMessages(this.msgDisplay, this.world, this.options, `${this.fpsMsg} ${this.mouseXY}`)
     renderLevel(this.display, this.world, this.options)
     // setTimeout(() => requestAnimationFrame(this.render.bind(this)), CONFIG.renderInterval)
