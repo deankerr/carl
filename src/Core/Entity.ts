@@ -57,7 +57,8 @@ export function hydrate(t: EntityTemplate, pt?: Point, fov?: number): Entity {
   }
 
   if ('emitLight' in t) {
-    entity = { ...entity, ...C.emitLight(entity.color) }
+    const color = t.emitLight.color === 'self' ? entity.color : t.emitLight.color
+    entity = { ...entity, ...C.emitLight(color, t.emitLight.flicker) }
   }
 
   return entity

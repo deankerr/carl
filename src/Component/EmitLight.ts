@@ -1,8 +1,5 @@
-import * as ROT from 'rot-js'
-import { Color } from 'rot-js/lib/color'
+export type EmitLight = { emitLight: { color: string; frequency: number; current: boolean; lastUpdate: number } }
 
-export type EmitLight = { emitLight: { color: Color } }
-
-export const emitLight = (color: string) => {
-  return { emitLight: { color: ROT.Color.fromString(color) } }
+export const emitLight = (color: string, frequency = 0, current = false, lastUpdate = 0): EmitLight => {
+  return { emitLight: { color, frequency, current, lastUpdate } }
 }

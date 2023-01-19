@@ -87,6 +87,7 @@ export const outdoor = (width = lwidth, height = lheight): NewLevel => {
   const ruinKey: { [key: string]: number } = {
     '#': 1,
     '%': 2,
+    p: 0,
     '<': 10,
     '>': 11,
     '.': 98,

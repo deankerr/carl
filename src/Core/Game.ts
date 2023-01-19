@@ -58,7 +58,6 @@ export class Game {
     // mouse click coords
     mouseMove(d, ev => (this.mouseXY = d.eventToPosition(ev)))
 
-    processLighting(this.world)
     processFOV(this.world)
     // game active
     this.render()
@@ -207,6 +206,7 @@ export class Game {
     }
 
     processAnimation(this.world)
+    processLighting(this.world)
 
     if (this.world.hasChanged) {
       renderMessages(this.msgDisplay, this.world, this.options, `${this.fpsMsg} ${this.mouseXY}`)

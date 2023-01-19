@@ -27,7 +27,10 @@ export const Features = {
       list: ['flames1', 'flames2'],
       frequency: 120,
     },
-    emitLight: true,
+    emitLight: {
+      color: 'self',
+      flicker: 120,
+    },
   },
   blueFlames: {
     id: 'blueflames',
@@ -40,7 +43,10 @@ export const Features = {
       list: ['flames1', 'flames2'],
       frequency: 120,
     },
-    emitLight: true,
+    emitLight: {
+      color: 'self',
+      flicker: 120,
+    },
   },
   greenFlames: {
     id: 'greenflames',
@@ -53,6 +59,9 @@ export const Features = {
       list: ['flames1', 'flames2'],
       frequency: 120,
     },
-    emitLight: true,
+    emitLight: {
+      color: 'self',
+      flicker: 120,
+    },
   },
 }
