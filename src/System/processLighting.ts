@@ -1,7 +1,7 @@
 import * as ROT from 'rot-js'
 import { Color } from 'rot-js/lib/color'
 import { World } from '../Core/World'
-import { hexLuminance, transformHSL } from '../lib/color'
+import { transformHSL } from '../lib/color'
 import { Pt } from '../Model/Point'
 import { emitLight } from '../Component'
 
@@ -37,8 +37,7 @@ export const processLighting = (world: World) => {
     let lightColor = color
     if (frequency && Date.now() - lastUpdate >= frequency) {
       if (current) {
-        const llum = hexLuminance(color)
-        lightColor = transformHSL(color, { lum: { to: llum * 0.9, min: 0 } })
+        lightColor = transformHSL(color, { lum: { by: 0.9, min: 0 } })
       }
       world.modify(emitter).noLog().change(emitLight(color, frequency, !current, Date.now()))
     }
