@@ -1,8 +1,8 @@
 // Entity/Component manager
 import { Components, componentName } from './Components'
 import { Graphic, tagCurrentTurn } from '../Component'
-import { Entity, EntityTemplates, createDoor } from './Entity'
-import * as Templates from '../Templates'
+import { Entity, EntityTemplates, createDoor, hydrate } from './Entity'
+import { Beings } from '../Templates'
 import { objLog } from '../lib/util'
 import { Point, Pt } from '../Model/Point'
 import { Game } from './Game'
@@ -122,7 +122,7 @@ export class World {
     if (newTemplates.features) {
       for (const feature of newTemplates.features) {
         const [t, pos] = feature
-        this.create(Templates.createFeature(t, pos === 0 ? this.active.ptInRoom() : pos))
+        this.create(hydrate(t, pos === 0 ? this.active.ptInRoom() : pos))
       }
     }
 
@@ -135,7 +135,7 @@ export class World {
     if (newTemplates.beings) {
       for (const being of newTemplates.beings) {
         const [t, pos] = being
-        const entity = this.create(Templates.createBeing(t, pos === 0 ? this.active.ptInRoom() : pos))
+        const entity = this.create(hydrate(t, pos === 0 ? this.active.ptInRoom() : pos))
         if ('tagActor' in entity) this.active.scheduler.add(entity.id, true)
       }
     }
@@ -150,11 +150,7 @@ export class World {
     if (this.get('tagPlayer').length > 0) return
 
     const player = this.create(
-      Templates.createBeing(
-        Templates.Beings.player,
-        pt ?? this.active.stairsAscendingPt ?? this.active.ptInRoom(),
-        this.domain.playerFOV
-      )
+      hydrate(Beings.player, pt ?? this.active.stairsAscendingPt ?? this.active.ptInRoom(), this.domain.playerFOV)
     )
     this.active.scheduler.add(player.id, true)
   }

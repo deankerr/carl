@@ -16,6 +16,7 @@ export type EntityTemplates = {
   features: [FeatureTemplate, Point | 0][]
   doors: Point[]
 }
+export type ETemplate = BeingTemplate | FeatureTemplate | TerrainTemplate
 
 export const createTemplates = (): EntityTemplates => {
   return { beings: [], features: [], doors: [] }
@@ -35,7 +36,7 @@ export const createDoor = (pt: Point) => {
   }
 }
 
-export function hydrate(t: TerrainTemplate, pt?: Point): Entity {
+export function hydrate(t: ETemplate, pt?: Point, fov?: number): Entity {
   const { id, name, char, color } = t
 
   let entity = {
@@ -46,11 +47,19 @@ export function hydrate(t: TerrainTemplate, pt?: Point): Entity {
   }
 
   if (pt) entity = { ...entity, ...C.position(pt) }
+  if (fov) entity = { ...entity, ...C.fov(fov) }
 
-  if ('walkable' in t) entity = { ...entity, ...C.tagWalkable() }
-  if ('memorable' in t) entity = { ...entity, ...C.tagMemorable() }
+  // TODO map components to templates to avoid doing this manually
+  if ('tag' in t) {
+    console.log(t.name, t.tag, t.tag.includes('walkable'))
+    if (t.tag.includes('walkable')) entity = { ...entity, ...C.tagWalkable() }
+    if (t.tag.includes('memorable')) entity = { ...entity, ...C.tagMemorable() }
+    if (t.tag.includes('blocksLight')) entity = { ...entity, ...C.tagBlocksLight() }
+    if (t.tag.includes('actor')) entity = { ...entity, ...C.tagActor() }
+    if (t.tag.includes('player')) entity = { ...entity, ...C.tagPlayer() }
+  }
+
   if ('trodOn' in t) entity = { ...entity, ...C.trodOn(t.trodOn) }
-  if ('blocksLight' in t) entity = { ...entity, ...C.tagBlocksLight() }
 
   if ('cycleGraphic' in t && Array.isArray(t.cycleGraphic)) {
     const cycle = t.cycleGraphic.map(g => {
