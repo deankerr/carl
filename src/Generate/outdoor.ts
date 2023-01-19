@@ -7,7 +7,7 @@ import { half, rnd, repeat } from '../lib/util'
 import { Point, Pt } from '../Model/Point'
 import { outdoorRuin } from './prefab/outdoorRuin'
 import { createTemplates } from '../Core/Entity'
-import { Beings, Features, Terrain } from '../Templates'
+import { Beings, Features } from '../Templates'
 
 const lwidth = CONFIG.genLevelsAtDisplaySize ? CONFIG.mainDisplayWidth : CONFIG.levelWidth
 const lheight = CONFIG.genLevelsAtDisplaySize ? CONFIG.mainDisplayHeight : CONFIG.levelHeight

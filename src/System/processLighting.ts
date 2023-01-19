@@ -14,7 +14,7 @@ export const processLighting = (world: World) => {
 
   // doesn't seem to get called without {passes: 2}
   const reflectivity = (x: number, y: number) => {
-    return world.active.terrain(Pt(x, y)).tagBlocksLight ? 0.3 : 0
+    return 'blocksLight' in world.active.terrain(Pt(x, y)) ? 0.3 : 0
   }
 
   // const lighting = new ROT.Lighting(reflectivity, { range: 12, passes: 2 })

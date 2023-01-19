@@ -35,7 +35,7 @@ export const Beings = {
     id: 'snake',
     name: 'taipan',
     char: 'snake',
-    color: '#a25806',
+    color: '#32cd32',
   },
   toad: {
     id: 'toad',
@@ -59,7 +59,7 @@ export const Beings = {
     id: 'chicken',
     name: 'lil chickadee',
     char: 'chicken',
-    color: '#cc3131',
+    color: '#dadada',
   },
   bat: {
     id: 'bat',
