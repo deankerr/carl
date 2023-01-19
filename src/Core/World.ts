@@ -15,12 +15,13 @@ export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 export class World {
   options: Game['options']
 
+  hasChanged = true // trigger a rerender on next animation frame
+
   // Game state
   domainMap: DomainMap
   domain: Domain
   active: Level
   activeIndex = 0
-
   messages: Message[] = [] // TODO rename messageLog
   playerTurns = -1 // TODO start on 0
   nextEntityID = 0

@@ -67,6 +67,7 @@ export class Game {
 
   update(code: string) {
     const timeUpdate = Date.now()
+    this.world.hasChanged = true
 
     const playerAction = input(code)
     if (!playerAction) return
@@ -191,9 +192,10 @@ export class Game {
 
   lastFrameTime = 0
   lastFrameSec = 0
-  // doRender = true
+  renderOff = false
   fpsMsg = ''
   render() {
+    if (this.renderOff) return
     const t = Date.now()
     const tLast = t - this.lastFrameTime
     this.lastFrameTime = t
@@ -205,8 +207,13 @@ export class Game {
     }
 
     processAnimation(this.world)
-    renderMessages(this.msgDisplay, this.world, this.options, `${this.fpsMsg} ${this.mouseXY}`)
-    renderLevel(this.display, this.world, this.options)
+
+    if (this.world.hasChanged) {
+      renderMessages(this.msgDisplay, this.world, this.options, `${this.fpsMsg} ${this.mouseXY}`)
+      renderLevel(this.display, this.world, this.options)
+      this.world.hasChanged = false
+    }
+
     // setTimeout(() => requestAnimationFrame(this.render.bind(this)), CONFIG.renderInterval)
     requestAnimationFrame(this.render.bind(this))
   }

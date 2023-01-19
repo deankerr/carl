@@ -15,5 +15,7 @@ export function processAnimation(world: World) {
       .noLog()
       .change(graphic(list[c].char, list[c].color))
       .change(cycleGraphic(list, frequency, c, Date.now()))
+
+    world.hasChanged = true
   }
 }
