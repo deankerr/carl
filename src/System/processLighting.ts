@@ -4,8 +4,13 @@ import { World } from '../Core/World'
 import { Pt } from '../Model/Point'
 
 export const processLighting = (world: World) => {
-  if (world.active.lighting.size > 0) return
+  const entitylightingUpdate = world.get('tagLightingUpdated')
+  if (entitylightingUpdate.length === 0 && world.active.lighting.size > 0) return
   const t = Date.now()
+
+  // create Map if it does not yet exist (initial)
+  world.active.lighting = new Map<string, Color>()
+
   const emitters = world.get('emitLight', 'position')
   if (emitters.length === 0) return
 
@@ -32,6 +37,9 @@ export const processLighting = (world: World) => {
     world.active.lighting.set(x + ',' + y, color)
   }
   lighting.compute(lightingCallback)
+
+  // remove update tag from entities if any
+  entitylightingUpdate.forEach(e => world.modify(e).remove('tagLightingUpdated'))
 
   console.log(`processLighting complete ${Date.now() - t}ms`)
 }

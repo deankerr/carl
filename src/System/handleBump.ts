@@ -1,5 +1,5 @@
 import { World } from '../Core/World'
-import { tagMeleeAttackTarget, acting, tagWalkable, tagDoorOpen } from '../Component'
+import { tagMeleeAttackTarget, acting, tagWalkable, tagDoorOpen, tagLightingUpdated } from '../Component'
 import { MeleeAttack } from '../Action'
 
 export const handleBump = (world: World) => {
@@ -19,15 +19,19 @@ export const handleBump = (world: World) => {
   } else {
     // entities
     console.log('handleBump: entity bump')
-    // TODO Let NPCs do things
+
     // ? assuming there can only be one entity here
     const [bumpedEntity] = bumpableEntities
     if (currentIsPlayer) {
       // * handle door
-      const doorEntity = world.with(bumpedEntity, 'tagDoor')
-      if (doorEntity) {
+      if ('tagDoor' in bumpedEntity) {
         console.log('handleBump: result - open door')
-        world.modify(doorEntity).add(tagWalkable()).add(tagDoorOpen()).remove('tagBlocksLight')
+        world
+          .modify(bumpedEntity)
+          .add(tagWalkable())
+          .add(tagDoorOpen())
+          .add(tagLightingUpdated())
+          .remove('tagBlocksLight')
 
         world.message('You slowly push or pull the door open.')
         return

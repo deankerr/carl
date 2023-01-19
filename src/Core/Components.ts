@@ -19,6 +19,7 @@ import {
   TagPlayer,
   TagWalkable,
   TrodOn,
+  TagLightingUpdated,
 } from '../Component/'
 
 export type Components = Partial<
@@ -40,6 +41,7 @@ export type Components = Partial<
     TagMeleeAttackTarget &
     TagMemorable &
     TagPlayer &
+    TagLightingUpdated &
     TagWalkable &
     TrodOn
 >

@@ -16,22 +16,15 @@
   // 	"description": "Log output to console"
   // }
 
-  "New Component": {
-    "prefix": "newcomp",
+  "CARL Component": {
+    "prefix": "ccomp",
     "body": [
-      "import { Component } from '.'",
-      "",
-      "export interface $TM_FILENAME_BASE extends Component {",
-      "  id: '$TM_FILENAME_BASE'",
-      "  $1",
-      "}",
-      "",
-      "export function $TM_FILENAME_BASE(): $TM_FILENAME_BASE {",
-      "  return { id: '$TM_FILENAME_BASE' }",
+      "export type ${1:TYPE} = { ${2:PROPERTY}: ${3:PROPTYPE} }",
+      "export const ${2:PROPERTY} = (${2:PROPERTY}: ${3:PROPTYPE}): ${1:TYPE} => {",
+      "  return { ${2:PROPERTY} }",
       "}"
     ],
-    "description": "CARL! Component Template",
-    "isFileTemplate": true
+    "description": "CARL! Component Template"
   },
 
   "Entity Template": {
