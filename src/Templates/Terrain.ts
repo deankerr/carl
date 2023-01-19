@@ -15,7 +15,6 @@ export const Terrain = {
     name: 'wall',
     char: 'wall',
     color: '#767676',
-
     blocksLight: 'true',
   },
   stairsDescending: {
@@ -39,7 +38,6 @@ export const Terrain = {
     name: 'cracked wall',
     char: 'crackedWall',
     color: '#767676',
-
     blocksLight: 'true',
   },
   water: {
@@ -112,7 +110,6 @@ export const Terrain = {
     char: 'mound',
     color: '#6a4b39',
     walkable: 'true',
-
     trodOn: 'You round the mound.',
   },
   peak: {
@@ -135,7 +132,6 @@ export const Terrain = {
     name: 'endless void',
     char: 'void',
     color: '#F0F',
-
     blocksLight: 'true',
   },
 }
