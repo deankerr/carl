@@ -118,6 +118,7 @@ export class World {
     this.setCurrentLevel(nextDomain, nextIndex)
   }
 
+  // TODO Can be greatly simplified after Generate refactor
   createTemplates(newTemplates: EntityTemplates) {
     if (newTemplates.features) {
       for (const feature of newTemplates.features) {
@@ -148,7 +149,6 @@ export class World {
 
   createPlayer(pt?: Point) {
     if (this.get('tagPlayer').length > 0) return
-
     const player = this.create(
       hydrate(Beings.player, pt ?? this.active.stairsAscendingPt ?? this.active.ptInRoom(), this.domain.playerFOV)
     )
@@ -307,7 +307,6 @@ const modify = (active: Level, target: Entity) => {
     // check it currently does exist
     const isGraphic = 'char' in c && 'color' in c
     if (!isGraphic && !(componentName(c) in entity)) {
-      console.log('c:', c)
       throw new Error(`change: ${entity.id} does not have ${componentName(c)}`)
     }
 

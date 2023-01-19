@@ -127,7 +127,6 @@ export class Game {
       } else console.warn('Not on stairs')
 
       world.nextTurn()
-      processFOV(world)
       this.render()
 
       return

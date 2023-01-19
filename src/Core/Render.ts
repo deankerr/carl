@@ -93,7 +93,6 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
       color.push(terrainSeenColor)
     }
 
-    // if (!level.isInternalWall(here) || !options.hideInternalWalls) {
     if (visible) {
       char.push(terrainVisible.char)
       color.push(addLight(terrainVisible.color))
@@ -102,7 +101,6 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
       // color.push(addLight(terrainSeenColor))
       color.push(terrainSeenColor)
     }
-    // }
 
     // door
     const door = doors.filter(d => d.position.s === here.s)[0]
@@ -215,7 +213,7 @@ export const renderMessages = (d: ROT.Display, world: World, options: Game['opti
     const msgbg = '#282828'
     const baseMsgBg = hexLuminance(msgbg)
     const bg = setLuminance(msgbg, baseMsgBg * easedDiff, bgLum)
-    console.log('bg:', bg)
+    // console.log('bg:', bg)
     // boost the starting point of low luminance entity colors to a minimum (0.5) for readability
     const colorMapFaded = msg.colors.map(e => [
       e[0],

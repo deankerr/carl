@@ -6,7 +6,7 @@ import { Point } from '../Model/Point'
 
 export const populateNPCs = (level: Level) => {
   const newBeings: [Template.BeingTemplate, Point | 0][] = []
-  const npcs = Object.entries(Template.Beings)
+  const npcs = Object.entries(Template.Beings).filter(b => b[1].id !== 'player')
   repeat(() => {
     newBeings.push([pick(npcs)[1], level.ptInRoom()])
   }, 12)
@@ -17,7 +17,9 @@ export const populateNPCs = (level: Level) => {
 }
 
 export const populateALLNPCs = (level: Level): [Template.BeingTemplate, Point | 0][] => {
-  return Object.entries(Template.Beings).map(b => [b[1], level.ptInRoom()])
+  return Object.entries(Template.Beings)
+    .filter(b => b[1].id !== 'player')
+    .map(b => [b[1], level.ptInRoom()])
 }
 
 export const createDecor = (level: Level) => {
