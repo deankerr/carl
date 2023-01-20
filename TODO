@@ -2,9 +2,6 @@
 
 ## Now
 
-- Decouple render from update
-- Add simple animation (npc bobbing, light flickering)
-
 ## Soon
 
 - Refactor Game - extract meta action processing (UI etc), clarify system loop

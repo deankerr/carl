@@ -145,7 +145,7 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
         color,
         color.map((_c, i) => (i === 0 ? backgroundColor : 'transparent'))
       )
-    } //else display.draw(offsetX + here.x, offsetY + here.y, 'tree', backgroundColor, null) // blank
+    }
 
     // debug border / crosshairs
     if (options.debugMode) {
@@ -210,9 +210,9 @@ export const renderMessages = (d: ROT.Display, world: World, options: Game['opti
     // reduce luminance by 0% (new message) -> 100% (maxMessageAge)
     const baseColorFaded = setLuminance(CONFIG.messageColor, baseLum * easedDiff, bgLum)
 
-    const msgbg = CONFIG.backgroundColor //'#282828'
-    const baseMsgBg = hexLuminance(msgbg)
-    const bg = setLuminance(msgbg, baseMsgBg * easedDiff, bgLum)
+    // const msgbg = CONFIG.backgroundColor //'#282828'
+    // const baseMsgBg = hexLuminance(msgbg)
+    // const bg = setLuminance(msgbg, baseMsgBg * easedDiff, bgLum)
     // console.log('bg:', bg)
     // boost the starting point of low luminance entity colors to a minimum (0.5) for readability
     const colorMapFaded = msg.colors.map(e => [
@@ -229,7 +229,7 @@ export const renderMessages = (d: ROT.Display, world: World, options: Game['opti
       colorizedMsg = colorizedMsg.replaceAll(target, colorized)
     }
 
-    colorizedBuffer.push(` %b{${bg}}%c{${baseColorFaded}}` + colorizedMsg)
+    colorizedBuffer.push(` %c{${baseColorFaded}}` + colorizedMsg)
   }
 
   colorizedBuffer.forEach((msg, i) => {
