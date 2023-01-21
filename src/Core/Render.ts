@@ -51,8 +51,7 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
 
   // * ========== Rendering ========== *
 
-  const doors = world.get('position', 'char', 'color', 'tagDoor', 'doorGraphic')
-  const entities = world.get('position', 'char', 'color').filter(e => doors.every(d => d.id !== e.id) && e !== player)
+  const entities = world.get('position', 'char', 'color')
 
   level.terrainGrid.each(here => {
     const render = { x: offsetX + here.x, y: offsetY + here.y }
@@ -100,21 +99,6 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
       char.push(terrainVisible.char)
       // color.push(addLight(terrainSeenColor))
       color.push(terrainSeenColor)
-    }
-
-    // door
-    const door = doors.filter(d => d.position.s === here.s)[0]
-    if (door) {
-      const open = 'tagDoorOpen' in door
-      const doorChar = open ? door.doorGraphic.open.char : door.doorGraphic.closed.char
-
-      if (visible) {
-        char.push(doorChar)
-        color.push(door.color)
-      } else if (seen) {
-        char.push(doorChar)
-        color.push(darken(door.color, darkenSat, darkenLum, darkenLumMin))
-      }
     }
 
     // entities

@@ -15,7 +15,6 @@ const CONFIG = {
   lightsOnInitial: PROD ? false : false,
   backgroundColor: '#191919',
   messageColor: '#FFF',
-  // msgBgColor: ' rgb(10,30,20,1)',
   msgBgColor: 'transparent', //' rgb(80,120,0,1)',
   htmlBGColor: PROD ? '#191919' : '#191919',
   renderInterval: 500,

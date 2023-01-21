@@ -24,14 +24,18 @@ export const handleBump = (world: World) => {
     const [bumpedEntity] = bumpableEntities
     if (currentIsPlayer) {
       // * handle door
-      if ('tagDoor' in bumpedEntity) {
+      const door = world.with(bumpedEntity, 'doorGraphic')
+      if (door) {
         console.log('handleBump: result - open door')
-        world
-          .modify(bumpedEntity)
-          .add(tagWalkable())
-          .add(tagDoorOpen())
-          .add(tagLightPathUpdated())
-          .remove('tagBlocksLight')
+        const door = world.with(bumpedEntity, 'doorGraphic')
+        if (door)
+          world
+            .modify(bumpedEntity)
+            .add(tagWalkable())
+            .add(tagDoorOpen())
+            .add(tagLightPathUpdated())
+            .change(door.doorGraphic.open)
+            .remove('tagBlocksLight')
 
         world.message('You slowly push or pull the door open.')
         return
