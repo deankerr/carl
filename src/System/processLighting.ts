@@ -23,6 +23,12 @@ export const processLighting = (world: World) => {
 
   // set up infrastructure for ROT.JS lighting
   const fov = new ROT.FOV.PreciseShadowcasting(world.isTransparent.bind(world))
+  // const lighting = new ROT.Lighting(
+  //   (x: number, y: number) => {
+  //     return 'blocksLight' in world.active.terrain(Pt(x, y)) ? 0.3 : 0
+  //   },
+  //   { range: 12, passes: 2 }
+  // )
   const lighting = new ROT.Lighting((x: number, y: number) =>
     'blocksLight' in world.active.terrain(Pt(x, y)) ? 0.3 : 0
   )

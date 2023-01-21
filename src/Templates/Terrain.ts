@@ -33,6 +33,14 @@ export const Terrain = {
     tag: ['walkable'],
     trodOn: "There's a staircase leading up here.",
   },
+  column: {
+    id: 'column',
+    name: 'column',
+    char: 'column',
+    color: '#767676',
+    tag: ['blocksLight'],
+  },
+
   crackedWall: {
     id: 'crackedWall',
     name: 'cracked wall',
@@ -120,11 +128,18 @@ export const Terrain = {
     tag: ['walkable'],
     trodOn: 'You summit the peak.',
   },
+  statue: {
+    id: 'statue',
+    name: 'statue',
+    char: 'statue',
+    color: '#5f574f',
+    tag: ['blocksLight'],
+  },
   void: {
     id: 'void',
     name: 'void',
     char: 'void',
-    color: '#F0F',
+    color: '#000',
     tag: ['walkable'],
   },
   endlessVoid: {

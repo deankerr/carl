@@ -57,4 +57,5 @@ const generators: Record<string, Domain['generator']> = {
   outdoor: Generate.outdoor,
   dungeon4: Generate.dungeon4,
   ruin1: Generate.prefabRuin1,
+  flameTest: Generate.flameTest,
 }

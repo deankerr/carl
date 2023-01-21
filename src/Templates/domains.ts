@@ -1,6 +1,15 @@
 // define domains
 
+const flameTest = {
+  label: 'flameTest',
+  revealed: true,
+  playerFOV: 12,
+  generator: 'flameTest',
+  connections: { top: '', ascend: '', descend: '' },
+}
+
 export const domains = [
+  flameTest,
   {
     label: 'outdoor',
     revealed: true,
@@ -8,6 +17,8 @@ export const domains = [
     generator: 'outdoor',
     connections: {
       // ascend: 'ruin'
+      top: '',
+      ascend: '',
       descend: 'dungeon',
     },
   },

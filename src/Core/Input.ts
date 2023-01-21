@@ -46,6 +46,8 @@ export function input(code: string): ActionTypes | null {
       return ChangeLevel('debug_outdoor')
     case 'KeyP':
       return ChangeLevel('debug_dungeon')
+    case 'BracketLeft':
+      return ChangeLevel('debug_flameTest')
 
     // UI
     case 'KeyL':

@@ -44,10 +44,11 @@ export class Rect {
   }
 
   // Travels through the x/y coords
-  traverse(callback: (x: number, y: number) => unknown) {
+  traverse(callback: (x: number, y: number) => unknown, border = false) {
     for (let yi = this.y; yi <= this.y2; yi++) {
       for (let xi = this.x; xi <= this.x2; xi++) {
-        if (callback(xi, yi) === false) return // exit loop if false?
+        if (border && (xi === 0 || xi === this.x2 || yi === 0 || yi === this.y2)) return callback(xi, yi)
+        if (callback(xi, yi) === false) return
       }
     }
   }

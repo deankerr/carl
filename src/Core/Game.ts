@@ -23,6 +23,8 @@ import {
 import { mouseMove } from '../lib/display'
 import { Keys } from '../lib/Keys'
 import { input } from './Input'
+import { Pt } from '../Model/Point'
+import { Color } from 'rot-js/lib/color'
 
 export class Game {
   display: ROT.Display
@@ -32,7 +34,6 @@ export class Game {
 
   messageNew: string[] = [] // messages generated during the last update
   messageHistory: string[] = [] // previous messages that still fit in the buffer visually
-  mouseXY: number[] = [0, 0] // mouse X Y on screen display
 
   options = {
     lightsOn: CONFIG.lightsOnInitial, // reveal level debug flag
@@ -56,7 +57,7 @@ export class Game {
     this.world.__clog(true)
 
     // mouse click coords
-    mouseMove(d, ev => (this.mouseXY = d.eventToPosition(ev)))
+    mouseMove(this.display, ev => this.debugAtCursor(this.display.eventToPosition(ev)))
 
     processFOV(this.world)
     // game active
@@ -115,6 +116,7 @@ export class Game {
         if (playerAction.changeLevel.to === 'debug_up') world.changeLevel(-1)
         if (playerAction.changeLevel.to === 'debug_outdoor') world.setCurrentLevel(world.domainMap['outdoor'], 0)
         if (playerAction.changeLevel.to === 'debug_dungeon') world.setCurrentLevel(world.domainMap['dungeon'], 0)
+        if (playerAction.changeLevel.to === 'debug_flameTest') world.setCurrentLevel(world.domainMap['flameTest'], 0)
 
         world.nextTurn()
         processLighting(this.world)
@@ -209,12 +211,29 @@ export class Game {
     processLighting(this.world)
 
     if (this.world.hasChanged) {
-      renderMessages(this.msgDisplay, this.world, this.options, `${this.fpsMsg} ${this.mouseXY}`)
+      renderMessages(this.msgDisplay, this.world, this.options, `${this.fpsMsg} ${this.mouseDebugMsg}`)
       renderLevel(this.display, this.world, this.options)
       this.world.hasChanged = false
     }
 
     // setTimeout(() => requestAnimationFrame(this.render.bind(this)), CONFIG.renderInterval)
     requestAnimationFrame(this.render.bind(this))
+  }
+
+  mouseDebugMsg = ''
+  debugAtCursor(cursor: number[]) {
+    const pt = Pt(cursor[0], cursor[1])
+    const pos = `${pt.x},${pt.y}`
+
+    let color: string | Color = ''
+    const [terrain] = this.world.here(pt)
+    if (terrain) color = ROT.Color.fromString(terrain.color)
+
+    let lighting: string | Color = ''
+    if (this.world.active.lighting.has(pt.s)) lighting = this.world.active.lighting.get(pt.s) ?? lighting
+
+    const total = Array.isArray(color) && Array.isArray(lighting) ? ROT.Color.add(color, lighting) : ''
+
+    this.mouseDebugMsg = pos + ' ' + color + ' ' + lighting + ' ' + total
   }
 }

@@ -5,13 +5,15 @@
 
 import { Grid } from '../Model/Grid'
 import { create } from './dungeon4/'
-import { Pt } from '../Model/Point'
+import { Point, Pt } from '../Model/Point'
 import { CONFIG } from '../config'
 import { Level } from '../Model/Level'
 import { EntityTemplates, createTemplates } from '../Core/Entity'
 import { createDecor, populateNPCs } from './features'
 import { Beings } from '../Templates'
-import { Features } from '../Templates/Features'
+import { Features, FeatureTemplate } from '../Templates/Features'
+// import { Rect } from './Rectangle'
+import { half } from '../lib/util'
 
 export type NewLevel = [Level, EntityTemplates]
 
@@ -104,4 +106,26 @@ export const arena = (): NewLevel => {
   ]
 
   return [new Level('arena', terrain, new Map(), []), templates]
+}
+
+export const flameTest = (): NewLevel => {
+  const terrain = Grid.fill(lwidth, lheight, 0)
+  const center = Pt(half(lwidth), half(lheight))
+  const left = center.add(Pt(-half(center.x) - 4, 0))
+  const right = center.add(Pt(half(center.x) + 4, 0))
+
+  // const walls = Rect.atC(center.x, center.y, 10, 10)
+  // walls.traverse((x, y) => terrain.set(Pt(x, y), 1), true)
+
+  const entities = createTemplates()
+
+  const flames = [
+    [Features.flames, center],
+    [Features.blueFlames, left],
+    [Features.greenFlames, right],
+  ] as [FeatureTemplate, Point | 0][]
+  entities.features.push(...flames)
+  entities.player = center
+
+  return [new Level('flameTest', terrain), entities]
 }

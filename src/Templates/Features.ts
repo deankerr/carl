@@ -28,7 +28,7 @@ export const Features = {
       frequency: 120,
     },
     emitLight: {
-      color: 'self',
+      color: '#663000',
       flicker: 120,
     },
   },
@@ -44,7 +44,7 @@ export const Features = {
       frequency: 120,
     },
     emitLight: {
-      color: 'self',
+      color: '#000366',
       flicker: 120,
     },
   },
@@ -52,7 +52,7 @@ export const Features = {
     id: 'greenflames',
     name: 'green flames',
     char: 'flames1',
-    color: '#0df20d',
+    color: '#00FF00',
     tag: ['walkable'],
     trodOn: 'You crisp up nicely as you stand in the flames.',
     cycleGraphic: {
@@ -60,7 +60,7 @@ export const Features = {
       frequency: 120,
     },
     emitLight: {
-      color: 'self',
+      color: '#006600',
       flicker: 120,
     },
   },
