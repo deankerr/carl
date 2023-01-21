@@ -1,14 +1,14 @@
 import { Components } from './Components'
 import * as C from '../Component'
 import { Point } from '../Model/Point'
-import { BeingTemplate, FeatureTemplate, TerrainTemplate } from '../Templates'
+import { BeingTemplate, FeatureTemplate } from '../Templates'
 import { transformHSL } from '../lib/color'
 
 export type EntityID = { readonly id: string; name: string; char: string; color: string }
 
 export type Entity = EntityID & Components
 
-export type EntityTemplate = BeingTemplate | FeatureTemplate | TerrainTemplate
+export type EntityTemplate = BeingTemplate | FeatureTemplate
 
 export type EntityTemplates = {
   player?: Point

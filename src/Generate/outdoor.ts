@@ -7,7 +7,7 @@ import { half, rnd, repeat } from '../lib/util'
 import { Point, Pt } from '../Model/Point'
 import { outdoorRuin } from './prefab/outdoorRuin'
 import { createTemplates } from '../Core/Entity'
-import { Beings, Features } from '../Templates'
+import { Beings, Features, Terrain } from '../Templates'
 
 const lwidth = CONFIG.genLevelsAtDisplaySize ? CONFIG.mainDisplayWidth : CONFIG.levelWidth
 const lheight = CONFIG.genLevelsAtDisplaySize ? CONFIG.mainDisplayHeight : CONFIG.levelHeight
@@ -26,47 +26,47 @@ export const outdoor = (width = lwidth, height = lheight): NewLevel => {
   const sec = { northQuartile, southQuartile, westQuartile, eastQuartile }
 
   // place a lot of grass
-  repeat(() => {
+  repeat(40, () => {
     drawCluster(level.rndPt(), 100, 8)
-  }, 40)
+  })
 
   // place some dead grass
-  repeat(() => {
+  repeat(20, () => {
     drawCluster(level.rndPt(), 40, 9)
-  }, 20)
+  })
 
   // TODO rnd flip n/s weighting
   // a few northern peaks
-  repeat(() => {
+  repeat(12, () => {
     const rPt = level.rndPt()
     drawCluster(Pt(rPt.x, half(sec.northQuartile.y)), 30, 14)
-  }, 12)
+  })
 
   // a few northern mounds
-  repeat(() => {
+  repeat(8, () => {
     const rPt = level.rndPt()
     drawCluster(Pt(rPt.x, half(northQuartile.y)), 30, 13)
-  }, 8)
+  })
 
   // the same but southern, and a bit less
   // peaks
-  repeat(() => {
+  repeat(8, () => {
     const rPt = level.rndPt()
     drawCluster(Pt(rPt.x, southQuartile.y + half(height - southQuartile.y)), 20, 14)
-  }, 8)
+  })
 
   // mounds
-  repeat(() => {
+  repeat(1, () => {
     const rPt = level.rndPt()
     drawCluster(Pt(rPt.x, southQuartile.y + half(height - southQuartile.y)), 20, 13)
-  }, 1)
+  })
 
   // a western lake/shrubs
   const lakePtW = Pt(rnd(0, westQuartile.x), level.rndPt().y)
   drawCluster(lakePtW, 40, 15) // shrub
   drawCluster(lakePtW, 80, 3) // water
   // some lake snakes
-  repeat(() => entities.beings.push([Beings.snake, lakePtW]), 2)
+  repeat(2, () => entities.beings.push([Beings.snake, lakePtW]))
 
   // a southern lake/shrubs
   const lakePtS = Pt(level.rndPt().x, rnd(southQuartile.y, height - 1))
@@ -76,7 +76,7 @@ export const outdoor = (width = lwidth, height = lheight): NewLevel => {
   entities.beings.push([Beings.toad, lakePtS])
 
   // sparse shrubs
-  repeat(() => drawSparseCluster(level.rndPt(), 5, 15), 4)
+  repeat(4, () => drawSparseCluster(level.rndPt(), 5, 15))
 
   // ruin at center
   const prefab = outdoorRuin
@@ -130,7 +130,7 @@ export const outdoor = (width = lwidth, height = lheight): NewLevel => {
   // entities.features.push([Beings.flamesGreen, Pt(westQuartile.x - 5, center.y)])
 
   // some ghosts
-  repeat(() => entities.beings.push([Beings.ghost, center]), 4)
+  repeat(4, () => entities.beings.push([Beings.ghost, center]))
 
   // player, SW start position
   // entities.player = Pt(2, level.height - 4) // bl corner
@@ -142,7 +142,10 @@ export const outdoor = (width = lwidth, height = lheight): NewLevel => {
   // level.set(southQuartile, 0)
   // level.set(westQuartile, 1)
   // level.set(eastQuartile, 1)
-  const newLevel = new Level('outdoor', level, new Map(), [])
+
+  // const newLevel = new Level('outdoor', level, new Map(), [])
+  const newLevel = new Level('outdoor', Grid.fill(3, 3, Terrain.path), new Map(), [])
+
   // entities.beings.push(...populateALLNPCs(newLevel))
   return [newLevel, entities]
 
@@ -180,6 +183,6 @@ export const outdoor = (width = lwidth, height = lheight): NewLevel => {
   }
 
   function drawSparseCluster(startPt: Point, amount: number, terrain: number) {
-    repeat(() => level.set(startPt.add(Pt(rnd(2, 6), rnd(2, 6))), terrain), amount)
+    repeat(amount, () => level.set(startPt.add(Pt(rnd(2, 6), rnd(2, 6))), terrain))
   }
 }

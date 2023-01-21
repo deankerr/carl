@@ -3,7 +3,7 @@ import * as ROT from 'rot-js'
 import { Grid } from './Grid'
 import { Entity } from '../Core/Entity'
 import { Point } from './Point'
-import { Terrain, TerrainLegacyMap, TerrainTemplate } from '../Templates/Terrain'
+import { Terrain } from '../Templates/Terrain'
 import { pick, repeatUntil } from '../lib/util'
 import { Color } from 'rot-js/lib/color'
 
@@ -26,7 +26,8 @@ export class Level {
     // bare level defaults as workaround until refactor
     readonly label = 'bare',
 
-    readonly terrainGrid: Grid<number> | Grid<TerrainTemplate> = Grid.fill(1, 1, 0),
+    // readonly terrainGrid: Grid<number> = Grid.fill(1, 1, 0),
+    readonly terrainGrid: Grid<Entity>,
     readonly voidDecor = new Map<string, Entity>(),
     readonly rooms: Point[][] = []
   ) {
@@ -35,12 +36,7 @@ export class Level {
   }
 
   terrain(at: Point) {
-    const t = this.terrainGrid.get(at)
-
-    if (t === null) return Terrain.endlessVoid
-
-    if (typeof t === 'number') return TerrainLegacyMap[t]
-    return t
+    return this.terrainGrid.get(at) ?? Terrain.endlessVoid
   }
 
   ptInRoom(index?: number) {
@@ -54,7 +50,7 @@ export class Level {
         let result
         repeatUntil(() => {
           const pt = this.terrainGrid.rndPt()
-          if (!('tagWalkable' in this.terrain(pt))) return false
+          if (!this.terrain(pt).tagWalkable) return false
           result = pt
           return true
         }, 1000)

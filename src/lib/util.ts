@@ -52,9 +52,9 @@ export const pick = <T>(arr: T[]): T => {
   return picked
 }
 
-export const repeat = (callback: () => unknown, times: number) => {
+export const repeat = (times: number, callback: () => unknown) => {
   for (let i = 0; i < times; i++) {
-    callback()
+    if (callback()) break
   }
 }
 

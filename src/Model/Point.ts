@@ -1,3 +1,5 @@
+import { Entity } from '../Core/Entity'
+
 export class Point {
   readonly s: string
   constructor(readonly x: number, readonly y: number) {
@@ -11,4 +13,9 @@ export class Point {
 
 export function Pt(x: number, y: number) {
   return new Point(x, y)
+}
+
+export function StrPt(s: string) {
+  const pt = s.split(',')
+  return new Point(parseInt(pt[0]), parseInt(pt[1]))
 }

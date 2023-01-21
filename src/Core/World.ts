@@ -9,11 +9,13 @@ import { Level } from '../Model/Level'
 import { Point, Pt } from '../Model/Point'
 import { objLog } from '../lib/util'
 import { colorizeMessage, Message } from '../lib/messages'
+import { Terrain } from '../Templates'
 
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 
 export class World {
   options: Game['options']
+  terrain = Terrain
 
   hasChanged = true // trigger a rerender on next animation frame
 
@@ -28,6 +30,8 @@ export class World {
 
   constructor(options: Game['options']) {
     this.options = options
+
+    // create terrain
 
     // initialize world structure, set root level as active
     const [domainMap, root] = createDomains()
@@ -285,6 +289,7 @@ export class World {
     console.log('messages', this.messages)
     console.log('playerTurns', this.playerTurns)
     console.log('nextEntityID', this.nextEntityID)
+    console.log('terrain:', this.terrain)
     console.groupEnd()
   }
 }

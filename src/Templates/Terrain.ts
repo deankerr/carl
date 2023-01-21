@@ -1,8 +1,7 @@
 import { Entity, hydrate } from '../Core/Entity'
+// export type TerrainTemplate = typeof Terrain[keyof typeof Terrain]
 
-export type TerrainTemplate = typeof Terrain[keyof typeof Terrain]
-
-export const Terrain = {
+export const TerrainData = {
   path: {
     id: 'path',
     name: 'path',
@@ -136,23 +135,6 @@ export const Terrain = {
   },
 }
 
-export const TerrainLegacyMap: { [key: number]: Entity } = {
-  0: hydrate(Terrain.path),
-  1: hydrate(Terrain.wall),
-  2: hydrate(Terrain.crackedWall),
-  3: hydrate(Terrain.water),
-  4: hydrate(Terrain.crackedPath1),
-  5: hydrate(Terrain.crackedPath2),
-  6: hydrate(Terrain.crackedPath3),
-  7: hydrate(Terrain.crackedPath4),
-  8: hydrate(Terrain.grass),
-  9: hydrate(Terrain.deadGrass),
-  10: hydrate(Terrain.stairsAscending),
-  11: hydrate(Terrain.stairsDescending),
-  12: hydrate(Terrain.tree),
-  13: hydrate(Terrain.mound),
-  14: hydrate(Terrain.peak),
-  15: hydrate(Terrain.shrub),
-  98: hydrate(Terrain.void),
-  99: hydrate(Terrain.endlessVoid),
-}
+export const Terrain = Object.entries(TerrainData).reduce((acc, curr) => {
+  return { ...acc, [curr[0]]: hydrate(curr[1]) }
+}, {}) as { [P in keyof typeof TerrainData]: Entity }
