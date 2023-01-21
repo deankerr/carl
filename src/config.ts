@@ -19,6 +19,7 @@ const CONFIG = {
   msgBgColor: 'transparent', //' rgb(80,120,0,1)',
   htmlBGColor: PROD ? '#191919' : '#191919',
   renderInterval: 500,
+  debugShowLightInfo: false,
 }
 
 export { CONFIG }

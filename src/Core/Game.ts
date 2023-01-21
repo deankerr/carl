@@ -225,14 +225,16 @@ export class Game {
     const pt = Pt(cursor[0], cursor[1])
     this.debugCoordMsg = ` ${pt.x},${pt.y}`
 
-    // color
-    const [terrain] = this.world.here(pt)
-    const color = ROT.Color.fromString(terrain.color)
-    // lighting
-    const lighting = this.world.active.lighting.get(pt.s) ?? [0, 0, 0]
-    const total = ROT.Color.add(color, lighting)
+    if (CONFIG.debugShowLightInfo) {
+      // color
+      const [terrain] = this.world.here(pt)
+      const color = ROT.Color.fromString(terrain.color)
+      // lighting
+      const lighting = this.world.active.lighting.get(pt.s) ?? [0, 0, 0]
+      const total = ROT.Color.add(color, lighting)
 
-    const { toRGB } = ROT.Color
-    this.debugColorMsg = 'C:' + toRGB(color) + ' L:' + toRGB(lighting) + ' T:' + toRGB(total)
+      const { toRGB } = ROT.Color
+      this.debugColorMsg = 'C:' + toRGB(color) + ' L:' + toRGB(lighting) + ' T:' + toRGB(total)
+    }
   }
 }
