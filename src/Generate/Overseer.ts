@@ -21,7 +21,27 @@ export class Overseer {
   }
 
   construct() {
-    for (const [pt, t] of this.main) this.internal.set(StrPt(pt), t)
+    const result = Grid.fill(this.width, this.height, this.initial)
+    for (const [pt, t] of this.main) result.set(StrPt(pt), t)
+    return result
+  }
+
+  // playback
+  index = 0
+  current() {
+    return this.internal
+  }
+
+  next() {
+    if (this.index + 1 < this.mutations.length) {
+      for (const [pt, t] of this.mutations[++this.index]) this.internal.set(StrPt(pt), t)
+      return true
+    } else return false
+  }
+
+  reset() {
+    this.index = 0
+    this.internal.each(pt => this.internal.set(pt, this.initial))
     return this.internal
   }
 }

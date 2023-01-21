@@ -31,7 +31,6 @@ export class Game {
   msgDisplay: ROT.Display
   keys = new Keys()
   world: World
-  context: Context = Context.Game
 
   messageNew: string[] = [] // messages generated during the last update
   messageHistory: string[] = [] // previous messages that still fit in the buffer visually
@@ -99,14 +98,7 @@ export class Game {
           this.world.__clog()
           return
         case 'visualizer':
-          // Visualizer Context
-          if (this.world.active.overseer.main.size > 0) {
-            console.log('Game: Start Visualizer')
-            this.keys.cleanup()
-            new Visualizer(this.world, this.keys)
-            console.log('Game: resumed')
-            this.keys.add(this.update.bind(this))
-          }
+          this.startVisualizer()
           return
         default:
           console.log('UI: Action not implemented', playerAction)
@@ -222,8 +214,8 @@ export class Game {
     processLighting(this.world)
 
     if (this.world.hasChanged) {
-      renderMessages(this.msgDisplay, this.world, this.options, [this.fpsMsg + this.debugCoordMsg, this.debugColorMsg])
-      renderLevel(this.display, this.world, this.options)
+      renderMessages(this.msgDisplay, this.world, [this.fpsMsg + this.debugCoordMsg, this.debugColorMsg])
+      renderLevel(this.display, this.world)
       this.world.hasChanged = false
     }
 
@@ -251,11 +243,20 @@ export class Game {
 
     this.world.hasChanged = true
   }
+
+  startVisualizer() {
+    if (this.world.active.overseer.main.size > 0) {
+      console.log('Game: Start Visualizer')
+      this.keys.cleanup()
+      this.renderOff = true
+      new Visualizer(this.display, this.msgDisplay, this.world, this.keys, this.restoreContext.bind(this))
+    }
+  }
+
+  restoreContext() {
+    this.renderOff = false
+    this.render()
+    this.keys.add(this.update.bind(this))
+    console.log('Game: resumed')
+  }
 }
-
-const Context = {
-  Game: 'Game',
-  Visualizer: 'Visualizer',
-} as const
-
-type Context = keyof typeof Context

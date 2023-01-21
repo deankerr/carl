@@ -1,6 +1,5 @@
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
-import { Game } from './Game'
 import { World } from './World'
 import { half, floor, clamp, min } from '../lib/util'
 import { Message, createWordRegex } from '../lib/messages'
@@ -21,6 +20,7 @@ export const renderLevel = (display: ROT.Display, world: World) => {
   const options = world.options
   display.clear()
 
+  const domain = world.domain
   const level = world.active
   const yMax = display.getOptions().height - 1
   // const xMax = d.getOptions().width - 1
@@ -53,7 +53,7 @@ export const renderLevel = (display: ROT.Display, world: World) => {
 
   const entities = world.get('position', 'char', 'color')
 
-  level.terrainGrid.each(here => {
+  level.terrainGrid.each((here, terrain) => {
     const render = { x: offsetX + here.x, y: offsetY + here.y }
 
     // skip this location if we're outside of the viewport
@@ -62,12 +62,12 @@ export const renderLevel = (display: ROT.Display, world: World) => {
     }
 
     // create array stacks of chars and colors of terrain + entities here
-    const terrain = level.terrain(here)
+    // const terrain = level.terrain(here)
     const char: string[] = []
     const color: string[] = []
 
-    const visible = player.fov.visible.includes(here.s) || world.domain.revealed || options.lightsOn
-    const seen = level.areaKnown.includes(here.s) || world.domain.seen
+    const visible = player.fov.visible.includes(here.s) || domain.revealed || options.lightsOn
+    const seen = level.areaKnown.includes(here.s) || domain.seen
     const voidSeen = level.voidAreaKnown.includes(here.s) || options.lightsOn
 
     // ROT.JS lighting
@@ -160,10 +160,10 @@ export const renderLevel = (display: ROT.Display, world: World) => {
 // const msgDisplayMargin = 0 // space between each side of message and display edge
 const maxMessageAge = 16 // disappear after this many turns
 const minColorizedLum = 0.5 // colorized entity name min luminance
-export const renderMessages = (d: ROT.Display, world: World, options: Game['options'], debugMsg?: string[]) => {
+export const renderMessages = (d: ROT.Display, world: World, debugMsg?: string[]) => {
   const width = CONFIG.messageDisplayWidth
   const height = CONFIG.messageDisplayHeight
-  const { playerTurns, messages } = world
+  const { playerTurns, messages, options } = world
   const buffer: Message[] = []
   d.clear()
 
