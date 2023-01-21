@@ -236,5 +236,7 @@ export class Game {
       const { toRGB } = ROT.Color
       this.debugColorMsg = 'C:' + toRGB(color) + ' L:' + toRGB(lighting) + ' T:' + toRGB(total)
     }
+
+    this.world.hasChanged = true
   }
 }
