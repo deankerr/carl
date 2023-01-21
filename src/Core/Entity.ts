@@ -2,6 +2,7 @@ import { Components } from './Components'
 import * as C from '../Component'
 import { Point } from '../Model/Point'
 import { BeingTemplate, FeatureTemplate, TerrainTemplate } from '../Templates'
+import { transformHSL } from '../lib/color'
 
 export type EntityID = { readonly id: string; name: string; char: string; color: string }
 
@@ -57,7 +58,9 @@ export function hydrate(t: EntityTemplate, pt?: Point, fov?: number): Entity {
   }
 
   if ('emitLight' in t) {
-    const color = t.emitLight.color === 'self' ? entity.color : t.emitLight.color
+    // const color = 'color' in t.emitLight ? t.emitLight.color : transformHSL(entity.color, {lum: {to: .25}})
+    // hardcoded to 25% of entity's luminance for now
+    const color = transformHSL(entity.color, { lum: { to: 0.25 } })
     entity = { ...entity, ...C.emitLight(color, t.emitLight.flicker) }
   }
 

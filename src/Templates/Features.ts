@@ -20,7 +20,7 @@ export const Features = {
     id: 'flames',
     name: 'flames',
     char: 'flames1',
-    color: '#fc7703',
+    color: '#FF8000',
     tag: ['walkable'],
     trodOn: 'You crisp up nicely as you stand in the flames.',
     cycleGraphic: {
@@ -28,7 +28,6 @@ export const Features = {
       frequency: 120,
     },
     emitLight: {
-      color: 'self',
       flicker: 120,
     },
   },
@@ -36,7 +35,7 @@ export const Features = {
     id: 'blueflames',
     name: 'blue flames',
     char: 'flames1',
-    color: '#141cff',
+    color: '#0000FF',
     tag: ['walkable'],
     trodOn: 'You crisp up nicely as you stand in the flames.',
     cycleGraphic: {
@@ -44,7 +43,6 @@ export const Features = {
       frequency: 120,
     },
     emitLight: {
-      color: 'self',
       flicker: 120,
     },
   },
@@ -52,7 +50,7 @@ export const Features = {
     id: 'greenflames',
     name: 'green flames',
     char: 'flames1',
-    color: '#0df20d',
+    color: '#00FF00',
     tag: ['walkable'],
     trodOn: 'You crisp up nicely as you stand in the flames.',
     cycleGraphic: {
@@ -60,7 +58,51 @@ export const Features = {
       frequency: 120,
     },
     emitLight: {
-      color: 'self',
+      flicker: 120,
+    },
+  },
+  redFlames: {
+    id: 'redflames',
+    name: 'red flames',
+    char: 'flames1',
+    color: '#FF0000',
+    tag: ['walkable'],
+    trodOn: 'You crisp up nicely as you stand in the flames.',
+    cycleGraphic: {
+      list: ['flames1', 'flames2'],
+      frequency: 120,
+    },
+    emitLight: {
+      flicker: 120,
+    },
+  },
+  yellowFlames: {
+    id: 'yellowflames',
+    name: 'yellow flames',
+    char: 'flames1',
+    color: '#FFFF00',
+    tag: ['walkable'],
+    trodOn: 'You crisp up nicely as you stand in the flames.',
+    cycleGraphic: {
+      list: ['flames1', 'flames2'],
+      frequency: 120,
+    },
+    emitLight: {
+      flicker: 120,
+    },
+  },
+  pinkFlames: {
+    id: 'pinkflames',
+    name: 'pink flames',
+    char: 'flames1',
+    color: '#FF00FF',
+    tag: ['walkable'],
+    trodOn: 'You crisp up nicely as you stand in the flames.',
+    cycleGraphic: {
+      list: ['flames1', 'flames2'],
+      frequency: 120,
+    },
+    emitLight: {
       flicker: 120,
     },
   },

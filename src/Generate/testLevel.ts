@@ -14,6 +14,7 @@ export function testLevel(): NewLevel {
   const terrain = Grid.fill(lwidth, lheight, 0)
   const center = Pt(half(terrain.width), half(terrain.height))
   const quarterWidth = floor(terrain.width / 4)
+  const quarterHeight = floor(terrain.height / 4)
   const centerLeft = Pt(quarterWidth, center.y)
   const centerRight = Pt(terrain.width - quarterWidth, center.y)
 
@@ -22,9 +23,13 @@ export function testLevel(): NewLevel {
   const entities = createTemplates()
   entities.player = center
 
-  entities.features.push([Features.flames, center])
-  entities.features.push([Features.flames, centerLeft])
-  entities.features.push([Features.flames, centerRight])
+  entities.features.push([Features.blueFlames, centerLeft.add(Pt(0, -quarterHeight))])
+  entities.features.push([Features.flames, center.add(Pt(0, -quarterHeight))])
+  entities.features.push([Features.greenFlames, centerRight.add(Pt(0, -quarterHeight))])
+
+  entities.features.push([Features.redFlames, centerLeft.add(Pt(0, quarterHeight))])
+  entities.features.push([Features.yellowFlames, center.add(Pt(0, quarterHeight))])
+  entities.features.push([Features.pinkFlames, centerRight.add(Pt(0, quarterHeight))])
 
   return [level, entities]
 }
