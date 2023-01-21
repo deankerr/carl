@@ -115,6 +115,7 @@ export class Game {
         if (playerAction.changeLevel.to === 'debug_up') world.changeLevel(-1)
         if (playerAction.changeLevel.to === 'debug_outdoor') world.setCurrentLevel(world.domainMap['outdoor'], 0)
         if (playerAction.changeLevel.to === 'debug_dungeon') world.setCurrentLevel(world.domainMap['dungeon'], 0)
+        if (playerAction.changeLevel.to === 'debug_testLevel') world.setCurrentLevel(world.domainMap['testLevel'], 0)
 
         world.nextTurn()
         processLighting(this.world)

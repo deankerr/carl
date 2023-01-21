@@ -29,7 +29,10 @@ export function testLevel(): NewLevel {
 
   entities.features.push([Features.redFlames, centerLeft.add(Pt(0, quarterHeight))])
   entities.features.push([Features.yellowFlames, center.add(Pt(0, quarterHeight))])
-  entities.features.push([Features.pinkFlames, centerRight.add(Pt(0, quarterHeight))])
+  entities.features.push([Features.magentaFlames, centerRight.add(Pt(0, quarterHeight))])
+
+  entities.features.push([Features.cyanFlames, Pt(half(quarterWidth), center.y)])
+  entities.features.push([Features.purpleFlames, Pt(terrain.width - half(quarterWidth), center.y)])
 
   return [level, entities]
 }

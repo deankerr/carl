@@ -37,10 +37,20 @@ export const createDecor = (level: Level) => {
     // }
 
     // fire
-    if (i % 4 === 1) {
-      const opts = [Features.flames, Features.blueFlames, Features.greenFlames]
-      newFeatures.push([pick(opts), level.ptInRoom(i)])
-    }
+    // if (i % 4 === 1) {
+    const opts = [
+      Features.flames,
+      Features.blueFlames,
+      Features.greenFlames,
+      Features.cyanFlames,
+      Features.magentaFlames,
+      Features.purpleFlames,
+      Features.redFlames,
+      Features.yellowFlames,
+    ]
+
+    newFeatures.push([pick(opts), level.ptInRoom(i)])
+    // }
   })
 
   // cracked walls/paths

@@ -12,7 +12,7 @@ const CONFIG = {
   genLevelsAtDisplaySize: true,
   levelWidth: 60,
   levelHeight: 38,
-  lightsOnInitial: PROD ? false : true,
+  lightsOnInitial: PROD ? false : false,
   backgroundColor: '#191919',
   messageColor: '#FFF',
   // msgBgColor: ' rgb(10,30,20,1)',

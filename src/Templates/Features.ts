@@ -91,11 +91,41 @@ export const Features = {
       flicker: 120,
     },
   },
-  pinkFlames: {
-    id: 'pinkflames',
-    name: 'pink flames',
+  magentaFlames: {
+    id: 'magentaflames',
+    name: 'magenta flames',
     char: 'flames1',
     color: '#FF00FF',
+    tag: ['walkable'],
+    trodOn: 'You crisp up nicely as you stand in the flames.',
+    cycleGraphic: {
+      list: ['flames1', 'flames2'],
+      frequency: 120,
+    },
+    emitLight: {
+      flicker: 120,
+    },
+  },
+  cyanFlames: {
+    id: 'cyanflames',
+    name: 'cyan flames',
+    char: 'flames1',
+    color: '#00FFFF',
+    tag: ['walkable'],
+    trodOn: 'You crisp up nicely as you stand in the flames.',
+    cycleGraphic: {
+      list: ['flames1', 'flames2'],
+      frequency: 120,
+    },
+    emitLight: {
+      flicker: 120,
+    },
+  },
+  purpleFlames: {
+    id: 'purpleflames',
+    name: 'purple flames',
+    char: 'flames1',
+    color: '#8000FF',
     tag: ['walkable'],
     trodOn: 'You crisp up nicely as you stand in the flames.',
     cycleGraphic: {
