@@ -124,7 +124,7 @@ export const Terrain = {
     id: 'void',
     name: 'void',
     char: 'void',
-    color: '#F0F',
+    color: '#000',
     tag: ['walkable'],
   },
   endlessVoid: {

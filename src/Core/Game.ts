@@ -23,6 +23,7 @@ import {
 import { mouseMove } from '../lib/display'
 import { Keys } from '../lib/Keys'
 import { input } from './Input'
+import { Pt } from '../Model/Point'
 
 export class Game {
   display: ROT.Display
@@ -32,7 +33,6 @@ export class Game {
 
   messageNew: string[] = [] // messages generated during the last update
   messageHistory: string[] = [] // previous messages that still fit in the buffer visually
-  mouseXY: number[] = [0, 0] // mouse X Y on screen display
 
   options = {
     lightsOn: CONFIG.lightsOnInitial, // reveal level debug flag
@@ -56,7 +56,7 @@ export class Game {
     this.world.__clog(true)
 
     // mouse click coords
-    mouseMove(d, ev => (this.mouseXY = d.eventToPosition(ev)))
+    mouseMove(this.display, ev => this.debugAtCursor(this.display.eventToPosition(ev)))
 
     processFOV(this.world)
     // game active
@@ -209,12 +209,29 @@ export class Game {
     processLighting(this.world)
 
     if (this.world.hasChanged) {
-      renderMessages(this.msgDisplay, this.world, this.options, `${this.fpsMsg} ${this.mouseXY}`)
+      renderMessages(this.msgDisplay, this.world, this.options, [this.fpsMsg + this.debugCoordMsg, this.debugColorMsg])
       renderLevel(this.display, this.world, this.options)
       this.world.hasChanged = false
     }
 
     // setTimeout(() => requestAnimationFrame(this.render.bind(this)), CONFIG.renderInterval)
     requestAnimationFrame(this.render.bind(this))
+  }
+
+  debugCoordMsg = ''
+  debugColorMsg = ''
+  debugAtCursor(cursor: number[]) {
+    const pt = Pt(cursor[0], cursor[1])
+    this.debugCoordMsg = ` ${pt.x},${pt.y}`
+
+    // color
+    const [terrain] = this.world.here(pt)
+    const color = ROT.Color.fromString(terrain.color)
+    // lighting
+    const lighting = this.world.active.lighting.get(pt.s) ?? [0, 0, 0]
+    const total = ROT.Color.add(color, lighting)
+
+    const { toRGB } = ROT.Color
+    this.debugColorMsg = 'C:' + toRGB(color) + ' L:' + toRGB(lighting) + ' T:' + toRGB(total)
   }
 }

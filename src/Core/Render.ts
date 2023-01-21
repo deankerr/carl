@@ -176,7 +176,7 @@ export const renderLevel = (display: ROT.Display, world: World, options: Game['o
 // const msgDisplayMargin = 0 // space between each side of message and display edge
 const maxMessageAge = 16 // disappear after this many turns
 const minColorizedLum = 0.5 // colorized entity name min luminance
-export const renderMessages = (d: ROT.Display, world: World, options: Game['options'], debugMsg?: string) => {
+export const renderMessages = (d: ROT.Display, world: World, options: Game['options'], debugMsg?: string[]) => {
   const width = CONFIG.messageDisplayWidth
   const height = CONFIG.messageDisplayHeight
   const { playerTurns, messages } = world
@@ -236,8 +236,12 @@ export const renderMessages = (d: ROT.Display, world: World, options: Game['opti
     d.drawText(min(0, half(width) - half(buffer[i].raw.length)), i, msg)
   })
 
-  // debug message (framerate)
-  if (debugMsg) d.drawText(0, height - 1, `${spinner.next()} ${debugMsg}`)
+  // debug message (framerate/color)
+  if (debugMsg) {
+    debugMsg.forEach((m, i) => {
+      d.drawText(0, height - 1 - i, i === 0 ? `${spinner.next()} ${m}` : m)
+    })
+  }
 
   // debug mode display size marker
   if (options.debugMode) {
