@@ -2,6 +2,15 @@
 
 export const domains = [
   {
+    label: 'testLevel',
+    revealed: true,
+    playerFOV: 12,
+    generator: 'testLevel',
+    connections: {
+      descend: 'dungeon',
+    },
+  },
+  {
     label: 'outdoor',
     revealed: true,
     playerFOV: 12,

@@ -2,6 +2,7 @@
 // read the domain template file, create domain nodes and link them
 import * as Templates from '../Templates'
 import * as Generate from '../Generate'
+import { testLevel } from './testLevel'
 import { Level } from '../Model/Level'
 
 export function createDomains(): [DomainMap, Domain] {
@@ -57,4 +58,5 @@ const generators: Record<string, Domain['generator']> = {
   outdoor: Generate.outdoor,
   dungeon4: Generate.dungeon4,
   ruin1: Generate.prefabRuin1,
+  testLevel: testLevel,
 }
