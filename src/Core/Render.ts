@@ -15,10 +15,10 @@ const darkenLumMin = 0.12
 // luminance of background color (used as min value)
 const bgLum = hexLuminance(CONFIG.backgroundColor)
 
-export const renderLevel = (display: ROT.Display, world: World, options: Game['options']) => {
+export const renderLevel = (display: ROT.Display, world: World) => {
   // console.log('char', 'color', world.active)
   const { mainDisplayWidth: displayWidth, mainDisplayHeight: displayHeight, backgroundColor } = CONFIG
-
+  const options = world.options
   display.clear()
 
   const level = world.active
