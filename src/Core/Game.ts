@@ -24,12 +24,14 @@ import { mouseMove } from '../lib/display'
 import { Keys } from '../lib/Keys'
 import { input } from './Input'
 import { Pt } from '../Model/Point'
+import { Visualizer } from './Visualizer'
 
 export class Game {
   display: ROT.Display
   msgDisplay: ROT.Display
   keys = new Keys()
   world: World
+  context: Context = Context.Game
 
   messageNew: string[] = [] // messages generated during the last update
   messageHistory: string[] = [] // previous messages that still fit in the buffer visually
@@ -95,6 +97,16 @@ export class Game {
           break
         case 'debug_logworld':
           this.world.__clog()
+          return
+        case 'visualizer':
+          // Visualizer Context
+          if (this.world.active.overseer.main.size > 0) {
+            console.log('Game: Start Visualizer')
+            this.keys.cleanup()
+            new Visualizer(this.world, this.keys)
+            console.log('Game: resumed')
+            this.keys.add(this.update.bind(this))
+          }
           return
         default:
           console.log('UI: Action not implemented', playerAction)
@@ -240,3 +252,10 @@ export class Game {
     this.world.hasChanged = true
   }
 }
+
+const Context = {
+  Game: 'Game',
+  Visualizer: 'Visualizer',
+} as const
+
+type Context = keyof typeof Context

@@ -50,6 +50,9 @@ export function input(code: string): ActionTypes | null {
       return ChangeLevel('debug_testLevel')
 
     // UI
+    case 'KeyV':
+      return UI('visualizer')
+    // debug
     case 'KeyL':
       return UI('toggleLightSwitch')
     case 'Semicolon':

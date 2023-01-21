@@ -1,5 +1,3 @@
-import { Entity } from '../Core/Entity'
-
 export class Point {
   readonly s: string
   constructor(readonly x: number, readonly y: number) {

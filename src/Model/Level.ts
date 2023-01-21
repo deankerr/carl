@@ -6,6 +6,7 @@ import { Point } from './Point'
 import { Terrain } from '../Templates/Terrain'
 import { pick, repeatUntil } from '../lib/util'
 import { Color } from 'rot-js/lib/color'
+import { Overseer } from '../Generate/Overseer'
 
 export class Level {
   readonly width: number
@@ -22,6 +23,7 @@ export class Level {
 
   lighting = new Map<string, Color>()
 
+  overseer: Overseer = new Overseer(1, 1, Terrain.void)
   constructor(
     // bare level defaults as workaround until refactor
     readonly label = 'bare',
