@@ -15,7 +15,7 @@ export class Visualizer {
   worldProxy: World
   level: Level
   playing = false
-  speed = 400
+  speed = 250
 
   constructor(
     readonly display: ROT.Display,
@@ -43,9 +43,6 @@ export class Visualizer {
     this.worldProxy = new Proxy(world, handler)
 
     this.render()
-
-    msgDisplay.clear()
-    msgDisplay.drawText(0, 3, 'Visualizer')
 
     this.keys.add(this.input.bind(this))
     this.play()
@@ -85,7 +82,8 @@ export class Visualizer {
     if (!this.playing) return
     const more = this.overseer.next()
     this.render()
-    if (more && this.playing) setTimeout(() => requestAnimationFrame(this.next.bind(this)), this.speed)
+    if (more && this.playing) this.play()
+    else this.playing = false
   }
 
   play() {
@@ -95,6 +93,8 @@ export class Visualizer {
 
   render() {
     renderLevel(this.display, this.worldProxy)
+    this.msgDisplay.clear()
+    this.msgDisplay.drawText(0, 3, 'Visualizer ' + this.overseer.index)
   }
 
   return() {

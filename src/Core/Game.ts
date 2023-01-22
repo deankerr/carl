@@ -63,6 +63,8 @@ export class Game {
     // game active
     this.render()
     this.keys.add(this.update.bind(this))
+
+    // this.startVisualizer()
   }
 
   update(code: string) {

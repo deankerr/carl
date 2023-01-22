@@ -52,6 +52,10 @@ export const pick = <T>(arr: T[]): T => {
   return picked
 }
 
+export const mix = <T>(arr: T[]): T[] => {
+  return ROT.RNG.shuffle(arr)
+}
+
 export const repeat = (times: number, callback: (i: number) => unknown) => {
   for (let i = 0; i < times; i++) {
     if (callback(i)) break

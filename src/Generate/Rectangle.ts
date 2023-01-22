@@ -1,7 +1,6 @@
-// ? hollow rect support?
-import * as ROT from 'rot-js'
-
-type Point = { x: number; y: number }
+// import * as ROT from 'rot-js'
+import { pick, rnd } from '../lib/util'
+import { Pt, Point } from '../Model/Point'
 
 export class Rect {
   // Top left to bottom right
@@ -22,10 +21,10 @@ export class Rect {
   // debug id
   id
 
-  constructor(x: number, y: number, width: number, height: number, id = 0) {
+  constructor(pt: Point, width: number, height: number, id = 0) {
     if (width < 1 || height < 1)
       throw new Error('Please do not create zero/negative width Rects, as I cannot fathom them.')
-
+    const { x, y } = pt
     this.x = x
     this.y = y
 
@@ -44,10 +43,11 @@ export class Rect {
   }
 
   // Travels through the x/y coords
-  traverse(callback: (x: number, y: number) => unknown) {
+  traverse(callback: (pt: Point, edge: boolean) => unknown) {
     for (let yi = this.y; yi <= this.y2; yi++) {
       for (let xi = this.x; xi <= this.x2; xi++) {
-        if (callback(xi, yi) === false) return // exit loop if false?
+        const pt = Pt(xi, yi)
+        if (callback(pt, this.isEdgePt(pt)) === false) return
       }
     }
   }
@@ -60,9 +60,9 @@ export class Rect {
     // Quick test if rects intersect
     if (this.x2 < rect.x || this.y2 < rect.y || this.x > rect.x2 || this.y > rect.y2) return null
 
-    const pts: { x: number; y: number }[] = []
-    rect.traverse((x, y) => {
-      if (this.intersectsPt({ x, y })) pts.push({ x, y })
+    const pts: string[] = []
+    rect.traverse(pt => {
+      if (this.intersectsPt(pt)) pts.push(pt.s)
     })
 
     return pts
@@ -84,53 +84,63 @@ export class Rect {
     const y = this.y - yBy
     const width = this.width + xBy * 2
     const height = this.height + xBy * 2
-    return Rect.at(x, y, width, height)
+    return Rect.at(Pt(x, y), width, height)
   }
 
   // Return list of each pt in the rect. outer = outermost edge only
-  toPts(outer = false): Point[] {
+  toPts(edgeOnly = false): Point[] {
     const result: Point[] = []
-    this.traverse((x, y) => {
-      if (!outer) result.push({ x, y })
-      else if (x == this.x || x == this.x2 || y == this.y || y == this.y2) result.push({ x, y })
+    this.traverse((pt, edge) => {
+      if (!edgeOnly) result.push(pt)
+      else if (edge) result.push(pt)
     })
 
     return result
   }
 
   // Return a random point with this rect
-  rndPt(): Point {
-    return { x: ROT.RNG.getUniformInt(this.x, this.x2), y: ROT.RNG.getUniformInt(this.y, this.y2) }
+  rndPt() {
+    return Pt(rnd(this.x, this.x2), rnd(this.y, this.y2))
   }
 
-  // ? rndPtOuter()
+  // excludes corners
+  rndEdgePt() {
+    const r = rnd(0, 1)
+    const x = r ? rnd(this.x + 1, this.x2 - 1) : pick([this.x, this.x2])
+    const y = !r ? rnd(this.y + 1, this.y2 - 1) : pick([this.y, this.y2])
+    return Pt(x, y)
+  }
+
+  isEdgePt(pt: Point) {
+    return pt.x === this.x || pt.x === this.x2 || pt.y === this.y || pt.y === this.y2
+  }
 
   // Construction
 
   // Constructor alias
-  static at(x: number, y: number, width: number, height: number, id = 0) {
-    return new Rect(x, y, width, height, id)
+  static at(pt: Point, width: number, height: number, id = 0) {
+    return new Rect(pt, width, height, id)
   }
 
   // Center-point based
-  static atC(cx: number, cy: number, width: number, height: number, id = 0) {
-    const x = cx - Math.floor(width / 2)
-    const y = cy - Math.floor(height / 2)
-    return new Rect(x, y, width, height, id)
+  static atC(pt: Point, width: number, height: number, id = 0) {
+    const x = pt.x - Math.floor(width / 2)
+    const y = pt.y - Math.floor(height / 2)
+    return new Rect(Pt(x, y), width, height, id)
   }
 
   // From x/y to x2/y2
-  static atxy2(x: number, y: number, x2: number, y2: number, id = 0) {
-    return new Rect(x, y, x2 - x + 1, y2 - y + 1, id)
+  static atxy2(pt: Point, x2: number, y2: number, id = 0) {
+    return new Rect(pt, x2 - pt.x + 1, y2 - pt.y + 1, id)
   }
 
   // By size, eg xSize 1 = 1, 2 = 3, 3 = 5 etc.
-  static scaled(cx: number, cy: number, xSize: number, ySize: number, id = 0) {
-    const width = 2 * xSize - 1
-    const height = 2 * ySize - 1
-    const x1 = cx - Math.floor(width / 2)
-    const y1 = cy - Math.floor(height / 2)
+  // static scaled(cx: number, cy: number, xSize: number, ySize: number, id = 0) {
+  //   const width = 2 * xSize - 1
+  //   const height = 2 * ySize - 1
+  //   const x1 = cx - Math.floor(width / 2)
+  //   const y1 = cy - Math.floor(height / 2)
 
-    return new Rect(x1, y1, width, height, id)
-  }
+  //   return new Rect(x1, y1, width, height, id)
+  // }
 }

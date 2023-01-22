@@ -9,8 +9,8 @@ export const domains = [
     generator: 'overworld',
     connections: {
       top: '',
-      ascend: 'ruin',
-      descend: 'dungeon',
+      ascend: 'overworld',
+      descend: 'overworld',
       bottom: '',
     },
   },

@@ -9,15 +9,27 @@ export class Overseer {
   internal: Grid<Entity>
   main: Mutation = new Map()
   mutations: Mutation[] = []
+  features: Mutation = new Map()
 
   constructor(readonly width: number, readonly height: number, readonly initial = Terrain.void) {
     this.internal = Grid.fill(width, height, initial)
   }
 
-  mutate() {
+  mutate(m?: Mutation | Mutation[]) {
     const mutation: Mutation = new Map()
     this.mutations.push(mutation)
-    return new Mutator(this.main, mutation)
+    const mutator = new Mutator(this.main, mutation)
+
+    if (m) {
+      if (Array.isArray(m)) {
+        m[0].forEach((e, pt) => mutator.set(pt, e))
+        m[1].forEach((f, k) => this.features.set(k, f))
+      } else {
+        m.forEach((e, pt) => mutator.set(pt, e))
+      }
+    }
+
+    return mutator
   }
 
   construct() {
@@ -33,8 +45,9 @@ export class Overseer {
   }
 
   next() {
-    if (this.index + 1 < this.mutations.length) {
-      for (const [pt, t] of this.mutations[++this.index]) this.internal.set(StrPt(pt), t)
+    if (this.index < this.mutations.length) {
+      for (const [pt, t] of this.mutations[this.index]) this.internal.set(StrPt(pt), t)
+      this.index++
       return true
     } else return false
   }
@@ -49,9 +62,10 @@ export class Overseer {
 class Mutator {
   constructor(private current: Mutation, private mutator: Mutation) {}
 
-  set(pt: Point, e: Entity) {
-    if (this.current.get(pt.s) === e) return
-    this.current.set(pt.s, e)
-    this.mutator.set(pt.s, e)
+  set(setPt: Point | string, e: Entity) {
+    const pts = typeof setPt === 'string' ? setPt : setPt.s
+    if (this.current.get(pts) === e) return
+    this.current.set(pts, e)
+    this.mutator.set(pts, e)
   }
 }
