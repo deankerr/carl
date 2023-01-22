@@ -119,6 +119,22 @@ export const TerrainData = {
     tag: ['walkable'],
     trodOn: 'You summit the peak.',
   },
+  tombstone: {
+    id: 'tombstone',
+    name: 'tombstone',
+    char: 'tombstone',
+    color: '#767676',
+    tag: ['walkable'],
+    trodOn: 'You bow your head solemnly in thoughtful prayer.',
+  },
+
+  column: {
+    id: 'column',
+    name: 'column',
+    char: 'column',
+    color: '#755b49',
+    tag: ['blocksLight'],
+  },
   void: {
     id: 'void',
     name: 'void',

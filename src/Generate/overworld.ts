@@ -21,18 +21,17 @@ export function overworld(width = 60, height = 29) {
   // TODO common level points, make this resuable
   const center = Pt(half(width), half(height))
 
-  repeat(10, () => walk(grid, Terrain.grass, 500))
-  repeat(10, () => walk(grid, Terrain.deadGrass, 100))
+  repeat(10, () => walk(grid, Terrain.grass, 500)) // grass
+  repeat(10, () => walk(grid, Terrain.deadGrass, 100)) // dead grass
 
+  // outer/inner space markers
   const mmut = grid.mutate()
   const outskirtsRect = Rect.at(Pt(0, 0), width, height).scale(-2)
-  const outSkirtsPts = outskirtsRect.toPts(true)
   const innerRect = outskirtsRect.scale(-5)
-  const innerPts = innerRect.toPts(true)
 
   // debug visual markers
-  outSkirtsPts.forEach(pt => mmut.set(pt, Terrain.path))
-  innerPts.forEach(pt => mmut.set(pt, Terrain.path))
+  // outSkirtsPts.forEach(pt => mmut.set(pt, Terrain.path))
+  // innerPts.forEach(pt => mmut.set(pt, Terrain.path))
 
   // outskirt decoration
   outskirtsRect.traverse((pt, edge) => {
@@ -62,6 +61,9 @@ export function overworld(width = 60, height = 29) {
     }
   })
 
+  // scattered shrubs
+  repeat(5, () => sparseWalk(grid, Terrain.shrub, 5, innerRect.rndEdgePt()))
+
   // western lake
   const westLakePt = Pt(outskirtsRect.x, center.y + rnd(-5, 5))
   repeat(4, () => walk(grid, Terrain.water, 30, westLakePt))
@@ -75,9 +77,9 @@ export function overworld(width = 60, height = 29) {
   const inX = innerRect.x
   const inX2 = innerRect.x2
   const structPts = mix([
-    Pt(inX + inSpace, center.y + rnd(-4, 4)),
-    Pt(inX + half(innerRect.width), center.y + rnd(-4, 4)),
-    Pt(inX2 - inSpace, center.y + rnd(-4, 4)),
+    Pt(inX + inSpace, center.y + rnd(-2, 2)),
+    Pt(inX + half(innerRect.width), center.y + rnd(-2, 2)),
+    Pt(inX2 - inSpace, center.y + rnd(-2, 2)),
   ])
 
   const bigRoom = new Room(rnd(9, 13), rnd(9, 13))
@@ -89,9 +91,11 @@ export function overworld(width = 60, height = 29) {
 
   grid.mutate(bigRoom.place(structPts[0]))
   grid.mutate(smallRoom.place(structPts[1]))
+  sparseWalk(grid, Terrain.tombstone, rnd(4, 8), structPts[2])
+  sparseWalk(grid, Terrain.column, 1, structPts[2])
 
   const temut = grid.mutate()
-  structPts.forEach(pt => temut.set(Pt(pt.x, center.y), Terrain.tree))
+  // structPts.forEach(pt => temut.set(Pt(pt.x, center.y), Terrain.tree))
   // const room = new Room({ floor: 'none', minWidth: 7, minHeight: 5, maxWidth: 11, maxHeight: 9 }).crumble().door()
   // grid.mutate(room.place(center))
 
@@ -118,6 +122,12 @@ function walk(grid: Overseer, type: Entity, amount: number, start?: Point) {
     pt = pt.add(dir)
     mutations.set(pt, type)
   })
+}
+
+function sparseWalk(grid: Overseer, type: Entity, amount: number, start?: Point) {
+  const mutations = grid.mutate()
+  const pt = start ?? grid.internal.rndPt()
+  repeat(amount, () => mutations.set(pt.add(Pt(rnd(-4, 4), rnd(-4, 4))), type))
 }
 
 /*

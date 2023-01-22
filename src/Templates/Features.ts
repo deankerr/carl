@@ -16,6 +16,20 @@ export const Features = {
     tag: ['walkable', 'memorable'],
     trodOn: 'You trample the pathetic shrub.',
   },
+  statue: {
+    id: 'statue',
+    name: 'statue',
+    char: 'statue',
+    color: '#5f574f',
+    tag: ['blocksLight'],
+  },
+  tombstone: {
+    id: 'tombstone',
+    name: 'tombstone',
+    char: 'tombstone',
+    color: '#5f574f',
+    tag: ['walkable'],
+  },
   flames: {
     id: 'flames',
     name: 'flames',
