@@ -31,8 +31,8 @@ export function overworld(width = 60, height = 29) {
   const innerPts = innerRect.toPts(true)
 
   // debug visual markers
-  // outSkirtsPts.forEach(pt => mmut.set(pt, Terrain.path))
-  // innerPts.forEach(pt => mmut.set(pt, Terrain.path))
+  outSkirtsPts.forEach(pt => mmut.set(pt, Terrain.path))
+  innerPts.forEach(pt => mmut.set(pt, Terrain.path))
 
   // outskirt decoration
   outskirtsRect.traverse((pt, edge) => {
@@ -71,20 +71,27 @@ export function overworld(width = 60, height = 29) {
   repeat(2, () => walk(grid, Terrain.water, 20, southLakePt))
 
   // ruined structures
-  const inSpace = innerRect.width / 4
+  const inSpace = innerRect.width / 6
   const inX = innerRect.x
+  const inX2 = innerRect.x2
   const structPts = mix([
     Pt(inX + inSpace, center.y + rnd(-4, 4)),
-    Pt(inX + inSpace * 2, center.y + rnd(-4, 4)),
-    Pt(inX + inSpace * 3, center.y + rnd(-4, 4)),
+    Pt(inX + half(innerRect.width), center.y + rnd(-4, 4)),
+    Pt(inX2 - inSpace, center.y + rnd(-4, 4)),
   ])
 
-  const bigRoom = new Room({ floor: 'none', minWidth: 9, minHeight: 7, maxWidth: 13, maxHeight: 11 }).crumble(2)
-  const smallRoom = new Room({ floor: 'none', minWidth: 7, minHeight: 5, maxWidth: 9, maxHeight: 7 }).crumble(2)
+  const bigRoom = new Room(rnd(9, 13), rnd(9, 13))
+    .degradedFloor(Terrain.void, -1)
+    .walls(10)
+    .crumble(3)
+    .door(Terrain.void)
+  const smallRoom = new Room(rnd(7, 9), rnd(7, 9)).degradedFloor(Terrain.void, -1).walls(10).crumble(2)
 
   grid.mutate(bigRoom.place(structPts[0]))
   grid.mutate(smallRoom.place(structPts[1]))
 
+  const temut = grid.mutate()
+  structPts.forEach(pt => temut.set(Pt(pt.x, center.y), Terrain.tree))
   // const room = new Room({ floor: 'none', minWidth: 7, minHeight: 5, maxWidth: 11, maxHeight: 9 }).crumble().door()
   // grid.mutate(room.place(center))
 

@@ -5,46 +5,46 @@ import { Point, Pt } from '../../Model/Point'
 import { Features, Terrain } from '../../Templates'
 import { Rect } from '../Rectangle'
 
-export type RoomOpts = {
-  wall?: Entity
-  floor?: Entity | 'none'
-  minWidth?: number
-  minHeight?: number
-  maxWidth?: number
-  maxHeight?: number
-}
-
-const defaultOpts = {
-  wall: Terrain.wall,
-  floor: Terrain.path,
-  minWidth: 5,
-  minHeight: 5,
-  maxWidth: 11,
-  maxHeight: 11,
-}
-
 export class Room {
   rect: Rect
-  wall: Entity
-  floor: Entity | 'none'
   map = new Map<string, Entity>()
   feature = new Map<string, Entity>()
 
-  constructor(setOpts: RoomOpts) {
-    const opts = { ...defaultOpts, ...setOpts }
-    this.rect = Rect.atC(Pt(0, 0), rnd(opts.minWidth, opts.maxWidth), rnd(opts.minHeight, opts.maxHeight))
-    this.wall = opts.wall
-    this.floor = opts.floor
-    this.rect.traverse((pt, edge) => {
-      if (edge) this.map.set(pt.s, rnd(5) < 5 ? this.wall : Terrain.crackedWall)
-      else if (this.floor !== 'none') this.map.set(pt.s, this.floor)
-    })
+  constructor(width: number, height: number) {
+    this.rect = Rect.atC(Pt(0, 0), width, height)
   }
 
-  door() {
+  walls(crackedPerc = 25) {
+    this.rect.traverse((pt, edge) => {
+      if (edge) {
+        this.map.set(pt.s, rnd(100) < crackedPerc ? Terrain.crackedWall : Terrain.wall)
+      }
+    })
+    return this
+  }
+
+  floor(type: Entity) {
+    this.rect.traverse((pt, edge) => {
+      if (!edge) {
+        this.map.set(pt.s, type)
+      }
+    })
+    return this
+  }
+
+  degradedFloor(type: Entity, scale: number) {
+    const inner = this.rect.scale(scale)
+    inner.traverse((pt, edge) => {
+      if (edge) {
+        rnd(1) && this.map.set(pt.s, type)
+      } else rnd(16) && this.map.set(pt.s, type)
+    })
+    return this
+  }
+
+  door(beneath: Entity) {
     const pt = this.rect.rndEdgePt().s
-    if (this.floor !== 'none') this.map.set(pt, this.floor)
-    else this.map.delete(pt)
+    this.map.set(pt, beneath)
     this.feature.set(pt, Features.door)
     return this
   }
@@ -54,14 +54,13 @@ export class Room {
       const pt = this.rect.rndEdgePt()
       this.map.delete(pt.s)
       pt.neighbors().forEach(npt => {
-        const r = rnd(3)
-        if (this.map.get(npt.s) === this.wall) {
+        if (this.map.get(npt.s) === Terrain.wall) {
           // if wall, delete or crack
-          if (r <= 1) this.map.delete(npt.s)
+          if (rnd(0)) this.map.delete(npt.s)
           else this.map.set(npt.s, Terrain.crackedWall)
         } else {
           // if not, small chance to crack
-          if (!r) this.map.set(npt.s, Terrain.crackedWall)
+          if (!rnd(4)) this.map.set(npt.s, Terrain.crackedWall)
         }
       })
     })
