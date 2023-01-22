@@ -1,7 +1,7 @@
 import { Entity, hydrate } from '../Core/Entity'
-// export type TerrainTemplate = typeof Terrain[keyof typeof Terrain]
+export type TerrainTemplate = typeof Terrain[keyof typeof Terrain]
 
-export const TerrainData = {
+export const Terrain = {
   path: {
     id: 'path',
     name: 'path',
@@ -89,20 +89,13 @@ export const TerrainData = {
     color: '#664f47',
     tag: ['walkable'],
   },
-  shrub: {
-    id: 'shrub',
-    name: 'shrub',
-    char: 'shrub',
-    color: '#58a54a',
-    tag: ['walkable'],
-  },
-  tree: {
-    id: 'tree',
-    name: 'tree',
-    char: 'tree',
-    color: 'forestgreen',
-    tag: ['walkable'],
-  },
+  // tree: {
+  //   id: 'tree',
+  //   name: 'tree',
+  //   char: 'tree',
+  //   color: 'forestgreen',
+  //   tag: ['walkable'],
+  // },
   mound: {
     id: 'mound',
     name: 'mound',
@@ -119,14 +112,14 @@ export const TerrainData = {
     tag: ['walkable'],
     trodOn: 'You summit the peak.',
   },
-  tombstone: {
-    id: 'tombstone',
-    name: 'tombstone',
-    char: 'tombstone',
-    color: '#767676',
-    tag: ['walkable'],
-    trodOn: 'You bow your head solemnly in thoughtful prayer.',
-  },
+  // tombstone: {
+  //   id: 'tombstone',
+  //   name: 'tombstone',
+  //   char: 'tombstone',
+  //   color: '#767676',
+  //   tag: ['walkable'],
+  //   trodOn: 'You bow your head solemnly in thoughtful prayer.',
+  // },
 
   column: {
     id: 'column',
@@ -151,6 +144,8 @@ export const TerrainData = {
   },
 }
 
-export const Terrain = Object.entries(TerrainData).reduce((acc, curr) => {
-  return { ...acc, [curr[0]]: hydrate(curr[1]) }
-}, {}) as { [P in keyof typeof TerrainData]: Entity }
+export function createSymbolicTerrain() {
+  return Object.entries(Terrain).reduce((acc, curr) => {
+    return { ...acc, [curr[0]]: hydrate(curr[1]) }
+  }, {}) as { [P in keyof typeof Terrain]: Entity }
+}

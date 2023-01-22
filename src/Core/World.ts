@@ -3,19 +3,19 @@ import { Game } from './Game'
 import { Entity, EntityTemplates, hydrate } from './Entity'
 import { Components, componentName } from './Components'
 import { Graphic, tagCurrentTurn } from '../Component'
-import { Beings, Features } from '../Templates'
+import { Beings, Features, TerrainTemplate } from '../Templates'
 import { createDomains, Domain, DomainMap } from '../Generate/domains'
 import { Level } from '../Model/Level'
-import { Point, Pt } from '../Model/Point'
+import { Point, Pt, StrPt } from '../Model/Point'
 import { objLog } from '../lib/util'
 import { colorizeMessage, Message } from '../lib/messages'
-import { Terrain } from '../Templates'
+import { Grid } from '../Model/Grid'
 
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 
 export class World {
   options: Game['options']
-  terrain = Terrain
+  terrain = new Map<TerrainTemplate, Entity>()
 
   hasChanged = true // trigger a rerender on next animation frame
 
@@ -30,8 +30,6 @@ export class World {
 
   constructor(options: Game['options']) {
     this.options = options
-
-    // create terrain
 
     // initialize world structure, set root level as active
     const [domainMap, root] = createDomains()
@@ -49,14 +47,22 @@ export class World {
     // generate a level if it does not yet exist
     if (index > domain.levels.length - 1) {
       console.log('create', domain?.label, index)
-      const [level, entityTemplates] = domain.generator()
+      const overseer = domain.generator()
+
+      const grid = Grid.fill(overseer.width, overseer.height, this.getTerrain(overseer.initial))
+      for (const [pt, v] of overseer.terrain) {
+        grid.set(StrPt(pt), this.getTerrain(v))
+      }
+
+      const level = new Level('bbb', grid)
+      level.overseer = overseer
 
       domain.levels.push(level)
       this.active = domain.levels[index]
       this.activeIndex = index
       this.domain = domain
 
-      this.createTemplates(entityTemplates)
+      // this.createTemplates(entityTemplates)
       this.createPlayer()
     } else {
       console.log('change', domain?.label, index)
@@ -64,6 +70,14 @@ export class World {
       this.activeIndex = index
       this.domain = domain
     }
+  }
+
+  getTerrain(template: TerrainTemplate) {
+    const t = this.terrain.get(template)
+    if (t) return t
+    const newTerrain = hydrate(template)
+    this.terrain.set(template, newTerrain)
+    return newTerrain
   }
 
   changeLevel(dir: number) {

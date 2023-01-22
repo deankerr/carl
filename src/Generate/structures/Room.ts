@@ -1,13 +1,14 @@
 // import * as ROT from 'rot-js'
-import { Entity } from '../../Core/Entity'
+import { Entity, EntityTemplate } from '../../Core/Entity'
 import { repeat, rnd } from '../../lib/util'
 import { Point, Pt } from '../../Model/Point'
 import { Features, Terrain } from '../../Templates'
+import { Mutator } from '../Overseer'
 import { Rect } from '../Rectangle'
 
 export class Room {
   rect: Rect
-  map = new Map<string, Entity>()
+  map = new Map<string, Entity | EntityTemplate>()
   feature = new Map<string, Entity>()
 
   constructor(width: number, height: number) {
@@ -67,17 +68,18 @@ export class Room {
     return this
   }
 
-  place(pt: Point) {
-    const placed = new Map<string, Entity>()
+  place(pt: Point, mutator: Mutator) {
+    // const placed = new Map<string, Entity>()
     for (const [pts, e] of this.map) {
-      placed.set(pt.add(pts).s, e)
+      console.log('hi')
+      mutator.set(pt.add(pts).s, e)
     }
 
-    const placedFeatures = new Map<string, Entity>()
-    for (const [pts, e] of this.feature) {
-      placedFeatures.set(pts, e)
-    }
+    // const placedFeatures = new Map<string, Entity>()
+    // for (const [pts, e] of this.feature) {
+    //   placedFeatures.set(pts, e)
+    // }
 
-    return [placed, placedFeatures]
+    // return [placed, placedFeatures]
   }
 }

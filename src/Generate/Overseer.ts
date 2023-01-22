@@ -1,41 +1,34 @@
-import { Entity } from '../Core/Entity'
+import { EntityTemplate } from '../Core/Entity'
 import { Grid } from '../Model/Grid'
 import { Point, StrPt } from '../Model/Point'
-import { Terrain } from '../Templates'
+import { Terrain, TerrainTemplate } from '../Templates'
 
-export type Mutation = Map<string, Entity>
+export type Mutation = Map<string, EntityTemplate>
 
 export class Overseer {
-  internal: Grid<Entity>
-  main: Mutation = new Map()
+  internal: Grid<TerrainTemplate>
+  terrain = new Map<string, TerrainTemplate>()
   mutations: Mutation[] = []
-  features: Mutation = new Map()
 
   constructor(readonly width: number, readonly height: number, readonly initial = Terrain.void) {
     this.internal = Grid.fill(width, height, initial)
   }
 
-  mutate(m?: Mutation | Mutation[]) {
+  mutator() {
     const mutation: Mutation = new Map()
     this.mutations.push(mutation)
-    const mutator = new Mutator(this.main, mutation)
-
-    if (m) {
-      if (Array.isArray(m)) {
-        m[0].forEach((e, pt) => mutator.set(pt, e))
-        m[1].forEach((f, k) => this.features.set(k, f))
-      } else {
-        m.forEach((e, pt) => mutator.set(pt, e))
-      }
-    }
-
+    const mutator = new Mutator(this.terrain, mutation)
     return mutator
   }
 
   construct() {
     const result = Grid.fill(this.width, this.height, this.initial)
-    for (const [pt, t] of this.main) result.set(StrPt(pt), t)
+    for (const [pt, t] of this.terrain) result.set(StrPt(pt), t)
     return result
+  }
+
+  rndPt() {
+    return this.internal.rndPt()
   }
 
   // playback
@@ -59,13 +52,13 @@ export class Overseer {
   }
 }
 
-class Mutator {
-  constructor(private current: Mutation, private mutator: Mutation) {}
+export class Mutator {
+  constructor(private main: Mutation, private mutator: Mutation) {}
 
-  set(setPt: Point | string, e: Entity) {
+  set(setPt: Point | string, e: EntityTemplate) {
     const pts = typeof setPt === 'string' ? setPt : setPt.s
-    if (this.current.get(pts) === e) return
-    this.current.set(pts, e)
+    if (this.main.get(pts) === e) return
+    if (Object.values(Terrain).includes(e)) this.main.set(pts, e)
     this.mutator.set(pts, e)
   }
 }

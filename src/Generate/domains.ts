@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // read the domain template file, create domain nodes and link them
 import * as Templates from '../Templates'
-import * as Generate from '../Generate'
-import { testLevel } from './testLevel'
 import { overworld } from './overworld'
 import { Level } from '../Model/Level'
+import { Overseer } from './Overseer'
 
 export function createDomains(): [DomainMap, Domain] {
   // process templates into nodes without connections
@@ -45,7 +44,7 @@ export type Domain = {
   seen: boolean
   revealed: boolean
   playerFOV: number
-  generator: (...args: any[]) => any // TODO gen params
+  generator: (...args: any[]) => Overseer // TODO gen params
   levels: Level[]
   connections: {
     top: Domain | undefined
@@ -58,9 +57,9 @@ export type Domain = {
 export type DomainMap = Record<string, Domain>
 
 const generators: Record<string, Domain['generator']> = {
-  outdoor: Generate.outdoor,
-  dungeon4: Generate.dungeon4,
-  ruin1: Generate.prefabRuin1,
-  testLevel: testLevel,
+  // outdoor: Generate.outdoor,
+  // dungeon4: Generate.dungeon4,
+  // ruin1: Generate.prefabRuin1,
+  // testLevel: testLevel,
   overworld: overworld,
 }

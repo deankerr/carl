@@ -68,3 +68,12 @@ export const repeatUntil = (callback: () => unknown, times: number) => {
     if (callback()) break
   }
 }
+
+export function* range(n: number, max?: number, step = 1) {
+  let value = max ? n : 0
+  const to = max ?? n
+  while (value <= to) {
+    yield value
+    value += step
+  }
+}
