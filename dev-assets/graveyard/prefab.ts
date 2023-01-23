@@ -1,11 +1,11 @@
 import { ruin1 } from './prefab/ruin1'
-import { Point, Pt } from '../Model/Point'
-import { Grid } from '../Model/Grid'
-import { Level } from '../Model/Level'
+import { Point, Pt } from '../../src/Model/Point'
+import { Grid } from '../../src/Model/Grid'
+import { Level } from '../../src/Model/Level'
 import { NewLevel } from './generate'
 import { populateNPCs } from './features'
-import { createTemplates, Entity } from '../Core/Entity'
-import { Features } from '../Templates'
+import { createTemplates, Entity } from '../../src/Core/Entity'
+import { Features } from '../../src/Templates'
 
 export const prefabRuin1 = (): NewLevel => {
   const fakeRooms: Point[][] = []

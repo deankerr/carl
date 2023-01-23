@@ -3,15 +3,15 @@
  up in the main game functions
  */
 
-import { Grid } from '../Model/Grid'
+import { Grid } from '../../src/Model/Grid'
 import { create } from './dungeon4/'
-import { Pt } from '../Model/Point'
-import { CONFIG } from '../config'
-import { Level } from '../Model/Level'
-import { EntityTemplates, createTemplates } from '../Core/Entity'
+import { Pt } from '../../src/Model/Point'
+import { CONFIG } from '../../src/config'
+import { Level } from '../../src/Model/Level'
+import { EntityTemplates, createTemplates } from '../../src/Core/Entity'
 import { createDecor, populateNPCs } from './features'
-import { Beings } from '../Templates'
-import { Features } from '../Templates/Features'
+import { Beings } from '../../src/Templates'
+import { Features } from '../../src/Templates/Features'
 
 export type NewLevel = [Level, EntityTemplates]
 

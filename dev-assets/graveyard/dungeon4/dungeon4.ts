@@ -10,7 +10,7 @@
 // TODO return Room[], Corridor[] along with data
 
 import * as ROT from 'rot-js'
-import { Rect } from '../Rectangle'
+import { Rectangle } from '../../Model/Rectangle'
 import { digCorridor, digRect, digRoom, digPts } from './dig'
 import { copy } from '../../lib/util'
 
@@ -103,8 +103,8 @@ export function create(newConfig?: Partial<GEN_CONFIG>): [number[][], Room[], Po
 
   // set up
   current = [...new Array(CONFIG.height)].map(() => new Array(CONFIG.width).fill(' '))
-  current = digRect(current, Rect.at(0, 0, CONFIG.width, CONFIG.height), '·')
-  current = digRect(current, Rect.at(1, 1, CONFIG.width - 2, CONFIG.height - 2), ' ')
+  current = digRect(current, Rectangle.at(0, 0, CONFIG.width, CONFIG.height), '·')
+  current = digRect(current, Rectangle.at(1, 1, CONFIG.width - 2, CONFIG.height - 2), ' ')
 
   // wipe old history (store this?)
   history = []
@@ -154,7 +154,7 @@ function finalize(rooms: Room[], corridors: Corridor[]): [CharMap, Room[], Point
     const shiftedRooms = rooms.map(r => {
       const { x, y, width, height } = r.rect
       // console.log('old rect', r)
-      const rect = Rect.at(x + dx, y + dy, width, height)
+      const rect = Rectangle.at(x + dx, y + dy, width, height)
       // console.log('new rect', rect)
       return new Room(rect, r.label, 1)
     })
@@ -261,7 +261,7 @@ export function inBounds(x: number, y: number, within = 0) {
   return x >= 0 + within && x < CONFIG.width - within && y >= 0 + within && y < CONFIG.height - within
 }
 
-export function rectInBounds(rect: Rect, within = 0) {
+export function rectInBounds(rect: Rectangle, within = 0) {
   return inBounds(rect.x, rect.y, within) && inBounds(rect.x2, rect.y2, within)
 }
 
@@ -346,18 +346,18 @@ export type CharMap = string[][]
 export type Point = { x: number; y: number }
 
 export class Room {
-  readonly rect: Rect
+  readonly rect: Rectangle
   readonly label: string
-  border: Rect
+  border: Rectangle
 
-  constructor(rect: Rect, label: string | number, borderSize: number) {
+  constructor(rect: Rectangle, label: string | number, borderSize: number) {
     this.rect = rect
     this.label = `${label}`
     this.border = rect.scale(borderSize)
   }
 
   static scaled(x: number, y: number, xScale: number, yScale: number, label: string | number = '?', borderSize = 1) {
-    const rect = Rect.scaled(x, y, xScale, yScale)
+    const rect = Rectangle.scaled(x, y, xScale, yScale)
 
     return new Room(rect, label, borderSize)
   }

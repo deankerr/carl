@@ -1,3 +1,3 @@
-export * from './generate'
-export * from './prefab'
-export * from './outdoor'
+export * from '../../dev-assets/graveyard/generate'
+export * from '../../dev-assets/graveyard/prefab'
+export * from '../../dev-assets/graveyard/outdoor'

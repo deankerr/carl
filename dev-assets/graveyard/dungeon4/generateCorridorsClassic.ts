@@ -24,7 +24,7 @@
 
 import * as ROT from 'rot-js'
 import { CharMap, copy, Corridor, createBlankMap, inBounds, Point, Room, snapshot } from './dungeon4'
-import { Rect } from '../Rectangle'
+import { Rectangle } from '../../Model/Rectangle'
 import { digCorridor, digPts, digRect, digRoom } from './dig'
 
 const maxCorridorAttempts = 50
@@ -72,19 +72,19 @@ export function generateCorridorsClassic(rooms: Room[]): [Corridor[], number] {
       corridors.push(corridor)
       // update rooms
       const roomsPathed = new Set<Room>()
-      corridor.points.forEach((pt) => {
-        const room = rooms.find((r) => r.rect.intersectsPt(pt))
+      corridor.points.forEach(pt => {
+        const room = rooms.find(r => r.rect.intersectsPt(pt))
         if (room) roomsPathed.add(room)
       })
 
-      unconnected = unconnected.filter((r) => ![...roomsPathed].includes(r))
+      unconnected = unconnected.filter(r => ![...roomsPathed].includes(r))
       console.log('unconnected is now:', unconnected)
 
       level = digCorridor(level, corridor, '.')
       snapshot(level, 'Corridor created', 'corrsuccess')
       // set up next round
       next = unconnected[0]
-      targets = rooms.filter((r) => !unconnected.includes(r))
+      targets = rooms.filter(r => !unconnected.includes(r))
     } else {
       // TODO better stages of desperation as the misses pile up
       // try to set a different origin (/target?)
@@ -93,17 +93,17 @@ export function generateCorridorsClassic(rooms: Room[]): [Corridor[], number] {
       console.log('origin:', origin, 'target', target)
       console.log('targets:', targets)
       console.log('unconnected:', unconnected)
-      const newNext = ROT.RNG.getItem(unconnected.filter((r) => r !== origin))
+      const newNext = ROT.RNG.getItem(unconnected.filter(r => r !== origin))
       if (!newNext) {
         // this is this last origin? try removing the last target
-        targets = targets.filter((r) => r !== target)
+        targets = targets.filter(r => r !== target)
         snapshot(level, "This isn't working. Trying new target.", 'pathtarget')
         console.warn('Try removing last target')
       } else {
         // try random target
 
-        targets = targets.filter((r) => r !== target)
-        if (targets.length === 0) targets = unconnected.filter((r) => r !== target)
+        targets = targets.filter(r => r !== target)
+        if (targets.length === 0) targets = unconnected.filter(r => r !== target)
         if (targets.length === 0) throw new Error('I give up.')
         snapshot(level, "This isn't working. Trying new target.", 'pathtarget')
 
@@ -151,7 +151,7 @@ function connectRooms(level: CharMap, origin: Room, target: Room) {
     let corrMap = digPts(currentMap, [from, to], 'p')
     corrMap = digPts(
       corrMap,
-      bannedOrigins.map((p) => s2pt(p)),
+      bannedOrigins.map(p => s2pt(p)),
       'x'
     )
     snapshot(corrMap, `Path ${origin.label} to ${target.label} ${attempts}/${innerMax}`, 'path')
@@ -179,7 +179,7 @@ function connectRooms(level: CharMap, origin: Room, target: Room) {
       }
 
       // dig visual
-      corrMap = digRect(corrMap, Rect.scaled(pt.x, pt.y, 2, 2), 'w', 'crwp0123456789.xW')
+      corrMap = digRect(corrMap, Rectangle.scaled(pt.x, pt.y, 2, 2), 'w', 'crwp0123456789.xW')
       corrMap = digPts(corrMap, pt, 'p')
       snapshot(corrMap, `Path ${origin.label} to ${target.label} ${attempts}/${innerMax}`, 'path')
       return true
@@ -214,7 +214,7 @@ function floodFind(origin: Room, targets: Room[], map: CharMap) {
   const useONeighbours = true // config
   const t = Date.now()
   // const start = pt2s({ x: origin.rect.cx, y: origin.rect.cy })
-  const start = origin.border.toPts().map((pt) => pt2s(pt))
+  const start = origin.border.toPts().map(pt => pt2s(pt))
   let frontier = new Set<string>([...start])
   const searched = new Set<string>([...start])
   const hit: Point[] = []
@@ -233,14 +233,14 @@ function floodFind(origin: Room, targets: Room[], map: CharMap) {
       if (
         map[realpt.y][realpt.x] === 'w' &&
         !origin.border.intersectsPt(realpt) &&
-        targets.some((r) => r.border.intersectsPt(realpt))
+        targets.some(r => r.border.intersectsPt(realpt))
       ) {
         console.log('hit!')
         hit.push(realpt)
       } else {
         // not found, mark as reached and get unreached neighs for next round
         const neigh = useONeighbours ? getONeighbours(pt) : getNeighbours(pt)
-        neigh.forEach((n) => {
+        neigh.forEach(n => {
           if (!searched.has(n) && !frontier.has(n)) {
             nextFrontier.add(n)
           }
@@ -250,7 +250,7 @@ function floodFind(origin: Room, targets: Room[], map: CharMap) {
 
     // visual only
     const pts: Point[] = []
-    frontier.forEach((p) => pts.push(s2pt(p)))
+    frontier.forEach(p => pts.push(s2pt(p)))
     let mark = digPts(map, pts, 'f')
 
     if (hit.length === 0) {
@@ -272,7 +272,7 @@ function floodFind(origin: Room, targets: Room[], map: CharMap) {
 
   console.warn(`Flood end ${Date.now() - t}ms`, flooda, max)
 
-  const roomsFound = hit.map((h) => targets.find((r) => r.border.intersectsPt(h))) as Room[]
+  const roomsFound = hit.map(h => targets.find(r => r.border.intersectsPt(h))) as Room[]
   const set = new Set<Room>([...roomsFound])
   console.log('roomsFound:', ...set)
   console.groupEnd()
@@ -316,8 +316,8 @@ function getONeighbours(pStr: string): string[] {
   const ps = { x: p.x, y: p.y + 1 }
   const pw = { x: p.x - 1, y: p.y }
   const neigh = [pn, pe, ps, pw]
-  const valid = neigh.filter((n) => inBounds(n.x, n.y))
-  return valid.map((v) => pt2s(v))
+  const valid = neigh.filter(n => inBounds(n.x, n.y))
+  return valid.map(v => pt2s(v))
 }
 
 function pt2s(p: Point) {

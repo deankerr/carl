@@ -1,6 +1,6 @@
 import { createBlankMap, snapshot, rnd, CharMap, Room, floor, rndO, max, GEN_CONFIG } from './dungeon4'
 import { digRect, digRectCycleChars, digRoom } from './dig'
-import { Rect } from '../Rectangle'
+import { Rectangle } from '../../Model/Rectangle'
 
 // a (sort of) Binary Space Partition based room generator
 
@@ -33,7 +33,7 @@ export function generateRoomsBSP(newConfig: GEN_CONFIG): [Room[], number] {
   const levelMaxY = current.length - 1
 
   // create initial sector
-  const initialRect = Rect.atxy2(
+  const initialRect = Rectangle.atxy2(
     CONFIG.levelEdge,
     CONFIG.levelEdge,
     levelMaxX - CONFIG.levelEdge,
@@ -43,7 +43,7 @@ export function generateRoomsBSP(newConfig: GEN_CONFIG): [Room[], number] {
 
   // create queue
   const queue = [initialRect]
-  const complete: Rect[] = [] // keep sectors that can't be split here instead of on the queue
+  const complete: Rectangle[] = [] // keep sectors that can't be split here instead of on the queue
   let sectorN = 0 // used for sector ids
 
   // draw first sector
@@ -122,7 +122,7 @@ export function generateRoomsBSP(newConfig: GEN_CONFIG): [Room[], number] {
   return [rooms, timerEnd]
 }
 
-function split(parent: Rect) {
+function split(parent: Rectangle) {
   // Decide which axis to split
   const canSplitVert = parent.width > CONFIG.minSectorW * 2 + 1
   const canSplitHori = parent.height > CONFIG.minSectorH * 2 + 1
@@ -152,26 +152,26 @@ function split(parent: Rect) {
 
   // --- visual only - draw line
   const lineRect = splitV
-    ? Rect.atxy2(splitPt, parent.y, splitPt, parent.y2)
-    : Rect.atxy2(parent.x, splitPt, parent.x2, splitPt)
+    ? Rectangle.atxy2(splitPt, parent.y, splitPt, parent.y2)
+    : Rectangle.atxy2(parent.x, splitPt, parent.x2, splitPt)
 
   current = digRect(current, lineRect, splitV ? '|' : '-')
   // ------
 
   // Birth children
   const child1 = splitV
-    ? Rect.atxy2(parent.x, parent.y, splitPt - 1, parent.y2)
-    : Rect.atxy2(parent.x, parent.y, parent.x2, splitPt - 1)
+    ? Rectangle.atxy2(parent.x, parent.y, splitPt - 1, parent.y2)
+    : Rectangle.atxy2(parent.x, parent.y, parent.x2, splitPt - 1)
 
   const child2 = splitV
-    ? Rect.atxy2(splitPt + 1, parent.y, parent.x2, parent.y2)
-    : Rect.atxy2(parent.x, splitPt + 1, parent.x2, parent.y2)
+    ? Rectangle.atxy2(splitPt + 1, parent.y, parent.x2, parent.y2)
+    : Rectangle.atxy2(parent.x, splitPt + 1, parent.x2, parent.y2)
 
   return [child1, child2]
 }
 
 // TODO better control of room size distribution
-function createRooms(current: CharMap, rects: Rect[]) {
+function createRooms(current: CharMap, rects: Rectangle[]) {
   //console.log('createRooms()')
 
   const rooms = rects.map((parent, i) => {
@@ -204,7 +204,7 @@ function createRooms(current: CharMap, rects: Rect[]) {
     const ySpace = parent.y2 - (parent.y + h)
     const y = rnd(parent.y + 1, parent.y + ySpace)
 
-    const roomRect = Rect.at(x, y, w, h)
+    const roomRect = Rectangle.at(x, y, w, h)
 
     const room = new Room(roomRect, i, 1)
 

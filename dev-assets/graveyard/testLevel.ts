@@ -3,7 +3,7 @@ import { Grid } from '../Model/Grid'
 import { Level } from '../Model/Level'
 import { createTemplates } from '../Core/Entity'
 import { Features } from '../Templates'
-import { NewLevel } from './generate'
+import { NewLevel } from '../../dev-assets/graveyard/generate'
 import { floor, half } from '../lib/util'
 import { Pt } from '../Model/Point'
 

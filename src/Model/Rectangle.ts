@@ -1,8 +1,8 @@
 // import * as ROT from 'rot-js'
 import { pick, rnd } from '../lib/util'
-import { Pt, Point } from '../Model/Point'
+import { Pt, Point } from './Point'
 
-export class Rect {
+export class Rectangle {
   // Top left to bottom right
   readonly x: number
   readonly y: number
@@ -56,7 +56,7 @@ export class Rect {
 
   // TODO handle arrays, ts generic
   // Tests if another Rect intersects this, if so returns the Pts where it does
-  intersects(rect: Rect) {
+  intersects(rect: Rectangle) {
     if (this === rect) console.warn('Did you mean to check if a rect intersects itself?', this, rect)
 
     // Quick test if rects intersect
@@ -76,7 +76,7 @@ export class Rect {
   }
 
   // Is a rect fully contained within this rect (or overlap perfectly)?
-  contains(rect: Rect) {
+  contains(rect: Rectangle) {
     return this.x <= rect.x && this.x2 >= rect.x2 && this.y <= rect.y && this.y2 >= rect.y2
   }
 
@@ -87,11 +87,11 @@ export class Rect {
     const width = this.width + xBy * 2
     const height = this.height + xBy * 2
     // enforce minimum of size 1 to avoid weirdness
-    return Rect.at(Pt(x, y), width > 0 ? width : 1, height > 0 ? height : 1)
+    return Rectangle.at(Pt(x, y), width > 0 ? width : 1, height > 0 ? height : 1)
   }
 
   translate(x: number, y: number) {
-    return Rect.at(Pt(this.x + x, this.y + y), this.width, this.height)
+    return Rectangle.at(Pt(this.x + x, this.y + y), this.width, this.height)
   }
 
   // Return list of each pt in the rect. outer = outermost edge only
@@ -134,19 +134,19 @@ export class Rect {
 
   // Constructor alias
   static at(pt: Point, width: number, height: number, id = 0) {
-    return new Rect(pt, width, height, id)
+    return new Rectangle(pt, width, height, id)
   }
 
   // Center-point based
   static atC(pt: Point, width: number, height: number, id = 0) {
     const x = pt.x - Math.floor(width / 2)
     const y = pt.y - Math.floor(height / 2)
-    return new Rect(Pt(x, y), width, height, id)
+    return new Rectangle(Pt(x, y), width, height, id)
   }
 
   // From x/y to x2/y2
   static atxy2(pt: Point, pt2: Point, id = 0) {
-    return new Rect(pt, pt2.x - pt.x + 1, pt2.y - pt.y + 1, id)
+    return new Rectangle(pt, pt2.x - pt.x + 1, pt2.y - pt.y + 1, id)
   }
 
   // By size, eg xSize 1 = 1, 2 = 3, 3 = 5 etc.

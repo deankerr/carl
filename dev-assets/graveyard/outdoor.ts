@@ -1,13 +1,13 @@
 // import * as ROT from 'rot-js'
-import { CONFIG } from '../config'
-import { Level } from '../Model/Level'
-import { Grid } from '../Model/Grid'
+import { CONFIG } from '../../src/config'
+import { Level } from '../../src/Model/Level'
+import { Grid } from '../../src/Model/Grid'
 import { NewLevel } from './generate'
-import { half, rnd, repeat } from '../lib/util'
-import { Point, Pt } from '../Model/Point'
+import { half, rnd, repeat } from '../../src/lib/util'
+import { Point, Pt } from '../../src/Model/Point'
 import { outdoorRuin } from './prefab/outdoorRuin'
-import { createTemplates } from '../Core/Entity'
-import { Beings, Features, Terrain } from '../Templates'
+import { createTemplates } from '../../src/Core/Entity'
+import { Beings, Features, Terrain } from '../../src/Templates'
 
 const lwidth = CONFIG.genLevelsAtDisplaySize ? CONFIG.mainDisplayWidth : CONFIG.levelWidth
 const lheight = CONFIG.genLevelsAtDisplaySize ? CONFIG.mainDisplayHeight : CONFIG.levelHeight

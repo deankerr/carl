@@ -1,5 +1,5 @@
 import { CharMap, Room, Corridor, Point } from './dungeon4'
-import { Rect } from '../Rectangle'
+import { Rectangle } from '../../Model/Rectangle'
 import { inBounds, copy } from './dungeon4'
 
 export function digCorridor(map: CharMap, corridor: Corridor | Corridor[], char = '.', borderChar = 'w') {
@@ -9,9 +9,9 @@ export function digCorridor(map: CharMap, corridor: Corridor | Corridor[], char 
   let newMap = copy(map)
   const corridors: Corridor[] = Array.isArray(corridor) ? corridor : [corridor]
 
-  corridors.forEach((c) => {
+  corridors.forEach(c => {
     for (const pt of c.points) {
-      const wallRect = Rect.scaled(pt.x, pt.y, 2, 2)
+      const wallRect = Rectangle.scaled(pt.x, pt.y, 2, 2)
       newMap = digRect(newMap, wallRect, borderChar[0], wallIgnore)
       newMap = digPts(newMap, pt, char[0], pIgnore)
     }
@@ -31,7 +31,7 @@ export function digRoom(
   let newMap = copy(map)
   const rooms = Array.isArray(room) ? room : [room]
 
-  rooms.forEach((r) => {
+  rooms.forEach(r => {
     newMap = digRect(newMap, r.border, borderChar)
     newMap = digRect(newMap, r.rect, char)
     if (showLabel) {
@@ -54,7 +54,7 @@ export function digRoom(
   return newMap
 }
 
-export function digRect(map: CharMap, rect: Rect, char: string | number, ignore = '') {
+export function digRect(map: CharMap, rect: Rectangle, char: string | number, ignore = '') {
   const newLevel = copy(map)
   const c = `${char}`[0]
   rect.traverse((x, y) => {
@@ -63,7 +63,7 @@ export function digRect(map: CharMap, rect: Rect, char: string | number, ignore 
   return newLevel
 }
 
-export function digRectCycleChars(map: CharMap, rect: Rect, char: string | number, ignore = '') {
+export function digRectCycleChars(map: CharMap, rect: Rectangle, char: string | number, ignore = '') {
   const newLevel = copy(map)
   const c = `${char}`
   const l = c.length
