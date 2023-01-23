@@ -1,5 +1,5 @@
 // import * as ROT from 'rot-js'
-import { Entity, EntityTemplate } from '../../Core/Entity'
+import { EntityTemplate } from '../../Core/Entity'
 import { repeat, rnd } from '../../lib/util'
 import { Point, Pt } from '../../Model/Point'
 import { Features, Terrain } from '../../Templates'
@@ -8,8 +8,8 @@ import { Rect } from '../Rectangle'
 
 export class Room {
   rect: Rect
-  map = new Map<string, Entity | EntityTemplate>()
-  feature = new Map<string, Entity>()
+  map = new Map<string, EntityTemplate>()
+  feature = new Map<string, EntityTemplate>()
 
   constructor(width: number, height: number) {
     this.rect = Rect.atC(Pt(0, 0), width, height)
@@ -24,7 +24,7 @@ export class Room {
     return this
   }
 
-  floor(type: Entity) {
+  floor(type: EntityTemplate) {
     this.rect.traverse((pt, edge) => {
       if (!edge) {
         this.map.set(pt.s, type)
@@ -33,7 +33,7 @@ export class Room {
     return this
   }
 
-  degradedFloor(type: Entity, scale: number) {
+  degradedFloor(type: EntityTemplate, scale: number) {
     const inner = this.rect.scale(scale)
     inner.traverse((pt, edge) => {
       if (edge) {
@@ -43,7 +43,7 @@ export class Room {
     return this
   }
 
-  door(beneath: Entity) {
+  door(beneath: EntityTemplate) {
     const pt = this.rect.rndEdgePt().s
     this.map.set(pt, beneath)
     this.feature.set(pt, Features.door)

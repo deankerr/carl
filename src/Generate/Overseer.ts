@@ -9,15 +9,18 @@ export class Overseer {
   internal: Grid<TerrainTemplate>
   terrain = new Map<string, TerrainTemplate>()
   mutations: Mutation[] = []
+  entityMutations: Mutation[] = []
 
   constructor(readonly width: number, readonly height: number, readonly initial = Terrain.void) {
     this.internal = Grid.fill(width, height, initial)
   }
 
-  mutator() {
+  mutate() {
     const mutation: Mutation = new Map()
+    const entityMutations: Mutation = new Map()
     this.mutations.push(mutation)
-    const mutator = new Mutator(this.terrain, mutation)
+    this.entityMutations.push(entityMutations)
+    const mutator = new Mutator(this.terrain, mutation, entityMutations)
     return mutator
   }
 
@@ -53,12 +56,14 @@ export class Overseer {
 }
 
 export class Mutator {
-  constructor(private main: Mutation, private mutator: Mutation) {}
+  constructor(private main: Mutation, private mutator: Mutation, private entityMutator: Mutation) {}
 
   set(setPt: Point | string, e: EntityTemplate) {
     const pts = typeof setPt === 'string' ? setPt : setPt.s
     if (this.main.get(pts) === e) return
-    if (Object.values(Terrain).includes(e)) this.main.set(pts, e)
-    this.mutator.set(pts, e)
+    if (Object.values(Terrain).includes(e)) {
+      this.main.set(pts, e)
+      this.mutator.set(pts, e)
+    } else this.entityMutator.set(pts, e)
   }
 }

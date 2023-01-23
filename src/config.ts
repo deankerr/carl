@@ -11,7 +11,7 @@ const CONFIG = {
   messageDisplayHeight: 4,
   genLevelsAtDisplaySize: true,
   levelWidth: 60,
-  levelHeight: 38,
+  levelHeight: 29,
   lightsOnInitial: PROD ? false : true,
   backgroundColor: '#191919',
   messageColor: '#FFF',

@@ -144,8 +144,10 @@ export const Terrain = {
   },
 }
 
-export function createSymbolicTerrain() {
-  return Object.entries(Terrain).reduce((acc, curr) => {
-    return { ...acc, [curr[0]]: hydrate(curr[1]) }
-  }, {}) as { [P in keyof typeof Terrain]: Entity }
+export const GlobalTerrainData = new Map<TerrainTemplate, Entity>()
+Object.entries(Terrain).forEach(t => GlobalTerrainData.set(t[1], hydrate(t[1])))
+
+export function GlobalTerrain(template: TerrainTemplate) {
+  const tEntity = GlobalTerrainData.get(template)
+  return tEntity ?? hydrate(Terrain.endlessVoid)
 }

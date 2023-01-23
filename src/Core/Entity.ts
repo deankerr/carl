@@ -1,25 +1,14 @@
 import { Components } from './Components'
 import * as C from '../Component'
 import { Point } from '../Model/Point'
-import { BeingTemplate, FeatureTemplate } from '../Templates'
+import { BeingTemplate, FeatureTemplate, TerrainTemplate } from '../Templates'
 import { transformHSL } from '../lib/color'
 
 export type EntityID = { readonly id: string; name: string; char: string; color: string }
 
 export type Entity = EntityID & Components
 
-export type EntityTemplate = BeingTemplate | FeatureTemplate
-
-export type EntityTemplates = {
-  player?: Point
-  beings: [BeingTemplate, Point | 0][]
-  features: [FeatureTemplate, Point | 0][]
-  doors: Point[]
-}
-
-export const createTemplates = (): EntityTemplates => {
-  return { beings: [], features: [], doors: [] }
-}
+export type EntityTemplate = BeingTemplate | FeatureTemplate | TerrainTemplate
 
 export function hydrate(t: EntityTemplate, pt?: Point, fov?: number): Entity {
   let entity = {

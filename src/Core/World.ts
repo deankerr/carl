@@ -1,15 +1,14 @@
 // Entity/Component manager
 import { Game } from './Game'
-import { Entity, EntityTemplates, hydrate } from './Entity'
+import { Entity, EntityTemplate, hydrate } from './Entity'
 import { Components, componentName } from './Components'
 import { Graphic, tagCurrentTurn } from '../Component'
-import { Beings, Features, TerrainTemplate } from '../Templates'
+import { Beings, TerrainTemplate } from '../Templates'
 import { createDomains, Domain, DomainMap } from '../Generate/domains'
 import { Level } from '../Model/Level'
 import { Point, Pt, StrPt } from '../Model/Point'
 import { objLog } from '../lib/util'
 import { colorizeMessage, Message } from '../lib/messages'
-import { Grid } from '../Model/Grid'
 
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 
@@ -49,19 +48,18 @@ export class World {
       console.log('create', domain?.label, index)
       const overseer = domain.generator()
 
-      const grid = Grid.fill(overseer.width, overseer.height, this.getTerrain(overseer.initial))
-      for (const [pt, v] of overseer.terrain) {
-        grid.set(StrPt(pt), this.getTerrain(v))
-      }
-
-      const level = new Level('bbb', grid)
+      const level = new Level('bbb', overseer.construct())
       level.overseer = overseer
 
       domain.levels.push(level)
       this.active = domain.levels[index]
       this.activeIndex = index
       this.domain = domain
-
+      overseer.entityMutations.forEach(m => {
+        for (const [pt, template] of m) {
+          this.createTemplate(template, StrPt(pt))
+        }
+      })
       // this.createTemplates(entityTemplates)
       this.createPlayer()
     } else {
@@ -70,14 +68,6 @@ export class World {
       this.activeIndex = index
       this.domain = domain
     }
-  }
-
-  getTerrain(template: TerrainTemplate) {
-    const t = this.terrain.get(template)
-    if (t) return t
-    const newTerrain = hydrate(template)
-    this.terrain.set(template, newTerrain)
-    return newTerrain
   }
 
   changeLevel(dir: number) {
@@ -139,44 +129,20 @@ export class World {
   }
 
   // TODO Can be greatly simplified after Generate refactor
-  createTemplates(newTemplates: EntityTemplates) {
-    if (newTemplates.features) {
-      for (const feature of newTemplates.features) {
-        const [t, pos] = feature
-        this.create(hydrate(t, pos === 0 ? this.active.ptInRoom() : pos))
-      }
-    }
-
-    if (newTemplates.doors) {
-      for (const pt of newTemplates.doors) {
-        this.create(hydrate(Features.door, pt))
-      }
-    }
-
-    if (newTemplates.beings) {
-      for (const being of newTemplates.beings) {
-        const [t, pos] = being
-        const entity = this.create(hydrate(t, pos === 0 ? this.active.ptInRoom() : pos))
-        if ('tagActor' in entity) this.active.scheduler.add(entity.id, true)
-      }
-    }
-
-    if (newTemplates.player) {
-      const pt = newTemplates.player
-      this.createPlayer(pt)
-    }
+  createTemplate(template: EntityTemplate, pt: Point) {
+    this.activate(hydrate(template, pt))
   }
 
   createPlayer(pt?: Point) {
     if (this.get('tagPlayer').length > 0) return
-    const player = this.create(
+    const player = this.activate(
       hydrate(Beings.player, pt ?? this.active.stairsAscendingPt ?? this.active.ptInRoom(), this.domain.playerFOV)
     )
     this.active.scheduler.add(player.id, true)
   }
 
   // add new entity to state
-  create(entity: Entity) {
+  activate(entity: Entity) {
     // stamp with next id
     const id = entity.id + '-' + this.nextEntityID++
     const newEntity = { ...entity, id }

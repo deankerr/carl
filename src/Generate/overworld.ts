@@ -1,17 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */ // !!!! dev
 import * as ROT from 'rot-js'
-import { Grid } from '../Model/Grid'
-import { Terrain, Features, Beings } from '../Templates'
-import { createTemplates, Entity, EntityTemplate, hydrate } from '../Core/Entity'
-import { Level } from '../Model/Level'
-import { Point, Pt, StrPt } from '../Model/Point'
-import { floor, half, mix, pick, range, repeat, rnd } from '../lib/util'
-import { Overseer, Mutation, Mutator } from './Overseer'
+import { Terrain, Features } from '../Templates'
+import { EntityTemplate } from '../Core/Entity'
+import { Point, Pt } from '../Model/Point'
+import { half, mix, pick, range, repeat, rnd } from '../lib/util'
+import { Overseer, Mutator } from './Overseer'
 import { Room } from './structures/Room'
 import { Rect } from './Rectangle'
+import { CONFIG } from '../config'
 
 // stairs/connectors?
-export function overworld(width = 60, height = 29) {
+export function overworld(width = CONFIG.levelWidth, height = CONFIG.levelHeight) {
   const t = Date.now()
   ROT.RNG.setSeed(1234)
   console.log(ROT.RNG.getSeed())
@@ -20,26 +18,26 @@ export function overworld(width = 60, height = 29) {
 
   const center = Pt(half(width), half(height))
 
-  repeat(10, () => walk(grid.rndPt(), Terrain.grass, 400, grid.mutator())) // grass
-  repeat(10, () => walk(grid.rndPt(), Terrain.deadGrass, 100, grid.mutator())) // dead grass
+  repeat(10, () => walk(grid.rndPt(), Terrain.grass, 400, grid.mutate())) // grass
+  repeat(10, () => walk(grid.rndPt(), Terrain.deadGrass, 100, grid.mutate())) // dead grass
 
   // outer/inner space markers
   const levelRect = Rect.at(Pt(0, 0), width, height)
-  const outer = levelRect.scale(-2)
+  const outer = levelRect.scale(-1)
   const inner = levelRect.scale(-6)
 
   // debug visual markers
-  const mutMarkers = grid.mutator()
+  const mutMarkers = grid.mutate()
   outer.traverse((pt, edge) => (edge ? mutMarkers.set(pt, Terrain.path) : ''))
   inner.traverse((pt, edge) => (edge ? mutMarkers.set(pt, Terrain.path) : ''))
 
   // western lake
   const westLakePt = Pt(half(inner.x), rnd(inner.y, inner.y2))
-  const westLakeMut = grid.mutator()
+  const westLakeMut = grid.mutate()
   repeat(30, () => walk(westLakePt, Terrain.water, 12, westLakeMut, { n: 2, s: 2 }))
 
-  const nsPeak = grid.mutator()
-  const nsMound = grid.mutator()
+  const nsPeak = grid.mutate()
+  const nsMound = grid.mutate()
   for (const x of range(0, width - 1, 3)) {
     walk(Pt(x, outer.y), Terrain.peak, 2, nsPeak)
     walk(Pt(x, outer.y), Terrain.mound, 2, nsMound)
@@ -47,8 +45,8 @@ export function overworld(width = 60, height = 29) {
     walk(Pt(x, outer.y2), Terrain.peak, 2, nsPeak)
   }
 
-  const ewPeak = grid.mutator()
-  const ewMound = grid.mutator()
+  const ewPeak = grid.mutate()
+  const ewMound = grid.mutate()
   for (const y of range(0, height - 1, 3)) {
     walk(Pt(outer.x, y), Terrain.mound, 2, ewMound)
     walk(Pt(outer.x, y), Terrain.peak, 2, ewPeak)
@@ -56,11 +54,12 @@ export function overworld(width = 60, height = 29) {
     walk(Pt(outer.x2, y), Terrain.mound, 2, ewMound)
   }
 
-  const cornersPeak = grid.mutator()
+  const cornersPeak = grid.mutate()
   for (const pt of outer.scale(-3).cornerPts()) walk(pt, pick([Terrain.peak, Terrain.mound]), 10, cornersPeak)
 
   // scattered shrubs
-  // repeat(5, () => sparseWalk(grid, Terrain.shrub, 5, innerRect.rndEdgePt()))
+  const shrubMut = grid.mutate()
+  repeat(5, () => sparseWalk(inner.rndEdgePt(), Features.shrub, 5, shrubMut))
 
   // // smaller southern lake
   // const southLakePt = Pt(center.x + rnd(-4, -4), outskirtsRect.y2)
@@ -82,7 +81,7 @@ export function overworld(width = 60, height = 29) {
     .walls(10)
     .crumble(3)
     .door(Terrain.void)
-  bigRoom.place(structPts[0], grid.mutator())
+  bigRoom.place(structPts[0], grid.mutate())
 
   // structure 2
   // const smallRoom = new Room(rnd(7, 9), rnd(7, 9)).degradedFloor(Terrain.void, -1).walls(10).crumble(2)
@@ -113,15 +112,14 @@ function walk(
   const south = new Array(weighting?.s ?? 1).fill(Pt(0, 1))
   const west = new Array(weighting?.w ?? 1).fill(Pt(-1, 0))
   const moves = [...north, ...east, ...south, ...west]
-  for (const i of range(life)) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  for (const _i of range(life)) {
     const dir = pick(moves)
     pt = pt.add(dir)
     mutator.set(pt.s, type)
   }
 }
 
-// function sparseWalk(grid: Overseer, type: Entity, amount: number, start?: Point) {
-//   const mutations = grid.mutate()
-//   const pt = start ?? grid.internal.rndPt()
-//   repeat(amount, () => mutations.set(pt.add(Pt(rnd(-4, 4), rnd(-4, 4))), type))
-// }
+function sparseWalk(start: Point, type: EntityTemplate, amount: number, mutator: Mutator) {
+  repeat(amount, () => mutator.set(start.add(Pt(rnd(-4, 4), rnd(-4, 4))), type))
+}

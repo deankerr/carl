@@ -3,7 +3,7 @@ import * as ROT from 'rot-js'
 import { Grid } from './Grid'
 import { Entity } from '../Core/Entity'
 import { Point } from './Point'
-import { Terrain } from '../Templates/Terrain'
+import { Terrain, TerrainTemplate, GlobalTerrain } from '../Templates/Terrain'
 import { pick, repeatUntil } from '../lib/util'
 import { Color } from 'rot-js/lib/color'
 import { Overseer } from '../Generate/Overseer'
@@ -29,7 +29,7 @@ export class Level {
     readonly label = 'bare',
 
     // readonly terrainGrid: Grid<number> = Grid.fill(1, 1, 0),
-    readonly terrainGrid: Grid<Entity>,
+    readonly terrainGrid: Grid<TerrainTemplate>,
     readonly voidDecor = new Map<string, Entity>(),
     readonly rooms: Point[][] = []
   ) {
@@ -38,7 +38,8 @@ export class Level {
   }
 
   terrain(at: Point) {
-    return this.terrainGrid.get(at) ?? Terrain.endlessVoid
+    const template = this.terrainGrid.get(at)
+    return GlobalTerrain(template ?? Terrain.endlessVoid)
   }
 
   ptInRoom(index?: number) {
