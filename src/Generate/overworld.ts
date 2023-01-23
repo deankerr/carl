@@ -1,17 +1,19 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as ROT from 'rot-js'
 import { Terrain, Features } from '../Templates'
 import { EntityTemplate } from '../Core/Entity'
 import { Point, Pt } from '../Model/Point'
 import { half, mix, pick, range, repeat, rnd } from '../lib/util'
 import { Overseer, Mutator } from './Overseer'
-import { Room } from './structures/Room'
+import { RoomBuilder, Room } from './structures/Room'
 import { Rect } from './Rectangle'
 import { CONFIG } from '../config'
+import { handleBump } from '../System'
 
 // stairs/connectors?
 export function overworld(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
   const t = Date.now()
-  ROT.RNG.setSeed(1234)
+  // ROT.RNG.setSeed(1234)
   console.log(ROT.RNG.getSeed())
 
   const grid = new Overseer(width, height, Terrain.void)
@@ -39,10 +41,10 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   const nsPeak = grid.mutate()
   const nsMound = grid.mutate()
   for (const x of range(0, width - 1, 3)) {
-    walk(Pt(x, outer.y), Terrain.peak, 2, nsPeak)
-    walk(Pt(x, outer.y), Terrain.mound, 2, nsMound)
-    walk(Pt(x, outer.y2), Terrain.mound, 2, nsMound)
-    walk(Pt(x, outer.y2), Terrain.peak, 2, nsPeak)
+    walk(Pt(x, outer.y), Terrain.peak, 3, nsPeak)
+    walk(Pt(x, outer.y), Terrain.mound, 3, nsMound)
+    walk(Pt(x, outer.y2), Terrain.mound, 3, nsMound)
+    walk(Pt(x, outer.y2), Terrain.peak, 3, nsPeak)
   }
 
   const ewPeak = grid.mutate()
@@ -69,19 +71,33 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   const inSpace = inner.width / 6
   const inX = inner.x
   const inX2 = inner.x2
-  const structPts = mix([
-    Pt(inX + inSpace, center.y + rnd(-2, 2)),
-    Pt(inX + half(inner.width), center.y + rnd(-2, 2)),
-    Pt(inX2 - inSpace, center.y + rnd(-2, 2)),
-  ])
+  // const structPts = mix([
+  //   Pt(inX + inSpace, center.y + rnd(-2, 2)),
+  //   Pt(inX + half(inner.width), center.y + rnd(-2, 2)),
+  //   Pt(inX2 - inSpace, center.y + rnd(-2, 2)),
+  // ])
 
   // structure 1
-  const bigRoom = new Room(rnd(11, 13), rnd(11, 13))
-    .degradedFloor(Terrain.void, -1)
-    .walls(10)
-    .crumble(3)
-    .door(Terrain.void)
-  bigRoom.place(structPts[0], grid.mutate())
+  // const ruinPt = center.add('-18,0')
+  const ruinPt = center
+  const bigRoom = Room(15, 13).walls(0).degradedFloor(Terrain.void, -1)
+
+  const cornerRoom = bigRoom.annex(bigRoom.rect.cornerPts()[0], 9, 7)
+  cornerRoom.walls(0).floor(Terrain.void)
+  // .crumble(2)
+
+  const annexRoom = bigRoom.annex(Pt(bigRoom.rect.x2 + 4, bigRoom.rect.cy), 9, 7)
+  annexRoom.walls(0).degradedFloor(Terrain.void, -2)
+
+  const intRoom = bigRoom.annex(Pt(bigRoom.rect.x + 3, bigRoom.rect.y2 - 3), 7, 7)
+  intRoom.walls(0).crumble(1)
+
+  bigRoom.door(Terrain.void, bigRoom.rect.cornerPts()[0])
+  console.log('bigRoom:', bigRoom)
+  bigRoom.place(ruinPt, grid.mutate())
+  // const annex1 = Room(rnd(7, 9), rnd(5, 7)).walls(0)
+
+  // annex1.place(ruinPt.add('-5,3'), grid.mutate())
 
   // structure 2
   // const smallRoom = new Room(rnd(7, 9), rnd(7, 9)).degradedFloor(Terrain.void, -1).walls(10).crumble(2)
@@ -112,11 +128,11 @@ function walk(
   const south = new Array(weighting?.s ?? 1).fill(Pt(0, 1))
   const west = new Array(weighting?.w ?? 1).fill(Pt(-1, 0))
   const moves = [...north, ...east, ...south, ...west]
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  for (const _i of range(life)) {
+  for (const i of range(life)) {
     const dir = pick(moves)
     pt = pt.add(dir)
     mutator.set(pt.s, type)
+    i // durr
   }
 }
 

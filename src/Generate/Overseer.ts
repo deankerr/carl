@@ -56,14 +56,14 @@ export class Overseer {
 }
 
 export class Mutator {
-  constructor(private main: Mutation, private mutator: Mutation, private entityMutator: Mutation) {}
+  constructor(private main: Mutation, public terrain: Mutation, public entityMutator: Mutation) {}
 
   set(setPt: Point | string, e: EntityTemplate) {
     const pts = typeof setPt === 'string' ? setPt : setPt.s
     if (this.main.get(pts) === e) return
     if (Object.values(Terrain).includes(e)) {
       this.main.set(pts, e)
-      this.mutator.set(pts, e)
+      this.terrain.set(pts, e)
     } else this.entityMutator.set(pts, e)
   }
 }
