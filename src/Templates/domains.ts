@@ -3,8 +3,8 @@
 export const domains = [
   {
     label: 'overworld',
-    seen: true,
-    revealed: true,
+    seen: false,
+    revealed: false,
     playerFOV: 12,
     generator: 'overworld',
     connections: {

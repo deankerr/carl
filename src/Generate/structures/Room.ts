@@ -15,7 +15,10 @@ export class RoomBuilder {
 
   terrain = new Map<string, EntityTemplate>()
   entities = new Map<Point, EntityTemplate>()
-  annexes: RoomBuilder[] = []
+
+  children: RoomBuilder[] = [] // all sub-rooms
+  divisions: RoomBuilder[] = [] // internal only
+  annexes: RoomBuilder[] = [] // external only
 
   constructor(rect: Rect) {
     this.rect = rect
@@ -41,9 +44,11 @@ export class RoomBuilder {
 
   degradedFloor(type: EntityTemplate, scale: number) {
     const inner = this.rect.scale(scale)
+    const tinySpace = inner.width < 3 || inner.height < 3
     console.log('inner:', inner)
     inner.traverse((pt, edge) => {
-      if (edge) {
+      if (tinySpace) rnd(2) && this.terrain.set(pt.s, type)
+      else if (edge) {
         rnd(1) && this.terrain.set(pt.s, type)
       } else rnd(16) && this.terrain.set(pt.s, type)
     })
@@ -70,6 +75,10 @@ export class RoomBuilder {
     return this
   }
 
+  each() {
+    return [this, ...this.annexes, ...this.divisions]
+  }
+
   crumble(amount = 3) {
     repeat(amount, () => {
       const pt = this.rect.rndEdgePt()
@@ -90,7 +99,7 @@ export class RoomBuilder {
 
   place(at: Point, mutator: Mutator) {
     for (const [pts, e] of this.terrain) mutator.set(at.add(pts).s, e)
-    for (const room of this.annexes) room.place(at, mutator)
+    for (const room of this.children) room.place(at, mutator)
 
     // for (const [pt, e] of this.entities) {
     //   const ePt = at.add(pt)
@@ -100,8 +109,11 @@ export class RoomBuilder {
     for (const [pt, e] of this.entities) mutator.set(at.add(pt), e)
   }
 
-  externalAnnex(width: number, height: number) {
+  externalAnnex(nWidth?: number, nHeight?: number) {
+    const self = this.rect
     let rect: Rect | undefined
+    const width = nWidth ?? rndO(minRoomSize, self.width * 0.66)
+    const height = nHeight ?? rndO(minRoomSize, self.height * 0.66)
     repeat(1000, () => {
       // choose direction
       const dir = pick([Pt(-1, 0), Pt(0, -1), Pt(1, 0), Pt(0, 1)])
@@ -113,28 +125,26 @@ export class RoomBuilder {
       )
       // repeat until an available space is found
       const testRect = Rect.atC(pos, width, height).scale(-1)
-      if (this.annexes.some(a => a.rect.intersects(testRect))) return false
+      if (this.children.some(a => a.rect.intersects(testRect))) return false
       rect = Rect.atC(pos, width, height)
       return true
     })
     if (!rect) throw new Error('Unable to replace annex')
     const room = new RoomBuilder(rect)
+    this.children.push(room)
     this.annexes.push(room)
     return room
   }
 
   divide() {
     const self = this.rect
-    console.log('self:', self)
     const tl = Pt(self.x, self.y)
-    // const dir = pick([Pt(-1, 0), Pt(0, -1), Pt(1, 0), Pt(0, 1)])
     // create a random x or y point to divide at
     const splitPt = rnd(1) ? Pt(rndO(5, self.width - 4), 0) : Pt(0, rndO(5, self.height - 4))
-    console.log('split:', splitPt)
     const room1 = new RoomBuilder(Rect.at(tl, splitPt.x || self.width, splitPt.y || self.height))
-    this.annexes.push(room1)
+    this.children.push(room1)
+    this.divisions.push(room1)
     return room1
-    // const split = Pt()
   }
 }
 

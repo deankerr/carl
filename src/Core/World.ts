@@ -79,21 +79,21 @@ export class World {
 
     // descend
     if (dir === 1) {
-      console.log('changeLevel down')
+      // console.log('changeLevel down')
       if (descend) {
         if (descend !== this.domain) {
-          console.log('changeLevel descend domain')
+          // console.log('changeLevel descend domain')
           // descend to another domain
           nextDomain = descend
           nextIndex = 0
           // ????
         } else if (this.activeIndex === 50 && bottom) {
-          console.log('changeLevel bottom')
+          // console.log('changeLevel bottom')
           // descend out of dungeon
           nextDomain = bottom
           nextIndex = 0
         } else {
-          console.log('changeLevel descend')
+          // console.log('changeLevel descend')
           nextDomain = descend
           nextIndex = this.activeIndex + 1
         }
@@ -102,20 +102,20 @@ export class World {
 
     // ascend
     if (dir === -1) {
-      console.log('changeLevel up')
+      // console.log('changeLevel up')
       if (ascend) {
         if (ascend !== this.domain) {
-          console.log('changeLevel ascend domain')
+          // console.log('changeLevel ascend domain')
           // ascend to another domain
           nextDomain = ascend
           nextIndex = 0
         } else if (this.activeIndex === 0 && top) {
-          console.log('changeLevel top')
+          // console.log('changeLevel top')
           // ascend out of dungeon
           nextDomain = top
           nextIndex = 0
         } else {
-          console.log('changeLevel ascend ')
+          // console.log('changeLevel ascend ')
           nextDomain = ascend
           nextIndex = this.activeIndex - 1
         }

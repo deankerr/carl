@@ -17,7 +17,7 @@ const messageBackgroundColor = 'transparent'
 const htmlBackgroundColor = mainBackgroundColor
 
 const frameLimit = 500
-const lightsOnInitial = PROD ? false : true
+const lightsOnInitial = PROD ? false : false
 const debugShowLightInfo = false
 
 const CONFIG = {

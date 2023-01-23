@@ -1,3 +1,5 @@
+import { pick } from '../lib/util'
+
 export type FeatureTemplate = typeof Features[keyof typeof Features]
 
 export const Features = {
@@ -150,4 +152,17 @@ export const Features = {
       flicker: 120,
     },
   },
+}
+
+export function randomFlameTemplate() {
+  return pick([
+    Features.blueFlames,
+    Features.cyanFlames,
+    Features.greenFlames,
+    Features.magentaFlames,
+    Features.magentaFlames,
+    Features.flames,
+    Features.purpleFlames,
+    Features.redFlames,
+  ])
 }
