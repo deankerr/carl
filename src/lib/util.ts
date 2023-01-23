@@ -22,9 +22,15 @@ export function objLog(obj: object | object[], label = 'Object Log', collapsed =
   }
 }
 
-export function rnd(min: number, max?: number): number {
+export function rnd(min: number, max?: number) {
   if (max) return ROT.RNG.getUniformInt(min, max)
   return ROT.RNG.getUniformInt(0, min)
+}
+
+// odd numbers only
+export function rndO(min: number, max: number) {
+  const n = rnd(floor(min / 2), floor(max / 2))
+  return 2 * n + 1
 }
 
 export function half(n: number) {
@@ -56,16 +62,10 @@ export const mix = <T>(arr: T[]): T[] => {
   return ROT.RNG.shuffle(arr)
 }
 
+// repeat callback n times, return true to exit early
 export const repeat = (times: number, callback: (i: number) => unknown) => {
   for (let i = 0; i < times; i++) {
     if (callback(i)) break
-  }
-}
-
-// exit repeat loop if callback returned true
-export const repeatUntil = (callback: () => unknown, times: number) => {
-  for (let i = 0; i < times; i++) {
-    if (callback()) break
   }
 }
 

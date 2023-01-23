@@ -23,7 +23,9 @@ export class Rect {
 
   constructor(pt: Point, width: number, height: number, id = 0) {
     if (width < 1 || height < 1)
-      throw new Error('Please do not create zero/negative width Rects, as I cannot fathom them.')
+      throw new Error(
+        `Please do not create zero/negative width Rects, as I cannot fathom them. w:${width} h: ${height}`
+      )
     const { x, y } = pt
     this.x = x
     this.y = y
@@ -84,7 +86,12 @@ export class Rect {
     const y = this.y - yBy
     const width = this.width + xBy * 2
     const height = this.height + xBy * 2
-    return Rect.at(Pt(x, y), width, height)
+    // enforce minimum of size 1 to avoid weirdness
+    return Rect.at(Pt(x, y), width > 0 ? width : 1, height > 0 ? height : 1)
+  }
+
+  translate(x: number, y: number) {
+    return Rect.at(Pt(this.x + x, this.y + y), this.width, this.height)
   }
 
   // Return list of each pt in the rect. outer = outermost edge only
@@ -119,6 +126,10 @@ export class Rect {
     return pt.x === this.x || pt.x === this.x2 || pt.y === this.y || pt.y === this.y2
   }
 
+  center() {
+    return Pt(this.cx, this.cy)
+  }
+
   // Construction
 
   // Constructor alias
@@ -134,8 +145,8 @@ export class Rect {
   }
 
   // From x/y to x2/y2
-  static atxy2(pt: Point, x2: number, y2: number, id = 0) {
-    return new Rect(pt, x2 - pt.x + 1, y2 - pt.y + 1, id)
+  static atxy2(pt: Point, pt2: Point, id = 0) {
+    return new Rect(pt, pt2.x - pt.x + 1, pt2.y - pt.y + 1, id)
   }
 
   // By size, eg xSize 1 = 1, 2 = 3, 3 = 5 etc.

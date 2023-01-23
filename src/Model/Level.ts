@@ -4,7 +4,7 @@ import { Grid } from './Grid'
 import { Entity } from '../Core/Entity'
 import { Point } from './Point'
 import { Terrain, TerrainTemplate, GlobalTerrain } from '../Templates/Terrain'
-import { pick, repeatUntil } from '../lib/util'
+import { pick, repeat } from '../lib/util'
 import { Color } from 'rot-js/lib/color'
 import { Overseer } from '../Generate/Overseer'
 
@@ -51,12 +51,12 @@ export class Level {
       } else {
         // if they are no rooms, find any open pt
         let result
-        repeatUntil(() => {
+        repeat(1000, () => {
           const pt = this.terrainGrid.rndPt()
           if (!this.terrain(pt).tagWalkable) return false
           result = pt
           return true
-        }, 1000)
+        })
         if (!result) throw new Error('Could find random walkable in level')
         return result
       }

@@ -4,8 +4,15 @@ export class Point {
     this.s = `${this.x},${this.y}`
   }
 
-  add(vector: Point | string) {
-    const pt = typeof vector === 'string' ? StrPt(vector) : vector
+  add(vector: Point | string | number, y?: number) {
+    let pt: Point
+    if (typeof vector === 'number') {
+      if (typeof y === 'number') pt = Pt(vector, y)
+      else throw new Error('Both parameters must be number')
+    } else if (typeof vector === 'string') {
+      pt = StrPt(vector)
+    } else pt = vector
+
     return Pt(this.x + pt.x, this.y + pt.y)
   }
 

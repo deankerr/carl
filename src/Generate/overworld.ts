@@ -3,7 +3,7 @@ import * as ROT from 'rot-js'
 import { Terrain, Features } from '../Templates'
 import { EntityTemplate } from '../Core/Entity'
 import { Point, Pt } from '../Model/Point'
-import { half, mix, pick, range, repeat, rnd } from '../lib/util'
+import { half, mix, pick, range, repeat, rnd, rndO } from '../lib/util'
 import { Overseer, Mutator } from './Overseer'
 import { RoomBuilder, Room } from './structures/Room'
 import { Rect } from './Rectangle'
@@ -80,21 +80,37 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   // structure 1
   // const ruinPt = center.add('-18,0')
   const ruinPt = center
-  const bigRoom = Room(15, 13).walls(0).degradedFloor(Terrain.void, -1)
+  // const bigRoom = Room(15, 13).walls(0).degradedFloor(Terrain.void, -1)
 
-  const cornerRoom = bigRoom.annex(bigRoom.rect.cornerPts()[0], 9, 7)
-  cornerRoom.walls(0).floor(Terrain.void)
-  // .crumble(2)
+  // const cornerRoom = bigRoom.annex(bigRoom.rect.cornerPts()[0], 9, 7)
+  // cornerRoom.walls(0).floor(Terrain.void)
+  // // .crumble(2)
 
-  const annexRoom = bigRoom.annex(Pt(bigRoom.rect.x2 + 4, bigRoom.rect.cy), 9, 7)
-  annexRoom.walls(0).degradedFloor(Terrain.void, -2)
+  // const annexRoom = bigRoom.annex(Pt(bigRoom.rect.x2 + 4, bigRoom.rect.cy), 9, 7)
+  // annexRoom.walls(0).degradedFloor(Terrain.void, -2)
 
-  const intRoom = bigRoom.annex(Pt(bigRoom.rect.x + 3, bigRoom.rect.y2 - 3), 7, 7)
-  intRoom.walls(0).crumble(1)
+  // const intRoom = bigRoom.annex(Pt(bigRoom.rect.x + 3, bigRoom.rect.y2 - 3), 7, 7)
+  // intRoom.walls(0).crumble(1)
 
-  bigRoom.door(Terrain.void, bigRoom.rect.cornerPts()[0])
-  console.log('bigRoom:', bigRoom)
-  bigRoom.place(ruinPt, grid.mutate())
+  // bigRoom.door(Terrain.void, bigRoom.rect.cornerPts()[0])
+  // console.log('bigRoom:', bigRoom)
+  // bigRoom.place(ruinPt, grid.mutate())
+
+  // * 2
+
+  const ruin = Room(15, 15).walls(0).degradedFloor(Terrain.void, -1).checkedFloor(Terrain.path)
+  ruin.divide().walls().degradedFloor(Terrain.water, -2)
+  ruin.externalAnnex(9, 7).walls(0).degradedFloor(Terrain.void, -1)
+  ruin.externalAnnex(9, 7).walls(0).degradedFloor(Terrain.void, -1)
+  // ruin.externalAnnex(9, 7).walls(0).degradedFloor(Terrain.void, -1)
+  // ruin.externalAnnex(9, 7).walls(0).degradedFloor(Terrain.void, -1)
+  // ruin.add(Features.blueFlames).add(Features.magentaFlames).add(Features.greenFlames).add(Features.flames)
+  ruin.add(Features.flames, ruin.rect.center())
+  // ruin.externalAnnex(9, 7).walls(0).degradedFloor(Terrain.void, -1)
+  // ruin.annexExternal(9, 7).walls(0).degradedFloor(Terrain.void, -1)
+  // ruin.annexExternal(9, 7).walls(0).degradedFloor(Terrain.void, -1)
+  ruin.place(ruinPt, grid.mutate())
+  console.log('ruin:', ruin)
   // const annex1 = Room(rnd(7, 9), rnd(5, 7)).walls(0)
 
   // annex1.place(ruinPt.add('-5,3'), grid.mutate())
