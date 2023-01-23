@@ -111,6 +111,10 @@ export class Rect {
     return Pt(x, y)
   }
 
+  cornerPts() {
+    return [Pt(this.x, this.y), Pt(this.x2, this.y), Pt(this.x, this.y2), Pt(this.x2, this.y2)]
+  }
+
   isEdgePt(pt: Point) {
     return pt.x === this.x || pt.x === this.x2 || pt.y === this.y || pt.y === this.y2
   }

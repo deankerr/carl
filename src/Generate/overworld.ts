@@ -13,7 +13,7 @@ import { Rect } from './Rectangle'
 // stairs/connectors?
 export function overworld(width = 60, height = 29) {
   const t = Date.now()
-  // ROT.RNG.setSeed(1234)
+  ROT.RNG.setSeed(1234)
   console.log(ROT.RNG.getSeed())
 
   const grid = new Overseer(width, height, Terrain.void)
@@ -25,66 +25,39 @@ export function overworld(width = 60, height = 29) {
 
   // outer/inner space markers
   const levelRect = Rect.at(Pt(0, 0), width, height)
-  const outer = levelRect.scale(-1)
+  const outer = levelRect.scale(-2)
   const inner = levelRect.scale(-6)
 
   // debug visual markers
-  // const mutMarkers = grid.mutator()
-  // outer.traverse((pt, edge) => (edge ? mutMarkers.set(pt, Terrain.path) : ''))
-  // inner.traverse((pt, edge) => (edge ? mutMarkers.set(pt, Terrain.path) : ''))
-
-  // outskirt decoration
-  // const mutMound = grid.mutator()
-  // const mutPeak = grid.mutator()
-  // outer.traverse((pt, edge) => {
-  //   if (edge) {
-  //     // many mounds, some peaks in the north
-  //     if (pt.y === outer.y) {
-  //       if (!rnd(8)) walk(pt, Terrain.peak, 20, mutPeak, { e: 3, w: 3 })
-  //       if (!rnd(4)) walk(pt, Terrain.mound, 20, mutMound, { e: 3, w: 3 })
-  //     }
-
-  //     // fewer mounds, more peaks in the south
-  //     if (pt.y === outer.y2) {
-  //       if (!rnd(6)) walk(pt, Terrain.peak, 20, mutPeak, { e: 3, w: 3 })
-  //       if (!rnd(12)) walk(pt, Terrain.mound, 20, mutMound, { e: 3, w: 3 })
-  //     }
-
-  //     // scattered mounds/peaks, in the east and west
-  //     if (pt.x === outer.x) {
-  //       if (!rnd(8)) walk(pt, Terrain.peak, 12, mutPeak, { e: 3, w: 3 })
-  //       if (!rnd(12)) walk(pt, Terrain.mound, 12, mutMound, { e: 3, w: 3 })
-  //     }
-
-  //     if (pt.x === outer.x2) {
-  //       if (!rnd(8)) walk(pt, Terrain.peak, 12, mutPeak, { e: 3, w: 3 })
-  //       if (!rnd(12)) walk(pt, Terrain.mound, 12, mutMound, { e: 3, w: 3 })
-  //     }
-  //   }
-  // })
-
-  const nsPeak = grid.mutator()
-  const nsMound = grid.mutator()
-  for (const x of range(0, width - 1)) {
-    walk(Pt(x, outer.y), Terrain.peak, 1, nsPeak)
-    walk(Pt(x, outer.y), Terrain.mound, 1, nsMound)
-    walk(Pt(x, outer.y2), Terrain.mound, 1, nsMound)
-    walk(Pt(x, outer.y2), Terrain.peak, 1, nsPeak)
-  }
+  const mutMarkers = grid.mutator()
+  outer.traverse((pt, edge) => (edge ? mutMarkers.set(pt, Terrain.path) : ''))
+  inner.traverse((pt, edge) => (edge ? mutMarkers.set(pt, Terrain.path) : ''))
 
   // western lake
   const westLakePt = Pt(half(inner.x), rnd(inner.y, inner.y2))
   const westLakeMut = grid.mutator()
   repeat(30, () => walk(westLakePt, Terrain.water, 12, westLakeMut, { n: 2, s: 2 }))
 
+  const nsPeak = grid.mutator()
+  const nsMound = grid.mutator()
+  for (const x of range(0, width - 1, 3)) {
+    walk(Pt(x, outer.y), Terrain.peak, 2, nsPeak)
+    walk(Pt(x, outer.y), Terrain.mound, 2, nsMound)
+    walk(Pt(x, outer.y2), Terrain.mound, 2, nsMound)
+    walk(Pt(x, outer.y2), Terrain.peak, 2, nsPeak)
+  }
+
   const ewPeak = grid.mutator()
   const ewMound = grid.mutator()
-  for (const y of range(0, height - 1, 2)) {
-    walk(Pt(outer.x, y), Terrain.mound, 1, ewMound)
-    walk(Pt(outer.x, y), Terrain.peak, 1, ewPeak)
-    walk(Pt(outer.x2, y), Terrain.peak, 1, ewPeak)
-    walk(Pt(outer.x2, y), Terrain.mound, 1, ewMound)
+  for (const y of range(0, height - 1, 3)) {
+    walk(Pt(outer.x, y), Terrain.mound, 2, ewMound)
+    walk(Pt(outer.x, y), Terrain.peak, 2, ewPeak)
+    walk(Pt(outer.x2, y), Terrain.peak, 2, ewPeak)
+    walk(Pt(outer.x2, y), Terrain.mound, 2, ewMound)
   }
+
+  const cornersPeak = grid.mutator()
+  for (const pt of outer.scale(-3).cornerPts()) walk(pt, pick([Terrain.peak, Terrain.mound]), 10, cornersPeak)
 
   // scattered shrubs
   // repeat(5, () => sparseWalk(grid, Terrain.shrub, 5, innerRect.rndEdgePt()))
@@ -104,7 +77,7 @@ export function overworld(width = 60, height = 29) {
   ])
 
   // structure 1
-  const bigRoom = new Room(rnd(9, 13), rnd(9, 13))
+  const bigRoom = new Room(rnd(11, 13), rnd(11, 13))
     .degradedFloor(Terrain.void, -1)
     .walls(10)
     .crumble(3)
@@ -112,8 +85,8 @@ export function overworld(width = 60, height = 29) {
   bigRoom.place(structPts[0], grid.mutator())
 
   // structure 2
-  const smallRoom = new Room(rnd(7, 9), rnd(7, 9)).degradedFloor(Terrain.void, -1).walls(10).crumble(2)
-  smallRoom.place(structPts[1], grid.mutator())
+  // const smallRoom = new Room(rnd(7, 9), rnd(7, 9)).degradedFloor(Terrain.void, -1).walls(10).crumble(2)
+  // smallRoom.place(structPts[1], grid.mutator())
 
   // structure 3
   // sparseWalk(grid, Terrain.shrub, rnd(3, 6), structPts[2])
@@ -146,20 +119,6 @@ function walk(
     mutator.set(pt.s, type)
   }
 }
-
-// function walkEastWest(grid: Overseer, type: Entity, amount: number, start?: Point) {
-//   const mutations = grid.mutate()
-//   let pt = start ?? grid.internal.rndPt()
-//   mutations.set(pt, type)
-//   // north, east, south, west // favour e/w
-//   const moveNS = [Pt(0, -1), Pt(0, 1)]
-//   const moveEW = [Pt(-1, 0), Pt(1, 0)]
-//   repeat(amount, () => {
-//     const dir = rnd(3) ? pick(moveEW) : pick(moveNS)
-//     pt = pt.add(dir)
-//     mutations.set(pt, type)
-//   })
-// }
 
 // function sparseWalk(grid: Overseer, type: Entity, amount: number, start?: Point) {
 //   const mutations = grid.mutate()
