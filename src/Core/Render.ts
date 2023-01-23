@@ -12,11 +12,11 @@ const darkenLum = 0.08 //                 0.1
 const darkenLumMin = 0.12
 
 // luminance of background color (used as min value)
-const bgLum = hexLuminance(CONFIG.backgroundColor)
+const bgLum = hexLuminance(CONFIG.mainBackgroundColor)
 
 export const renderLevel = (display: ROT.Display, world: World) => {
   // console.log('char', 'color', world.active)
-  const { mainDisplayWidth: displayWidth, mainDisplayHeight: displayHeight, backgroundColor } = CONFIG
+  const { mainDisplayWidth: displayWidth, mainDisplayHeight: displayHeight, mainBackgroundColor } = CONFIG
   const options = world.options
   display.clear()
 
@@ -127,7 +127,7 @@ export const renderLevel = (display: ROT.Display, world: World) => {
         render.y,
         char,
         color,
-        color.map((_c, i) => (i === 0 ? backgroundColor : 'transparent'))
+        color.map((_c, i) => (i === 0 ? mainBackgroundColor : 'transparent'))
       )
     }
 

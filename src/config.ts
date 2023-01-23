@@ -1,24 +1,41 @@
-// ADOM display total: 80 x 25, game map: 80 x 20
 const PROD = import.meta.env.PROD
 
+const appInitial = 'game'
+const seed = null
+
+const mainDisplayWidth = 60
+const mainDisplayHeight = 29
+const messageDisplayWidth = 60
+const messageDisplayHeight = 4
+
+const generateWidth = mainDisplayWidth
+const generateHeight = mainDisplayHeight
+
+const mainBackgroundColor = '#131313'
+const messageColor = '#FFF'
+const messageBackgroundColor = 'transparent'
+const htmlBackgroundColor = mainBackgroundColor
+
+const frameLimit = 500
+const lightsOnInitial = PROD ? false : true
+const debugShowLightInfo = false
+
 const CONFIG = {
-  appInitial: 'game',
-  // seed: 1234,
-  seed: null,
-  mainDisplayWidth: 60,
-  mainDisplayHeight: 29,
-  messageDisplayWidth: 60,
-  messageDisplayHeight: 4,
-  genLevelsAtDisplaySize: true,
-  levelWidth: 60,
-  levelHeight: 29,
-  lightsOnInitial: PROD ? false : true,
-  backgroundColor: '#191919',
-  messageColor: '#FFF',
-  msgBgColor: 'transparent', //' rgb(80,120,0,1)',
-  htmlBGColor: PROD ? '#191919' : '#191919',
-  renderInterval: 500,
-  debugShowLightInfo: false,
+  appInitial,
+  seed,
+  mainDisplayWidth,
+  mainDisplayHeight,
+  messageDisplayWidth,
+  messageDisplayHeight,
+  generateWidth,
+  generateHeight,
+  mainBackgroundColor,
+  messageColor,
+  messageBackgroundColor,
+  htmlBackgroundColor,
+  frameLimit,
+  debugShowLightInfo,
+  lightsOnInitial,
 }
 
 export { CONFIG }

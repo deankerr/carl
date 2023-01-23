@@ -9,7 +9,7 @@ import { Rect } from './Rectangle'
 import { CONFIG } from '../config'
 
 // stairs/connectors?
-export function overworld(width = CONFIG.levelWidth, height = CONFIG.levelHeight) {
+export function overworld(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
   const t = Date.now()
   ROT.RNG.setSeed(1234)
   console.log(ROT.RNG.getSeed())
