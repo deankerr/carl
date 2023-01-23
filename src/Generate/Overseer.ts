@@ -10,6 +10,7 @@ export class Overseer {
   terrain = new Map<string, TerrainTemplate>()
   mutations: Mutation[] = []
   entityMutations: Mutation[] = []
+  visualMutations: Mutation[] = []
 
   constructor(readonly width: number, readonly height: number, readonly initial = Terrain.void) {
     this.internal = Grid.fill(width, height, initial)
@@ -20,7 +21,9 @@ export class Overseer {
     const entityMutations: Mutation = new Map()
     this.mutations.push(mutation)
     this.entityMutations.push(entityMutations)
-    const mutator = new Mutator(this.terrain, mutation, entityMutations)
+    const visual = new Map()
+    this.visualMutations.push(visual)
+    const mutator = new Mutator(this.terrain, mutation, entityMutations, visual)
     return mutator
   }
 
@@ -41,11 +44,17 @@ export class Overseer {
   }
 
   next() {
-    if (this.index < this.mutations.length) {
-      for (const [pt, t] of this.mutations[this.index]) this.internal.set(StrPt(pt), t)
+    if (this.index + 1 < this.mutations.length) {
       this.index++
-      return true
+      for (const [pt, t] of this.mutations[this.index]) this.internal.set(StrPt(pt), t)
+      return [this.entityMutations[this.index], this.visualMutations[this.index]]
     } else return false
+  }
+
+  last() {
+    this.index = this.mutations.length - 1
+    for (const [pt, t] of this.terrain) this.internal.set(StrPt(pt), t)
+    return [...this.entityMutations, ...this.visualMutations]
   }
 
   reset() {
@@ -56,7 +65,12 @@ export class Overseer {
 }
 
 export class Mutator {
-  constructor(private main: Mutation, public terrain: Mutation, public entityMutator: Mutation) {}
+  constructor(
+    private main: Mutation,
+    private terrain: Mutation,
+    private entityMutator: Mutation,
+    private visualMutator: Mutation
+  ) {}
 
   set(setPt: Point | string, e: EntityTemplate) {
     const pts = typeof setPt === 'string' ? setPt : setPt.s
@@ -65,5 +79,10 @@ export class Mutator {
       this.main.set(pts, e)
       this.terrain.set(pts, e)
     } else this.entityMutator.set(pts, e)
+  }
+
+  visual(setPt: Point, e: EntityTemplate) {
+    const pts = typeof setPt === 'string' ? setPt : setPt.s
+    this.visualMutator.set(pts, e)
   }
 }

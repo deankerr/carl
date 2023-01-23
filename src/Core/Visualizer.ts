@@ -8,7 +8,8 @@ import { renderLevel, renderMessages } from './Render'
 import { Level } from '../Model/Level'
 import { hydrate } from './Entity'
 import { Beings } from '../Templates'
-import { Pt } from '../Model/Point'
+import { Pt, StrPt } from '../Model/Point'
+import { CONFIG } from '../config'
 
 export class Visualizer {
   overseer: Overseer
@@ -41,7 +42,11 @@ export class Visualizer {
     }
 
     this.worldProxy = new Proxy(world, handler)
-
+    if (CONFIG.visualizerLast) {
+      this.overseer.last().forEach(m => {
+        for (const [pt, e] of m) this.level.entities.push(hydrate(e, StrPt(pt)))
+      })
+    }
     this.render()
 
     this.keys.add(this.input.bind(this))
@@ -81,6 +86,11 @@ export class Visualizer {
   next() {
     if (!this.playing) return
     const more = this.overseer.next()
+    if (more !== false && Array.isArray(more)) {
+      more.forEach(m => {
+        for (const [pt, e] of m) this.level.entities.push(hydrate(e, StrPt(pt)))
+      })
+    }
     this.render()
     if (more && this.playing) this.play()
     else this.playing = false

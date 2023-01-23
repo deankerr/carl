@@ -64,7 +64,7 @@ export class Game {
     this.render()
     this.keys.add(this.update.bind(this))
 
-    // this.startVisualizer()
+    if (CONFIG.autoVisualizer) this.startVisualizer()
   }
 
   update(code: string) {

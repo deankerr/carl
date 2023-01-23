@@ -6,9 +6,9 @@ import { Point, Pt } from '../Model/Point'
 import { half, mix, pick, range, repeat, rnd, rndO } from '../lib/util'
 import { Overseer, Mutator } from './Overseer'
 import { RoomBuilder, Room } from './structures/Room'
-import { Rect } from './Rectangle'
+import { Rectangle } from '../Model/Rectangle'
 import { CONFIG } from '../config'
-import { handleBump } from '../System'
+import { Structure } from './structures/Structure'
 
 // stairs/connectors?
 export function overworld(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
@@ -20,57 +20,55 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
 
   const center = Pt(half(width), half(height))
 
-  repeat(10, () => walk(grid.rndPt(), Terrain.grass, 400, grid.mutate())) // grass
-  repeat(10, () => walk(grid.rndPt(), Terrain.deadGrass, 100, grid.mutate())) // dead grass
+  // repeat(10, () => walk(grid.rndPt(), Terrain.grass, 400, grid.mutate())) // grass
+  // repeat(10, () => walk(grid.rndPt(), Terrain.deadGrass, 100, grid.mutate())) // dead grass
 
   // outer/inner space markers
-  const levelRect = Rect.at(Pt(0, 0), width, height)
+  const levelRect = Rectangle.at(Pt(0, 0), width, height)
   const outer = levelRect.scale(-1)
   const inner = levelRect.scale(-6)
 
-  // debug visual markers
-  const mutMarkers = grid.mutate()
-  outer.traverse((pt, edge) => (edge ? mutMarkers.set(pt, Terrain.path) : ''))
-  inner.traverse((pt, edge) => (edge ? mutMarkers.set(pt, Terrain.path) : ''))
+  // // debug visual markers
+  // const mutMarkers = grid.mutate()
+  // outer.traverse((pt, edge) => (edge ? mutMarkers.set(pt, Terrain.path) : ''))
+  // inner.traverse((pt, edge) => (edge ? mutMarkers.set(pt, Terrain.path) : ''))
 
-  // western lake
-  const westLakePt = Pt(half(inner.x), rnd(inner.y, inner.y2))
-  const westLakeMut = grid.mutate()
-  repeat(30, () => walk(westLakePt, Terrain.water, 12, westLakeMut, { n: 2, s: 2 }))
+  // // western lake
+  // const westLakePt = Pt(half(inner.x), rnd(inner.y, inner.y2))
+  // const westLakeMut = grid.mutate()
+  // repeat(30, () => walk(westLakePt, Terrain.water, 12, westLakeMut, { n: 2, s: 2 }))
 
-  const nsPeak = grid.mutate()
-  const nsMound = grid.mutate()
-  for (const x of range(0, width - 1, 3)) {
-    walk(Pt(x, outer.y), Terrain.peak, 3, nsPeak)
-    walk(Pt(x, outer.y), Terrain.mound, 3, nsMound)
-    walk(Pt(x, outer.y2), Terrain.mound, 3, nsMound)
-    walk(Pt(x, outer.y2), Terrain.peak, 3, nsPeak)
-  }
+  // const nsPeak = grid.mutate()
+  // const nsMound = grid.mutate()
+  // for (const x of range(0, width - 1, 3)) {
+  //   walk(Pt(x, outer.y), Terrain.peak, 3, nsPeak)
+  //   walk(Pt(x, outer.y), Terrain.mound, 3, nsMound)
+  //   walk(Pt(x, outer.y2), Terrain.mound, 3, nsMound)
+  //   walk(Pt(x, outer.y2), Terrain.peak, 3, nsPeak)
+  // }
 
-  const ewPeak = grid.mutate()
-  const ewMound = grid.mutate()
-  for (const y of range(0, height - 1, 3)) {
-    walk(Pt(outer.x, y), Terrain.mound, 2, ewMound)
-    walk(Pt(outer.x, y), Terrain.peak, 2, ewPeak)
-    walk(Pt(outer.x2, y), Terrain.peak, 2, ewPeak)
-    walk(Pt(outer.x2, y), Terrain.mound, 2, ewMound)
-  }
+  // const ewPeak = grid.mutate()
+  // const ewMound = grid.mutate()
+  // for (const y of range(0, height - 1, 3)) {
+  //   walk(Pt(outer.x, y), Terrain.mound, 2, ewMound)
+  //   walk(Pt(outer.x, y), Terrain.peak, 2, ewPeak)
+  //   walk(Pt(outer.x2, y), Terrain.peak, 2, ewPeak)
+  //   walk(Pt(outer.x2, y), Terrain.mound, 2, ewMound)
+  // }
 
-  const cornersPeak = grid.mutate()
-  for (const pt of outer.scale(-3).cornerPts()) walk(pt, pick([Terrain.peak, Terrain.mound]), 10, cornersPeak)
+  // const cornersPeak = grid.mutate()
+  // for (const pt of outer.scale(-3).cornerPts()) walk(pt, pick([Terrain.peak, Terrain.mound]), 10, cornersPeak)
 
-  // scattered shrubs
-  const shrubMut = grid.mutate()
-  repeat(5, () => sparseWalk(inner.rndEdgePt(), Features.shrub, 5, shrubMut))
+  // // scattered shrubs
+  // const shrubMut = grid.mutate()
+  // repeat(5, () => sparseWalk(inner.rndEdgePt(), Features.shrub, 5, shrubMut))
 
   // // smaller southern lake
   // const southLakePt = Pt(center.x + rnd(-4, -4), outskirtsRect.y2)
   // repeat(2, () => walk(grid, Terrain.water, 20, southLakePt))
 
   // ruined structures
-  const inSpace = inner.width / 6
-  const inX = inner.x
-  const inX2 = inner.x2
+
   // const structPts = mix([
   //   Pt(inX + inSpace, center.y + rnd(-2, 2)),
   //   Pt(inX + half(inner.width), center.y + rnd(-2, 2)),
@@ -79,37 +77,49 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
 
   // structure 1
   // const ruinPt = center.add('-18,0')
-  const ruinPt = center.add(rnd(-5, 5), rnd(-3, 3))
+  // const ruinPt = center.add(rnd(-5, 5), rnd(-3, 3))
 
-  const ruin = Room(rndO(11, 13), rnd(9, 11))
-    .walls(0)
-    .door(Terrain.void)
-    .door(Terrain.void)
-    .door(Terrain.void)
-    .degradedFloor(Terrain.void, -1)
+  // const ruin = Room(rndO(11, 13), rnd(9, 11))
+  //   .walls(0)
+  //   .door(Terrain.void)
+  //   .door(Terrain.void)
+  //   .door(Terrain.void)
+  //   .degradedFloor(Terrain.void, -1)
 
-  repeat(rnd(1, 2), () => {
-    ruin.divide()
-  })
+  // repeat(rnd(1, 2), () => {
+  //   ruin.divide()
+  // })
 
-  repeat(rnd(1, 2), () => {
-    ruin.externalAnnex()
-  })
+  // repeat(rnd(1, 2), () => {
+  //   ruin.externalAnnex()
+  // })
 
-  ruin.children.forEach(c => {
-    c.walls().degradedFloor(Terrain.void, -1).door(Terrain.void)
-    if (rnd(1)) c.add(randomFlameTemplate())
-  })
+  // ruin.children.forEach(c => {
+  //   c.walls().degradedFloor(Terrain.void, -1).door(Terrain.void)
+  //   if (rnd(1)) c.add(randomFlameTemplate())
+  // })
 
-  ruin.place(ruinPt, grid.mutate())
-  console.log('ruin:', ruin)
+  // ruin.place(ruinPt, grid.mutate())
+  // console.log('ruin:', ruin)
 
-  // structure 3
-  // sparseWalk(grid, Terrain.shrub, rnd(3, 6), structPts[2])
-  // sparseWalk(grid, Terrain.tombstone, rnd(4, 8), structPts[2])
-  // const col = grid.mutate()
-  // col.set(structPts[2], Terrain.column)
+  const main = new Structure(inner, grid)
+  const [sub1, sub2] = main.bisect()
 
+  const ruin = rnd(1) ? sub1.inner(17, 11) : sub2.inner(17, 11)
+  ruin.walls()
+
+  // const ruinsInner = ruin.shell()
+
+  const [inner1, inner2, innerWall] = ruin.bisect()
+  innerWall.walls()
+
+  const [room1, room2, roomsInnerWall] = rnd(1) ? inner1.bisect() : inner2.bisect()
+  roomsInnerWall.walls()
+
+  const [lilRoom1, lilRoom2, lilWall] = rnd(1) ? room1.bisect() : room2.bisect()
+  lilWall.walls()
+
+  // * End
   console.log(`Done: ${Date.now() - t}ms`)
   console.log('grid', grid)
   return grid

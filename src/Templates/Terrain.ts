@@ -1,3 +1,5 @@
+import * as ROT from 'rot-js'
+import { Color } from 'rot-js/lib/color'
 import { Entity, hydrate } from '../Core/Entity'
 export type TerrainTemplate = typeof Terrain[keyof typeof Terrain]
 
@@ -128,6 +130,20 @@ export const Terrain = {
     color: '#755b49',
     tag: ['blocksLight'],
   },
+  smallCheck: {
+    id: 'smallCheck',
+    name: 'small checkerboard',
+    char: 'smallCheck',
+    color: '#C8757B',
+    tag: ['walkable'],
+  },
+  pip: {
+    id: 'pip',
+    name: 'pip',
+    char: 'bigCheck',
+    color: '#C8757B',
+    tag: ['walkable'],
+  },
   void: {
     id: 'void',
     name: 'void',
@@ -150,4 +166,14 @@ Object.entries(Terrain).forEach(t => GlobalTerrainData.set(t[1], hydrate(t[1])))
 export function GlobalTerrain(template: TerrainTemplate) {
   const tEntity = GlobalTerrainData.get(template)
   return tEntity ?? hydrate(Terrain.endlessVoid)
+}
+
+let markerCount = 0
+export function Marker() {
+  // const h = markerCount % 2 ? (markerCount++ % 20) * 0.05 : (markerCount++ % 20) * 0.05 + 0.4
+  const h = (markerCount++ % 20) * 0.06
+  const hslc = [h, 0.5, 0.5] as Color
+  const rgb = ROT.Color.hsl2rgb(hslc)
+  console.log('Marker:', hslc, rgb)
+  return { ...Terrain.pip, color: ROT.Color.toHex(rgb) }
 }

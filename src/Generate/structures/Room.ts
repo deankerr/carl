@@ -5,13 +5,13 @@ import { half, pick, repeat, rnd, rndO } from '../../lib/util'
 import { Point, Pt, StrPt } from '../../Model/Point'
 import { Features, Terrain } from '../../Templates'
 import { Mutator } from '../Overseer'
-import { Rect } from '../Rectangle'
+import { Rectangle } from '../../Model/Rectangle'
 
 export function Room(width: number, height: number) {
-  return new RoomBuilder(Rect.atC(Pt(0, 0), width, height))
+  return new RoomBuilder(Rectangle.atC(Pt(0, 0), width, height))
 }
 export class RoomBuilder {
-  rect: Rect
+  rect: Rectangle
 
   terrain = new Map<string, EntityTemplate>()
   entities = new Map<Point, EntityTemplate>()
@@ -20,7 +20,7 @@ export class RoomBuilder {
   divisions: RoomBuilder[] = [] // internal only
   annexes: RoomBuilder[] = [] // external only
 
-  constructor(rect: Rect) {
+  constructor(rect: Rectangle) {
     this.rect = rect
   }
 
@@ -45,7 +45,7 @@ export class RoomBuilder {
   degradedFloor(type: EntityTemplate, scale: number) {
     const inner = this.rect.scale(scale)
     const tinySpace = inner.width < 3 || inner.height < 3
-    console.log('inner:', inner)
+    // console.log('inner:', inner)
     inner.traverse((pt, edge) => {
       if (tinySpace) rnd(2) && this.terrain.set(pt.s, type)
       else if (edge) {
@@ -111,7 +111,7 @@ export class RoomBuilder {
 
   externalAnnex(nWidth?: number, nHeight?: number) {
     const self = this.rect
-    let rect: Rect | undefined
+    let rect: Rectangle | undefined
     const width = nWidth ?? rndO(minRoomSize, self.width * 0.66)
     const height = nHeight ?? rndO(minRoomSize, self.height * 0.66)
     repeat(1000, () => {
@@ -124,9 +124,9 @@ export class RoomBuilder {
         scaleBy.y * dir.y || rnd(this.rect.y, this.rect.y2)
       )
       // repeat until an available space is found
-      const testRect = Rect.atC(pos, width, height).scale(-1)
+      const testRect = Rectangle.atC(pos, width, height).scale(-1)
       if (this.children.some(a => a.rect.intersects(testRect))) return false
-      rect = Rect.atC(pos, width, height)
+      rect = Rectangle.atC(pos, width, height)
       return true
     })
     if (!rect) throw new Error('Unable to replace annex')
@@ -141,7 +141,7 @@ export class RoomBuilder {
     const tl = Pt(self.x, self.y)
     // create a random x or y point to divide at
     const splitPt = rnd(1) ? Pt(rndO(5, self.width - 4), 0) : Pt(0, rndO(5, self.height - 4))
-    const room1 = new RoomBuilder(Rect.at(tl, splitPt.x || self.width, splitPt.y || self.height))
+    const room1 = new RoomBuilder(Rectangle.at(tl, splitPt.x || self.width, splitPt.y || self.height))
     this.children.push(room1)
     this.divisions.push(room1)
     return room1
