@@ -30,4 +30,22 @@ export function StrPt(s: string) {
   return new Point(parseInt(pt[0]), parseInt(pt[1]))
 }
 
+export function PtSet(...args: Point[] | string[]) {
+  const set = new Set<string>()
+
+  for (const a of args) {
+    if (typeof a === 'string') {
+      set.add(a)
+    } else {
+      set.add(a.s)
+    }
+  }
+
+  const toPt = () => {
+    const sPtA = [...set]
+    return sPtA.map(pts => StrPt(pts))
+  }
+  return { set, toPt }
+}
+
 const neighbors = [Pt(0, -1), Pt(1, -1), Pt(1, 0), Pt(1, 1), Pt(0, 1), Pt(-1, 1), Pt(-1, 0), Pt(-1, -1)]

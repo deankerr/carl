@@ -143,14 +143,4 @@ export class Rect {
   static atxy2(pt: Point, pt2: Point, id = 0) {
     return new Rect(pt, pt2.x - pt.x + 1, pt2.y - pt.y + 1, id)
   }
-
-  // By size, eg xSize 1 = 1, 2 = 3, 3 = 5 etc.
-  // static scaled(cx: number, cy: number, xSize: number, ySize: number, id = 0) {
-  //   const width = 2 * xSize - 1
-  //   const height = 2 * ySize - 1
-  //   const x1 = cx - Math.floor(width / 2)
-  //   const y1 = cy - Math.floor(height / 2)
-
-  //   return new Rect(x1, y1, width, height, id)
-  // }
 }

@@ -32,9 +32,9 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   const inner = levelRect.scale(-6)
 
   // // debug visual markers
-  // const mutMarkers = grid.mutate()
-  // outer.traverse((pt, edge) => (edge ? mutMarkers.set(pt, Terrain.path) : ''))
-  // inner.traverse((pt, edge) => (edge ? mutMarkers.set(pt, Terrain.path) : ''))
+  // const mutMarkers = O.mutate()
+  // outer.traverse((pt, edge) => (edge ? mutMarkers.set(pt, Features.debugMarker) : ''))
+  // inner.traverse((pt, edge) => (edge ? mutMarkers.set(pt, Features.debugMarker) : ''))
 
   // western lake
   const westLakePt = Pt(half(inner.x), rnd(inner.y, inner.y2))
@@ -79,18 +79,11 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   const ruinW = rndO(13, 15)
   const ruinH = rndO(11, 13)
   const ruin = main.sub[rnd(1)].inner(ruinW, ruinH)
-  // const ruin = main.sub[1].inner(rnd(13, 17), rnd(9, 15))
   ruin.walls()
-  ruin.mark()
-
-  const [done, walls] = BSPRooms(ruin.rect.scale(-1), { O })
-
-  // const mark = O.mutate()
-  // walls.forEach(r => r.traverse(pt => mark.set(pt, Features.debugMarker)))
-
-  // const ruinsInner = ruin.shell()
-
-  // repeat(1, () => sparseWalk(O.grid.rndPt(), Features.flames, 5, O.mutate()))
+  ruin.bisectRooms()
+  ruin.buildInnerWalls()
+  ruin.connectInnerRooms()
+  // ruin.innerRooms.forEach(r => r.mark())
 
   // * End
   console.log(`Overworld done: ${Date.now() - t}ms`, O)

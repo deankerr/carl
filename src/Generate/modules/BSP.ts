@@ -25,11 +25,10 @@ export function BSPRooms(startRect: Rect, BSPConfig?: BSPConfig) {
   const complete: Rect[] = []
   const walls: Rect[] = []
 
-  repeat(attempts, i => {
-    // console.log('bsp loop', i)
+  repeat(attempts, () => {
     const r = queue.shift()
     if (!r) {
-      console.log('no more rects!')
+      console.log('BSP: Queue empty!')
       return true
     }
 
@@ -38,7 +37,6 @@ export function BSPRooms(startRect: Rect, BSPConfig?: BSPConfig) {
 
     let dir = rnd(1) ? 'vert' : 'hori'
     if (!canSplitV && !canSplitH) {
-      console.log('rect', i, 'done!', r)
       complete.push(r)
       return
     }
@@ -69,7 +67,7 @@ export function BSPRooms(startRect: Rect, BSPConfig?: BSPConfig) {
   })
 
   const results = [...queue, ...complete]
-  console.log(`BSP: created ${queue.length} rooms`, results, 'Walls', walls)
+  console.log(`BSP: created ${results.length} rooms`, results, 'Walls', walls)
 
   const wallMut = O?.mutate()
   if (wallMut) walls.forEach(w => w.traverse(pt => wallMut.set(pt, Features.debugMarker)))
