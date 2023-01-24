@@ -1,7 +1,7 @@
 const PROD = import.meta.env.PROD
 
 const appInitial = 'game'
-const seed = null
+const seed = 123
 
 const mainDisplayWidth = 59
 const mainDisplayHeight = 29
@@ -11,7 +11,7 @@ const messageDisplayHeight = 4
 const generateWidth = mainDisplayWidth
 const generateHeight = mainDisplayHeight
 // '#111a0e'
-const mainBackgroundColor = '#111a0e'
+const mainBackgroundColor = '#131313'
 const messageColor = '#FFF'
 const messageBackgroundColor = 'transparent'
 const htmlBackgroundColor = mainBackgroundColor
@@ -20,7 +20,7 @@ const frameLimit = 500
 const lightsOnInitial = PROD ? false : true
 const debugShowLightInfo = false
 
-const autoVisualizer = true
+const autoVisualizer = false
 const visualizerLast = false
 
 const CONFIG = {

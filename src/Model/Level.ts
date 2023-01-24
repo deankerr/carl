@@ -29,7 +29,7 @@ export class Level {
     readonly label = 'bare',
 
     // readonly terrainGrid: Grid<number> = Grid.fill(1, 1, 0),
-    readonly terrainGrid: Grid<TerrainTemplate>,
+    public terrainGrid: Grid<TerrainTemplate>,
     readonly voidDecor = new Map<string, Entity>(),
     readonly rooms: Point[][] = []
   ) {

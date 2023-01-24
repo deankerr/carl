@@ -48,15 +48,15 @@ export class World {
       console.log('create', domain?.label, index)
       const overseer = domain.generator()
 
-      const level = new Level('bbb', overseer.construct())
+      const level = new Level('bbb', overseer.grid)
       level.overseer = overseer
 
       domain.levels.push(level)
       this.active = domain.levels[index]
       this.activeIndex = index
       this.domain = domain
-      overseer.entityMutations.forEach(m => {
-        for (const [pt, template] of m) {
+      overseer.mutators.forEach(m => {
+        for (const [pt, template] of m.entities) {
           this.createTemplate(template, StrPt(pt))
         }
       })

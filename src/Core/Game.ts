@@ -247,7 +247,7 @@ export class Game {
   }
 
   startVisualizer() {
-    if (this.world.active.overseer.terrain.size > 0) {
+    if (this.world.active.overseer.mutators.length > 0) {
       console.log('Game: Start Visualizer')
       this.keys.cleanup()
       this.renderOff = true

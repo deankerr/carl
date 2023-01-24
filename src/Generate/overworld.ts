@@ -16,14 +16,14 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   // ROT.RNG.setSeed(1234)
   // console.log(ROT.RNG.getSeed())
 
-  const grid = new Overseer(width, height, Terrain.void)
+  const O = new Overseer(width, height)
 
   const center = Pt(half(width), half(height))
-
-  const grassMut = grid.mutate()
-  const dGrassMut = grid.mutate()
-  repeat(10, () => walk(grid.rndPt(), Terrain.grass, 400, grassMut)) // grass
-  repeat(10, () => walk(grid.rndPt(), Terrain.deadGrass, 100, dGrassMut)) // dead grass
+  O.mutate().set('0,0', Terrain.void)
+  const grassMut = O.mutate()
+  const dGrassMut = O.mutate()
+  repeat(10, () => walk(O.grid.rndPt(), Terrain.grass, 400, grassMut)) // grass
+  repeat(10, () => walk(O.grid.rndPt(), Terrain.deadGrass, 100, dGrassMut)) // dead grass
 
   // outer/inner space markers
   const levelRect = Rect.at(Pt(0, 0), width, height)
@@ -37,11 +37,11 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
 
   // western lake
   const westLakePt = Pt(half(inner.x), rnd(inner.y, inner.y2))
-  const westLakeMut = grid.mutate()
+  const westLakeMut = O.mutate()
   repeat(30, () => walk(westLakePt, Terrain.water, 12, westLakeMut, { n: 2, s: 2 }))
 
-  const nsPeak = grid.mutate()
-  const nsMound = grid.mutate()
+  const nsPeak = O.mutate()
+  const nsMound = O.mutate()
   for (const x of range(0, width - 1, 3)) {
     walk(Pt(x, outer.y), Terrain.peak, 3, nsPeak)
     walk(Pt(x, outer.y), Terrain.mound, 3, nsMound)
@@ -49,8 +49,8 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
     walk(Pt(x, outer.y2), Terrain.peak, 3, nsPeak)
   }
 
-  const ewPeak = grid.mutate()
-  const ewMound = grid.mutate()
+  const ewPeak = O.mutate()
+  const ewMound = O.mutate()
   for (const y of range(0, height - 1, 3)) {
     walk(Pt(outer.x, y), Terrain.mound, 2, ewMound)
     walk(Pt(outer.x, y), Terrain.peak, 2, ewPeak)
@@ -58,18 +58,18 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
     walk(Pt(outer.x2, y), Terrain.mound, 2, ewMound)
   }
 
-  const cornersPeak = grid.mutate()
+  const cornersPeak = O.mutate()
   for (const pt of outer.scale(-3).cornerPts()) walk(pt, pick([Terrain.peak, Terrain.mound]), 10, cornersPeak)
 
   // scattered shrubs
-  const shrubMut = grid.mutate()
+  const shrubMut = O.mutate()
   repeat(5, () => sparseWalk(inner.rndEdgePt(), Features.shrub, 5, shrubMut))
 
   // smaller southern lake
   // const southLakePt = Pt(center.x + rnd(-4, -4), outskirtsRect.y2)
   // repeat(2, () => walk(grid, Terrain.water, 20, southLakePt))
 
-  const main = new Structure(inner, grid)
+  const main = new Structure(inner, O)
   main.bisect()
 
   const ruinW = rndO(13, 15)
@@ -87,13 +87,12 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   bsp(ruin.rect.scale(-1))
   console.log('done:', done)
 
-  const mut = grid.mutate()
+  const mut = O.mutate()
   done.forEach(r => {
-    const mark = Marker()
-    r.traverse(pt => mut.visual(pt, mark))
+    r.traverse(pt => mut.set(pt, Features.debugMarker))
   })
-  const markW = { ...Marker(), color: 'magenta' }
-  walls.forEach(r => r.traverse(pt => mut.visual(pt, markW)))
+
+  walls.forEach(r => r.traverse(pt => mut.set(pt, Features.debugMarker)))
 
   function bsp(startRect: Rect) {
     const rects = [startRect]
@@ -139,10 +138,12 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
 
   // const ruinsInner = ruin.shell()
 
+  // repeat(1, () => sparseWalk(O.grid.rndPt(), Features.flames, 5, O.mutate()))
+
   // * End
   console.log(`Done: ${Date.now() - t}ms`)
-  console.log('grid', grid)
-  return grid
+  console.log('grid', O)
+  return O
 }
 
 function walk(

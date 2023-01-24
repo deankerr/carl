@@ -152,6 +152,13 @@ export const Features = {
       flicker: 120,
     },
   },
+  debugMarker: {
+    id: 'debugMarker',
+    name: 'debug marker',
+    char: 'smallCheck',
+    color: '#999',
+    tag: ['walkable'],
+  },
 }
 
 export function randomFlameTemplate() {
