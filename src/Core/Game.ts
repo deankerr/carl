@@ -7,7 +7,7 @@ import { CONFIG } from '../config'
 import { renderLevel, renderMessages } from './Render'
 import { World } from './World'
 
-import { actionName, ActionTypes, __randomMove, __wait } from '../Action'
+import { actionName, ActionTypes, ChangeLevel, __randomMove, __wait } from '../Action'
 import { acting } from '../Component'
 import {
   handleBump,
@@ -113,38 +113,7 @@ export class Game {
     // * change level *
     if ('changeLevel' in playerAction) {
       console.groupEnd()
-
-      // debug
-      if (playerAction.changeLevel.to.startsWith('debug_')) {
-        console.log(playerAction.changeLevel.to)
-        if (playerAction.changeLevel.to === 'debug_down') world.changeLevel(1)
-        if (playerAction.changeLevel.to === 'debug_up') world.changeLevel(-1)
-        if (playerAction.changeLevel.to === 'debug_outdoor') world.setCurrentLevel(world.domainMap['outdoor'], 0)
-        if (playerAction.changeLevel.to === 'debug_dungeon') world.setCurrentLevel(world.domainMap['dungeon'], 0)
-        if (playerAction.changeLevel.to === 'debug_testLevel') world.setCurrentLevel(world.domainMap['testLevel'], 0)
-
-        world.nextTurn()
-        processLighting(this.world)
-        processFOV(this.world)
-        // this.render()
-        return
-      }
-
-      // actual
-      const [player] = this.world.get('tagPlayer', 'position')
-      const [terrain] = this.world.here(player.position)
-      if (terrain.name === 'descending stairs') {
-        world.changeLevel(1)
-      } else if (terrain.name === 'ascending stairs') {
-        world.changeLevel(-1)
-      } else console.warn('Not on stairs')
-
-      world.nextTurn()
-      processLighting(this.world)
-      processFOV(this.world)
-      // this.render()
-
-      return
+      this.changeLevel(playerAction)
     }
 
     // * temp: all npc entities do this action
@@ -225,6 +194,42 @@ export class Game {
     requestAnimationFrame(this.render.bind(this))
   }
 
+  changeLevel(action: ChangeLevel) {
+    const { world } = this
+    const { changeLevel } = action
+    // debug
+    if (changeLevel.to.startsWith('debug_')) {
+      console.log(changeLevel.to)
+      if (changeLevel.to === 'debug_down') world.changeLevel(1)
+      if (changeLevel.to === 'debug_up') world.changeLevel(-1)
+      // if (changeLevel.to === 'debug_outdoor') world.setCurrentLevel(world.domainMap['outdoor'], 0)
+      // if (changeLevel.to === 'debug_dungeon') world.setCurrentLevel(world.domainMap['dungeon'], 0)
+      // if (changeLevel.to === 'debug_testLevel') world.setCurrentLevel(world.domainMap['testLevel'], 0)
+
+      world.nextTurn()
+      processLighting(this.world)
+      processFOV(this.world)
+      // this.render()
+      return
+    }
+
+    // actual
+    const [player] = this.world.get('tagPlayer', 'position')
+    const [terrain] = this.world.here(player.position)
+    if (terrain.name === 'descending stairs') {
+      world.changeLevel(1)
+    } else if (terrain.name === 'ascending stairs') {
+      world.changeLevel(-1)
+    } else console.warn('Not on stairs')
+
+    world.nextTurn()
+    processLighting(this.world)
+    processFOV(this.world)
+    // this.render()
+
+    return
+  }
+
   debugCoordMsg = ''
   debugColorMsg = ''
   debugAtCursor(cursor: number[]) {
@@ -255,10 +260,14 @@ export class Game {
     }
   }
 
-  restoreContext() {
+  restoreContext(gen = '') {
     this.renderOff = false
     this.render()
     this.keys.add(this.update.bind(this))
     console.log('Game: resumed')
+    if (gen) {
+      this.changeLevel(ChangeLevel(gen))
+      this.startVisualizer()
+    }
   }
 }

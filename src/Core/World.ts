@@ -68,6 +68,7 @@ export class World {
       this.activeIndex = index
       this.domain = domain
     }
+    this.hasChanged = true
   }
 
   changeLevel(dir: number) {

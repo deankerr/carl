@@ -96,7 +96,13 @@ export class Visualizer {
         }
         break
       case 'KeyV':
-        return this.return()
+        return this.cleanup()
+      case 'Minus':
+        console.log('Visualizer: climb up')
+        return this.cleanup('debug_up')
+      case 'Equal':
+        console.log('Visualizer: generate new level')
+        return this.cleanup('debug_down')
       default:
         console.log('Visualizer: no action for', code)
     }
@@ -186,10 +192,10 @@ export class Visualizer {
     this.msgDisplay.drawText(0, 3, 'Visualizer ' + this.index + '/' + this.lastFrame)
   }
 
-  return() {
+  cleanup(gen = '') {
     console.log('Visualizer cleanup')
-    this.playing = false
+    this.stop()
     this.keys.cleanup()
-    this.restoreGame()
+    this.restoreGame(gen)
   }
 }
