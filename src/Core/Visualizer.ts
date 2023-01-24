@@ -23,6 +23,7 @@ export class Visualizer {
   speed = 250
   lastFrame: number
   index = 0
+  settimeout = 0
 
   constructor(
     readonly display: ROT.Display,
@@ -63,12 +64,11 @@ export class Visualizer {
 
   input(code: string) {
     switch (code) {
-      // case 'KeyR':
-      //   console.log('Visualizer: reset')
-      //   this.playing = false
-      //   this.overseer.reset()
-      //   this.render()
-      //   break
+      case 'KeyR':
+        console.log('Visualizer: reset')
+        this.stop()
+        this.index = 0
+        break
       // case 'KeyN':
       //   console.log('Visualizer: next')
       //   this.next()
@@ -81,7 +81,7 @@ export class Visualizer {
         } else {
           console.log('Visualizer: play')
           this.playing = true
-          this.play()
+          this.forward()
         }
         break
       case 'KeyV':
@@ -122,24 +122,36 @@ export class Visualizer {
     console.log('START')
     this.index = 0
     this.playing = true
-    this.play()
+    this.next()
   }
 
   next() {
     this.level.terrainGrid = this.grids[this.index]
     this.level.entities = this.entities[this.index]
     this.render()
-    if (this.playing) this.play()
+    if (this.playing) this.settimeout = setTimeout(() => requestAnimationFrame(this.forward.bind(this)), this.speed)
   }
 
-  play() {
+  forward() {
     if (this.index + 1 <= this.lastFrame) {
       this.index++
-      setTimeout(() => requestAnimationFrame(this.next.bind(this)), this.speed)
+      this.next()
     } else {
       this.playing = false
       console.log('Playback complete')
     }
+  }
+
+  previous() {
+    if (this.index - 1 >= 0) {
+      this.index -= 2
+      this.next()
+    } else console.log('You can\t go back.')
+  }
+
+  stop() {
+    clearTimeout(this.settimeout)
+    this.playing = false
   }
 
   render() {

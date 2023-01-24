@@ -19,7 +19,7 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   const O = new Overseer(width, height)
 
   const center = Pt(half(width), half(height))
-  O.mutate().set('0,0', Terrain.void)
+
   const grassMut = O.mutate()
   const dGrassMut = O.mutate()
   repeat(10, () => walk(O.grid.rndPt(), Terrain.grass, 400, grassMut)) // grass
