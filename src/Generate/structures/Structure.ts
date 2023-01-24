@@ -2,12 +2,13 @@
 import { half, rnd } from '../../lib/util'
 import { Pt } from '../../Model/Point'
 import { Rect } from '../../Model/Rectangle'
-import { Marker, Terrain } from '../../Templates'
+import { Features, Marker, Terrain } from '../../Templates'
 import { Mutator, Overseer } from '../Overseer'
 
 export class Structure {
   rect: Rect // the total area which contains a structure
   sub: Structure[] = []
+  borders: Rect[] = []
   overseer: Overseer
   constructor(rect: Rect, overseer: Overseer) {
     this.rect = rect
@@ -26,7 +27,7 @@ export class Structure {
 
     const canSplitV = self.height >= 5
     const canSpiitH = self.width >= 5
-    if (!(canSplitV || canSpiitH)) return
+    if (!(canSplitV || canSpiitH)) return [this]
     // choose either a width or height to split at
     // true = vert, false = horiz
     const dir = true
@@ -43,6 +44,7 @@ export class Structure {
     const splitC = dir ? Rect.at(Pt(self.cx, self.y), 1, self.height) : Rect.at(Pt(self.x, self.cy), self.width, 1)
     const sub3 = new Structure(splitC, this.overseer)
     this.sub.push(sub1, sub2, sub3)
+    return [sub1, sub2, sub3]
   }
 
   inner(width: number, height: number) {
@@ -71,5 +73,10 @@ export class Structure {
     self.traverse((pt, edge) => {
       if (edge) mutator.set(pt, Terrain.wall)
     })
+  }
+
+  mark() {
+    const m = this.overseer.mutate()
+    this.rect.traverse(pt => m.set(pt, Features.debugMarker))
   }
 }

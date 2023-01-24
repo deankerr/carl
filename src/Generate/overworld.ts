@@ -9,6 +9,7 @@ import { RoomBuilder, Room } from './structures/Room'
 import { Rect } from '../Model/Rectangle'
 import { CONFIG } from '../config'
 import { Structure } from './structures/Structure'
+import { BSPRooms } from './modules/BSP'
 
 // stairs/connectors?
 export function overworld(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
@@ -70,80 +71,29 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   // repeat(2, () => walk(grid, Terrain.water, 20, southLakePt))
 
   const main = new Structure(inner, O)
-  main.bisect()
+  // main.mark()
+  const [main1, main2] = main.bisect()
+  // main1.mark()
+  // main2.mark()
 
   const ruinW = rndO(13, 15)
   const ruinH = rndO(11, 13)
   const ruin = main.sub[rnd(1)].inner(ruinW, ruinH)
   // const ruin = main.sub[1].inner(rnd(13, 17), rnd(9, 15))
   ruin.walls()
-  console.log('ruin:', ruin)
+  ruin.mark()
 
-  const min = 5
-  const minSplit = half(min)
-  const done: Rect[] = []
-  const walls: Rect[] = []
+  const [done, walls] = BSPRooms(ruin.rect.scale(-1), { O })
 
-  bsp(ruin.rect.scale(-1))
-  console.log('done:', done)
-
-  done.forEach(r => {
-    const mark = O.mutate()
-    r.traverse(pt => mark.set(pt, Features.debugMarker))
-  })
-
-  const mark = O.mutate()
-  walls.forEach(r => r.traverse(pt => mark.set(pt, Features.debugMarker)))
-
-  function bsp(startRect: Rect) {
-    const rects = [startRect]
-    repeat(rnd(3, 6), i => {
-      console.log('bsp loop', i)
-      const r = rects.shift()
-      if (!r) {
-        console.log('no more rects!')
-        return true
-      }
-
-      const canSplitV = r.width >= min
-      const canSplitH = r.height >= min
-
-      let dir = rnd(1) ? 'vert' : 'hori'
-      if (!canSplitV && !canSplitH) {
-        console.log('rect', i, 'done!', r)
-        done.push(r)
-        return
-      }
-
-      if (canSplitV && canSplitH) dir = rnd(1) ? 'vert' : 'hori'
-      else if (canSplitV) dir = 'vert'
-      else dir = 'hori'
-
-      // choose bisect point along top or left edge
-      const split = dir === 'vert' ? rnd(r.x + minSplit, r.x2 - minSplit) : rnd(r.y + minSplit, r.y2 - minSplit)
-
-      //create two sub rects, and a border rect
-      const sub1 =
-        dir === 'vert' ? Rect.atxy2(Pt(r.x, r.y), Pt(split - 1, r.y2)) : Rect.atxy2(Pt(r.x, r.y), Pt(r.x2, split - 1))
-
-      const sub2 =
-        dir === 'vert' ? Rect.atxy2(Pt(split + 1, r.y), Pt(r.x2, r.y2)) : Rect.atxy2(Pt(r.x, split + 1), Pt(r.x2, r.y2))
-
-      const subW = dir === 'vert' ? Rect.at(Pt(split, r.y), 1, r.height) : Rect.at(Pt(r.x, split), r.width, 1)
-      rects.push(sub1, sub2)
-      walls.push(subW)
-      return false
-    })
-    done.push(...rects)
-  }
+  // const mark = O.mutate()
+  // walls.forEach(r => r.traverse(pt => mark.set(pt, Features.debugMarker)))
 
   // const ruinsInner = ruin.shell()
 
   // repeat(1, () => sparseWalk(O.grid.rndPt(), Features.flames, 5, O.mutate()))
 
   // * End
-  console.log(`Done: ${Date.now() - t}ms`)
-  console.log('grid', O)
+  console.log(`Overworld done: ${Date.now() - t}ms`, O)
   return O
 }
 

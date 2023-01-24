@@ -37,7 +37,6 @@ export class Visualizer {
     readonly restoreGame: Game['restoreContext']
   ) {
     const t = Date.now()
-    console.log('Visualizer init')
     this.overseer = world.active.overseer
     this.lastFrame = this.overseer.mutators.length - 1
 
@@ -60,7 +59,7 @@ export class Visualizer {
     }
     this.worldProxy = new Proxy(world, handler)
 
-    console.log(`Visualizer load took ${Date.now() - t}ms`)
+    console.log(`Visualizer (${Date.now() - t}ms)`)
 
     this.keys.add(this.input.bind(this))
     if (CONFIG.visualizerAutoplay) this.start()
@@ -70,27 +69,27 @@ export class Visualizer {
   input(code: string) {
     switch (code) {
       case 'KeyR':
-        console.log('Visualizer: restart')
+        // console.log('Visualizer: restart')
         this.stop()
         this.index = 0
         this.next()
         break
       case 'ArrowLeft':
-        console.log('Visualizer: previous')
+        // console.log('Visualizer: previous')
         this.stop()
         this.backward()
         break
       case 'ArrowRight':
-        console.log('Visualizer: forward')
+        // console.log('Visualizer: forward')
         this.stop()
         this.forward()
         break
       case 'Space':
         if (this.playing) {
-          console.log('Visualizer: pause')
+          // console.log('Visualizer: pause')
           this.stop()
         } else {
-          console.log('Visualizer: play')
+          // console.log('Visualizer: play')
           this.playing = true
           this.forward()
         }
@@ -98,10 +97,10 @@ export class Visualizer {
       case 'KeyV':
         return this.cleanup()
       case 'Minus':
-        console.log('Visualizer: climb up')
+        // console.log('Visualizer: climb up')
         return this.cleanup('debug_up')
       case 'Equal':
-        console.log('Visualizer: generate new level')
+        // console.log('Visualizer: generate new level')
         return this.cleanup('debug_down')
       default:
         console.log('Visualizer: no action for', code)
@@ -109,7 +108,7 @@ export class Visualizer {
   }
 
   load() {
-    console.log('LOAD')
+    // console.log('LOAD')
     const markerGroups: Entity[][] = []
     while (this.index < this.lastFrame) {
       this.index++
@@ -151,7 +150,7 @@ export class Visualizer {
   }
 
   start() {
-    console.log('START')
+    // console.log('START')
     this.index = 0
     this.playing = true
     this.forward()
