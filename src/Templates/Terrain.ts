@@ -174,6 +174,6 @@ export function Marker() {
   const h = (markerCount++ % 20) * 0.06
   const hslc = [h, 0.5, 0.5] as Color
   const rgb = ROT.Color.hsl2rgb(hslc)
-  console.log('Marker:', hslc, rgb)
+  // console.log('Marker:', hslc, rgb)
   return { ...Terrain.pip, color: ROT.Color.toHex(rgb) }
 }

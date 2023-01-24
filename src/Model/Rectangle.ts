@@ -2,7 +2,7 @@
 import { pick, rnd } from '../lib/util'
 import { Pt, Point } from './Point'
 
-export class Rectangle {
+export class Rect {
   // Top left to bottom right
   readonly x: number
   readonly y: number
@@ -18,10 +18,7 @@ export class Rectangle {
 
   readonly area: number
 
-  // debug id
-  id
-
-  constructor(pt: Point, width: number, height: number, id = 0) {
+  constructor(pt: Point, width: number, height: number, public id = 0) {
     if (width < 1 || height < 1)
       throw new Error(
         `Please do not create zero/negative width Rects, as I cannot fathom them. w:${width} h: ${height}`
@@ -40,8 +37,6 @@ export class Rectangle {
     this.cy = this.y2 - Math.floor(this.height / 2)
 
     this.area = width * height
-
-    this.id = id
   }
 
   // Travels through the x/y coords
@@ -56,7 +51,7 @@ export class Rectangle {
 
   // TODO handle arrays, ts generic
   // Tests if another Rect intersects this, if so returns the Pts where it does
-  intersects(rect: Rectangle) {
+  intersects(rect: Rect) {
     if (this === rect) console.warn('Did you mean to check if a rect intersects itself?', this, rect)
 
     // Quick test if rects intersect
@@ -76,7 +71,7 @@ export class Rectangle {
   }
 
   // Is a rect fully contained within this rect (or overlap perfectly)?
-  contains(rect: Rectangle) {
+  contains(rect: Rect) {
     return this.x <= rect.x && this.x2 >= rect.x2 && this.y <= rect.y && this.y2 >= rect.y2
   }
 
@@ -87,11 +82,11 @@ export class Rectangle {
     const width = this.width + xBy * 2
     const height = this.height + xBy * 2
     // enforce minimum of size 1 to avoid weirdness
-    return Rectangle.at(Pt(x, y), width > 0 ? width : 1, height > 0 ? height : 1)
+    return Rect.at(Pt(x, y), width > 0 ? width : 1, height > 0 ? height : 1)
   }
 
   translate(x: number, y: number) {
-    return Rectangle.at(Pt(this.x + x, this.y + y), this.width, this.height)
+    return Rect.at(Pt(this.x + x, this.y + y), this.width, this.height)
   }
 
   // Return list of each pt in the rect. outer = outermost edge only
@@ -134,19 +129,19 @@ export class Rectangle {
 
   // Constructor alias
   static at(pt: Point, width: number, height: number, id = 0) {
-    return new Rectangle(pt, width, height, id)
+    return new Rect(pt, width, height, id)
   }
 
   // Center-point based
   static atC(pt: Point, width: number, height: number, id = 0) {
     const x = pt.x - Math.floor(width / 2)
     const y = pt.y - Math.floor(height / 2)
-    return new Rectangle(Pt(x, y), width, height, id)
+    return new Rect(Pt(x, y), width, height, id)
   }
 
   // From x/y to x2/y2
   static atxy2(pt: Point, pt2: Point, id = 0) {
-    return new Rectangle(pt, pt2.x - pt.x + 1, pt2.y - pt.y + 1, id)
+    return new Rect(pt, pt2.x - pt.x + 1, pt2.y - pt.y + 1, id)
   }
 
   // By size, eg xSize 1 = 1, 2 = 3, 3 = 5 etc.

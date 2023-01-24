@@ -11,7 +11,7 @@ const messageDisplayHeight = 4
 const generateWidth = mainDisplayWidth
 const generateHeight = mainDisplayHeight
 
-const mainBackgroundColor = '#131313'
+const mainBackgroundColor = '#111a0e'
 const messageColor = '#FFF'
 const messageBackgroundColor = 'transparent'
 const htmlBackgroundColor = mainBackgroundColor
@@ -20,8 +20,8 @@ const frameLimit = 500
 const lightsOnInitial = PROD ? false : true
 const debugShowLightInfo = false
 
-const autoVisualizer = false
-const visualizerLast = true
+const autoVisualizer = true
+const visualizerLast = false
 
 const CONFIG = {
   appInitial,
