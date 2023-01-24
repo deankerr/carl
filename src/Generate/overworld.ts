@@ -87,12 +87,13 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   bsp(ruin.rect.scale(-1))
   console.log('done:', done)
 
-  const mut = O.mutate()
   done.forEach(r => {
-    r.traverse(pt => mut.set(pt, Features.debugMarker))
+    const mark = O.mutate()
+    r.traverse(pt => mark.set(pt, Features.debugMarker))
   })
 
-  walls.forEach(r => r.traverse(pt => mut.set(pt, Features.debugMarker)))
+  const mark = O.mutate()
+  walls.forEach(r => r.traverse(pt => mark.set(pt, Features.debugMarker)))
 
   function bsp(startRect: Rect) {
     const rects = [startRect]

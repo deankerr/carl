@@ -7,7 +7,7 @@ import { Game } from './Core/Game'
 
 export function App() {
   // dev html background
-  document.body.style.backgroundColor = CONFIG.htmlBGColor
+  document.body.style.backgroundColor = CONFIG.htmlBackgroundColor
 
   if (CONFIG?.seed) ROT.RNG.setSeed(CONFIG.seed)
 

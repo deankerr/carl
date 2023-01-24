@@ -3,12 +3,21 @@ import { Color } from 'rot-js/lib/color'
 import { min } from './util'
 
 type tHSLOpts = {
+  hue: { to?: number; add?: number }
   sat: { to?: number; by?: number; min?: number }
   lum: { to?: number; by?: number; min?: number }
 }
 
 export function transformHSL(from: string, opts: Partial<tHSLOpts>) {
   const hsl = hexToHSL(from)
+  if (opts.hue) {
+    if (opts.hue.to) hsl[0] += opts.hue.to
+    if (opts.hue.add) {
+      hsl[0] = hsl[0] + opts.hue.add
+      while (hsl[0] > 1) hsl[0] = hsl[0] - 1
+    }
+  }
+
   if (opts.sat) {
     const cmin = opts.sat.min ?? 0
     if (opts.sat.to) hsl[1] = min(cmin, opts.sat.to)

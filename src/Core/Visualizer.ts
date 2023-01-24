@@ -7,10 +7,13 @@ import { World } from './World'
 import { renderLevel, renderMessages } from './Render'
 import { Level } from '../Model/Level'
 import { Entity, hydrate } from './Entity'
-import { Beings, Terrain, TerrainTemplate } from '../Templates'
+import { Beings, Features, Terrain, TerrainTemplate } from '../Templates'
 import { Pt, StrPt } from '../Model/Point'
 import { CONFIG } from '../config'
 import { Grid } from '../Model/Grid'
+import { Color } from 'rot-js/lib/color'
+import { range } from '../lib/util'
+import { hexToHSL, transformHSL } from '../lib/color'
 
 export class Visualizer {
   overseer: Overseer
@@ -18,6 +21,7 @@ export class Visualizer {
   level: Level
   grids: Grid<TerrainTemplate>[] = []
   entities: Entity[][] = []
+  markers: Entity[] = []
 
   playing = false
   speed = 250
@@ -100,6 +104,7 @@ export class Visualizer {
 
   load() {
     console.log('LOAD')
+    const markerGroups: Entity[][] = []
     while (this.index < this.lastFrame) {
       this.index++
 
@@ -117,11 +122,25 @@ export class Visualizer {
         entities.push(hydrate(e, StrPt(pts)))
       }
 
+      const markers: Entity[] = []
       for (const [pts, e] of mut.markers) {
-        entities.push(hydrate(e, StrPt(pts)))
+        const mark = hydrate(e, StrPt(pts))
+        entities.push(mark)
+        markers.push(mark)
       }
+      if (markers.length > 0) markerGroups.push(markers)
 
       this.entities.push(entities)
+    }
+
+    // color each debug marker with a lovely spread of hues
+    if (markerGroups.length > 0) {
+      const hues = 1 / (markerGroups.length + 1)
+      const base = Features.debugMarker.color
+      markerGroups.forEach((g, i) => {
+        const c = transformHSL(base, { hue: { add: hues * i } })
+        g.forEach(m => (m.color = c))
+      })
     }
   }
 

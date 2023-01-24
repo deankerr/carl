@@ -156,7 +156,7 @@ export const Features = {
     id: 'debugMarker',
     name: 'debug marker',
     char: 'smallCheck',
-    color: '#999',
+    color: '#C8757B',
     tag: ['walkable'],
   },
 }
