@@ -10,7 +10,7 @@ const messageDisplayHeight = 4
 
 const generateWidth = mainDisplayWidth
 const generateHeight = mainDisplayHeight
-
+// '#111a0e'
 const mainBackgroundColor = '#111a0e'
 const messageColor = '#FFF'
 const messageBackgroundColor = 'transparent'
