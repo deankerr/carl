@@ -59,25 +59,32 @@ export class Visualizer {
     console.log(`Visualizer load took ${Date.now() - t}ms`)
 
     this.keys.add(this.input.bind(this))
-    this.start()
+    if (CONFIG.visualizerAutoplay) this.start()
+    else this.next()
   }
 
   input(code: string) {
     switch (code) {
       case 'KeyR':
-        console.log('Visualizer: reset')
+        console.log('Visualizer: restart')
         this.stop()
         this.index = 0
+        this.next()
         break
-      // case 'KeyN':
-      //   console.log('Visualizer: next')
-      //   this.next()
-      //   this.render()
-      //   break
+      case 'ArrowLeft':
+        console.log('Visualizer: previous')
+        this.stop()
+        this.backward()
+        break
+      case 'ArrowRight':
+        console.log('Visualizer: forward')
+        this.stop()
+        this.forward()
+        break
       case 'Space':
         if (this.playing) {
           console.log('Visualizer: pause')
-          this.playing = false
+          this.stop()
         } else {
           console.log('Visualizer: play')
           this.playing = true
@@ -122,36 +129,36 @@ export class Visualizer {
     console.log('START')
     this.index = 0
     this.playing = true
-    this.next()
+    this.forward()
   }
 
   next() {
     this.level.terrainGrid = this.grids[this.index]
     this.level.entities = this.entities[this.index]
     this.render()
-    if (this.playing) this.settimeout = setTimeout(() => requestAnimationFrame(this.forward.bind(this)), this.speed)
   }
 
   forward() {
     if (this.index + 1 <= this.lastFrame) {
       this.index++
       this.next()
+      if (this.playing) this.settimeout = setTimeout(() => requestAnimationFrame(this.forward.bind(this)), this.speed)
     } else {
       this.playing = false
       console.log('Playback complete')
     }
   }
 
-  previous() {
+  backward() {
     if (this.index - 1 >= 0) {
-      this.index -= 2
+      this.index--
       this.next()
-    } else console.log('You can\t go back.')
+    } else console.log("You can't go back.")
   }
 
   stop() {
-    clearTimeout(this.settimeout)
     this.playing = false
+    clearTimeout(this.settimeout)
   }
 
   render() {

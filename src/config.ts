@@ -1,7 +1,7 @@
 const PROD = import.meta.env.PROD
 
 const appInitial = 'game'
-const seed = 123
+const seed = null
 
 const mainDisplayWidth = 59
 const mainDisplayHeight = 29
@@ -20,8 +20,8 @@ const frameLimit = 500
 const lightsOnInitial = PROD ? false : true
 const debugShowLightInfo = false
 
-const autoVisualizer = false
-const visualizerLast = false
+const autoStartVisualizer = true
+const visualizerAutoplay = false
 
 const CONFIG = {
   appInitial,
@@ -39,8 +39,8 @@ const CONFIG = {
   frameLimit,
   debugShowLightInfo,
   lightsOnInitial,
-  autoVisualizer,
-  visualizerLast,
+  autoStartVisualizer,
+  visualizerAutoplay,
 }
 
 export { CONFIG }
