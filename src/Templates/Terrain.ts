@@ -91,13 +91,6 @@ export const Terrain = {
     color: '#664f47',
     tag: ['walkable'],
   },
-  // tree: {
-  //   id: 'tree',
-  //   name: 'tree',
-  //   char: 'tree',
-  //   color: 'forestgreen',
-  //   tag: ['walkable'],
-  // },
   mound: {
     id: 'mound',
     name: 'mound',
@@ -123,13 +116,6 @@ export const Terrain = {
   //   trodOn: 'You bow your head solemnly in thoughtful prayer.',
   // },
 
-  column: {
-    id: 'column',
-    name: 'column',
-    char: 'column',
-    color: '#755b49',
-    tag: ['blocksLight'],
-  },
   smallCheck: {
     id: 'smallCheck',
     name: 'small checkerboard',

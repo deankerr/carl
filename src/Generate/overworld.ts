@@ -10,6 +10,7 @@ import { Rect } from '../Model/Rectangle'
 import { CONFIG } from '../config'
 import { Structure } from './structures/Structure'
 import { BSPRooms } from './modules/BSP'
+import RecursiveShadowcasting from 'rot-js/lib/fov/recursive-shadowcasting'
 
 // stairs/connectors?
 export function overworld(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
@@ -75,38 +76,52 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   const main = new Structure(inner, O)
   main.mark(true)
   const [main1, main2] = main.bisect()
-  main1.mark(true)
-  main2.mark(true)
-  // main1.mark()
-  // main2.mark()
+
+  const [ruinsArea, featureArea] = ROT.RNG.shuffle([main1, main2])
+  featureArea.mark()
 
   const ruinW = rndO(13, 15)
   const ruinH = rndO(11, 13)
-  const ruin = main.sub[rnd(1)].inner(ruinW, ruinH)
+  const ruin = ruinsArea.inner(ruinW, ruinH)
   ruin.walls()
   ruin.bisectRooms(rnd(2, 5))
   ruin.buildInnerWalls()
   ruin.connectInnerRooms()
   ruin.degradedFloor(Terrain.void)
   ruin.feature(randomFlameTemplate(), rnd(1, 3))
+  ruin.feature(Beings.rat, 4)
+  ruin.feature(Beings.ghost, 3)
 
-  const annex = ruin.createAnnex(rndO(7, 9), rndO(7, 9), main.rect)
-  console.log('annex:', annex)
-  annex.walls()
-  annex.bisectRooms(rnd(1, 3))
-  annex.buildInnerWalls()
-  annex.connectInnerRooms()
-  annex.degradedFloor(Terrain.void)
+  ruin.createAnnex(rndO(7, 9), rndO(7, 9), main.rect)
 
-  const waterRoom = pick(annex.innerRooms)
-  waterRoom.degradedFloor(Terrain.water)
-  waterRoom.feature(Beings.crab)
-  waterRoom.feature(Beings.crab2)
+  if (ruin.sub[0]) {
+    const annex = ruin.sub[0]
+    annex.walls()
+    annex.bisectRooms(rnd(1, 2))
+    annex.buildInnerWalls()
+    annex.connectInnerRooms()
+    annex.degradedFloor(Terrain.void)
 
+    const waterRoom = pick(annex.innerRooms)
+    waterRoom.degradedFloor(Terrain.water)
+    waterRoom.feature(Beings.crab)
+    waterRoom.feature(Beings.crab2)
+  }
   ruin.connectAnnexes()
   ruin.connectExternal(rnd(1, 2))
 
   console.log('ruin:', ruin)
+
+  const graveyard = featureArea.center(9, 7)
+  graveyard.degradedFloor(
+    [Terrain.path, Terrain.crackedPath1, Terrain.crackedPath2, Terrain.crackedPath3, Terrain.crackedPath4],
+    1
+  )
+
+  graveyard.feature(Features.tombstone, rnd(4, 8))
+  graveyard.feature(Features.statue, 2)
+
+  featureArea.feature(Features.deadTree, 6, Terrain.void)
 
   // * End
   console.log(`Overworld done: ${Date.now() - t}ms`, O)
@@ -135,6 +150,10 @@ function walk(
   }
 }
 
-function sparseWalk(start: Point, type: EntityTemplate, amount: number, mutator: Mutator) {
-  repeat(amount, () => mutator.set(start.add(Pt(rnd(-4, 4), rnd(-4, 4))), type))
+function sparseWalk(start: Point, type: EntityTemplate, amount: number, mutator: Mutator, terrain?: EntityTemplate) {
+  repeat(amount, () => {
+    const pt = start.add(Pt(rnd(-4, 4), rnd(-4, 4)))
+    if (terrain) mutator.set(pt, terrain)
+    mutator.set(pt, type)
+  })
 }

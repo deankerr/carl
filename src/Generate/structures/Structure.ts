@@ -61,6 +61,12 @@ export class Structure {
     return sub
   }
 
+  center(width: number, height: number) {
+    const sub = new Structure(Rect.atC(this.rect.center(), width, height), this.O)
+    this.sub.push(sub)
+    return sub
+  }
+
   bisectRooms(attempts = 2) {
     const [rooms, walls] = BSPRooms(this.rect.scale(-1), { O: this.O, attempts })
     this.innerRooms = rooms.map(r => new Structure(r, this.O))
@@ -184,51 +190,51 @@ export class Structure {
     else this.O.mutate().set(this.rect, t)
   }
 
-  degradedFloor(t = Terrain.path) {
-    if (this.innerRooms.length > 0) this.innerRooms.forEach(r => r.degradedFloor(t))
+  degradedFloor(template: EntityTemplate | EntityTemplate[], chance = 16) {
+    if (this.innerRooms.length > 0) this.innerRooms.forEach(r => r.degradedFloor(template))
     else {
       const isSmallRoom = this.rect.width <= 3 || this.rect.height <= 3
       const mut = this.O.mutate()
       this.rect.traverse((pt, edge) => {
+        const t = Array.isArray(template) ? pick(template) : template
         if (edge && !isSmallRoom) rnd(1) && mut.set(pt, t)
         else if (isSmallRoom) rnd(4) && mut.set(pt, t)
-        else rnd(16) && mut.set(pt, t)
+        else rnd(chance) && mut.set(pt, t)
       })
     }
   }
 
-  feature(template: EntityTemplate, n = 1) {
+  feature(template: EntityTemplate, n = 1, terrain?: EntityTemplate) {
     let features = 0
     const mut = this.O.mutate()
     while (features < n) {
-      const rect = this.innerRooms.length > 1 ? pick(this.innerRooms).rect : this.rect.scale(-1)
+      const rect = this.innerRooms.length > 1 ? pick(this.innerRooms).rect : this.rect
       const pt = rect.rndPt()
+      if (terrain) mut.set(pt, terrain)
       mut.set(pt, template)
       features++
-      console.log('created', template.id, 'at', pt.s)
     }
   }
 
   createAnnex(width: number, height: number, within: Rect) {
     const self = this.rect
     const dirs = ROT.RNG.shuffle([
-      Pt(self.x - half(width), self.cy),
-      Pt(self.x2 + half(width), self.cy),
-      Pt(self.cx, self.y - half(height)),
-      Pt(self.cx, self.y2 + half(height)),
+      Pt(self.x - half(width), self.cy + rnd(0, 3)),
+      Pt(self.x2 + half(width), self.cy + rnd(0, 3)),
+      Pt(self.cx + rnd(0, 3), self.y - half(height)),
+      Pt(self.cx + rnd(0, 3), self.y2 + half(height)),
     ])
     while (dirs.length > 0) {
       const pt = dirs.pop()
       if (!pt) continue
+      console.log('try a:', pt)
       const rect = Rect.atC(pt, width, height)
       // this.O.mutate().mark(rect)
       if (within.contains(rect)) {
         const annex = new Structure(rect, this.O)
         this.sub.push(annex)
-        return annex
       }
     }
-    throw new Error('Failed to create annex')
   }
 
   connectAnnexes() {

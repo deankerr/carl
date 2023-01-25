@@ -68,6 +68,7 @@ export const tileMapOryxMain = {
   spider: mapChar(6, 3, t),
   stairsAscending: mapChar(17, 2, t),
   stairsDescending: mapChar(18, 2, t),
+  statue: mapChar(19, 2, t),
   tombstone: mapChar(22, 2, t),
   tree: mapChar(5, 0, t),
   void: mapChar(13, 0, t),

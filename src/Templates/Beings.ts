@@ -61,9 +61,9 @@ export const Beings = {
   },
   rat: {
     id: 'rat',
-    name: 'rat prince',
+    name: 'ratman prince',
     char: 'R',
-    color: '#458727',
+    color: '#975230',
     tag: ['actor'],
   },
   // spooks
