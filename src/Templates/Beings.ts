@@ -42,7 +42,7 @@ export const Beings = {
     id: 'crab2',
     name: 'turncoat crab',
     char: 'crab',
-    color: '#cc3131',
+    color: '#32cd44',
     tag: ['actor'],
   },
   chicken: {

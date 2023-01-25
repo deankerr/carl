@@ -114,6 +114,7 @@ export class Game {
     if ('changeLevel' in playerAction) {
       console.groupEnd()
       this.changeLevel(playerAction)
+      return
     }
 
     // * temp: all npc entities do this action

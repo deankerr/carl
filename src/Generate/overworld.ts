@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as ROT from 'rot-js'
-import { Terrain, Features, randomFlameTemplate, Marker } from '../Templates'
+import { Terrain, Features, randomFlameTemplate, Marker, Beings } from '../Templates'
 import { EntityTemplate } from '../Core/Entity'
 import { Point, Pt } from '../Model/Point'
 import { half, mix, pick, range, repeat, rnd, rndO, str } from '../lib/util'
@@ -14,8 +14,10 @@ import { BSPRooms } from './modules/BSP'
 // stairs/connectors?
 export function overworld(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
   const t = Date.now()
-  // ROT.RNG.setSeed(1234)
+
+  // ROT.RNG.setState([0.5747384100686759, 0.7194003688637167, 0.938015446998179, 427068])
   // console.log(ROT.RNG.getSeed())
+  console.log(ROT.RNG.getState())
 
   const O = new Overseer(width, height)
 
@@ -71,8 +73,10 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   // repeat(2, () => walk(grid, Terrain.water, 20, southLakePt))
 
   const main = new Structure(inner, O)
-  // main.mark()
+  main.mark(true)
   const [main1, main2] = main.bisect()
+  main1.mark(true)
+  main2.mark(true)
   // main1.mark()
   // main2.mark()
 
@@ -80,11 +84,28 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   const ruinH = rndO(11, 13)
   const ruin = main.sub[rnd(1)].inner(ruinW, ruinH)
   ruin.walls()
-  ruin.bisectRooms()
+  ruin.bisectRooms(rnd(2, 5))
   ruin.buildInnerWalls()
   ruin.connectInnerRooms()
-  ruin.degradedFloor()
-  // ruin.innerRooms.forEach(r => r.mark())
+  ruin.degradedFloor(Terrain.void)
+  ruin.feature(randomFlameTemplate(), rnd(1, 3))
+
+  const annex = ruin.createAnnex(rndO(7, 9), rndO(7, 9), main.rect)
+  console.log('annex:', annex)
+  annex.walls()
+  annex.bisectRooms(rnd(1, 3))
+  annex.buildInnerWalls()
+  annex.connectInnerRooms()
+  annex.degradedFloor(Terrain.void)
+
+  const waterRoom = pick(annex.innerRooms)
+  waterRoom.degradedFloor(Terrain.water)
+  waterRoom.feature(Beings.crab)
+  waterRoom.feature(Beings.crab2)
+
+  ruin.connectAnnexes()
+  ruin.connectExternal(rnd(1, 2))
+
   console.log('ruin:', ruin)
 
   // * End

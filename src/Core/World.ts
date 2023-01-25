@@ -129,9 +129,9 @@ export class World {
     this.setCurrentLevel(nextDomain, nextIndex)
   }
 
-  // TODO Can be greatly simplified after Generate refactor
   createTemplate(template: EntityTemplate, pt: Point) {
-    this.activate(hydrate(template, pt))
+    const entity = hydrate(template, pt)
+    this.activate(entity)
   }
 
   createPlayer(pt?: Point) {
@@ -148,6 +148,7 @@ export class World {
     const id = entity.id + '-' + this.nextEntityID++
     const newEntity = { ...entity, id }
     this.active.entities.push(newEntity)
+    if ('tagActor' in entity) this.active.scheduler.add(newEntity.id, true)
     return newEntity
   }
 

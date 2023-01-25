@@ -53,7 +53,10 @@ export class Visualizer {
     // create a World proxy, intercept calls to the active level and replace with the current playback frame
     const handler = {
       get(target: World, prop: keyof World) {
+        // the fake playback level
         if (prop === 'active') return level
+        // switch the lights on
+        if (prop === 'options') return { ...world.options, lightsOn: true }
         return Reflect.get(target, prop)
       },
     }

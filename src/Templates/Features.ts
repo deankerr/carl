@@ -163,7 +163,7 @@ export const Features = {
 
 export function randomFlameTemplate() {
   return pick([
-    Features.blueFlames,
+    // Features.blueFlames, // bad
     Features.cyanFlames,
     Features.greenFlames,
     Features.magentaFlames,

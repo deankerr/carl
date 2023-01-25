@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import * as ROT from 'rot-js'
+import { EntityTemplate } from '../../Core/Entity'
 import { half, pick, range, rnd } from '../../lib/util'
 import { Point, PointSet, Pt } from '../../Model/Point'
 import { Rect } from '../../Model/Rectangle'
@@ -59,8 +61,8 @@ export class Structure {
     return sub
   }
 
-  bisectRooms() {
-    const [rooms, walls] = BSPRooms(this.rect.scale(-1), { O: this.O, attempts: rnd(2, 5) })
+  bisectRooms(attempts = 2) {
+    const [rooms, walls] = BSPRooms(this.rect.scale(-1), { O: this.O, attempts })
     this.innerRooms = rooms.map(r => new Structure(r, this.O))
     this.innerWalls = walls
 
@@ -140,8 +142,6 @@ export class Structure {
         })
       }
 
-      console.log('adjRoomPts:', adjRoomPts)
-
       // connect rooms
       // todo: connect a random amount of rooms (at least one)
       unconnected.delete(current)
@@ -152,8 +152,6 @@ export class Structure {
         unconnected.delete(room)
       }
     }
-    console.log('connected:', connected)
-    console.log('this.innerRoomConnections:', this.innerRoomConnections)
 
     // connect
     // todo different connection themes, eg crumbled wall gap
@@ -161,6 +159,23 @@ export class Structure {
     for (const [pt] of this.innerRoomConnections) {
       doorsMut.set(pt, Terrain.void)
       doorsMut.set(pt, Features.door)
+    }
+  }
+
+  connectExternal(n = 1) {
+    const mut = this.O.mutate()
+    let connections = 0
+    while (connections < n) {
+      const pt = this.rect.rndEdgePt()
+      // if no inner walls, or the point isn't adjacent to an inner wall
+      if (
+        this.innerWalls.length === 0 ||
+        !pt.orthNeighbours().some(nPt => this.innerWalls.some(w => w.intersectsPt(pt)))
+      ) {
+        mut.set(pt, Terrain.void)
+        mut.set(pt, Features.door)
+        connections++
+      }
     }
   }
 
@@ -172,16 +187,71 @@ export class Structure {
   degradedFloor(t = Terrain.path) {
     if (this.innerRooms.length > 0) this.innerRooms.forEach(r => r.degradedFloor(t))
     else {
+      const isSmallRoom = this.rect.width <= 3 || this.rect.height <= 3
       const mut = this.O.mutate()
       this.rect.traverse((pt, edge) => {
-        if (edge) rnd(1) && mut.set(pt, t)
+        if (edge && !isSmallRoom) rnd(1) && mut.set(pt, t)
+        else if (isSmallRoom) rnd(4) && mut.set(pt, t)
         else rnd(16) && mut.set(pt, t)
       })
     }
   }
 
-  mark() {
+  feature(template: EntityTemplate, n = 1) {
+    let features = 0
+    const mut = this.O.mutate()
+    while (features < n) {
+      const rect = this.innerRooms.length > 1 ? pick(this.innerRooms).rect : this.rect.scale(-1)
+      const pt = rect.rndPt()
+      mut.set(pt, template)
+      features++
+      console.log('created', template.id, 'at', pt.s)
+    }
+  }
+
+  createAnnex(width: number, height: number, within: Rect) {
+    const self = this.rect
+    const dirs = ROT.RNG.shuffle([
+      Pt(self.x - half(width), self.cy),
+      Pt(self.x2 + half(width), self.cy),
+      Pt(self.cx, self.y - half(height)),
+      Pt(self.cx, self.y2 + half(height)),
+    ])
+    while (dirs.length > 0) {
+      const pt = dirs.pop()
+      if (!pt) continue
+      const rect = Rect.atC(pt, width, height)
+      // this.O.mutate().mark(rect)
+      if (within.contains(rect)) {
+        const annex = new Structure(rect, this.O)
+        this.sub.push(annex)
+        return annex
+      }
+    }
+    throw new Error('Failed to create annex')
+  }
+
+  connectAnnexes() {
+    if (this.sub.length === 0) return
+    const mut = this.O.mutate()
+    for (const annex of this.sub) {
+      const pts = ROT.RNG.shuffle(this.rect.intersects(annex.rect))
+      while (pts.length > 0) {
+        const pt = pts.pop()
+        if (!pt) continue
+        //todo prevent doors into walls
+        mut.set(pt, Terrain.void)
+        mut.set(pt, Features.door)
+        break
+      }
+    }
+  }
+
+  mark(edgeOnly = false) {
     const m = this.O.mutate()
-    this.rect.traverse(pt => m.set(pt, Features.debugMarker))
+    this.rect.traverse((pt, edge) => {
+      if (!edgeOnly) m.set(pt, Features.debugMarker)
+      else if (edge) m.set(pt, Features.debugMarker)
+    })
   }
 }
