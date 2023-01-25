@@ -96,7 +96,7 @@ export const Terrain = {
     name: 'mound',
     char: 'mound',
     color: '#6a4b39',
-    tag: ['walkable'],
+    tag: ['walkable', 'blocksLight'],
     trodOn: 'You round the mound.',
   },
   peak: {
@@ -104,7 +104,7 @@ export const Terrain = {
     name: 'peak',
     char: 'peak',
     color: '#2a5a3e',
-    tag: ['walkable'],
+    tag: ['walkable', 'blocksLight'],
     trodOn: 'You summit the peak.',
   },
   // tombstone: {

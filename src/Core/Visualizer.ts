@@ -74,8 +74,7 @@ export class Visualizer {
       case 'KeyR':
         // console.log('Visualizer: restart')
         this.stop()
-        this.index = 0
-        this.next()
+        this.start()
         break
       case 'ArrowLeft':
         // console.log('Visualizer: previous')
@@ -154,7 +153,7 @@ export class Visualizer {
 
   start() {
     // console.log('START')
-    this.index = 0
+    this.index = -1
     this.playing = true
     this.forward()
   }

@@ -23,14 +23,14 @@ export const Features = {
     name: 'statue',
     char: 'statue',
     color: '#adadad',
-    tag: ['blocksLight'],
+    tag: ['blocksLight', 'memorable'],
   },
   tombstone: {
     id: 'tombstone',
     name: 'tombstone',
     char: 'tombstone',
     color: '#9c9c9c',
-    tag: ['walkable'],
+    tag: ['walkable', 'memorable'],
     trodOn: 'You bow your head solemnly in thoughtful prayer.',
   },
   column: {
@@ -38,7 +38,7 @@ export const Features = {
     name: 'column',
     char: 'column',
     color: '#755b49',
-    tag: ['blocksLight'],
+    tag: ['blocksLight', 'memorable'],
   },
   // tree: {
   //   id: 'tree',
@@ -52,7 +52,7 @@ export const Features = {
     name: 'dead tree',
     char: 'tree',
     color: '#602e15',
-    tag: ['walkable'],
+    tag: ['walkable', 'blocksLight', 'memorable'],
     trodOn: 'You smile as you continue to outlive this ancient tree.',
   },
   flames: {

@@ -1,16 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as ROT from 'rot-js'
-import { Terrain, Features, randomFlameTemplate, Marker, Beings } from '../Templates'
+import { Terrain, Features, randomFlameTemplate, Beings } from '../Templates'
 import { EntityTemplate } from '../Core/Entity'
 import { Point, Pt } from '../Model/Point'
-import { half, mix, pick, range, repeat, rnd, rndO, str } from '../lib/util'
+import { half, pick, range, repeat, rnd, rndO } from '../lib/util'
 import { Overseer, Mutator } from './Overseer'
-import { RoomBuilder, Room } from './structures/Room'
 import { Rect } from '../Model/Rectangle'
 import { CONFIG } from '../config'
 import { Structure } from './structures/Structure'
-import { BSPRooms } from './modules/BSP'
-import RecursiveShadowcasting from 'rot-js/lib/fov/recursive-shadowcasting'
 
 // stairs/connectors?
 export function overworld(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
@@ -22,7 +18,7 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
 
   const O = new Overseer(width, height)
 
-  const center = Pt(half(width), half(height))
+  // const center = Pt(half(width), half(height))
 
   const grassMut = O.mutate()
   const dGrassMut = O.mutate()
@@ -78,7 +74,8 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   const [main1, main2] = main.bisect()
 
   const [ruinsArea, featureArea] = ROT.RNG.shuffle([main1, main2])
-  featureArea.mark()
+  ruinsArea.mark(true)
+  featureArea.mark(true)
 
   const ruinW = rndO(13, 15)
   const ruinH = rndO(11, 13)
@@ -91,6 +88,8 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   ruin.feature(randomFlameTemplate(), rnd(1, 3))
   ruin.feature(Beings.rat, 4)
   ruin.feature(Beings.ghost, 3)
+  ruin.feature(Terrain.stairsDescending)
+  ruin.feature(Features.flames)
 
   ruin.createAnnex(rndO(7, 9), rndO(7, 9), main.rect)
 
@@ -123,6 +122,7 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
 
   featureArea.feature(Features.deadTree, 6, Terrain.void)
 
+  O.mutate().set(outer.rndEdgePt(), Beings.player)
   // * End
   console.log(`Overworld done: ${Date.now() - t}ms`, O)
   return O

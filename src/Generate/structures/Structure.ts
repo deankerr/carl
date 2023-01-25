@@ -68,7 +68,7 @@ export class Structure {
   }
 
   bisectRooms(attempts = 2) {
-    const [rooms, walls] = BSPRooms(this.rect.scale(-1), { O: this.O, attempts })
+    const [rooms, walls] = BSPRooms(this.rect.scale(-1), { attempts })
     this.innerRooms = rooms.map(r => new Structure(r, this.O))
     this.innerWalls = walls
 
@@ -102,11 +102,11 @@ export class Structure {
       // are there any possible room connections? if not?
 
       // highlight unconnected
-      const othersMarker = this.O.mutate()
-      unconnected.forEach(r => othersMarker.mark(r.rect))
+      // const othersMarker = this.O.mutate()
+      // unconnected.forEach(r => othersMarker.mark(r.rect))
 
       // highlight self
-      this.O.mutate().mark(current.rect)
+      // this.O.mutate().mark(current.rect)
 
       // scan along each edge, looking for adj rooms
       const self = current.rect

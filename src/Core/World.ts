@@ -130,8 +130,11 @@ export class World {
   }
 
   createTemplate(template: EntityTemplate, pt: Point) {
-    const entity = hydrate(template, pt)
-    this.activate(entity)
+    if (template.id === 'player') this.createPlayer(pt)
+    else {
+      const entity = hydrate(template, pt)
+      this.activate(entity)
+    }
   }
 
   createPlayer(pt?: Point) {
