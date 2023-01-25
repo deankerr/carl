@@ -102,11 +102,8 @@ export class Structure {
 
       // scan along each edge, looking for adj rooms
       const self = current.rect
-      // left/right
-      // const connections
       const adjRoomPts = new Map<Structure, PointSet>()
-      console.log('self:', self)
-      console.log('left/right scan')
+
       for (const yi of range(self.y, self.y2)) {
         // left
         const left = Pt(self.x, yi)
@@ -125,7 +122,6 @@ export class Structure {
         })
       }
 
-      console.log('up/down scan')
       for (const xi of range(self.x, self.x2)) {
         // top
         const top = Pt(xi, self.y)
@@ -165,6 +161,22 @@ export class Structure {
     for (const [pt] of this.innerRoomConnections) {
       doorsMut.set(pt, Terrain.void)
       doorsMut.set(pt, Features.door)
+    }
+  }
+
+  floor(t = Terrain.path) {
+    if (this.innerRooms.length > 0) this.innerRooms.forEach(r => r.floor(t))
+    else this.O.mutate().set(this.rect, t)
+  }
+
+  degradedFloor(t = Terrain.path) {
+    if (this.innerRooms.length > 0) this.innerRooms.forEach(r => r.degradedFloor(t))
+    else {
+      const mut = this.O.mutate()
+      this.rect.traverse((pt, edge) => {
+        if (edge) rnd(1) && mut.set(pt, t)
+        else rnd(16) && mut.set(pt, t)
+      })
     }
   }
 

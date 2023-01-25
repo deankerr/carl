@@ -35,7 +35,11 @@ export class Mutator {
   markers: Mutation = new Map()
   constructor(private grid: Grid<TerrainTemplate>) {}
 
-  set(setPt: Point | string, e: EntityTemplate) {
+  set(setPt: Point | string | Rect, e: EntityTemplate) {
+    if (setPt instanceof Rect) {
+      setPt.toPts().forEach(pt => this.set(pt, e))
+      return
+    }
     const pt = typeof setPt === 'string' ? strToPt(setPt) : setPt
     if (this.grid.get(pt) === e) return
     if (Object.values(Terrain).includes(e)) {

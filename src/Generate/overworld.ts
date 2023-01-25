@@ -83,6 +83,7 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   ruin.bisectRooms()
   ruin.buildInnerWalls()
   ruin.connectInnerRooms()
+  ruin.degradedFloor()
   // ruin.innerRooms.forEach(r => r.mark())
   console.log('ruin:', ruin)
 
