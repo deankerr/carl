@@ -6,7 +6,7 @@ import { Graphic, tagCurrentTurn } from '../Component'
 import { Beings, TerrainTemplate } from '../Templates'
 import { createDomains, Domain, DomainMap } from '../Generate/domains'
 import { Level } from '../Model/Level'
-import { Point, Pt, StrPt } from '../Model/Point'
+import { Point, Pt, strToPt } from '../Model/Point'
 import { objLog } from '../lib/util'
 import { colorizeMessage, Message } from '../lib/messages'
 
@@ -57,7 +57,7 @@ export class World {
       this.domain = domain
       overseer.mutators.forEach(m => {
         for (const [pt, template] of m.entities) {
-          this.createTemplate(template, StrPt(pt))
+          this.createTemplate(template, strToPt(pt))
         }
       })
       // this.createTemplates(entityTemplates)

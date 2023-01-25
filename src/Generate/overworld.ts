@@ -84,6 +84,7 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   ruin.buildInnerWalls()
   ruin.connectInnerRooms()
   // ruin.innerRooms.forEach(r => r.mark())
+  console.log('ruin:', ruin)
 
   // * End
   console.log(`Overworld done: ${Date.now() - t}ms`, O)

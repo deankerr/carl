@@ -8,7 +8,7 @@ import { renderLevel, renderMessages } from './Render'
 import { Level } from '../Model/Level'
 import { Entity, hydrate } from './Entity'
 import { Beings, Features, Terrain, TerrainTemplate } from '../Templates'
-import { Pt, StrPt } from '../Model/Point'
+import { Pt, strToPt } from '../Model/Point'
 import { CONFIG } from '../config'
 import { Grid } from '../Model/Grid'
 import { Color } from 'rot-js/lib/color'
@@ -118,18 +118,18 @@ export class Visualizer {
       const prevGrid = this.grids[this.index - 1]
       const grid = this.overseer.replay()
       prevGrid.each((pt, t) => grid.set(pt, t))
-      for (const [pts, t] of mut.terrain) grid.set(StrPt(pts), t)
+      for (const [pts, t] of mut.terrain) grid.set(strToPt(pts), t)
       this.grids.push(grid)
 
       // hydrate entities
       const entities: Entity[] = [...this.entities[this.index - 1]]
       for (const [pts, e] of mut.entities) {
-        entities.push(hydrate(e, StrPt(pts)))
+        entities.push(hydrate(e, strToPt(pts)))
       }
 
       const markers: Entity[] = []
       for (const [pts, e] of mut.markers) {
-        const mark = hydrate(e, StrPt(pts))
+        const mark = hydrate(e, strToPt(pts))
         entities.push(mark)
         markers.push(mark)
       }

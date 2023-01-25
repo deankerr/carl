@@ -1,7 +1,8 @@
 import { EntityTemplate } from '../Core/Entity'
 import { Grid } from '../Model/Grid'
-import { Point, StrPt } from '../Model/Point'
-import { Terrain, TerrainTemplate } from '../Templates'
+import { Point, strToPt } from '../Model/Point'
+import { Rect } from '../Model/Rectangle'
+import { Features, Terrain, TerrainTemplate } from '../Templates'
 
 export type Mutation = Map<string, EntityTemplate>
 
@@ -35,12 +36,20 @@ export class Mutator {
   constructor(private grid: Grid<TerrainTemplate>) {}
 
   set(setPt: Point | string, e: EntityTemplate) {
-    const pt = typeof setPt === 'string' ? StrPt(setPt) : setPt
+    const pt = typeof setPt === 'string' ? strToPt(setPt) : setPt
     if (this.grid.get(pt) === e) return
     if (Object.values(Terrain).includes(e)) {
       this.grid.set(pt, e)
       this.terrain.set(pt.s, e)
     } else if (e.id.includes('debug')) this.markers.set(pt.s, e)
     else this.entities.set(pt.s, e)
+  }
+
+  mark(pt: Point | Rect) {
+    if ('s' in pt) {
+      this.markers.set(pt.s, Features.debugMarker)
+    } else {
+      pt.toPts().forEach(pt => this.markers.set(pt.s, Features.debugMarker))
+    }
   }
 }

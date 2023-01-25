@@ -2,7 +2,7 @@
 // import * as ROT from 'rot-js'
 import { EntityTemplate } from '../../Core/Entity'
 import { half, pick, repeat, rnd, rndO } from '../../lib/util'
-import { Point, Pt, StrPt } from '../../Model/Point'
+import { Point, Pt, strToPt } from '../../Model/Point'
 import { Features, Terrain } from '../../Templates'
 import { Mutator } from '../Overseer'
 import { Rect } from '../../Model/Rectangle'

@@ -1,6 +1,6 @@
 // import * as ROT from 'rot-js'
 import { pick, rnd } from '../lib/util'
-import { Pt, Point } from './Point'
+import { Pt, Point, PointSet } from './Point'
 
 export class Rect {
   // Top left to bottom right
@@ -49,20 +49,18 @@ export class Rect {
     }
   }
 
-  // TODO handle arrays, ts generic
-  // Tests if another Rect intersects this, if so returns the Pts where it does
   intersects(rect: Rect) {
     if (this === rect) console.warn('Did you mean to check if a rect intersects itself?', this, rect)
 
     // Quick test if rects intersect
-    if (this.x2 < rect.x || this.y2 < rect.y || this.x > rect.x2 || this.y > rect.y2) return null
+    if (this.x2 < rect.x || this.y2 < rect.y || this.x > rect.x2 || this.y > rect.y2) return []
 
-    const pts: string[] = []
+    const ptSet = new PointSet()
     rect.traverse(pt => {
-      if (this.intersectsPt(pt)) pts.push(pt.s)
+      if (this.intersectsPt(pt)) ptSet.add(pt)
     })
 
-    return pts
+    return ptSet.toPt()
   }
 
   // Does a point intersect this Rect?
@@ -90,13 +88,15 @@ export class Rect {
   }
 
   // Return list of each pt in the rect. outer = outermost edge only
-  toPts(edgeOnly = false): Point[] {
+  toPts(): Point[] {
     const result: Point[] = []
-    this.traverse((pt, edge) => {
-      if (!edgeOnly) result.push(pt)
-      else if (edge) result.push(pt)
-    })
+    this.traverse(pt => result.push(pt))
+    return result
+  }
 
+  toPtsEdge(): Point[] {
+    const result: Point[] = []
+    this.traverse((pt, edge) => edge && result.push(pt))
     return result
   }
 

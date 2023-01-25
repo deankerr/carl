@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { half, rnd } from '../../lib/util'
-import { Pt, PtSet } from '../../Model/Point'
+import { half, pick, range, rnd } from '../../lib/util'
+import { Point, PointSet, Pt } from '../../Model/Point'
 import { Rect } from '../../Model/Rectangle'
 import { Features, Marker, Terrain } from '../../Templates'
 import { BSPRooms } from '../modules/BSP'
-import { Mutator, Overseer } from '../Overseer'
+import { Overseer } from '../Overseer'
 
 export class Structure {
   rect: Rect // the total area which contains a structure
@@ -12,8 +12,11 @@ export class Structure {
 
   innerRooms: Structure[] = []
   innerWalls: Rect[] = []
+  innerRoomConnections = new Map<Point, [Structure, Structure]>()
 
   O: Overseer
+  label = ''
+
   constructor(rect: Rect, overseer: Overseer) {
     this.rect = rect
     this.O = overseer
@@ -57,9 +60,14 @@ export class Structure {
   }
 
   bisectRooms() {
-    const [rooms, walls] = BSPRooms(this.rect.scale(-1), { attempts: rnd(2, 5) })
+    const [rooms, walls] = BSPRooms(this.rect.scale(-1), { O: this.O, attempts: rnd(2, 5) })
     this.innerRooms = rooms.map(r => new Structure(r, this.O))
     this.innerWalls = walls
+
+    this.innerRooms.forEach((r, i) => {
+      r.label = 'room ' + i
+      r.rect.id = i
+    })
   }
 
   walls() {
@@ -77,25 +85,87 @@ export class Structure {
   }
 
   connectInnerRooms() {
-    const unconnected = [...this.innerRooms]
-    const current = unconnected.pop()
-    if (!current) throw new Error('unhandled no more unconnceted?')
-    // are there any possible room connections? if not?
-    // find adjacent room points
-    current.mark()
-    console.log(
-      'this.innerWalls:',
-      this.innerWalls.map(r => r.toPts())
-    )
-    const searchRect = current.rect.scale(1)
-    const innerWallPts = this.innerWalls
-      .filter(w => w.intersects(searchRect))
-      .map(w => w.toPts())
-      .flat()
-    this.O.mutate()
-    const ptSet = PtSet(...innerWallPts).toPt()
-    console.log('innerWallPts:', innerWallPts)
-    console.log('ptSet:', ptSet)
+    const unconnected = new Set(this.innerRooms)
+    const connected = new Set<Structure>()
+    while (unconnected.size > 0) {
+      const current = pick([...unconnected])
+      // const current = unconnected.pop()
+      if (!current) throw new Error('unhandled no more unconnceted?')
+      // are there any possible room connections? if not?
+
+      // highlight unconnected
+      const othersMarker = this.O.mutate()
+      unconnected.forEach(r => othersMarker.mark(r.rect))
+
+      // highlight self
+      this.O.mutate().mark(current.rect)
+
+      // scan along each edge, looking for adj rooms
+      const self = current.rect
+      // left/right
+      // const connections
+      const adjRoomPts = new Map<Structure, PointSet>()
+      console.log('self:', self)
+      console.log('left/right scan')
+      for (const yi of range(self.y, self.y2)) {
+        // left
+        const left = Pt(self.x, yi)
+        const cRoomL = this.innerRooms.filter(r => r.rect.intersectsPt(left.add(-2, 0)))
+        cRoomL.forEach(cr => {
+          if (!adjRoomPts.has(cr)) adjRoomPts.set(cr, new PointSet())
+          adjRoomPts.get(cr)?.add(left.add(-1, 0))
+        })
+
+        // right
+        const right = Pt(self.x2, yi)
+        const cRoomR = this.innerRooms.filter(r => r.rect.intersectsPt(right.add(2, 0)))
+        cRoomR.forEach(cr => {
+          if (!adjRoomPts.has(cr)) adjRoomPts.set(cr, new PointSet())
+          adjRoomPts.get(cr)?.add(right.add(1, 0))
+        })
+      }
+
+      console.log('up/down scan')
+      for (const xi of range(self.x, self.x2)) {
+        // top
+        const top = Pt(xi, self.y)
+        const cRoomT = this.innerRooms.filter(r => r.rect.intersectsPt(top.add(0, -2)))
+        cRoomT.forEach(cr => {
+          if (!adjRoomPts.has(cr)) adjRoomPts.set(cr, new PointSet())
+          adjRoomPts.get(cr)?.add(top.add(0, -1))
+        })
+
+        // bottom
+        const bottom = Pt(xi, self.y2)
+        const cRoomB = this.innerRooms.filter(r => r.rect.intersectsPt(bottom.add(0, 2)))
+        cRoomB.forEach(cr => {
+          if (!adjRoomPts.has(cr)) adjRoomPts.set(cr, new PointSet())
+          adjRoomPts.get(cr)?.add(bottom.add(0, 1))
+        })
+      }
+
+      console.log('adjRoomPts:', adjRoomPts)
+
+      // connect rooms
+      // todo: connect a random amount of rooms (at least one)
+      unconnected.delete(current)
+      connected.add(current)
+      for (const [room, PtS] of adjRoomPts) {
+        this.innerRoomConnections.set(pick(PtS.toPt()), [current, room])
+        connected.add(room)
+        unconnected.delete(room)
+      }
+    }
+    console.log('connected:', connected)
+    console.log('this.innerRoomConnections:', this.innerRoomConnections)
+
+    // connect
+    // todo different connection themes, eg crumbled wall gap
+    const doorsMut = this.O.mutate()
+    for (const [pt] of this.innerRoomConnections) {
+      doorsMut.set(pt, Terrain.void)
+      doorsMut.set(pt, Features.door)
+    }
   }
 
   mark() {
