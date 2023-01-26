@@ -49,7 +49,7 @@ export const Features = {
   // },
   deadTree: {
     id: 'deadTree',
-    name: 'dead tree',
+    name: 'ancient tree',
     char: 'tree',
     color: '#602e15',
     tag: ['walkable', 'blocksLight', 'memorable'],

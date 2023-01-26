@@ -1,5 +1,5 @@
 import * as ROT from 'rot-js'
-import { Terrain, Features, randomFlameTemplate, Beings } from '../Templates'
+import { Terrain, Features, Beings } from '../Templates'
 import { EntityTemplate } from '../Core/Entity'
 import { Point, Pt } from '../Model/Point'
 import { half, pick, range, repeat, rnd, rndO } from '../lib/util'
@@ -39,6 +39,11 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   const westLakePt = Pt(half(inner.x), rnd(inner.y, inner.y2))
   const westLakeMut = O.mutate()
   repeat(30, () => walk(westLakePt, Terrain.water, 12, westLakeMut, { n: 2, s: 2 }))
+
+  // southern lake
+  const southLakePt = Pt(rnd(levelRect.x, levelRect.x2), levelRect.y2 - 3)
+  const southLakeMut = O.mutate()
+  repeat(15, () => walk(southLakePt, Terrain.water, 12, southLakeMut, { e: 2, w: 2 }))
 
   const nsPeak = O.mutate()
   const nsMound = O.mutate()
@@ -84,12 +89,27 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   ruin.bisectRooms(rnd(2, 5))
   ruin.buildInnerWalls()
   ruin.connectInnerRooms()
-  ruin.degradedFloor(Terrain.void)
-  ruin.feature(randomFlameTemplate(), rnd(1, 3))
-  ruin.feature(Beings.rat, 4)
-  ruin.feature(Beings.ghost, 3)
-  ruin.feature(Terrain.stairsDescending)
-  ruin.feature(Features.flames)
+  ruin.degradedFloor(
+    [Terrain.path, Terrain.crackedPath1, Terrain.crackedPath2, Terrain.crackedPath3, Terrain.crackedPath4],
+    1
+  )
+  const ruinRooms = ROT.RNG.shuffle([...ruin.innerRooms])
+  ruinRooms.forEach((r, i) => {
+    if (i === 0) {
+      r.feature(Features.magentaFlames, 1)
+      r.feature(Terrain.stairsDescending)
+    } else {
+      switch (i % 3) {
+        case 1:
+          r.feature(pick([Features.cyanFlames, Features.greenFlames]), 1)
+          r.feature(Beings.ghost, 3)
+          break
+        case 2:
+          r.feature(Features.flames)
+          r.feature(Beings.demon, 1)
+      }
+    }
+  })
 
   ruin.createAnnex(rndO(7, 9), rndO(7, 9), main.rect)
 
