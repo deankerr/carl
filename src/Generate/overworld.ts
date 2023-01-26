@@ -99,7 +99,8 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   ruinRooms.forEach((r, i) => {
     if (i === 0) {
       r.feature(Features.magentaFlames, 1)
-      r.feature(Terrain.stairsDescending)
+      const stairPt = r.feature(Terrain.stairsDescending)
+      O.domainConnections.set(stairPt[0].s, 'dungeon')
     } else {
       switch (i % 3) {
         case 1:

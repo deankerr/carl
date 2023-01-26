@@ -32,7 +32,6 @@ export class World {
     // initialize world structure, set root level as active
     this.domain = this.domains[0]
     this.active = this.domain.levels[0]
-
     this.setCurrentLevel(this.domain, 0)
 
     this.message('You begin your queste.')
@@ -48,17 +47,18 @@ export class World {
 
       const level = new Level(domain.id, overseer.grid)
       level.overseer = overseer
+      level.domainConnections = overseer.domainConnections
 
       domain.levels.push(level)
       this.active = domain.levels[index]
       this.activeIndex = index
       this.domain = domain
+
       overseer.mutators.forEach(m => {
         for (const [pt, template] of m.divulge().entities) {
           this.createTemplate(template, strToPt(pt))
         }
       })
-      // this.createTemplates(entityTemplates)
       this.createPlayer()
     } else {
       console.log('change', domain.id, index)
@@ -69,11 +69,19 @@ export class World {
     this.hasChanged = true
   }
 
-  changeLevel(dir: number) {
+  changeLevel(dir: number, domain?: string) {
     console.log('changeLevel:', dir)
-    const nextIndex = this.activeIndex + dir < 0 ? 0 : this.activeIndex + dir
-    this.setCurrentLevel(this.domain, nextIndex)
+    if (domain) {
+      const newDomain = this.domains.find(d => d.id === domain)
+      if (!newDomain) throw new Error('Unable to find domain')
+      this.changeDomain(newDomain)
+    } else {
+      const nextIndex = this.activeIndex + dir < 0 ? 0 : this.activeIndex + dir
+      this.setCurrentLevel(this.domain, nextIndex)
+    }
   }
+
+  changeDomain(domain: Domain) {}
 
   createTemplate(template: EntityTemplate, pt: Point) {
     if (template.id === 'player') this.createPlayer(pt)
@@ -85,9 +93,7 @@ export class World {
 
   createPlayer(pt?: Point) {
     if (this.get('tagPlayer').length > 0) return
-    const player = this.activate(
-      hydrate(Beings.player, pt ?? this.active.stairsAscendingPt ?? this.active.ptInRoom(), this.domain.playerFOV)
-    )
+    const player = this.activate(hydrate(Beings.player, pt ?? this.active.ptInRoom(), this.domain.playerFOV))
     this.active.scheduler.add(player.id, true)
   }
 

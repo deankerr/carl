@@ -203,9 +203,6 @@ export class Game {
       console.log(changeLevel.to)
       if (changeLevel.to === 'debug_down') world.changeLevel(1)
       if (changeLevel.to === 'debug_up') world.changeLevel(-1)
-      // if (changeLevel.to === 'debug_outdoor') world.setCurrentLevel(world.domainMap['outdoor'], 0)
-      // if (changeLevel.to === 'debug_dungeon') world.setCurrentLevel(world.domainMap['dungeon'], 0)
-      // if (changeLevel.to === 'debug_testLevel') world.setCurrentLevel(world.domainMap['testLevel'], 0)
 
       world.nextTurn()
       processLighting(this.world)
@@ -217,7 +214,10 @@ export class Game {
     // actual
     const [player] = this.world.get('tagPlayer', 'position')
     const [terrain] = this.world.here(player.position)
-    if (terrain.name === 'descending stairs') {
+    const { domainConnections } = this.world.active
+    const newDomain = domainConnections.get(player.position.s)
+    if (newDomain) world.changeLevel(0, newDomain)
+    else if (terrain.name === 'descending stairs') {
       world.changeLevel(1)
     } else if (terrain.name === 'ascending stairs') {
       world.changeLevel(-1)

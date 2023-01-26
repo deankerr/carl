@@ -192,13 +192,16 @@ export class Structure {
   feature(template: EntityTemplate, n = 1, terrain?: EntityTemplate) {
     let features = 0
     const mut = this.O.mutate()
+    const ptsPlaced: Point[] = []
     while (features < n) {
       const rect = this.innerRooms.length > 1 ? pick(this.innerRooms).rect : this.rect
       const pt = rect.rndPt()
       if (terrain) mut.set(pt, terrain)
       mut.set(pt, template)
+      ptsPlaced.push(pt)
       features++
     }
+    return ptsPlaced
   }
 
   createAnnex() {

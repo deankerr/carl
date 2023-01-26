@@ -17,13 +17,10 @@ export class Level {
 
   readonly scheduler = new ROT.Scheduler.Simple()
   entities: Entity[] = []
-
-  stairsDescendingPt: Point | undefined
-  stairsAscendingPt: Point | undefined
-
   lighting = new Map<string, Color>()
-
   overseer: Overseer = new Overseer(1, 1, Terrain.void)
+  domainConnections = new Map<string, string>()
+
   constructor(
     // bare level defaults as workaround until refactor
     readonly label = 'bare',

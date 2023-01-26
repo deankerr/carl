@@ -9,6 +9,7 @@ export type Mutation = Map<string, EntityTemplate>
 export class Overseer {
   grid: Grid<TerrainTemplate>
   mutators: Mutator[] = []
+  domainConnections = new Map<string, string>()
 
   constructor(readonly width: number, readonly height: number, readonly initial = Terrain.void) {
     this.grid = Grid.fill(width, height, initial)
