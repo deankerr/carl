@@ -96,7 +96,9 @@ export class Rect {
 
   toPtsEdge(): Point[] {
     const result: Point[] = []
-    this.traverse((pt, edge) => edge && result.push(pt))
+    this.traverse((pt, edge) => {
+      if (edge) result.push(pt)
+    })
     return result
   }
 

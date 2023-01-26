@@ -96,7 +96,7 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
 
   // ruin
   O.mutate().clear()
-  const ruin = ruinsArea.center(rndO(11, 13), rndO(9, 11))
+  const ruin = ruinsArea.center(rndO(13, 15), rndO(11, 13))
   ruin.walls()
   ruin.bisectRooms(rnd(2, 4))
   ruin.buildInnerWalls()

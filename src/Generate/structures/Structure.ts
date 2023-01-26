@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as ROT from 'rot-js'
 import { EntityTemplate } from '../../Core/Entity'
-import { half, makeOdd, pick, range, rnd, rndO } from '../../lib/util'
+import { half, makeOdd, pick, range, rnd, rndO, shuffle } from '../../lib/util'
 import { Point, PointSet, Pt } from '../../Model/Point'
 import { Rect } from '../../Model/Rectangle'
 import { Features, Marker, Terrain } from '../../Templates'
@@ -170,23 +170,6 @@ export class Structure {
     }
   }
 
-  connectExternal(n = 1) {
-    const mut = this.O.mutate()
-    let connections = 0
-    while (connections < n) {
-      const pt = this.rect.rndEdgePt()
-      // if no inner walls, or the point isn't adjacent to an inner wall
-      if (
-        this.innerWalls.length === 0 ||
-        !pt.orthNeighbours().some(nPt => this.innerWalls.some(w => w.intersectsPt(pt)))
-      ) {
-        mut.set(pt, Terrain.void)
-        mut.set(pt, Features.door)
-        connections++
-      }
-    }
-  }
-
   floor(t = Terrain.path) {
     if (this.innerRooms.length > 0) this.innerRooms.forEach(r => r.floor(t))
     else this.O.mutate().set(this.rect, t)
@@ -255,11 +238,44 @@ export class Structure {
       while (pts.length > 0) {
         const pt = pts.pop()
         if (!pt) continue
-        //todo prevent doors into walls
+
+        // avoid building a door next to an internal wall
+        const walkable = pt.orthNeighbours().filter(nPt => mut.query(nPt)?.tag.includes('walkable'))
+        if (walkable.length < 2) continue
+
         mut.set(pt, Terrain.void)
         mut.set(pt, Features.door)
         break
       }
+    }
+  }
+
+  connectExternal(n = 1) {
+    const mut = this.O.mutate()
+    let connections = 0
+
+    // list of all edge points excluding corners
+    const edgePts = new PointSet(...this.rect.toPtsEdge())
+    edgePts.del(...this.rect.cornerPts())
+    const validEdgePts = shuffle(edgePts.toPt())
+
+    while (connections < n) {
+      const pt = validEdgePts.pop()
+      if (!pt) return
+
+      // avoid building a door next to an internal wall
+      const walkable = pt.orthNeighbours().filter(nPt => mut.query(nPt)?.tag.includes('walkable'))
+      if (walkable.length < 2) continue
+
+      // avoid building a door to an annex
+      const isAnnex = walkable.some(pt => this.sub.some(annex => annex.rect.intersectsPt(pt)))
+      if (isAnnex) continue
+
+      // if no inner walls, or the point isn't adjacent to an inner wall
+
+      mut.set(pt, Terrain.void)
+      mut.set(pt, Features.door)
+      connections++
     }
   }
 

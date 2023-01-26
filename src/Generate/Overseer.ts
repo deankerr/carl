@@ -65,4 +65,8 @@ export class Mutator {
   divulge() {
     return { terrain: this.terrain, entities: this.entities, markers: this.markers, clearMarkers: this.clearMarkers }
   }
+
+  query(pt: Point) {
+    return this.grid.get(pt)
+  }
 }

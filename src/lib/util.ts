@@ -65,7 +65,7 @@ export const pick = <T>(arr: T[]): T => {
   return picked
 }
 
-export const mix = <T>(arr: T[]): T[] => {
+export const shuffle = <T>(arr: T[]): T[] => {
   return ROT.RNG.shuffle(arr)
 }
 
