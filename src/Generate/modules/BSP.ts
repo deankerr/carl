@@ -51,7 +51,8 @@ export function BSPRooms(startRect: Rect, BSPConfig?: BSPConfig) {
     }
 
     if (canSplitV && canSplitH) {
-      if (config.favorLargest) dir = r.width >= r.height ? 'vert' : 'hori'
+      if (config.favorLargest && r.width > r.height) dir = 'vert'
+      else if (config.favorLargest && r.height > r.width) dir = 'hori'
       else dir = rnd(1) ? 'vert' : 'hori'
     } else if (canSplitV) dir = 'vert'
     else dir = 'hori'

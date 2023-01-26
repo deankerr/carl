@@ -17,15 +17,20 @@ export function dungeon(width = CONFIG.generateWidth, height = CONFIG.generateHe
   level.mark(true)
 
   // initial rooms
-  level.bisectDungeon(rnd(4, 6))
+  level.bisectDungeon(6)
   level.innerRooms.forEach(r => {
     const room = r.inner(max(r.rect.width - 2, maxW), max(r.rect.height - 2, maxH))
     room.walls()
-    if (room.rect.area > 90) {
-      room.bisectRooms()
-      room.buildInnerWalls()
-      room.connectInnerRooms()
-    }
+  })
+
+  level.innerRooms.forEach(r => {
+    r.sub.forEach(room => {
+      if (room.rect.area > 90) {
+        room.bisectRooms()
+        room.buildInnerWalls()
+        room.connectInnerRooms()
+      }
+    })
   })
 
   // dig corridors

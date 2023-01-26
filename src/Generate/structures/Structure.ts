@@ -82,7 +82,7 @@ export class Structure {
     const [rooms, walls] = BSPRooms(this.rect.scale(-1), {
       O: this.O,
       attempts,
-      minResultSize: 7,
+      minResultSize: 9,
       minToSplitSize: 15,
       favorLargest: true,
     })
