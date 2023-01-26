@@ -33,6 +33,12 @@ export function rndO(min: number, max: number) {
   return 2 * n + 1
 }
 
+// make a number odd by increasing if necessary
+export function makeOdd(n: number) {
+  if (n % 2 === 1) return n
+  return n + 1
+}
+
 export function half(n: number) {
   return Math.floor(n / 2)
 }

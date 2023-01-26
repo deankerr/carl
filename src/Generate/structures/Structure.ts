@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as ROT from 'rot-js'
 import { EntityTemplate } from '../../Core/Entity'
-import { half, pick, range, rnd } from '../../lib/util'
+import { half, makeOdd, pick, range, rnd, rndO } from '../../lib/util'
 import { Point, PointSet, Pt } from '../../Model/Point'
 import { Rect } from '../../Model/Rectangle'
 import { Features, Marker, Terrain } from '../../Templates'
@@ -218,19 +218,22 @@ export class Structure {
     }
   }
 
-  createAnnex(width: number, height: number) {
+  createAnnex() {
     const self = this.rect
+    const nsWidth = makeOdd(self.width - 2)
+    const nsHeight = makeOdd(half(self.height))
+    const ewWidth = makeOdd(half(self.width))
+    const ewHeight = makeOdd(self.height - 2)
     const dirs = ROT.RNG.shuffle([
-      Pt(self.x - half(width), self.cy + rnd(0, 3)),
-      Pt(self.x2 + half(width), self.cy + rnd(0, 3)),
-      Pt(self.cx + rnd(0, 3), self.y - half(height)),
-      Pt(self.cx + rnd(0, 3), self.y2 + half(height)),
+      Rect.atC(Pt(self.cx, self.y - half(nsHeight)), nsWidth, nsHeight), // north
+      Rect.atC(Pt(self.cx, self.y2 + half(nsHeight)), nsWidth, nsHeight), // south
+      Rect.atC(Pt(self.x - half(ewWidth), self.cy), ewWidth, ewHeight), // east
+      Rect.atC(Pt(self.x2 + half(ewWidth), self.cy), ewWidth, ewHeight), // west
     ])
     while (dirs.length > 0) {
-      const pt = dirs.pop()
-      if (!pt) continue
+      const rect = dirs.pop()
+      if (!rect) continue
 
-      const rect = Rect.atC(pt, width, height)
       this.O.mutate().mark(rect)
       if (!this.sub.some(sub => sub.rect.intersects(rect).length > 0)) {
         const annex = new Structure(rect, this.O)

@@ -89,10 +89,7 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   ruin.bisectRooms(rnd(2, 5))
   ruin.buildInnerWalls()
   ruin.connectInnerRooms()
-  ruin.degradedFloor(
-    [Terrain.path, Terrain.crackedPath1, Terrain.crackedPath2, Terrain.crackedPath3, Terrain.crackedPath4],
-    1
-  )
+  ruin.degradedFloor(Terrain.void, 1)
   const ruinRooms = ROT.RNG.shuffle([...ruin.innerRooms])
   ruinRooms.forEach((r, i) => {
     if (i === 0) {
@@ -111,8 +108,8 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
     }
   })
 
-  ruin.createAnnex(rndO(5, 7), rndO(5, 7))
-  ruin.createAnnex(rndO(5, 7), rndO(5, 7))
+  ruin.createAnnex()
+  ruin.createAnnex()
 
   for (const annex of ruin.sub) {
     annex.walls()
