@@ -99,7 +99,6 @@ export class Structure {
       const current = pick([...unconnected])
       // const current = unconnected.pop()
       if (!current) throw new Error('unhandled no more unconnceted?')
-      // are there any possible room connections? if not?
 
       // highlight unconnected
       // const othersMarker = this.O.mutate()
@@ -152,10 +151,13 @@ export class Structure {
       // todo: connect a random amount of rooms (at least one)
       unconnected.delete(current)
       connected.add(current)
+      const existing = [...this.innerRoomConnections.values()]
       for (const [room, PtS] of adjRoomPts) {
-        this.innerRoomConnections.set(pick(PtS.toPt()), [current, room])
-        connected.add(room)
-        unconnected.delete(room)
+        // check if a connection has already been made
+        if (!existing.some(rooms => rooms.includes(current) && rooms.includes(room))) {
+          // create a connection if not
+          this.innerRoomConnections.set(pick(PtS.toPt()), [current, room])
+        }
       }
     }
 
