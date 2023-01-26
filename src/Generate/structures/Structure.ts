@@ -201,7 +201,7 @@ export class Structure {
         const t = Array.isArray(template) ? pick(template) : template
         if (edge && !isSmallRoom) rnd(1) && mut.set(pt, t)
         else if (isSmallRoom) rnd(4) && mut.set(pt, t)
-        else rnd(chance) && mut.set(pt, t)
+        else if (rnd(chance)) mut.set(pt, t)
       })
     }
   }
@@ -218,7 +218,7 @@ export class Structure {
     }
   }
 
-  createAnnex(width: number, height: number, within: Rect) {
+  createAnnex(width: number, height: number) {
     const self = this.rect
     const dirs = ROT.RNG.shuffle([
       Pt(self.x - half(width), self.cy + rnd(0, 3)),
@@ -229,12 +229,13 @@ export class Structure {
     while (dirs.length > 0) {
       const pt = dirs.pop()
       if (!pt) continue
-      console.log('try a:', pt)
+
       const rect = Rect.atC(pt, width, height)
-      // this.O.mutate().mark(rect)
-      if (within.contains(rect)) {
+      this.O.mutate().mark(rect)
+      if (!this.sub.some(sub => sub.rect.intersects(rect).length > 0)) {
         const annex = new Structure(rect, this.O)
         this.sub.push(annex)
+        return
       }
     }
   }

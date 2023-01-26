@@ -20,10 +20,10 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
 
   // const center = Pt(half(width), half(height))
 
-  const grassMut = O.mutate()
-  const dGrassMut = O.mutate()
-  repeat(10, () => walk(O.grid.rndPt(), Terrain.grass, 400, grassMut)) // grass
-  repeat(10, () => walk(O.grid.rndPt(), Terrain.deadGrass, 100, dGrassMut)) // dead grass
+  // const grassMut = O.mutate()
+  // const dGrassMut = O.mutate()
+  repeat(10, () => walk(O.grid.rndPt(), Terrain.grass, 400, O.mutate())) // grass
+  repeat(10, () => walk(O.grid.rndPt(), Terrain.deadGrass, 100, O.mutate())) // dead grass
 
   // outer/inner space markers
   const levelRect = Rect.at(Pt(0, 0), width, height)
@@ -67,8 +67,8 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   for (const pt of outer.scale(-3).cornerPts()) walk(pt, pick([Terrain.peak, Terrain.mound]), 10, cornersPeak)
 
   // scattered shrubs
-  const shrubMut = O.mutate()
-  repeat(5, () => sparseWalk(inner.rndEdgePt(), Features.shrub, 5, shrubMut))
+  // const shrubMut = O.mutate()
+  repeat(5, () => sparseWalk(inner.rndEdgePt(), Features.shrub, 5, O.mutate()))
 
   // smaller southern lake
   // const southLakePt = Pt(center.x + rnd(-4, -4), outskirtsRect.y2)
@@ -82,9 +82,9 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   ruinsArea.mark(true)
   featureArea.mark(true)
 
-  const ruinW = rndO(13, 15)
-  const ruinH = rndO(11, 13)
-  const ruin = ruinsArea.inner(ruinW, ruinH)
+  const ruinW = rndO(11, 13)
+  const ruinH = rndO(9, 11)
+  const ruin = ruinsArea.center(ruinW, ruinH)
   ruin.walls()
   ruin.bisectRooms(rnd(2, 5))
   ruin.buildInnerWalls()
@@ -111,12 +111,12 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
     }
   })
 
-  ruin.createAnnex(rndO(7, 9), rndO(7, 9), main.rect)
+  ruin.createAnnex(rndO(5, 7), rndO(5, 7))
+  ruin.createAnnex(rndO(5, 7), rndO(5, 7))
 
-  if (ruin.sub[0]) {
-    const annex = ruin.sub[0]
+  for (const annex of ruin.sub) {
     annex.walls()
-    annex.bisectRooms(rnd(1, 2))
+    annex.bisectRooms(rnd(1))
     annex.buildInnerWalls()
     annex.connectInnerRooms()
     annex.degradedFloor(Terrain.void)
