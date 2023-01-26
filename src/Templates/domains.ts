@@ -1,5 +1,9 @@
 // define domains
 
+import * as Generate from '../Generate'
+import { Overseer } from '../Generate'
+import { Level } from '../Model/Level'
+
 export const domains = [
   {
     label: 'overworld',
@@ -14,43 +18,30 @@ export const domains = [
       bottom: '',
     },
   },
-  // {
-  //   label: 'outdoor',
-  //   revealed: true,
-  //   playerFOV: 12,
-  //   generator: 'outdoor',
-  //   connections: {
-  //     // ascend: 'ruin'
-  //     descend: 'dungeon',
-  //   },
-  // },
-
-  // {
-  //   label: 'dungeon',
-  //   revealed: false,
-  //   playerFOV: 7,
-  //   generator: 'dungeon4',
-  //   connections: {
-  //     top: 'outdoor',
-  //     ascend: 'dungeon',
-  //     descend: 'dungeon',
-  //     // bottom: 5 specify dungeon depth?
-  //   },
-  // },
-  // {
-  //   label: 'testLevel',
-  //   revealed: true,
-  //   playerFOV: 12,
-  //   generator: 'testLevel',
-  //   connections: {
-  //     descend: 'dungeon',
-  //   },
-  // },
-
-  // ruin: {
-  //   revealed: false,
-  //   playerFOV: 8,
-  //   generator: 'ruin',
-  //   connections: {}
-  // }
 ]
+
+export type Domain = {
+  id: string
+  playerFOV: number
+  generator: () => Overseer
+  connections: string[]
+  levels: Level[]
+}
+
+const overworld: Domain = {
+  id: 'overworld',
+  playerFOV: 12,
+  generator: Generate.overworld,
+  connections: ['dungeon'],
+  levels: [],
+}
+
+const dungeon: Domain = {
+  id: 'dungeon',
+  playerFOV: 8,
+  generator: Generate.dungeon,
+  connections: ['overworld'],
+  levels: [],
+}
+
+export const Domains = [overworld, dungeon]

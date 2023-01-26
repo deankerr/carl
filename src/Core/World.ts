@@ -3,8 +3,7 @@ import { Game } from './Game'
 import { Entity, EntityTemplate, hydrate } from './Entity'
 import { Components, componentName } from './Components'
 import { Graphic, tagCurrentTurn } from '../Component'
-import { Beings, TerrainTemplate } from '../Templates'
-import { createDomains, Domain, DomainMap } from '../Generate/domains'
+import { Beings, TerrainTemplate, Domains, Domain } from '../Templates'
 import { Level } from '../Model/Level'
 import { Point, Pt, strToPt } from '../Model/Point'
 import { objLog } from '../lib/util'
@@ -19,7 +18,7 @@ export class World {
   hasChanged = true // trigger a rerender on next animation frame
 
   // Game state
-  domainMap: DomainMap
+  domains = Domains
   domain: Domain
   active: Level
   activeIndex = 0
@@ -31,11 +30,10 @@ export class World {
     this.options = options
 
     // initialize world structure, set root level as active
-    const [domainMap, root] = createDomains()
-    this.domainMap = domainMap
-    this.domain = root
-    this.setCurrentLevel(this.domain, 0)
+    this.domain = this.domains[0]
     this.active = this.domain.levels[0]
+
+    this.setCurrentLevel(this.domain, 0)
 
     this.message('You begin your queste.')
   }
@@ -44,11 +42,11 @@ export class World {
 
   setCurrentLevel(domain: Domain, index: number) {
     // generate a level if it does not yet exist
-    if (index > domain.levels.length - 1) {
-      console.log('create', domain?.label, index)
+    if (!domain.levels[index]) {
+      console.log('create', domain.id, index)
       const overseer = domain.generator()
 
-      const level = new Level('bbb', overseer.grid)
+      const level = new Level(domain.id, overseer.grid)
       level.overseer = overseer
 
       domain.levels.push(level)
@@ -63,7 +61,7 @@ export class World {
       // this.createTemplates(entityTemplates)
       this.createPlayer()
     } else {
-      console.log('change', domain?.label, index)
+      console.log('change', domain.id, index)
       this.active = domain.levels[index]
       this.activeIndex = index
       this.domain = domain
@@ -215,7 +213,6 @@ export class World {
 
   __clog(collapse = false) {
     collapse ? console.groupCollapsed('World') : console.group('World')
-    console.log('domainMap', this.domainMap)
     console.log('domain', this.domain)
     console.log('active', this.active)
     console.log('activeIndex', this.activeIndex)

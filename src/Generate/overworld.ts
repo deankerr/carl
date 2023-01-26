@@ -12,16 +12,12 @@ import { Structure } from './structures/Structure'
 export function overworld(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
   const t = Date.now()
 
-  // ROT.RNG.setState([0.5747384100686759, 0.7194003688637167, 0.938015446998179, 427068])
-  // console.log(ROT.RNG.getSeed())
   console.log(ROT.RNG.getState())
 
   const O = new Overseer(width, height)
 
   // const center = Pt(half(width), half(height))
 
-  // const grassMut = O.mutate()
-  // const dGrassMut = O.mutate()
   repeat(10, () => walk(O.grid.rndPt(), Terrain.grass, 400, O.mutate())) // grass
   repeat(10, () => walk(O.grid.rndPt(), Terrain.deadGrass, 100, O.mutate())) // dead grass
 
@@ -29,11 +25,6 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   const levelRect = Rect.at(Pt(0, 0), width, height)
   const outer = levelRect.scale(-1)
   const inner = levelRect.scale(-6)
-
-  // // debug visual markers
-  // const mutMarkers = O.mutate()
-  // outer.traverse((pt, edge) => (edge ? mutMarkers.set(pt, Features.debugMarker) : ''))
-  // inner.traverse((pt, edge) => (edge ? mutMarkers.set(pt, Features.debugMarker) : ''))
 
   // western lake
   const westLakePt = Pt(half(inner.x), rnd(inner.y, inner.y2))
