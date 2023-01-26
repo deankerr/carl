@@ -76,6 +76,9 @@ export class Visualizer {
         this.stop()
         this.start()
         break
+      case 'KeyE':
+        this.last()
+        break
       case 'ArrowLeft':
         // console.log('Visualizer: previous')
         this.stop()
@@ -184,6 +187,12 @@ export class Visualizer {
       this.index--
       this.next()
     } else console.log("You can't go back.")
+  }
+
+  last() {
+    this.stop()
+    this.index = this.lastFrame
+    this.next()
   }
 
   stop() {
