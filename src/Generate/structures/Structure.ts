@@ -78,6 +78,23 @@ export class Structure {
     })
   }
 
+  bisectDungeon(attempts: number) {
+    const [rooms, walls] = BSPRooms(this.rect.scale(-1), {
+      O: this.O,
+      attempts,
+      minResultSize: 7,
+      minToSplitSize: 15,
+      favorLargest: true,
+    })
+    this.innerRooms = rooms.map(r => new Structure(r, this.O))
+    this.innerWalls = walls
+
+    this.innerRooms.forEach((r, i) => {
+      r.label = 'room ' + i
+      r.rect.id = i
+    })
+  }
+
   walls() {
     const self = this.rect
     const mutator = this.O.mutate()
@@ -172,6 +189,7 @@ export class Structure {
 
   floor(t = Terrain.path) {
     if (this.innerRooms.length > 0) this.innerRooms.forEach(r => r.floor(t))
+    if (this.sub.length > 0) this.sub.forEach(r => r.floor(t))
     else this.O.mutate().set(this.rect, t)
   }
 

@@ -51,6 +51,10 @@ export function min(min: number, n: number) {
   return n < min ? min : n
 }
 
+export function max(n: number, max: number) {
+  return n > max ? max : n
+}
+
 export function clamp(min: number, n: number, max: number, debug?: string) {
   debug && console.log(`clamp ${debug} ${n} - min: ${min} ${n < min} / max: ${max} ${n > max}`)
   if (n < min) return min

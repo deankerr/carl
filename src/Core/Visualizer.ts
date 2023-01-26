@@ -24,7 +24,7 @@ export class Visualizer {
   markers: Entity[] = []
 
   playing = false
-  speed = 250
+  speed = 500
   lastFrame: number
   index = 0
   settimeout = 0

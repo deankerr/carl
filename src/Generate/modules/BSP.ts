@@ -9,11 +9,13 @@ type BSPConfig = {
   attempts?: number
   minToSplitSize?: number
   minResultSize?: number
+  favorLargest?: boolean
 }
 
 const BSPConfigDefault = {
   minToSplitSize: 5,
   minResultSize: 3,
+  favorLargest: false,
 }
 
 export function BSPRooms(startRect: Rect, BSPConfig?: BSPConfig) {
@@ -29,7 +31,10 @@ export function BSPRooms(startRect: Rect, BSPConfig?: BSPConfig) {
 
   if (O) O.mutate().mark(startRect)
 
+  console.log('Start BSP:', config)
+
   repeat(attempts, () => {
+    if (config.favorLargest) queue.sort((a, b) => b.area - a.area)
     const r = queue.shift()
     if (!r) {
       console.log('BSP: Queue empty!')
@@ -45,8 +50,10 @@ export function BSPRooms(startRect: Rect, BSPConfig?: BSPConfig) {
       return
     }
 
-    if (canSplitV && canSplitH) dir = rnd(1) ? 'vert' : 'hori'
-    else if (canSplitV) dir = 'vert'
+    if (canSplitV && canSplitH) {
+      if (config.favorLargest) dir = r.width >= r.height ? 'vert' : 'hori'
+      else dir = rnd(1) ? 'vert' : 'hori'
+    } else if (canSplitV) dir = 'vert'
     else dir = 'hori'
 
     // choose bisect point along top or left edge

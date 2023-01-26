@@ -26,4 +26,4 @@ const dungeon: Domain = {
   levels: [],
 }
 
-export const Domains = [overworld, dungeon]
+export const Domains = [dungeon, overworld]
