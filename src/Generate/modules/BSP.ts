@@ -72,5 +72,6 @@ export function BSPRooms(startRect: Rect, BSPConfig?: BSPConfig) {
   const wallMut = O?.mutate()
   if (wallMut) walls.forEach(w => w.traverse(pt => wallMut.set(pt, Features.debugMarker)))
 
+  O?.mutate().clear()
   return [[...queue, ...complete], walls]
 }

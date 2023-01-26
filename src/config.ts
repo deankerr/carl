@@ -21,7 +21,7 @@ const frameLimit = 500
 const lightsOnInitial = PROD ? false : false
 const debugShowLightInfo = false
 
-const autoStartVisualizer = false
+const autoStartVisualizer = true
 const visualizerAutoplay = true
 
 const CONFIG = {

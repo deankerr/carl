@@ -116,7 +116,7 @@ export class Visualizer {
       this.index++
 
       // copy previous grid, apply mutators
-      const mut = this.overseer.mutators[this.index]
+      const mut = this.overseer.mutators[this.index].divulge()
       const prevGrid = this.grids[this.index - 1]
       const grid = this.overseer.replay()
       prevGrid.each((pt, t) => grid.set(pt, t))
@@ -124,7 +124,9 @@ export class Visualizer {
       this.grids.push(grid)
 
       // hydrate entities
-      const entities: Entity[] = [...this.entities[this.index - 1]]
+      const entities: Entity[] = mut.clearMarkers
+        ? [...this.entities[this.index - 1]].filter(e => !e.id.includes('debug'))
+        : [...this.entities[this.index - 1]]
       for (const [pts, e] of mut.entities) {
         entities.push(hydrate(e, strToPt(pts)))
       }

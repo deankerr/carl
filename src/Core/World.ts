@@ -56,7 +56,7 @@ export class World {
       this.activeIndex = index
       this.domain = domain
       overseer.mutators.forEach(m => {
-        for (const [pt, template] of m.entities) {
+        for (const [pt, template] of m.divulge().entities) {
           this.createTemplate(template, strToPt(pt))
         }
       })

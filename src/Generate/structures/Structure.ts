@@ -68,7 +68,7 @@ export class Structure {
   }
 
   bisectRooms(attempts = 2) {
-    const [rooms, walls] = BSPRooms(this.rect.scale(-1), { attempts })
+    const [rooms, walls] = BSPRooms(this.rect.scale(-1), { O: this.O, attempts })
     this.innerRooms = rooms.map(r => new Structure(r, this.O))
     this.innerWalls = walls
 

@@ -14,7 +14,7 @@ export class Overseer {
     this.grid = Grid.fill(width, height, initial)
 
     const initMutator = new Mutator(this.grid)
-    this.grid.each((pt, t) => initMutator.terrain.set(pt.s, t))
+    this.grid.each((pt, t) => initMutator.divulge().terrain.set(pt.s, t))
     this.mutators.push(initMutator)
   }
 
@@ -30,9 +30,10 @@ export class Overseer {
 }
 
 export class Mutator {
-  terrain: Mutation = new Map()
-  entities: Mutation = new Map()
-  markers: Mutation = new Map()
+  private terrain: Mutation = new Map()
+  private entities: Mutation = new Map()
+  private markers: Mutation = new Map()
+  private clearMarkers = false
   constructor(private grid: Grid<TerrainTemplate>) {}
 
   set(setPt: Point | string | Rect, e: EntityTemplate) {
@@ -55,5 +56,13 @@ export class Mutator {
     } else {
       pt.toPts().forEach(pt => this.markers.set(pt.s, Features.debugMarker))
     }
+  }
+
+  clear() {
+    this.clearMarkers = true
+  }
+
+  divulge() {
+    return { terrain: this.terrain, entities: this.entities, markers: this.markers, clearMarkers: this.clearMarkers }
   }
 }
