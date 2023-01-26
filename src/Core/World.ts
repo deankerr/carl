@@ -3,7 +3,7 @@ import { Game } from './Game'
 import { Entity, EntityTemplate, hydrate } from './Entity'
 import { Components, componentName } from './Components'
 import { Graphic, tagCurrentTurn } from '../Component'
-import { Beings, TerrainTemplate, Domains, Domain } from '../Templates'
+import { Beings, TerrainTemplate, Domains } from '../Templates'
 import { Level } from '../Model/Level'
 import { Point, Pt, strToPt } from '../Model/Point'
 import { objLog } from '../lib/util'
@@ -19,8 +19,8 @@ export class World {
 
   // Game state
   domains = Domains
-  domain: Domain
-  active: Level
+  domain = Domains[0]
+  active = Domains[0].levels[0]
   activeIndex = 0
   messages: Message[] = [] // TODO rename messageLog
   playerTurns = -1 // TODO start on 0
@@ -28,19 +28,16 @@ export class World {
 
   constructor(options: Game['options']) {
     this.options = options
-
-    // initialize world structure, set root level as active
-    this.domain = this.domains[0]
-    this.active = this.domain.levels[0]
-    this.setCurrentLevel(this.domain, 0)
+    this.setCurrentLevel(0)
 
     this.message('You begin your queste.')
   }
 
   //  World API - Everything that happens in the game should occur through this API.
 
-  setCurrentLevel(domain: Domain, index: number) {
+  setCurrentLevel(index: number) {
     // generate a level if it does not yet exist
+    const domain = this.domain
     if (!domain.levels[index]) {
       console.log('create', domain.id, index)
       const overseer = domain.generator()
@@ -52,7 +49,6 @@ export class World {
       domain.levels.push(level)
       this.active = domain.levels[index]
       this.activeIndex = index
-      this.domain = domain
 
       overseer.mutators.forEach(m => {
         for (const [pt, template] of m.divulge().entities) {
@@ -64,24 +60,34 @@ export class World {
       console.log('change', domain.id, index)
       this.active = domain.levels[index]
       this.activeIndex = index
-      this.domain = domain
     }
     this.hasChanged = true
   }
 
   changeLevel(dir: number, domain?: string) {
     console.log('changeLevel:', dir)
+
     if (domain) {
-      const newDomain = this.domains.find(d => d.id === domain)
-      if (!newDomain) throw new Error('Unable to find domain')
-      this.changeDomain(newDomain)
+      this.changeDomain(domain)
+      this.setCurrentLevel(0)
     } else {
-      const nextIndex = this.activeIndex + dir < 0 ? 0 : this.activeIndex + dir
-      this.setCurrentLevel(this.domain, nextIndex)
+      const nextIndex = this.activeIndex + dir
+
+      if (nextIndex === -1) {
+        const nextDomain = this.domain.connections[0]
+        this.changeDomain(nextDomain)
+        this.setCurrentLevel(0)
+      } else {
+        this.setCurrentLevel(nextIndex)
+      }
     }
   }
 
-  changeDomain(domain: Domain) {}
+  changeDomain(domain: string) {
+    const newDomain = this.domains.find(d => d.id === domain)
+    if (!newDomain) throw new Error('Unable to find domain')
+    this.domain = newDomain
+  }
 
   createTemplate(template: EntityTemplate, pt: Point) {
     if (template.id === 'player') this.createPlayer(pt)
@@ -93,8 +99,7 @@ export class World {
 
   createPlayer(pt?: Point) {
     if (this.get('tagPlayer').length > 0) return
-    const player = this.activate(hydrate(Beings.player, pt ?? this.active.ptInRoom(), this.domain.playerFOV))
-    this.active.scheduler.add(player.id, true)
+    this.activate(hydrate(Beings.player, pt ?? this.active.ptInRoom(), this.domain.playerFOV))
   }
 
   // add new entity to state

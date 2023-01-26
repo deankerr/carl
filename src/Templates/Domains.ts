@@ -1,24 +1,6 @@
-// define domains
-
 import * as Generate from '../Generate'
 import { Overseer } from '../Generate'
 import { Level } from '../Model/Level'
-
-export const domains = [
-  {
-    label: 'overworld',
-    seen: false,
-    revealed: false,
-    playerFOV: 12,
-    generator: 'overworld',
-    connections: {
-      top: '',
-      ascend: 'overworld',
-      descend: 'overworld',
-      bottom: '',
-    },
-  },
-]
 
 export type Domain = {
   id: string
