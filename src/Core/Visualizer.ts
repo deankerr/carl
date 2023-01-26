@@ -147,7 +147,9 @@ export class Visualizer {
       const hues = 1 / (markerGroups.length + 1)
       const base = Features.debugMarker.color
       markerGroups.forEach((g, i) => {
-        const c = transformHSL(base, { hue: { add: hues * i } })
+        // alternate between the start and middle of the color wheel
+        const hue = i % 2 == 0 ? hues * i : hues * i + 0.5
+        const c = transformHSL(base, { hue: { add: hue } })
         g.forEach(m => (m.color = c))
       })
     }
