@@ -12,7 +12,7 @@ import { Pt, strToPt } from '../Model/Point'
 import { CONFIG } from '../config'
 import { Grid } from '../Model/Grid'
 import { Color } from 'rot-js/lib/color'
-import { range } from '../lib/util'
+import { half, range } from '../lib/util'
 import { hexToHSL, transformHSL } from '../lib/color'
 
 export class Visualizer {
@@ -71,10 +71,11 @@ export class Visualizer {
 
   input(code: string) {
     switch (code) {
-      case 'KeyR':
-        // console.log('Visualizer: restart')
-        this.stop()
-        this.start()
+      case 'KeyQ':
+        this.first()
+        break
+      case 'KeyW':
+        this.mid()
         break
       case 'KeyE':
         this.last()
@@ -187,6 +188,18 @@ export class Visualizer {
       this.index--
       this.next()
     } else console.log("You can't go back.")
+  }
+
+  first() {
+    this.stop()
+    this.index = 0
+    this.next()
+  }
+
+  mid() {
+    this.stop()
+    this.index = half(this.lastFrame)
+    this.next()
   }
 
   last() {
