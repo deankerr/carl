@@ -68,7 +68,7 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
 
   // scattered shrubs
   // const shrubMut = O.mutate()
-  repeat(5, () => sparseWalk(inner.rndEdgePt(), Features.shrub, 5, O.mutate()))
+  repeat(5, () => sparseWalk(inner.rndEdgePt(), Features.shrub, 5, O.mutate(), Terrain.void))
 
   // smaller southern lake
   // const southLakePt = Pt(center.x + rnd(-4, -4), outskirtsRect.y2)
@@ -82,14 +82,28 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   ruinsArea.mark(true)
   featureArea.mark(true)
 
-  const ruinW = rndO(11, 13)
-  const ruinH = rndO(9, 11)
-  const ruin = ruinsArea.center(ruinW, ruinH)
+  // * graveyard
+  const graveyard = featureArea.center(9, 7)
+  graveyard.degradedFloor(
+    [Terrain.path, Terrain.crackedPath1, Terrain.crackedPath2, Terrain.crackedPath3, Terrain.crackedPath4],
+    1
+  )
+
+  graveyard.feature(Features.tombstone, rnd(4, 8), Terrain.void)
+  graveyard.feature(Features.statue, 2, Terrain.void)
+
+  featureArea.feature(Features.deadTree, 6, Terrain.void)
+
+  // ruin
+  O.mutate().clear()
+  const ruin = ruinsArea.center(rndO(11, 13), rndO(9, 11))
   ruin.walls()
-  ruin.bisectRooms(rnd(2, 5))
+  ruin.bisectRooms(rnd(2, 4))
   ruin.buildInnerWalls()
   ruin.connectInnerRooms()
   ruin.degradedFloor(Terrain.void, 1)
+
+  // add features to rooms
   const ruinRooms = ROT.RNG.shuffle([...ruin.innerRooms])
   ruinRooms.forEach((r, i) => {
     if (i === 0) {
@@ -108,36 +122,29 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
     }
   })
 
-  ruin.createAnnex()
-  ruin.createAnnex()
+  ruin.createAnnex()?.walls()
+  ruin.createAnnex()?.walls()
 
-  for (const annex of ruin.sub) {
-    annex.walls()
+  // create/add features to annex room(s)
+  ruin.sub.forEach((annex, i) => {
     annex.bisectRooms(rnd(1))
     annex.buildInnerWalls()
     annex.connectInnerRooms()
     annex.degradedFloor(Terrain.void)
 
-    const waterRoom = pick(annex.innerRooms)
-    waterRoom.degradedFloor(Terrain.water)
-    waterRoom.feature(Beings.crab)
-    waterRoom.feature(Beings.crab2)
-  }
+    if (i === 0) {
+      const waterRoom = pick(annex.innerRooms)
+      waterRoom.degradedFloor(Terrain.water)
+      waterRoom.feature(Beings.crab)
+      waterRoom.feature(Beings.crab2)
+    } else if (i === 1) {
+      annex.degradedFloor(Terrain.path)
+    }
+  })
   ruin.connectAnnexes()
   ruin.connectExternal(rnd(1, 2))
 
   console.log('ruin:', ruin)
-
-  const graveyard = featureArea.center(9, 7)
-  graveyard.degradedFloor(
-    [Terrain.path, Terrain.crackedPath1, Terrain.crackedPath2, Terrain.crackedPath3, Terrain.crackedPath4],
-    1
-  )
-
-  graveyard.feature(Features.tombstone, rnd(4, 8))
-  graveyard.feature(Features.statue, 2)
-
-  featureArea.feature(Features.deadTree, 6, Terrain.void)
 
   O.mutate().set(outer.rndEdgePt(), Beings.player)
   // * End

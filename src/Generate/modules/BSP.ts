@@ -25,6 +25,8 @@ export function BSPRooms(startRect: Rect, BSPConfig?: BSPConfig) {
   const complete: Rect[] = []
   const walls: Rect[] = []
 
+  if (attempts === 0) return [queue, walls]
+
   if (O) O.mutate().mark(startRect)
 
   repeat(attempts, () => {

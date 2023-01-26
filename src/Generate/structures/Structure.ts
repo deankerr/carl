@@ -220,6 +220,7 @@ export class Structure {
 
   createAnnex() {
     const self = this.rect
+    // prepare relatively sized widths/heights for each orientation
     const nsWidth = makeOdd(self.width - 2)
     const nsHeight = makeOdd(half(self.height))
     const ewWidth = makeOdd(half(self.width))
@@ -230,17 +231,20 @@ export class Structure {
       Rect.atC(Pt(self.x - half(ewWidth), self.cy), ewWidth, ewHeight), // east
       Rect.atC(Pt(self.x2 + half(ewWidth), self.cy), ewWidth, ewHeight), // west
     ])
+
     while (dirs.length > 0) {
       const rect = dirs.pop()
       if (!rect) continue
-
-      this.O.mutate().mark(rect)
+      this.O?.mutate().mark(rect)
       if (!this.sub.some(sub => sub.rect.intersects(rect).length > 0)) {
         const annex = new Structure(rect, this.O)
         this.sub.push(annex)
-        return
+        this.O?.mutate().clear()
+        return annex
       }
+      this.O?.mutate().clear()
     }
+    return undefined
   }
 
   connectAnnexes() {
