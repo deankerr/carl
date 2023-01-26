@@ -73,60 +73,8 @@ export class World {
 
   changeLevel(dir: number) {
     console.log('changeLevel:', dir)
-    let nextDomain: Domain | undefined
-    let nextIndex: number | undefined
-
-    const { top, ascend, descend, bottom } = this.domain.connections
-
-    // descend
-    if (dir === 1) {
-      // console.log('changeLevel down')
-      if (descend) {
-        if (descend !== this.domain) {
-          // console.log('changeLevel descend domain')
-          // descend to another domain
-          nextDomain = descend
-          nextIndex = 0
-          // ????
-        } else if (this.activeIndex === 50 && bottom) {
-          // console.log('changeLevel bottom')
-          // descend out of dungeon
-          nextDomain = bottom
-          nextIndex = 0
-        } else {
-          // console.log('changeLevel descend')
-          nextDomain = descend
-          nextIndex = this.activeIndex + 1
-        }
-      }
-    }
-
-    // ascend
-    if (dir === -1) {
-      // console.log('changeLevel up')
-      if (ascend) {
-        if (ascend !== this.domain) {
-          // console.log('changeLevel ascend domain')
-          // ascend to another domain
-          nextDomain = ascend
-          nextIndex = 0
-        } else if (this.activeIndex === 0 && top) {
-          // console.log('changeLevel top')
-          // ascend out of dungeon
-          nextDomain = top
-          nextIndex = 0
-        } else {
-          // console.log('changeLevel ascend ')
-          nextDomain = ascend
-          nextIndex = this.activeIndex - 1
-        }
-      }
-    }
-
-    console.log('changelevel to:', nextDomain, nextIndex)
-    if (!nextDomain || nextIndex === undefined) throw new Error('Could not determine where to go')
-
-    this.setCurrentLevel(nextDomain, nextIndex)
+    const nextIndex = this.activeIndex + dir < 0 ? 0 : this.activeIndex + dir
+    this.setCurrentLevel(this.domain, nextIndex)
   }
 
   createTemplate(template: EntityTemplate, pt: Point) {
