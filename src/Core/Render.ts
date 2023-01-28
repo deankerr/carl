@@ -20,7 +20,7 @@ export const renderLevel = (display: ROT.Display, world: World) => {
   const options = world.options
   display.clear()
 
-  const domain = world.domain
+  // const domain = world.domain
   const level = world.active
   const yMax = display.getOptions().height - 1
   // const xMax = d.getOptions().width - 1
@@ -66,8 +66,8 @@ export const renderLevel = (display: ROT.Display, world: World) => {
     const char: string[] = []
     const color: string[] = []
 
-    const visible = player.fov.visible.includes(here.s) || domain.revealed || options.lightsOn
-    const seen = level.areaKnown.includes(here.s) || domain.seen
+    const visible = player.fov.visible.includes(here.s) || options.lightsOn
+    const seen = level.areaKnown.includes(here.s)
     const voidSeen = level.voidAreaKnown.includes(here.s) || options.lightsOn
 
     // ROT.JS lighting
