@@ -1,5 +1,6 @@
 import * as ROT from 'rot-js'
 import { Color } from 'rot-js/lib/color'
+import * as C from '../Component'
 import { Entity, hydrate } from '../Core/Entity'
 export type TerrainTemplate = typeof Terrain[keyof typeof Terrain]
 
@@ -162,4 +163,50 @@ export function Marker() {
   const rgb = ROT.Color.hsl2rgb(hslc)
   // console.log('Marker:', hslc, rgb)
   return { ...Terrain.pip, color: ROT.Color.toHex(rgb) }
+}
+
+export const terraindef = [
+  { id: 'path', name: 'path', char: 'path', color: '#262626', tags: ['walkable'] },
+  { id: 'wall', name: 'wall', char: 'wall', color: '#767676', tags: ['blocksLight'] },
+  { id: 'stairsDown', name: 'stairs downward', char: 'stairsDown', color: '#777', tags: ['walkable'] },
+  { id: 'stairsUp', name: 'stairs upward', char: 'stairsUp', color: '#777', tags: ['walkable'] },
+  { id: 'crackedWall', name: 'cracked wall', char: 'crackedWall', color: '#', tags: [''] },
+  { id: 'water', name: 'water', char: 'water', color: '#4084bf', tags: ['walkable'] },
+  { id: 'grass', name: 'grass', char: 'grass', color: '#65712b', tags: ['walkable'] },
+  { id: 'deadGrass ', name: 'dead grass', char: 'deadGrass', color: '#664f47', tags: ['walkable'] },
+  { id: 'mound', name: 'mound', char: 'mound', color: '#6a4b39', tags: ['walkable', 'blocksLight'] },
+  { id: 'peak', name: 'peak', char: 'peak', color: '#2a5a3e', tags: ['walkable', 'blocksLight'] },
+  { id: 'void', name: 'void', char: 'void', color: '#000000', tags: ['walkable'] },
+  { id: 'endlessVoid', name: 'endless void', char: 'void', color: '#FF00FF', tags: ['blocksLight'] },
+]
+
+// const t2 = terraindef.reduce((acc, curr) => {
+
+// }, {})
+
+type EntDef = {
+  id: string
+  name: string
+  char: string
+  color: string
+  tags: string[]
+}
+
+export function createGlobalEntities(...defs: EntDef[]) {
+  const a = defs.reduce((acc, curr) => {
+    let e = {
+      id: curr.id,
+      name: curr.name,
+      char: curr.char,
+      color: curr.color,
+    }
+
+    if ('tags' in curr) {
+      if (curr.tags.includes('walkable')) e = { ...e, ...C.tagWalkable() }
+      if (curr.tags.includes('blocksLight')) e = { ...e, ...C.tagBlocksLight() }
+    }
+
+    return { ...acc, e }
+  }, {})
+  return a
 }

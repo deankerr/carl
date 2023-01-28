@@ -61,3 +61,14 @@ export class Level {
     return pick(this.rooms[index])
   }
 }
+
+export class Level2 {
+  readonly width: number
+  readonly height: number
+  terrain = new Map<Point, Entity>()
+  entities: Entity[] = []
+  constructor(width: number, height: number) {
+    this.width = width
+    this.height = height
+  }
+}

@@ -1,7 +1,7 @@
 import * as ROT from 'rot-js'
 import { Terrain, Features, Beings } from '../Templates'
 import { EntityTemplate } from '../Core/Entity'
-import { Point, Pt } from '../Model/Point'
+import { Point, PointMan, Pt } from '../Model/Point'
 import { half, pick, range, repeat, rnd, rndO } from '../lib/util'
 import { Overseer, Mutator } from './Overseer'
 import { Rect } from '../Model/Rectangle'
@@ -13,7 +13,7 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   const t = Date.now()
 
   console.log('window:', window)
-  const pt = window.points.pt.bind(window.points)
+  const pt = PointMan()
   console.log('pt:', pt)
 
   console.log(ROT.RNG.getState())
@@ -25,7 +25,16 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   const p3 = pt(3, 3)
 
   const p4 = pt(1, 1)
-  console.log('points:', p1, p2, p3, p4, p1 == p4)
+  const parr = [p1, p2, p3]
+  console.log(
+    'points:',
+    p1,
+    p2,
+    p3,
+    p4,
+    p1 == p4,
+    parr.filter(p => p !== p4)
+  )
 
   // const center = Pt(half(width), half(height))
 

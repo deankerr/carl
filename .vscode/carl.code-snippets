@@ -76,6 +76,11 @@
   "import ROT.JS": {
     "prefix": "impROTJS",
     "body": "import * as ROT from 'rot-js'",
-    "description": "Import out favourite roguelike library."
+    "description": "Import our favourite roguelike library."
+  },
+
+  "template def": {
+    "prefix": "ttemplate",
+    "body": "{ id: '${1:NAME}', name: '$1', char: '$1', color: '#$2', tags: ['$3'] },"
   }
 }

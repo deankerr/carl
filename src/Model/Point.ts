@@ -90,3 +90,7 @@ export class PointManager {
     return pt
   }
 }
+
+export function PointMan() {
+  return window.points.pt.bind(window.points)
+}
