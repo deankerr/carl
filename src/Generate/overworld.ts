@@ -18,8 +18,8 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
 
   // const center = Pt(half(width), half(height))
 
-  repeat(10, () => walk(O.grid.rndPt(), Terrain.grass, 400, O.mutate())) // grass
-  repeat(10, () => walk(O.grid.rndPt(), Terrain.deadGrass, 100, O.mutate())) // dead grass
+  repeat(20, () => walk(O.grid.rndPt(), Terrain.grass, 800, O.mutate())) // grass
+  repeat(20, () => walk(O.grid.rndPt(), Terrain.deadGrass, 200, O.mutate())) // dead grass
 
   // outer/inner space markers
   const levelRect = Rect.at(Pt(0, 0), width, height)
