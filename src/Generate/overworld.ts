@@ -12,9 +12,20 @@ import { Structure } from './structures/Structure'
 export function overworld(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
   const t = Date.now()
 
+  console.log('window:', window)
+  const pt = window.points.pt.bind(window.points)
+  console.log('pt:', pt)
+
   console.log(ROT.RNG.getState())
 
   const O = new Overseer(width, height)
+
+  const p1 = pt(1, 1)
+  const p2 = pt(2, 2)
+  const p3 = pt(3, 3)
+
+  const p4 = pt(1, 1)
+  console.log('points:', p1, p2, p3, p4, p1 == p4)
 
   // const center = Pt(half(width), half(height))
 

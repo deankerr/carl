@@ -4,6 +4,7 @@ import { createGameDisplay } from './lib/display'
 import * as ROT from 'rot-js'
 
 import { Game } from './Core/Game'
+import { PointManager } from './Model/Point'
 
 export function App() {
   // dev html background
@@ -12,11 +13,13 @@ export function App() {
   if (CONFIG?.seed) ROT.RNG.setSeed(CONFIG.seed)
 
   const [msg, main] = createGameDisplay()
+  window.points = new PointManager()
   window.game = new Game(main, msg)
 }
 
 declare global {
   interface Window {
-    game: object
+    game: Game
+    points: PointManager
   }
 }

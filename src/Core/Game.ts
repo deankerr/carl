@@ -23,7 +23,7 @@ import {
 import { mouseMove } from '../lib/display'
 import { Keys } from '../lib/Keys'
 import { input } from './Input'
-import { Pt } from '../Model/Point'
+import { PointManager, Pt } from '../Model/Point'
 import { Visualizer } from './Visualizer'
 
 export class Game {

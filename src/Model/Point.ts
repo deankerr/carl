@@ -1,6 +1,6 @@
 export class Point {
   readonly s: string
-  constructor(readonly x: number, readonly y: number) {
+  constructor(readonly x: number, readonly y: number, readonly pID = 0) {
     this.s = `${this.x},${this.y}`
   }
 
@@ -76,3 +76,17 @@ export class PointSet {
 
 const neighbors = [Pt(0, -1), Pt(1, -1), Pt(1, 0), Pt(1, 1), Pt(0, 1), Pt(-1, 1), Pt(-1, 0), Pt(-1, -1)]
 const orthNeighbours = [Pt(0, -1), Pt(1, 0), Pt(0, 1), Pt(-1, 0)]
+
+export class PointManager {
+  points = new Map<string, Point>()
+  count = 0
+
+  pt(x: number, y: number) {
+    const s = x + ',' + y
+    if (this.points.has(s)) return this.points.get(s)
+
+    const pt = new Point(x, y, this.count++)
+    this.points.set(s, pt)
+    return pt
+  }
+}
