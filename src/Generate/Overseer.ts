@@ -1,7 +1,6 @@
-import { Entity, EntityTemplate } from '../Core/Entity'
+import { EntityTemplate } from '../Core/Entity'
 import { Grid } from '../Model/Grid'
-import { Level2 } from '../Model/Level'
-import { Point, PointMan, strToPt } from '../Model/Point'
+import { Point, strToPt } from '../Model/Point'
 import { Rect } from '../Model/Rectangle'
 import { Features, Terrain, TerrainTemplate } from '../Templates'
 
@@ -73,15 +72,15 @@ export class Mutator {
   }
 }
 
-const pt = PointMan()
-export class Overseer2 {
-  main: Level2
-  constructor(width: number, height: number, initialTerrain: Entity) {
-    this.main = new Level2(width, height)
-    for (let yi = 0; yi < height; yi++) {
-      for (let xi = 0; xi < width; xi++) {
-        // this.main.terrain.set(pt(xi, yi), initialTerrain)
-      }
-    }
-  }
-}
+// const pt = PointMan()
+// export class Overseer2 {
+//   main: Level2
+//   constructor(width: number, height: number, initialTerrain: Entity) {
+//     this.main = new Level2(width, height)
+//     for (let yi = 0; yi < height; yi++) {
+//       for (let xi = 0; xi < width; xi++) {
+//         // this.main.terrain.set(pt(xi, yi), initialTerrain)
+//       }
+//     }
+//   }
+// }
