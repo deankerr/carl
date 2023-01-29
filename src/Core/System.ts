@@ -1,10 +1,11 @@
-import * as Sys from '../System'
+// import * as Sys from '../System'
+import { handleMovement } from '../System'
 import { Region } from './Region'
 import * as Action from '../Action'
 import { ActionTypes } from '../Action'
 
 export class System {
-  // entityTurn = [Sys.handleMovement]
+  entityTurn = [handleMovement]
   playerInputRequired = false
 
   turn(region: Region, playerAction: ActionTypes) {

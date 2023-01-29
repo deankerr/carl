@@ -1,6 +1,6 @@
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
-import { World } from './World'
+import { World } from '../../dev-assets/graveyard/ECS/Template/World'
 import { half, floor, clamp, min } from '../lib/util'
 import { Message, createWordRegex } from '../lib/messages'
 import { hexLuminance, setLuminance } from '../lib/color'

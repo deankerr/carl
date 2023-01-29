@@ -1,13 +1,13 @@
 // Entity/Component manager
 import { Game } from './Game'
-import { Entity, EntityTemplate, hydrate } from '../../dev-assets/graveyard/ECS/Template/Entity'
-import { ComponentsType, componentName } from '../../dev-assets/graveyard/ECS/Template/Components'
+import { Entity, EntityTemplate, hydrate } from './Entity'
+import { ComponentsType, componentName } from './Components'
 import { Graphic, tagCurrentTurn } from '../Component'
-import { Beings, TerrainTemplate, Domains } from '../Templates'
-import { Level } from '../Model/Level'
-import { Point, Pt, strToPt } from '../Model/Point'
-import { objLog } from '../lib/util'
-import { colorizeMessage, Message } from '../lib/messages'
+import { Beings, TerrainTemplate, Domains } from '../../../../src/Templates'
+import { Level } from '../../../../src/Model/Level'
+import { Point, Pt, strToPt } from '../../../../src/Model/Point'
+import { objLog } from '../../../../src/lib/util'
+import { colorizeMessage, Message } from '../../../../src/lib/messages'
 
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 

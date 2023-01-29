@@ -2,12 +2,12 @@
 // the main update/render/input loop. Executes Systems loop
 
 import * as ROT from 'rot-js'
-import { CONFIG } from '../config'
+import { CONFIG } from '../../../../src/config'
 
 import { renderLevel, renderMessages } from './Render'
 import { World } from './World'
 
-import { actionName, ActionTypes, ChangeLevel, __randomMove, __wait } from '../Action'
+import { actionName, ActionTypes, ChangeLevel, __randomMove, __wait } from '../../../../src/Action'
 import { acting } from '../Component'
 import {
   handleBump,
@@ -18,13 +18,13 @@ import {
   processDeath,
   processFOV,
   processLighting,
-} from '../System'
+} from '../../../../src/System'
 
-import { mouseMove } from '../lib/display'
-import { Keys } from '../lib/Keys'
-import { input } from './Input'
-import { PointManager, Pt } from '../Model/Point'
-import { Visualizer } from './Visualizer'
+import { mouseMove } from '../../../../src/lib/display'
+import { Keys } from '../../../../src/lib/Keys'
+import { input } from '../../../../src/Core/Input'
+import { PointManager, Pt } from '../../../../src/Model/Point'
+import { Visualizer } from '../../../../src/Core/Visualizer'
 
 export class Game {
   display: ROT.Display

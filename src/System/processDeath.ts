@@ -1,6 +1,6 @@
 // remove dead entities from game
 // TODO handle non "beings" ie items
-import { World } from '../Core/World'
+import { World } from '../../dev-assets/graveyard/ECS/Template/World'
 
 export const processDeath = (world: World) => {
   const currentEntities = world.get('tagDead')

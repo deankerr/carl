@@ -1,4 +1,4 @@
-import { World } from '../Core/World'
+import { World } from '../../dev-assets/graveyard/ECS/Template/World'
 
 export const handleTread = (world: World) => {
   const [currentEntity] = world.get('acting', 'position')
