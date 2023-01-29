@@ -1,51 +1,22 @@
-import {
-  Acting,
-  BaseGraphic,
-  CycleGraphic,
-  Name,
-  DoorGraphic,
-  EmitLight,
-  FOV,
-  Graphic,
-  Position,
-  TagActor,
-  TagBlocksLight,
-  TagCurrentTurn,
-  TagDead,
-  TagDoor,
-  TagDoorOpen,
-  TagMeleeAttackTarget,
-  TagMemorable,
-  TagPlayer,
-  TagWalkable,
-  TrodOn,
-  TagLightPathUpdated,
-} from '../Component/'
+import { Point } from '../Model/Point'
 
-export type Components = Partial<
-  Graphic &
-    Position &
-    Acting &
-    BaseGraphic &
-    CycleGraphic &
-    Name &
-    DoorGraphic &
-    EmitLight &
-    FOV &
-    TagActor &
-    TagBlocksLight &
-    TagCurrentTurn &
-    TagDead &
-    TagDoor &
-    TagDoorOpen &
-    TagMeleeAttackTarget &
-    TagMemorable &
-    TagPlayer &
-    TagLightPathUpdated &
-    TagWalkable &
-    TrodOn
->
-
-export const componentName = <C extends Components>(component: C) => {
-  return Reflect.ownKeys(component).join()
+export type Components = ReturnType<typeof ComponentsFactory[keyof typeof ComponentsFactory]>
+export type CKey = keyof typeof ComponentsFactory
+export type Comp<K extends CKey> = ReturnType<typeof ComponentsFactory[K]>
+type a = Comp<'form'>
+export const ComponentsFactory = {
+  form: (name: string, char: string, color: string, bgColor = 'transparent') => {
+    return { form: { name, char, color, bgColor } }
+  },
+  position: (pt: Point) => {
+    return { position: { pt } }
+  },
+  tag: (...tags: Tags[]) => {
+    return { tags: { tags } }
+  },
+  trodOn: (msg: string) => {
+    return { trodOn: { msg } }
+  },
 }
+
+export type Tags = 'blocksMovement' | 'blocksLight' | 'playerControlled' | 'memorable' | 'actor'

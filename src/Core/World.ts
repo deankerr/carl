@@ -1,7 +1,7 @@
 // Entity/Component manager
 import { Game } from './Game'
-import { Entity, EntityTemplate, hydrate } from './Entity'
-import { Components, componentName } from './Components'
+import { Entity, EntityTemplate, hydrate } from '../../dev-assets/graveyard/ECS/Template/Entity'
+import { ComponentsType, componentName } from '../../dev-assets/graveyard/ECS/Template/Components'
 import { Graphic, tagCurrentTurn } from '../Component'
 import { Beings, TerrainTemplate, Domains } from '../Templates'
 import { Level } from '../Model/Level'
@@ -12,18 +12,15 @@ import { colorizeMessage, Message } from '../lib/messages'
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 
 export class World {
-  options: Game['options']
-  terrain = new Map<TerrainTemplate, Entity>()
-
   hasChanged = true // trigger a rerender on next animation frame
 
   // Game state
-  domains = Domains
-  domain = Domains[0]
+  // domains = Domains
+  // domain = Domains[0]
   active = Domains[0].levels[0]
   activeIndex = 0
-  messages: Message[] = [] // TODO rename messageLog
-  playerTurns = -1 // TODO start on 0
+  // messages: Message[] = [] // TODO rename messageLog
+  // playerTurns = -1 // TODO start on 0
   nextEntityID = 0
 
   constructor(options: Game['options']) {
@@ -207,7 +204,7 @@ export class World {
   }
 
   // currently unused, may be useful for debug
-  EntityComponentException<C extends Components>(error: string, entity: Entity, component: C | C[]) {
+  EntityComponentException<C extends ComponentsType>(error: string, entity: Entity, component: C | C[]) {
     console.error(error)
     objLog(component, 'component')
     objLog(entity, 'target')
@@ -241,7 +238,7 @@ const modify = (active: Level, target: Entity) => {
   if (!newEntity) throw new Error('modify: cannot locate' + target.id)
   let entity = newEntity
 
-  const add = <C extends Components | Graphic>(c: C) => {
+  const add = <C extends ComponentsType | Graphic>(c: C) => {
     // check it did not already exist
     if (componentName(c) in entity) throw new Error(`add: Already has component ${entity.id} ${componentName(c)}`)
 
@@ -252,7 +249,7 @@ const modify = (active: Level, target: Entity) => {
     return { entity, add, change, remove }
   }
 
-  const change = <C extends Components | Graphic>(c: C) => {
+  const change = <C extends ComponentsType | Graphic>(c: C) => {
     // check it currently does exist
     const isGraphic = 'char' in c && 'color' in c
     if (!isGraphic && !(componentName(c) in entity)) {
@@ -266,7 +263,7 @@ const modify = (active: Level, target: Entity) => {
     return { entity, add, change, remove }
   }
 
-  const remove = <N extends keyof Components | keyof Graphic>(cName: N) => {
+  const remove = <N extends keyof ComponentsType | keyof Graphic>(cName: N) => {
     // check it currently does exist
     if (!(cName in entity)) throw new Error(`remove: ${entity.id} does not have ${cName}`)
 

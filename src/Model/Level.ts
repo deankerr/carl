@@ -1,9 +1,9 @@
 // Represents a game level
 import * as ROT from 'rot-js'
 import { Grid } from './Grid'
-import { Entity } from '../Core/Entity'
+import { Entity } from '../../dev-assets/graveyard/ECS/Template/Entity'
 import { Point } from './Point'
-import { Terrain, TerrainTemplate, GlobalTerrain } from '../Templates/Terrain'
+import { Terrain, TerrainTemplate, GlobalTerrain } from '../../dev-assets/graveyard/ECS/Template/Terrain'
 import { pick, repeat } from '../lib/util'
 import { Color } from 'rot-js/lib/color'
 import { Overseer } from '../Generate/Overseer'

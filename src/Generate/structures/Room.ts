@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 // import * as ROT from 'rot-js'
-import { EntityTemplate } from '../../Core/Entity'
+import { EntityTemplate } from '../../../dev-assets/graveyard/ECS/Template/Entity'
 import { half, pick, repeat, rnd, rndO } from '../../lib/util'
 import { Point, Pt, strToPt } from '../../Model/Point'
 import { Features, Terrain } from '../../Templates'

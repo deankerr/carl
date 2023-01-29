@@ -1,4 +1,23 @@
-export type BeingTemplate = typeof Beings[keyof typeof Beings]
+// export type BeingTemplate = typeof Beings[keyof typeof Beings]
+export type BeingNewTemplate = typeof BeingNew[keyof typeof BeingNew]
+export const BeingNew = {
+  player: {
+    name: 'me',
+    form: {
+      char: '@',
+      color: '#EE82EE',
+    },
+    tag: ['actor', 'playerControlled'],
+  },
+  spider: {
+    name: 'spider',
+    form: {
+      char: 'spider',
+      color: '#00b3b3',
+    },
+    tag: ['actor'],
+  },
+}
 
 export const Beings = {
   player: {

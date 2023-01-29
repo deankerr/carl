@@ -1,4 +1,4 @@
-import { EntityTemplate } from '../Core/Entity'
+import { EntityTemplate } from '../../dev-assets/graveyard/ECS/Template/Entity'
 import { Grid } from '../Model/Grid'
 import { Point, strToPt } from '../Model/Point'
 import { Rect } from '../Model/Rectangle'

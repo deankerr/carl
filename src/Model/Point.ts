@@ -13,7 +13,7 @@ export class Point {
       pt = strToPt(vector)
     } else pt = vector
 
-    return Pt(this.x + pt.x, this.y + pt.y)
+    return new Point(this.x + pt.x, this.y + pt.y)
   }
 
   neighbors() {
@@ -25,7 +25,7 @@ export class Point {
   }
 }
 
-export function Pt(x: number, y: number) {
+function Pt(x: number, y: number) {
   return new Point(x, y)
 }
 
@@ -81,16 +81,20 @@ export class PointManager {
   points = new Map<string, Point>()
   count = 0
 
-  pt(x: number, y: number) {
+  at(x: number, y: number) {
     const s = x + ',' + y
-    if (this.points.has(s)) return this.points.get(s)
-
+    const storedPt = this.points.get(s)
+    if (storedPt) return storedPt
     const pt = new Point(x, y, this.count++)
     this.points.set(s, pt)
     return pt
   }
-}
 
-export function PointMan() {
-  return window.points.pt.bind(window.points)
+  grid(width: number, height: number, callback: (pt: Point) => unknown) {
+    for (let yi = 0; yi < height; yi++) {
+      for (let xi = 0; xi < width; xi++) {
+        callback(this.at(xi, yi))
+      }
+    }
+  }
 }

@@ -1,57 +1,78 @@
-import { Components } from './Components'
-import * as C from '../Component'
 import { Point } from '../Model/Point'
-import { BeingTemplate, FeatureTemplate, TerrainTemplate } from '../Templates'
-import { transformHSL } from '../lib/color'
+import { Comp, Components, ComponentsFactory, Tags } from './Components'
 
-export type EntityID = { readonly id: string; name: string; char: string; color: string }
+export type Entity = { eID: number } & Partial<Components>
+// export type Entity = BareEntity & Required<ReturnType<typeof ComponentsFactory['form' | 'position']>>
+export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
+// export type Entity = { eID: number } & ReturnType<typeof ComponentsFactory['form']> &
+// ReturnType<typeof ComponentsFactory['position']>
 
-export type Entity = EntityID & Components
+export class EntityFreezer {
+  private count = 0
+  readonly freezer = new Map<string, Entity>()
+  constructor(readonly components: typeof ComponentsFactory) {}
+  load(templates: EntityTemplate, tag?: Tags) {
+    for (const [key, template] of Object.entries(templates)) {
+      let e = { eID: 0 }
 
-export type EntityTemplate = BeingTemplate | FeatureTemplate | TerrainTemplate
-
-export function hydrate(t: EntityTemplate, pt?: Point, fov?: number): Entity {
-  let entity = {
-    id: t.id,
-    name: t.name,
-    char: t.char,
-    color: t.color,
-  }
-
-  if (pt) entity = { ...entity, ...C.position(pt) }
-  if (fov) entity = { ...entity, ...C.fov(fov) }
-
-  // TODO map components to templates to avoid doing this manually
-  if ('tag' in t) {
-    if (t.tag.includes('walkable')) entity = { ...entity, ...C.tagWalkable() }
-    if (t.tag.includes('memorable')) entity = { ...entity, ...C.tagMemorable() }
-    if (t.tag.includes('blocksLight')) entity = { ...entity, ...C.tagBlocksLight() }
-    if (t.tag.includes('actor')) entity = { ...entity, ...C.tagActor() }
-    if (t.tag.includes('player')) entity = { ...entity, ...C.tagPlayer() }
-    if (t.tag.includes('door')) {
-      entity = {
-        ...entity,
-        ...C.tagDoor(),
-        ...C.doorGraphic(C.graphic('doorClosed', entity.color), C.graphic('doorOpen', entity.color)),
+      if (template.form) e = { ...e, ...this.components.form(...template.form) }
+      if (template.trodOn) e = { ...e, ...this.components.trodOn(...template.trodOn) }
+      if (template.tag) {
+        const tags = tag ? template.tag.concat(tag) : template.tag
+        e = { ...e, ...ComponentsFactory.tag(...tags) }
       }
+      this.freezer.set(key, e)
     }
   }
 
-  if ('trodOn' in t) entity = { ...entity, ...C.trodOn(t.trodOn) }
-
-  if ('cycleGraphic' in t) {
-    const list = t.cycleGraphic.list.map(g => {
-      return C.graphic(g, t.color)
-    })
-    entity = { ...entity, ...C.cycleGraphic(list, t.cycleGraphic.frequency) }
+  spawn(key: EntityKey, at: Point): Entity {
+    const thawed = this.freezer.get(key) as EntityWith<Entity, keyof Comp<'form'>>
+    if (!thawed) throw new Error(`Could not thaw entity ${key}`)
+    const e = { ...thawed, eID: this.count++, ...this.components.position(at) }
+    return e as Entity
   }
-
-  if ('emitLight' in t) {
-    // const color = 'color' in t.emitLight ? t.emitLight.color : transformHSL(entity.color, {lum: {to: .25}})
-    // hardcoded to 25% of entity's luminance for now
-    const color = transformHSL(entity.color, { lum: { to: 0.25 } })
-    entity = { ...entity, ...C.emitLight(color, t.emitLight.flicker) }
-  }
-
-  return entity
 }
+
+type EntityTemplate = {
+  [key: string]: Partial<{
+    [Key in keyof typeof ComponentsFactory]: Parameters<typeof ComponentsFactory[Key]>
+  }>
+}
+
+export type EntityKey = TerrainKey | BeingKey | FeatureKey
+
+export const terrain: EntityTemplate = {
+  path: { form: ['path', 'path', '#262626'] },
+  wall: { form: ['wall', 'wall', '#767676'], tag: ['blocksMovement', 'blocksLight'] },
+  water: { form: ['water', 'water', '#4084bf'] },
+  stairsDown: { form: ['stairs down', 'stairsDown', '#767676'] },
+  stairsUp: { form: ['stairs up', 'stairsUp', '#767676'] },
+  crackedWall: {
+    form: ['cracked wall', 'crackedWall', '#767676'],
+    tag: ['blocksMovement', 'blocksLight'],
+  },
+  grass: { form: ['grass', 'grass', '#65712b'] },
+  deadGrass: { form: ['dead grass', 'deadGrass', '#664f47'] },
+  mound: { form: ['mound', 'mound', '#6a4b39'], tag: ['blocksLight'] },
+}
+type TerrainKey =
+  | 'path'
+  | 'wall'
+  | 'water'
+  | 'stairsDown'
+  | 'stairsUp'
+  | 'crackedWall'
+  | 'grass'
+  | 'deadGrass'
+  | 'mound'
+
+export const beings: EntityTemplate = {
+  player: { form: ['me', '@', '#EE82EE'], tag: ['playerControlled'] },
+  spider: { form: ['spider', 'spider', '#00B3B3'] },
+}
+type BeingKey = 'player' | 'spider'
+
+export const features: EntityTemplate = {
+  shrub: { form: ['shrub', 'shrub', '#58a54a'], tag: ['memorable'] },
+}
+type FeatureKey = 'shrub'

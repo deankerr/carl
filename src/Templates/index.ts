@@ -1,4 +1,4 @@
 export * from './Domains'
 export * from './Beings'
 export * from './Features'
-export * from './Terrain'
+export * from '../../dev-assets/graveyard/ECS/Template/Terrain'
