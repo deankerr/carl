@@ -1,18 +1,18 @@
 import { Point } from '../Model/Point'
-import { Comp, Complist, Components, ComponentsFactory, TagKeys } from './Components'
-export type eID = { eID: number }
+import { Comp, Complist, ComponentFoundary, TagKeys } from './Components'
+export type eID = { eID: number; label: string }
 export type Entity = eID & Comp<'form'> & Comp<'tag'> & Partial<Complist>
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 export type EntityR = Entity & Required<Comp<'form'>> & Comp<'position'>
 
-export class EntityFreezer {
+export class EntityHive {
   private count = 0
-  readonly freezer = new Map<string, Entity>()
-  constructor(readonly components: typeof ComponentsFactory) {}
+  readonly clones = new Map<string, Entity>()
+  constructor(readonly components: typeof ComponentFoundary) {}
 
   load(templates: EntityTemplate, tag?: TagKeys) {
     for (const [key, template] of Object.entries(templates)) {
-      let e = { eID: 0, ...this.components.tag(), ...this.components.form('', '', '') }
+      let e = { eID: 0, label: key, ...this.components.tag(), ...this.components.form('', '', '') }
 
       if (template.form) e = { ...e, ...this.components.form(...template.form) }
 
@@ -23,12 +23,12 @@ export class EntityFreezer {
 
       if (template.trodOn) e = { ...e, ...this.components.trodOn(...template.trodOn) }
 
-      this.freezer.set(key, e)
+      this.clones.set(key, e)
     }
   }
 
   spawn(key: EntityKey, at: Point): Entity {
-    const thawed = this.freezer.get(key)
+    const thawed = this.clones.get(key)
     if (!thawed) throw new Error(`Could not thaw entity ${key}`)
     const e = { ...thawed, eID: this.count++, ...this.components.position(at) }
     return e as Entity
@@ -37,7 +37,7 @@ export class EntityFreezer {
 
 type EntityTemplate = {
   [key: string]: Partial<{
-    [Key in keyof typeof ComponentsFactory]: Parameters<typeof ComponentsFactory[Key]>
+    [Key in keyof typeof ComponentFoundary]: Parameters<typeof ComponentFoundary[Key]>
   }>
 }
 
@@ -73,7 +73,7 @@ type TerrainKey =
   | 'endlessVoid'
 
 export const beings: EntityTemplate = {
-  player: { form: ['me', '@', '#EE82EE'], tag: ['playerControlled'] },
+  player: { form: ['player', '@', '#EE82EE'], tag: ['playerControlled'] },
   spider: { form: ['spider', 'spider', '#00B3B3'] },
 }
 type BeingKey = 'player' | 'spider'

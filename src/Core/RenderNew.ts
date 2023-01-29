@@ -8,6 +8,7 @@ export function renderRegion(region: Region) {
     const chars = entities.map(e => e.form.char)
     const colors = entities.map(e => e.form.color)
     const bgColors = entities.map(e => e.form.bgColor)
-    display.draw(pt.x, pt.y, chars, colors, bgColors)
+
+    if (chars.length > 0) display.draw(pt.x, pt.y, chars, colors, bgColors)
   })
 }

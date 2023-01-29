@@ -1,7 +1,7 @@
 // import { Bump, Tread } from '../Action'
 import { Region } from '../Core/Region'
 
-export const handleMovement = (region: Region) => {
+export const handleMovement = (region: Region, isPlayerTurn: boolean) => {
   const { component } = window.game
   const [currentEntity] = region.get('acting', 'position')
   const action = currentEntity.acting
@@ -28,7 +28,7 @@ export const handleMovement = (region: Region) => {
   //   return
   // }
 
-  const [terrain, entitiesHere] = region.here(newPt)
+  const [terrain, entitiesHere] = region.at(newPt)
 
   // terrain walkable check
   if (terrain.tags.includes('blocksMovement')) {

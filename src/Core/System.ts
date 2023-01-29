@@ -5,23 +5,39 @@ import * as Action from '../Action'
 import { ActionTypes } from '../Action'
 
 export class System {
-  entityTurn = [handleMovement]
-  playerInputRequired = false
+  turnProcess = [handleMovement]
 
-  turn(region: Region, playerAction: ActionTypes) {
+  player(region: Region, playerAction: ActionTypes) {
     const { component } = window.game
+    region.modify(region.player(), component.acting(playerAction))
+    this.turnProcess.forEach(sys => sys(region, false))
+    region.remove(region.get('acting'), 'acting')
+
+    this.run(region)
+  }
+
+  run(region: Region) {
+    let maxLoops = 100
+    while (maxLoops-- > 0) {
+      const e = this.next(region)
+      if (e.tags.includes('playerControlled')) {
+        console.log('Sys: Player Input Required')
+        return
+      }
+
+      const { component } = window.game
+
+      region.modify(e, component.acting(Action.__randomMove()))
+      this.turnProcess.forEach(sys => sys(region, false))
+      region.remove(region.get('acting'), 'acting')
+    }
+  }
+
+  // process(region: Region) {}
+
+  next(region: Region) {
     const nextID = region.turnQueue.next()
     if (!nextID) throw new Error('System: turn queue empty')
-    console.log('nextID:', nextID)
-    const e = region.getByID(nextID)
-    if (!e) throw new Error('System: unable to get entity by ID')
-
-    region.modify(e, component.acting(Action.none()))
-    console.log('next turn:', e)
-    if (e.tags.includes('playerControlled')) {
-      console.log('Sys: player turn')
-      this.playerInputRequired = true
-      return
-    }
+    return region.getByID(nextID)
   }
 }
