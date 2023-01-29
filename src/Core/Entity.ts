@@ -1,65 +1,74 @@
-import { Point } from '../Model/Point'
-import { Comp, Complist, ComponentFoundary, TagKeys } from './Components'
+import { Comp, Complist, ComponentFoundry } from './Components'
 export type eID = { eID: number; label: string }
-export type Entity = eID & Comp<'form'> & Comp<'tag'> & Partial<Complist>
+export type Entity = eID & Comp<'name'> & Comp<'form'> & Partial<Complist>
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
-export type EntityR = Entity & Required<Comp<'form'>> & Comp<'position'>
 
-export class EntityHive {
+type FoundaryParams = { [K in keyof typeof ComponentFoundry]: Parameters<typeof ComponentFoundry[K]> }
+
+type EntityTemplate = {
+  label: string
+  name: FoundaryParams['name']
+  form: FoundaryParams['form']
+} & Partial<FoundaryParams>
+
+export class EntityPool {
   private count = 0
-  readonly clones = new Map<string, Entity>()
-  constructor(readonly components: typeof ComponentFoundary) {}
+  readonly pool = new Map<string, Entity>()
 
-  load(templates: EntityTemplate, tag?: TagKeys) {
-    for (const [key, template] of Object.entries(templates)) {
-      let e = { eID: 0, label: key, ...this.components.tag(), ...this.components.form('', '', '') }
-
-      if (template.form) e = { ...e, ...this.components.form(...template.form) }
-
-      if (template.tag) {
-        const tags = tag ? template.tag.concat(tag) : template.tag
-        e = { ...e, ...this.components.tag(...tags) }
+  constructor(readonly apply: typeof ComponentFoundry, templates: EntityTemplate[]) {
+    for (const t of templates) {
+      let e = {
+        eID: 0,
+        label: t.label,
+        ...apply.name(...t.name),
+        ...apply.form(...t.form),
       }
 
-      if (template.trodOn) e = { ...e, ...this.components.trodOn(...template.trodOn) }
+      if (t.tag) e = { ...e, ...apply.tag(...t.tag) }
+      if (t.trodOn) e = { ...e, ...apply.trodOn(...t.trodOn) }
 
-      this.clones.set(key, e)
+      this.pool.set(t.label, e)
     }
   }
 
-  spawn(key: EntityKey, at: Point): Entity {
-    const thawed = this.clones.get(key)
-    if (!thawed) throw new Error(`Could not thaw entity ${key}`)
-    const e = { ...thawed, eID: this.count++, ...this.components.position(at) }
-    return e as Entity
-  }
+  // spawn(key: EntityIDs, at: Point): Entity {
+  //   const thawed = this.clones.get(key)
+  //   if (!thawed) throw new Error(`Could not thaw entity ${key}`)
+  //   const e = { ...thawed, eID: this.count++, ...this.components.position(at) }
+  //   return e as Entity
+  // }
 }
 
-type EntityTemplate = {
-  [key: string]: Partial<{
-    [Key in keyof typeof ComponentFoundary]: Parameters<typeof ComponentFoundary[Key]>
-  }>
-}
+export const beings: EntityTemplate[] = [
+  { label: 'player', name: ['player'], form: ['@', '#EE82EE'], tag: ['playerControlled', 'actor'] },
+  { label: 'spider', name: ['spider'], form: ['spider', '#00B3B3'], tag: ['actor'] },
+]
+export type BeingLabels = 'player' | 'spider'
 
-export type EntityKey = TerrainKey | BeingKey | FeatureKey
+export const features: EntityTemplate[] = [
+  { label: 'shrub', name: ['shrub'], form: ['shrub', '#58a54a'], tag: ['memorable'] },
+]
+export type FeatureLabels = 'shrub'
 
-export const terrain: EntityTemplate = {
-  path: { form: ['path', 'path', '#262626'] },
-  wall: { form: ['wall', 'wall', '#767676'], tag: ['blocksMovement', 'blocksLight'] },
-  water: { form: ['water', 'water', '#4084bf'] },
-  stairsDown: { form: ['stairs down', 'stairsDown', '#767676'] },
-  stairsUp: { form: ['stairs up', 'stairsUp', '#767676'] },
-  crackedWall: {
-    form: ['cracked wall', 'crackedWall', '#767676'],
+export const terrain: EntityTemplate[] = [
+  { label: 'path', name: ['path'], form: ['path', '#262626'] },
+  { label: 'wall', name: ['wall'], form: ['wall', '#767676'], tag: ['blocksMovement', 'blocksLight'] },
+  { label: 'water', name: ['water'], form: ['water', '#4084bf'], trodOn: ['You tread water.'] },
+  { label: 'stairsDown', name: ['descending stairs'], form: ['stairsDown', '#767676'] },
+  { label: 'stairsUp', name: ['ascending'], form: ['stairsUp', '#767676'] },
+  {
+    label: 'crackedWall',
+    name: ['cracked wall'],
+    form: ['crackedWall', '#767676'],
     tag: ['blocksMovement', 'blocksLight'],
   },
-  grass: { form: ['grass', 'grass', '#65712b'] },
-  deadGrass: { form: ['dead grass', 'deadGrass', '#664f47'] },
-  mound: { form: ['mound', 'mound', '#6a4b39'], tag: ['blocksLight'] },
-  void: { form: ['void', 'void', '#FF00FF'] },
-  endlessVoid: { form: ['endless void', 'void', '#FF00FF'], tag: ['blocksLight', 'blocksMovement'] },
-}
-type TerrainKey =
+  { label: 'grass', name: ['grass'], form: ['grass', '#65712b'] },
+  { label: 'deadGrass', name: ['dead grass'], form: ['deadGrass', '#664f47'] },
+  { label: 'mound', name: ['mound'], form: ['mound', '#6a4b39'], tag: ['blocksLight'] },
+  { label: 'void', name: ['void'], form: ['void', '#FF00FF'] },
+  { label: 'endlessVoid', name: ['endless void'], form: ['void', '#FF00FF'], tag: ['blocksLight', 'blocksMovement'] },
+]
+export type TerrainLabels =
   | 'path'
   | 'wall'
   | 'water'
@@ -72,13 +81,6 @@ type TerrainKey =
   | 'void'
   | 'endlessVoid'
 
-export const beings: EntityTemplate = {
-  player: { form: ['player', '@', '#EE82EE'], tag: ['playerControlled'] },
-  spider: { form: ['spider', 'spider', '#00B3B3'] },
-}
-type BeingKey = 'player' | 'spider'
+export type EntityLabels = BeingLabels | FeatureLabels | TerrainLabels
 
-export const features: EntityTemplate = {
-  shrub: { form: ['shrub', 'shrub', '#58a54a'], tag: ['memorable'] },
-}
-type FeatureKey = 'shrub'
+export const gameTemplates = [...beings, ...features, ...terrain]

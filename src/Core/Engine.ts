@@ -3,12 +3,14 @@ import { CONFIG } from '../config'
 import { createGameDisplay } from '../lib/display'
 import { Keys } from '../lib/Keys'
 import { PointMan } from '../Model/Point'
-import { ComponentFoundary } from './Components'
-import { EntityHive, terrain, beings, features } from './Entity'
+import { ComponentFoundry } from './Components'
+import { EntityPool, gameTemplates } from './Entity'
 import { input } from './Input'
 import { Region } from './Region'
-import { renderRegion } from './RenderNew'
+import { renderMessages, renderRegion } from './RenderNew'
 import { System } from './System'
+
+export type Message = { turn: number; text: string }
 
 export class Engine {
   display: ROT.Display
@@ -16,12 +18,15 @@ export class Engine {
   keys = new Keys()
 
   point = PointMan
-  component = ComponentFoundary
-  hive = new EntityHive(this.component)
+  component = ComponentFoundry
+  hive = new EntityPool(this.component, gameTemplates)
   system = new System()
 
   regions: Region[] = []
   region = this.regions[0]
+
+  messageLog: Message[] = []
+  playerTurns = 0
 
   constructor() {
     const [msg, main] = createGameDisplay()
@@ -29,10 +34,6 @@ export class Engine {
     this.msgDisplay = msg
     msg.drawText(0, 0, 'msg hello')
     main.drawText(0, 0, 'main hello')
-
-    this.hive.load(terrain)
-    this.hive.load(features)
-    this.hive.load(beings, 'actor')
   }
 
   init() {
@@ -44,10 +45,10 @@ export class Engine {
     region.being('player', this.point.pt(1, 0))
     region.being('spider', this.point.pt(9, 5))
     region.feature('shrub', this.point.pt(8, 7))
-    renderRegion(region)
-
     this.region = region
-    this.system.run(region)
+
+    // this.system.run(region)
+    this.render()
     this.keys.add(this.update.bind(this))
     console.log('Engine ready', this)
   }
@@ -63,6 +64,18 @@ export class Engine {
     }
 
     this.system.player(this.region, playerAction)
+    this.playerTurns++
+    this.render()
+  }
+
+  render() {
     renderRegion(this.region)
+    renderMessages(this.messageLog)
+  }
+
+  message(newMsg: string) {
+    console.log('newMsg:', newMsg)
+    console.log('this.:', this)
+    this.messageLog.unshift({ turn: this.playerTurns, text: newMsg })
   }
 }

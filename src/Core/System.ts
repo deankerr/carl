@@ -1,18 +1,19 @@
 // import * as Sys from '../System'
-import { handleMovement } from '../System'
+import { handleBump, handleMeleeAttack, handleMovement, handleTread, processDeath } from '../System'
 import { Region } from './Region'
 import * as Action from '../Action'
 import { ActionTypes } from '../Action'
 
 export class System {
-  turnProcess = [handleMovement]
+  turnProcess = [handleMovement, handleTread, handleBump, handleMeleeAttack, processDeath]
 
   player(region: Region, playerAction: ActionTypes) {
     const { component } = window.game
+    console.group('player')
     region.modify(region.player(), component.acting(playerAction))
-    this.turnProcess.forEach(sys => sys(region, false))
+    this.turnProcess.forEach(sys => sys(region, true))
     region.remove(region.get('acting'), 'acting')
-
+    console.groupEnd()
     this.run(region)
   }
 

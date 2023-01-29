@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Queue } from '../lib/util'
 import { Point } from '../Model/Point'
-import { Components, TagKeys } from './Components'
+import { Components, TagKeys, ComponentFoundry } from './Components'
 import { Entity, EntityHive, EntityKey, EntityR, EntityWith } from './Entity'
 
 export class Region {
@@ -13,7 +13,8 @@ export class Region {
     readonly width: number,
     readonly height: number,
     readonly baseTerrain: EntityKey,
-    readonly hive: EntityHive
+    readonly hive: EntityHive,
+    readonly components = ComponentFoundry
   ) {}
 
   render(callback: (pt: Point, entities: Entity[]) => unknown) {
@@ -59,10 +60,6 @@ export class Region {
       : this.hive.spawn('endlessVoid', pt)
   }
 
-  getRenderable() {
-    return this.entities.filter(e => 'form' in e && 'position' in e) as EntityR[]
-  }
-
   getByID(eID: number) {
     const e = this.entities.find(e => e.eID === eID)
     if (!e) throw new Error(`Unable to find entity for id ${e}`)
@@ -75,11 +72,24 @@ export class Region {
 
   // TODO autocomplete components - allow console/UI methods of editing entities
   modify(entity: Entity, c: Components) {
-    const e = { ...entity, ...c }
+    const newEntity = { ...entity, ...c }
     const index = this.entities.findIndex(e => e === entity)
     if (index < 0) throw new Error('Unable to locate entity to modify')
-    this.entities[index] = e
-    console.log('modify:', e.form.name, e.eID, c)
+    this.entities[index] = newEntity
+    console.log('modify:', newEntity.form.name, newEntity.eID, c)
+    return newEntity
+  }
+
+  addTag(entity: Entity, tag: TagKeys) {
+    const tags = this.components.tag(...[...entity.tags, tag])
+    const e = { ...entity, ...tags }
+    console.log('addTag', tag, e.label, tags)
+  }
+
+  removeTag(entity: Entity, tag: TagKeys) {
+    const tags = this.components.tag(...entity.tags.filter(t => t !== tag))
+    const e = { ...entity, ...tags }
+    console.log('removeTag', tag, e.label)
   }
 
   remove(entity: Entity | Entity[], cName: keyof Entity) {
@@ -89,5 +99,15 @@ export class Region {
       Reflect.deleteProperty(e, cName)
       console.log('remove:', e.form.name, cName)
     })
+  }
+
+  destroy(entity: Entity) {
+    console.log('destroy entity', entity.label)
+    this.entities = this.entities.filter(e => e.eID !== entity.eID)
+
+    // turn queue
+    if (entity.tags.includes('actor')) {
+      this.turnQueue.remove(entity.eID)
+    }
   }
 }

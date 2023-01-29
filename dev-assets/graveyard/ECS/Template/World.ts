@@ -7,7 +7,7 @@ import { Beings, TerrainTemplate, Domains } from '../../../../src/Templates'
 import { Level } from '../../../../src/Model/Level'
 import { Point, Pt, strToPt } from '../../../../src/Model/Point'
 import { objLog } from '../../../../src/lib/util'
-import { colorizeMessage, Message } from '../../../../src/lib/messages'
+import { colorizeMessage, Message } from './messages'
 
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 

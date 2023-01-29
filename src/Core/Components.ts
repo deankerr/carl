@@ -1,24 +1,24 @@
 import { ActionTypes } from '../Action'
 import { Point } from '../Model/Point'
 
-export type CKey = keyof typeof ComponentFoundary
-export type Comp<K extends CKey> = ReturnType<typeof ComponentFoundary[K]>
-export type Complist = Comp<'form'> & Comp<'position'> & Comp<'tag'> & Comp<'trodOn'> & Comp<'acting'>
-export type Components = ReturnType<typeof ComponentFoundary[keyof typeof ComponentFoundary]>
-// export type Components = Partial<Form & Position & Tags & TrodOn>
-// export type Form = { form: { name: string; char: string; color: string; bgColor: string } }
-// export type Position = { position: { pt: Point } }
-// export type Tags = { tags: TagKeys[] }
-// export type TrodOn = { trodOn: { msg: string } }
-export const ComponentFoundary = {
-  form: (name: string, char: string, color: string, bgColor = 'transparent') => {
-    return { form: { name, char, color, bgColor } }
+export type Comp<K extends keyof typeof ComponentFoundry> = ReturnType<typeof ComponentFoundry[K]>
+export type Complist = Comp<'name'> & Comp<'form'> & Comp<'position'> & Comp<'tag'> & Comp<'trodOn'> & Comp<'acting'>
+export type Components = ReturnType<typeof ComponentFoundry[keyof typeof ComponentFoundry]>
+
+export const ComponentFoundry = {
+  name: (name: string) => {
+    return { name }
+  },
+  form: (char: string, color: string, bgColor = 'transparent') => {
+    return { form: { char, color, bgColor } }
   },
   position: (pt: Point) => {
     return { position: { pt } }
   },
   tag: (...tags: TagKeys[]) => {
-    return { tags }
+    return tags.reduce((acc, curr) => {
+      return { ...acc, [curr]: true }
+    }, {} as { [K in TagKeys]?: true })
   },
   trodOn: (msg: string) => {
     return { trodOn: { msg } }
@@ -28,4 +28,11 @@ export const ComponentFoundary = {
   },
 }
 
-export type TagKeys = 'blocksMovement' | 'blocksLight' | 'playerControlled' | 'memorable' | 'actor'
+export type TagKeys =
+  | 'blocksMovement'
+  | 'blocksLight'
+  | 'playerControlled'
+  | 'memorable'
+  | 'actor'
+  | 'meleeAttackTarget'
+  | 'dead'

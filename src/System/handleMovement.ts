@@ -1,4 +1,5 @@
-// import { Bump, Tread } from '../Action'
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import * as Action from '../Action'
 import { Region } from '../Core/Region'
 
 export const handleMovement = (region: Region, isPlayerTurn: boolean) => {
@@ -33,8 +34,8 @@ export const handleMovement = (region: Region, isPlayerTurn: boolean) => {
   // terrain walkable check
   if (terrain.tags.includes('blocksMovement')) {
     console.log('handleMovement: new action - Bump (terrain)', terrain)
-    // const newAction = acting(Bump(newPt))
-    // world.modify(currentEntity).change(newAction)
+    const newAction = component.acting(Action.Bump(newPt))
+    region.modify(currentEntity, newAction)
     return
   }
 
@@ -42,16 +43,17 @@ export const handleMovement = (region: Region, isPlayerTurn: boolean) => {
   const entitiesAreWalkable = entitiesHere.every(e => 'tagCurrentTurn' in e || 'tagWalkable' in e)
   if (!entitiesAreWalkable) {
     console.log('handleMovement: new action - Bump (entity)')
-    // const newAction = component.acting( Bump(newPt))
-    // world.modify(currentEntity).change(newAction)
+    const newAction = component.acting(Action.Bump(newPt))
+    region.modify(currentEntity, newAction)
     return
   } else {
     // create tread action
     console.log('handleMovement: new action - Tread')
-    // const tread = acting(Tread(newPt))
+    const tread = component.acting(Action.Tread(newPt))
     // update position
     const newPosition = component.position(newPt)
-    // region.modify(currentEntity).change(tread).change(newPosition)
-    region.modify(currentEntity, newPosition)
+    const e = region.modify(currentEntity, tread)
+    region.modify(e, newPosition)
+    // region.modify(currentEntity, newPosition)
   }
 }

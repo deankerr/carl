@@ -1,17 +1,16 @@
-// remove dead entities from game
-// TODO handle non "beings" ie items
-import { World } from '../../dev-assets/graveyard/ECS/Template/World'
+import { Region } from '../Core/Region'
 
-export const processDeath = (world: World) => {
-  const currentEntities = world.get('tagDead')
+// remove dead entities from game
+export const processDeath = (region: Region) => {
+  const currentEntities = region.getTagged('dead')
 
   if (currentEntities.length === 0) return console.log('processDeath: no entities to remove')
 
   console.log('processDeath: reaping')
   for (const entity of currentEntities) {
-    console.log('processDeath: removing', entity.id)
-    world.destroy(entity)
-    console.log('processDeath: removed', entity.id)
+    console.log('processDeath: removing', entity.label)
+    region.destroy(entity)
+    console.log('processDeath: removed', entity.label)
   }
 
   console.log('processDeath: process complete')

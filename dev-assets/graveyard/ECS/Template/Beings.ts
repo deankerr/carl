@@ -1,4 +1,4 @@
-// export type BeingTemplate = typeof Beings[keyof typeof Beings]
+export type BeingTemplate = typeof Beings[keyof typeof Beings]
 export type BeingNewTemplate = typeof BeingNew[keyof typeof BeingNew]
 export const BeingNew = {
   player: {

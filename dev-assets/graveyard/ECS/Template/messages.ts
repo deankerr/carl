@@ -1,5 +1,5 @@
 import * as ROT from 'rot-js'
-import { Beings, Features, Terrain } from '../Templates'
+import { Beings, Features, Terrain } from '../../../../src/Templates'
 
 const hex = (c: string) => ROT.Color.toHex(ROT.Color.fromString(c))
 
