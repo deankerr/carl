@@ -1,15 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Region } from './Region'
 
 export function renderRegion(region: Region) {
   const { display, point } = window.game
 
-  // points.grid(region.width, region.height, pt => {
-  //   const t = region.at(pt)
-  //   display.draw(pt.x, pt.y, t.form.char, t.form.color, null)
-  // })
-
   region.render((pt, entities) => {
-    const e = entities[0]
-    display.draw(pt.x, pt.y, e.form.char, e.form.color, null)
+    const chars = entities.map(e => e.form.char)
+    const colors = entities.map(e => e.form.color)
+    const bgColors = entities.map(e => e.form.bgColor)
+    display.draw(pt.x, pt.y, chars, colors, bgColors)
   })
 }

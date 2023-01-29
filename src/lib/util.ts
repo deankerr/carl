@@ -88,3 +88,24 @@ export function* range(n: number, max?: number, step = 1) {
     value += step
   }
 }
+
+export class Queue<T> {
+  queue: T[] = []
+  repeat: T[] = []
+
+  add(item: T, repeat = false) {
+    this.queue.push(item)
+    if (repeat) this.repeat.push(item)
+  }
+
+  next() {
+    const item = this.queue.shift()
+    if (item && this.repeat.includes(item)) this.queue.push(item)
+    return item
+  }
+
+  remove(item: T) {
+    this.queue = this.queue.filter(i => i !== item)
+    this.repeat = this.repeat.filter(i => i !== item)
+  }
+}

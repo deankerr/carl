@@ -81,7 +81,7 @@ export class PointManager {
   points = new Map<string, Point>()
   count = 0
 
-  at(x: number, y: number) {
+  pt(x: number, y: number) {
     const s = x + ',' + y
     const storedPt = this.points.get(s)
     if (storedPt) return storedPt
@@ -93,7 +93,7 @@ export class PointManager {
   grid(width: number, height: number, callback: (pt: Point) => unknown) {
     for (let yi = 0; yi < height; yi++) {
       for (let xi = 0; xi < width; xi++) {
-        callback(this.at(xi, yi))
+        callback(this.pt(xi, yi))
       }
     }
   }

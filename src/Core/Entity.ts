@@ -1,32 +1,34 @@
 import { Point } from '../Model/Point'
-import { Comp, Components, ComponentsFactory, Tags } from './Components'
-
-export type Entity = { eID: number } & Partial<Components>
-// export type Entity = BareEntity & Required<ReturnType<typeof ComponentsFactory['form' | 'position']>>
+import { Comp, Complist, Components, ComponentsFactory, TagKeys } from './Components'
+export type eID = { eID: number }
+export type Entity = eID & Comp<'form'> & Comp<'tag'> & Partial<Complist>
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
-// export type Entity = { eID: number } & ReturnType<typeof ComponentsFactory['form']> &
-// ReturnType<typeof ComponentsFactory['position']>
+export type EntityR = Entity & Required<Comp<'form'>> & Comp<'position'>
 
 export class EntityFreezer {
   private count = 0
   readonly freezer = new Map<string, Entity>()
   constructor(readonly components: typeof ComponentsFactory) {}
-  load(templates: EntityTemplate, tag?: Tags) {
+
+  load(templates: EntityTemplate, tag?: TagKeys) {
     for (const [key, template] of Object.entries(templates)) {
-      let e = { eID: 0 }
+      let e = { eID: 0, ...this.components.tag(), ...this.components.form('', '', '') }
 
       if (template.form) e = { ...e, ...this.components.form(...template.form) }
-      if (template.trodOn) e = { ...e, ...this.components.trodOn(...template.trodOn) }
+
       if (template.tag) {
         const tags = tag ? template.tag.concat(tag) : template.tag
-        e = { ...e, ...ComponentsFactory.tag(...tags) }
+        e = { ...e, ...this.components.tag(...tags) }
       }
+
+      if (template.trodOn) e = { ...e, ...this.components.trodOn(...template.trodOn) }
+
       this.freezer.set(key, e)
     }
   }
 
   spawn(key: EntityKey, at: Point): Entity {
-    const thawed = this.freezer.get(key) as EntityWith<Entity, keyof Comp<'form'>>
+    const thawed = this.freezer.get(key)
     if (!thawed) throw new Error(`Could not thaw entity ${key}`)
     const e = { ...thawed, eID: this.count++, ...this.components.position(at) }
     return e as Entity
@@ -54,6 +56,8 @@ export const terrain: EntityTemplate = {
   grass: { form: ['grass', 'grass', '#65712b'] },
   deadGrass: { form: ['dead grass', 'deadGrass', '#664f47'] },
   mound: { form: ['mound', 'mound', '#6a4b39'], tag: ['blocksLight'] },
+  void: { form: ['void', 'void', '#FF00FF'] },
+  endlessVoid: { form: ['endless void', 'void', '#FF00FF'], tag: ['blocksLight', 'blocksMovement'] },
 }
 type TerrainKey =
   | 'path'
@@ -65,6 +69,8 @@ type TerrainKey =
   | 'grass'
   | 'deadGrass'
   | 'mound'
+  | 'void'
+  | 'endlessVoid'
 
 export const beings: EntityTemplate = {
   player: { form: ['me', '@', '#EE82EE'], tag: ['playerControlled'] },

@@ -1,11 +1,9 @@
-import { World } from '../Core/World'
-import { acting } from '../Component'
-import { position } from '../Component/'
-import { Pt } from '../Model/Point'
-import { Bump, Tread } from '../Action'
+// import { Bump, Tread } from '../Action'
+import { Region } from '../Core/Region'
 
-export const handleMovement = (world: World) => {
-  const [currentEntity] = world.get('acting', 'position', 'tagCurrentTurn')
+export const handleMovement = (region: Region) => {
+  const { component } = window.game
+  const [currentEntity] = region.get('acting', 'position')
   const action = currentEntity.acting
 
   if (!('move' in action)) {
@@ -13,8 +11,8 @@ export const handleMovement = (world: World) => {
     return
   }
 
-  console.log('handleMovement:', currentEntity.id, action.move)
-  const currentIsPlayer = 'tagPlayer' in currentEntity
+  console.log('handleMovement:', currentEntity.eID, action.move)
+  // const currentIsPlayer = 'tagPlayer' in currentEntity
 
   // wait, just return (for now)
   if (action.move.dir === 'WAIT') {
@@ -22,21 +20,21 @@ export const handleMovement = (world: World) => {
     return
   }
 
-  const newPt = Pt(currentEntity.position.x + action.move.dx, currentEntity.position.y + action.move.dy)
+  const newPt = currentEntity.position.pt.add(action.move.x, action.move.y)
 
   // debug no clip
-  if (world.options.debugMode && currentIsPlayer) {
-    world.modify(currentEntity).change(position(newPt))
-    return
-  }
+  // if (world.options.debugMode && currentIsPlayer) {
+  //   world.modify(currentEntity).change(position(newPt))
+  //   return
+  // }
 
-  const [terrain, entitiesHere] = world.here(newPt)
+  const [terrain, entitiesHere] = region.here(newPt)
 
   // terrain walkable check
-  if (!terrain.tagWalkable) {
+  if (terrain.tags.includes('blocksMovement')) {
     console.log('handleMovement: new action - Bump (terrain)', terrain)
-    const newAction = acting(Bump(newPt))
-    world.modify(currentEntity).change(newAction)
+    // const newAction = acting(Bump(newPt))
+    // world.modify(currentEntity).change(newAction)
     return
   }
 
@@ -44,15 +42,16 @@ export const handleMovement = (world: World) => {
   const entitiesAreWalkable = entitiesHere.every(e => 'tagCurrentTurn' in e || 'tagWalkable' in e)
   if (!entitiesAreWalkable) {
     console.log('handleMovement: new action - Bump (entity)')
-    const newAction = acting(Bump(newPt))
-    world.modify(currentEntity).change(newAction)
+    // const newAction = component.acting( Bump(newPt))
+    // world.modify(currentEntity).change(newAction)
     return
   } else {
     // create tread action
     console.log('handleMovement: new action - Tread')
-    const tread = acting(Tread(newPt))
+    // const tread = acting(Tread(newPt))
     // update position
-    const newPosition = position(newPt)
-    world.modify(currentEntity).change(tread).change(newPosition)
+    const newPosition = component.position(newPt)
+    // region.modify(currentEntity).change(tread).change(newPosition)
+    region.modify(currentEntity, newPosition)
   }
 }
