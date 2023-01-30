@@ -9,23 +9,23 @@ export const handleMeleeAttack = (region: Region, isPlayerTurn: boolean) => {
   console.log('handleMeleeAttack: ', currentEntity.label)
 
   // get target
-  const [targetEntity] = region.getTagged('meleeAttackTarget')
+  const [targetEntity] = region.get('meleeAttackTarget')
 
   // hardcoded responses for now
   if (isPlayerTurn) {
     // kill target
     console.log(`handleMeleeAttack: player killed ${targetEntity.label}`)
-    region.addTag(targetEntity, 'dead')
-    game.message(`You obliterate the ${targetEntity.form.name} with your mind!`)
+    region.entity(targetEntity).modify('tag', 'dead')
+    game.message(`You obliterate the ${targetEntity.name} with your mind!`)
   } else {
     // TODO in player vision/hearing range only
-    game.message(`The ${currentEntity.form.name} glares helplessly at the ${targetEntity.form.name}`)
+    game.message(`The ${currentEntity.name} glares helplessly at the ${targetEntity.name}`)
   }
 
   // ? cleanup
-  const taggedEntities = region.getTagged('meleeAttackTarget')
+  const taggedEntities = region.get('meleeAttackTarget')
   for (const entity of taggedEntities) {
-    region.removeTag(entity, 'meleeAttackTarget')
+    region.entity(entity).remove('meleeAttackTarget')
     console.log(`handleMeleeAttack: cleanup - removed tagMeleeAttackTarget from ${entity.label}`)
   }
 }

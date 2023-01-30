@@ -3,7 +3,6 @@ import * as Action from '../Action'
 import { Region } from '../Core/Region'
 
 export const handleMovement = (region: Region, isPlayerTurn: boolean) => {
-  const { component } = window.game
   const [currentEntity] = region.get('acting', 'position')
   const action = currentEntity.acting
 
@@ -13,7 +12,6 @@ export const handleMovement = (region: Region, isPlayerTurn: boolean) => {
   }
 
   console.log('handleMovement:', currentEntity.eID, action.move)
-  // const currentIsPlayer = 'tagPlayer' in currentEntity
 
   // wait, just return (for now)
   if (action.move.dir === 'WAIT') {
@@ -32,10 +30,10 @@ export const handleMovement = (region: Region, isPlayerTurn: boolean) => {
   const [terrain, entitiesHere] = region.at(newPt)
 
   // terrain walkable check
-  if (terrain.tags.includes('blocksMovement')) {
+  if (terrain.blocksMovement) {
     console.log('handleMovement: new action - Bump (terrain)', terrain)
-    const newAction = component.acting(Action.Bump(newPt))
-    region.modify(currentEntity, newAction)
+    // const newAction = component.acting(Action.Bump(newPt))
+    region.entity(currentEntity).modify('acting', Action.Bump(newPt))
     return
   }
 
@@ -43,17 +41,13 @@ export const handleMovement = (region: Region, isPlayerTurn: boolean) => {
   const entitiesAreWalkable = entitiesHere.every(e => 'tagCurrentTurn' in e || 'tagWalkable' in e)
   if (!entitiesAreWalkable) {
     console.log('handleMovement: new action - Bump (entity)')
-    const newAction = component.acting(Action.Bump(newPt))
-    region.modify(currentEntity, newAction)
+    // const newAction = component.acting(Action.Bump(newPt))
+    // region.entity(currentEntity, newAction)
+    region.entity(currentEntity).modify('acting', Action.Bump(newPt))
     return
   } else {
-    // create tread action
+    // valid move, create tread action and update position
     console.log('handleMovement: new action - Tread')
-    const tread = component.acting(Action.Tread(newPt))
-    // update position
-    const newPosition = component.position(newPt)
-    const e = region.modify(currentEntity, tread)
-    region.modify(e, newPosition)
-    // region.modify(currentEntity, newPosition)
+    region.entity(currentEntity).modify('acting', Action.Tread(newPt)).modify('position', newPt)
   }
 }

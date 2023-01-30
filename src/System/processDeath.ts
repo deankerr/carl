@@ -2,7 +2,7 @@ import { Region } from '../Core/Region'
 
 // remove dead entities from game
 export const processDeath = (region: Region) => {
-  const currentEntities = region.getTagged('dead')
+  const currentEntities = region.get('dead')
 
   if (currentEntities.length === 0) return console.log('processDeath: no entities to remove')
 

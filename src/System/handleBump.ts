@@ -8,14 +8,14 @@ export const handleBump = (region: Region, isPlayerTurn: boolean) => {
 
   if (!('bump' in action)) return console.log('handleBump: not a bump action')
 
-  const { message, component } = window.game
+  const { game } = window
   const [terrain, entities] = region.at(action.bump)
   const bumpableEntities = entities.filter(e => !('tagCurrentTurn' in e) && !('tagWalkable' in e))
 
   if (bumpableEntities.length === 0) {
     // no entities, terrain bump
     console.log('handleBump: result - terrain bump')
-    if (isPlayerTurn) message(`You bounce off the ${terrain.form.name}.`)
+    if (isPlayerTurn) game.message(`You bounce off the ${terrain.name}.`)
   } else {
     // entities
     console.log('handleBump: entity bump')
@@ -43,10 +43,12 @@ export const handleBump = (region: Region, isPlayerTurn: boolean) => {
 
       // * attack!
       // region.modify(bumpedEntity).add(tagMeleeAttackTarget())
-      region.addTag(bumpedEntity, 'meleeAttackTarget')
+      // region.addTag(bumpedEntity, 'meleeAttackTarget')
+      region.entity(bumpedEntity).modify('tag', 'meleeAttackTarget')
 
       // update acting component
-      region.modify(currentEntity, component.acting(Action.MeleeAttack(action.bump)))
+      // region.entity(currentEntity, component.acting(Action.MeleeAttack(action.bump)))
+      region.entity(currentEntity).modify('acting', Action.MeleeAttack(action.bump))
       console.log(`handleBump: action - MeleeAttack ${bumpedEntity.label}`)
     }
 

@@ -8,11 +8,12 @@ export class System {
   turnProcess = [handleMovement, handleTread, handleBump, handleMeleeAttack, processDeath]
 
   player(region: Region, playerAction: ActionTypes) {
-    const { component } = window.game
     console.group('player')
-    region.modify(region.player(), component.acting(playerAction))
+
+    region.entity(region.player()).modify('acting', playerAction)
     this.turnProcess.forEach(sys => sys(region, true))
-    region.remove(region.get('acting'), 'acting')
+    // region.remove(region.get('acting'), 'acting')
+    region.entity(region.get('acting')[0]).remove('acting')
     console.groupEnd()
     this.run(region)
   }
@@ -21,16 +22,14 @@ export class System {
     let maxLoops = 100
     while (maxLoops-- > 0) {
       const e = this.next(region)
-      if (e.tags.includes('playerControlled')) {
+      if (e.playerControlled) {
         console.log('Sys: Player Input Required')
         return
       }
 
-      const { component } = window.game
-
-      region.modify(e, component.acting(Action.__randomMove()))
+      region.entity(e).modify('acting', Action.__randomMove())
       this.turnProcess.forEach(sys => sys(region, false))
-      region.remove(region.get('acting'), 'acting')
+      region.entity(region.get('acting')[0]).remove('acting')
     }
   }
 

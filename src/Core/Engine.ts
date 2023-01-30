@@ -19,7 +19,7 @@ export class Engine {
 
   point = PointMan
   component = ComponentFoundry
-  hive = new EntityPool(this.component, gameTemplates)
+  pool = new EntityPool(this.component, gameTemplates)
   system = new System()
 
   regions: Region[] = []
@@ -37,9 +37,9 @@ export class Engine {
   }
 
   init() {
-    const region = new Region(CONFIG.generateWidth, CONFIG.generateHeight, 'grass', this.hive)
+    const region = new Region(CONFIG.generateWidth, CONFIG.generateHeight, 'grass', this.pool)
     this.point.grid(region.width, region.height, pt => {
-      if (pt.x % 3 === 0) region.terrain.set(pt, this.hive.spawn('water', pt))
+      if (pt.x % 3 === 0) region.terrain.set(pt, this.pool.spawn('water', pt))
     })
 
     region.being('player', this.point.pt(1, 0))
@@ -47,6 +47,9 @@ export class Engine {
     region.feature('shrub', this.point.pt(8, 7))
     this.region = region
 
+    // const p = this.pool.entity(region.player()).modify('tag', 'testTag').modify('name', 'bart').done()
+    // console.log('var:', p)
+    //----
     // this.system.run(region)
     this.render()
     this.keys.add(this.update.bind(this))
@@ -59,6 +62,7 @@ export class Engine {
 
     if ('ui' in playerAction) {
       if (playerAction.ui === 'debug_logworld') console.log(this)
+      if (playerAction.ui === 'debug_logentities') console.log('Local entities', this.region.entities)
       renderRegion(this.region)
       return
     }

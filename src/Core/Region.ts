@@ -2,7 +2,7 @@
 import { Queue } from '../lib/util'
 import { Point } from '../Model/Point'
 import { Components, TagKeys, ComponentFoundry } from './Components'
-import { Entity, EntityHive, EntityKey, EntityR, EntityWith } from './Entity'
+import { Entity, EntityPool, EntityLabel, EntityWith, TerrainLabel } from './Entity'
 
 export class Region {
   terrain = new Map<Point, Entity>()
@@ -12,8 +12,8 @@ export class Region {
   constructor(
     readonly width: number,
     readonly height: number,
-    readonly baseTerrain: EntityKey,
-    readonly hive: EntityHive,
+    readonly baseTerrain: TerrainLabel,
+    readonly pool: EntityPool,
     readonly components = ComponentFoundry
   ) {}
 
@@ -26,14 +26,14 @@ export class Region {
     })
   }
 
-  being(key: EntityKey, pt: Point) {
-    const being = window.game.hive.spawn(key, pt)
+  being(key: EntityLabel, pt: Point) {
+    const being = window.game.pool.spawn(key, pt)
     this.entities.push(being)
     this.turnQueue.add(being.eID, true)
   }
 
-  feature(key: EntityKey, pt: Point) {
-    const feature = window.game.hive.spawn(key, pt)
+  feature(key: EntityLabel, pt: Point) {
+    const feature = window.game.pool.spawn(key, pt)
     this.entities.push(feature)
   }
 
@@ -42,12 +42,8 @@ export class Region {
     return results
   }
 
-  getTagged(tag: TagKeys) {
-    return this.entities.filter(e => e.tags.includes(tag))
-  }
-
   player() {
-    return this.entities.filter(e => e.tags.includes('playerControlled'))[0]
+    return this.entities.filter(e => e.playerControlled)[0]
   }
 
   at(pt: Point): [Entity, Entity[]] {
@@ -56,8 +52,8 @@ export class Region {
 
   terrainAt(pt: Point) {
     return this.inBounds(pt)
-      ? this.terrain.get(pt) ?? this.hive.spawn(this.baseTerrain, pt)
-      : this.hive.spawn('endlessVoid', pt)
+      ? this.terrain.get(pt) ?? this.pool.spawn(this.baseTerrain, pt)
+      : this.pool.spawn('endlessVoid', pt)
   }
 
   getByID(eID: number) {
@@ -70,35 +66,8 @@ export class Region {
     return pt.x >= 0 && pt.x < this.width && pt.y >= 0 && pt.y < this.height
   }
 
-  // TODO autocomplete components - allow console/UI methods of editing entities
-  modify(entity: Entity, c: Components) {
-    const newEntity = { ...entity, ...c }
-    const index = this.entities.findIndex(e => e === entity)
-    if (index < 0) throw new Error('Unable to locate entity to modify')
-    this.entities[index] = newEntity
-    console.log('modify:', newEntity.form.name, newEntity.eID, c)
-    return newEntity
-  }
-
-  addTag(entity: Entity, tag: TagKeys) {
-    const tags = this.components.tag(...[...entity.tags, tag])
-    const e = { ...entity, ...tags }
-    console.log('addTag', tag, e.label, tags)
-  }
-
-  removeTag(entity: Entity, tag: TagKeys) {
-    const tags = this.components.tag(...entity.tags.filter(t => t !== tag))
-    const e = { ...entity, ...tags }
-    console.log('removeTag', tag, e.label)
-  }
-
-  remove(entity: Entity | Entity[], cName: keyof Entity) {
-    const e = Array.isArray(entity) ? entity : [entity]
-
-    e.forEach(e => {
-      Reflect.deleteProperty(e, cName)
-      console.log('remove:', e.form.name, cName)
-    })
+  entity(entity: Entity) {
+    return this.pool.entity(this.entities, entity)
   }
 
   destroy(entity: Entity) {
@@ -106,7 +75,7 @@ export class Region {
     this.entities = this.entities.filter(e => e.eID !== entity.eID)
 
     // turn queue
-    if (entity.tags.includes('actor')) {
+    if (entity.actor) {
       this.turnQueue.remove(entity.eID)
     }
   }
