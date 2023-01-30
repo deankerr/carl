@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import * as Action from '../Action'
+import * as Action from '../Core/Action'
 import { Region } from '../Core/Region'
 
 export const handleMovement = (region: Region, isPlayerTurn: boolean) => {

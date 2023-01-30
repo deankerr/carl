@@ -1,5 +1,5 @@
 // import { tagMeleeAttackTarget, acting, tagWalkable, tagDoorOpen, tagLightPathUpdated } from '../Component'
-import * as Action from '../Action'
+import * as Action from '../Core/Action'
 import { Region } from '../Core/Region'
 
 export const handleBump = (region: Region, isPlayerTurn: boolean) => {

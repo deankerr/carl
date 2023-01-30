@@ -1,7 +1,7 @@
 // * Translate key code into Action
 
 // import { Move, Direction, Wait, UI, ChangeLevel } from './Actions'
-import { ActionTypes, ChangeLevel, Move, UI } from '../Action'
+import { ActionTypes, ChangeLevel, Move, UI } from './Action'
 
 export function input(code: string): ActionTypes | null {
   switch (code) {

@@ -1,8 +1,8 @@
 // import * as Sys from '../System'
 import { handleBump, handleMeleeAttack, handleMovement, handleTread, processDeath } from '../System'
 import { Region } from './Region'
-import * as Action from '../Action'
-import { ActionTypes } from '../Action'
+import * as Action from './Action'
+import { ActionTypes } from './Action'
 
 export class System {
   turnProcess = [handleMovement, handleTread, handleBump, handleMeleeAttack, processDeath]

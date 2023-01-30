@@ -1,4 +1,4 @@
-import { ActionTypes } from '../Action'
+import { ActionTypes } from './Action'
 import { Point } from '../Model/Point'
 
 export type Comp<K extends keyof typeof ComponentFoundry> = ReturnType<typeof ComponentFoundry[K]>
