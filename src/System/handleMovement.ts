@@ -11,7 +11,7 @@ export const handleMovement = (region: Region, isPlayerTurn: boolean) => {
     return
   }
 
-  console.log('handleMovement:', currentEntity.eID, action.move)
+  console.log('handleMovement:', currentEntity.label, action.move)
 
   // wait, just return (for now)
   if (action.move.dir === 'WAIT') {
@@ -29,25 +29,14 @@ export const handleMovement = (region: Region, isPlayerTurn: boolean) => {
 
   const [terrain, entitiesHere] = region.at(newPt)
 
-  // terrain walkable check
-  if (terrain.blocksMovement) {
-    console.log('handleMovement: new action - Bump (terrain)', terrain)
-    // const newAction = component.acting(Action.Bump(newPt))
+  // walkable check
+  if (terrain.blocksMovement || entitiesHere.some(e => e.blocksMovement)) {
+    console.log('handleMovement: new action - Bump ')
     region.entity(currentEntity).modify('acting', Action.Bump(newPt))
     return
   }
 
-  // entity blocking check
-  const entitiesAreWalkable = entitiesHere.every(e => 'tagCurrentTurn' in e || 'tagWalkable' in e)
-  if (!entitiesAreWalkable) {
-    console.log('handleMovement: new action - Bump (entity)')
-    // const newAction = component.acting(Action.Bump(newPt))
-    // region.entity(currentEntity, newAction)
-    region.entity(currentEntity).modify('acting', Action.Bump(newPt))
-    return
-  } else {
-    // valid move, create tread action and update position
-    console.log('handleMovement: new action - Tread')
-    region.entity(currentEntity).modify('acting', Action.Tread(newPt)).modify('position', newPt)
-  }
+  // valid move, create tread action and update position
+  console.log('handleMovement: new action - Tread')
+  region.entity(currentEntity).modify('acting', Action.Tread(newPt)).modify('position', newPt)
 }

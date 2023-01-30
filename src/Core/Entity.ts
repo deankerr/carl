@@ -46,14 +46,11 @@ export class EntityPool {
     const index = localState.findIndex(e => e === entity)
     if (index < 0) throw new Error(`Unable to locate entity to modify, ${entity.label}`)
     let store = entity
-    console.log('mod init:', store)
 
     const modify = <T extends CNames>(cName: T, ...p: FoundryParams[T]) => {
-      console.log('mod add:', store, cName, p)
       store = this.add(store, cName, ...p)
-      console.log('mod add done:', store)
-
       localState[index] = store
+      console.log('MODIFY:', store.name, cName, p)
       return options
     }
 
@@ -62,12 +59,11 @@ export class EntityPool {
       Reflect.deleteProperty(e, cName)
       store = e
       localState[index] = store
+      console.log('REMOVE:', store.name, cName)
       return options
     }
 
-    const done = () => store
-
-    const options = { modify, remove, done }
+    const options = { modify, remove }
 
     return options
   }
@@ -75,8 +71,8 @@ export class EntityPool {
 
 export type BeingLabel = 'player' | 'spider'
 export const beings: EntityTemplate[] = [
-  { label: 'player', name: ['player'], form: ['@', '#EE82EE'], tag: ['playerControlled', 'actor'] },
-  { label: 'spider', name: ['spider'], form: ['spider', '#00B3B3'], tag: ['actor'] },
+  { label: 'player', name: ['player'], form: ['@', '#EE82EE'], tag: ['playerControlled', 'actor', 'blocksMovement'] },
+  { label: 'spider', name: ['spider'], form: ['spider', '#00B3B3'], tag: ['actor', 'blocksMovement'] },
 ]
 
 export type FeatureLabel = 'shrub'

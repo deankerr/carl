@@ -7,37 +7,41 @@ import { ActionTypes } from '../Action'
 export class System {
   turnProcess = [handleMovement, handleTread, handleBump, handleMeleeAttack, processDeath]
 
-  player(region: Region, playerAction: ActionTypes) {
+  player(local: Region, playerAction: ActionTypes) {
     console.group('player')
 
-    region.entity(region.player()).modify('acting', playerAction)
-    this.turnProcess.forEach(sys => sys(region, true))
-    // region.remove(region.get('acting'), 'acting')
-    region.entity(region.get('acting')[0]).remove('acting')
+    local.entity(local.player()).modify('acting', playerAction)
+    this.turnProcess.forEach(sys => sys(local, true))
+    local.entity(local.get('acting')[0]).remove('acting')
+
     console.groupEnd()
-    this.run(region)
+
+    this.run(local)
   }
 
-  run(region: Region) {
+  run(local: Region) {
     let maxLoops = 100
     while (maxLoops-- > 0) {
-      const e = this.next(region)
+      const e = this.next(local)
       if (e.playerControlled) {
         console.log('Sys: Player Input Required')
         return
       }
 
-      region.entity(e).modify('acting', Action.__randomMove())
-      this.turnProcess.forEach(sys => sys(region, false))
-      region.entity(region.get('acting')[0]).remove('acting')
+      console.group('Sys:', e.label)
+      local.entity(e).modify('acting', Action.__randomMove())
+      this.turnProcess.forEach(sys => sys(local, false))
+      local.entity(local.get('acting')[0]).remove('acting')
+      console.groupEnd()
     }
+    if (maxLoops < 1) throw new Error('Sys loop maximum exceeded')
   }
 
   // process(region: Region) {}
 
-  next(region: Region) {
-    const nextID = region.turnQueue.next()
-    if (!nextID) throw new Error('System: turn queue empty')
-    return region.getByID(nextID)
+  next(local: Region) {
+    const nextID = local.turnQueue.next()
+    if (nextID === undefined) throw new Error('System: turn queue empty')
+    return local.getByID(nextID)
   }
 }

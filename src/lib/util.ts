@@ -100,7 +100,7 @@ export class Queue<T> {
 
   next() {
     const item = this.queue.shift()
-    if (item && this.repeat.includes(item)) this.queue.push(item)
+    if (item !== undefined && this.repeat.includes(item)) this.queue.push(item)
     return item
   }
 

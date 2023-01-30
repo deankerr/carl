@@ -1,7 +1,5 @@
 import * as ROT from 'rot-js'
-import { Terrain, Features, Beings } from '../Templates'
-import { EntityTemplate } from '../../dev-assets/graveyard/ECS/Template/Entity'
-import { Point, Pt } from '../Model/Point'
+import { Point } from '../Model/Point'
 import { half, pick, range, repeat, rnd, rndO } from '../lib/util'
 import { Overseer, Mutator } from './Overseer'
 import { Rect } from '../Model/Rectangle'

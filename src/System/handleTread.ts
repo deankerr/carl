@@ -17,7 +17,7 @@ export const handleTread = (region: Region, isPlayerTurn: boolean) => {
   if (entitiesHere.length > 0) {
     // entity tread
     for (const entity of entitiesHere) {
-      if ('trodOn' in entity && entity.trodOn) {
+      if (entity.trodOn) {
         console.log('handleTread: treading on', entity.label)
         window.game.message(entity.trodOn.msg)
       }

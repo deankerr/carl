@@ -1,21 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Queue } from '../lib/util'
 import { Point } from '../Model/Point'
-import { Components, TagKeys, ComponentFoundry } from './Components'
 import { Entity, EntityPool, EntityLabel, EntityWith, TerrainLabel } from './Entity'
 
 export class Region {
   terrain = new Map<Point, Entity>()
+  terrainBase: Entity
   entities: Entity[] = []
   turnQueue = new Queue<number>()
 
-  constructor(
-    readonly width: number,
-    readonly height: number,
-    readonly baseTerrain: TerrainLabel,
-    readonly pool: EntityPool,
-    readonly components = ComponentFoundry
-  ) {}
+  constructor(readonly width: number, readonly height: number, readonly pool: EntityPool, baseTerrain: TerrainLabel) {
+    const t = this.pool.pool.get(baseTerrain)
+    if (!t) throw new Error('Unable to get base terrain')
+    this.terrainBase = t
+  }
 
   render(callback: (pt: Point, entities: Entity[]) => unknown) {
     window.game.point.grid(this.width, this.height, pt => {
@@ -51,9 +49,7 @@ export class Region {
   }
 
   terrainAt(pt: Point) {
-    return this.inBounds(pt)
-      ? this.terrain.get(pt) ?? this.pool.spawn(this.baseTerrain, pt)
-      : this.pool.spawn('endlessVoid', pt)
+    return this.inBounds(pt) ? this.terrain.get(pt) ?? this.terrainBase : this.pool.spawn('endlessVoid', pt)
   }
 
   getByID(eID: number) {

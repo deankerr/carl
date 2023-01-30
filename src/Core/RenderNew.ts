@@ -4,10 +4,10 @@ import { repeat } from '../lib/util'
 import { Message } from './Engine'
 import { Region } from './Region'
 
-export function renderRegion(region: Region) {
+export function renderRegion(local: Region) {
   const { display, point } = window.game
 
-  region.render((pt, entities) => {
+  local.render((pt, entities) => {
     const chars = entities.map(e => e.form.char)
     const colors = entities.map(e => e.form.color)
     const bgColors = entities.map(e => e.form.bgColor)

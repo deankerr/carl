@@ -23,7 +23,7 @@ export class Engine {
   system = new System()
 
   regions: Region[] = []
-  region = this.regions[0]
+  local = this.regions[0]
 
   messageLog: Message[] = []
   playerTurns = 0
@@ -37,19 +37,13 @@ export class Engine {
   }
 
   init() {
-    const region = new Region(CONFIG.generateWidth, CONFIG.generateHeight, 'grass', this.pool)
-    this.point.grid(region.width, region.height, pt => {
-      if (pt.x % 3 === 0) region.terrain.set(pt, this.pool.spawn('water', pt))
-    })
+    const region = new Region(CONFIG.generateWidth, CONFIG.generateHeight, this.pool, 'grass')
 
     region.being('player', this.point.pt(1, 0))
     region.being('spider', this.point.pt(9, 5))
     region.feature('shrub', this.point.pt(8, 7))
-    this.region = region
+    this.local = region
 
-    // const p = this.pool.entity(region.player()).modify('tag', 'testTag').modify('name', 'bart').done()
-    // console.log('var:', p)
-    //----
     // this.system.run(region)
     this.render()
     this.keys.add(this.update.bind(this))
@@ -62,18 +56,18 @@ export class Engine {
 
     if ('ui' in playerAction) {
       if (playerAction.ui === 'debug_logworld') console.log(this)
-      if (playerAction.ui === 'debug_logentities') console.log('Local entities', this.region.entities)
-      renderRegion(this.region)
+      if (playerAction.ui === 'debug_logentities') console.log('Local entities', this.local.entities)
+      this.render()
       return
     }
 
-    this.system.player(this.region, playerAction)
+    this.system.player(this.local, playerAction)
     this.playerTurns++
     this.render()
   }
 
   render() {
-    renderRegion(this.region)
+    renderRegion(this.local)
     renderMessages(this.messageLog)
   }
 
