@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Entity, EntityLabel, EntityPool, TerrainLabel } from '../Core/Entity'
+import { Entity, EntityKey, EntityPool, TerrainKey } from '../Core/Entity'
 import { Region } from '../Core/Region'
 import { rnd } from '../lib/util'
 import { Point, point } from '../Model/Point'
@@ -24,7 +24,7 @@ export class Overseer {
     readonly width: number,
     readonly height: number,
     readonly pool: EntityPool,
-    readonly initial: TerrainLabel = 'void'
+    readonly initial: TerrainKey = 'void'
   ) {
     this.current = new Region(width, height, pool, initial)
   }
@@ -45,7 +45,7 @@ export class Overseer {
 export class Mutator {
   constructor(readonly current: Region) {}
 
-  setT(pt: Point | Rect, t: TerrainLabel) {
+  setT(pt: Point | Rect, t: TerrainKey) {
     if (pt instanceof Rect) {
       pt.toPts().forEach(pt => this.setT(pt, t))
       return
@@ -54,7 +54,7 @@ export class Mutator {
     this.current.createTerrain(t, pt)
   }
 
-  setE(pt: Point | Rect, e: EntityLabel) {
+  setE(pt: Point | Rect, e: EntityKey) {
     if (pt instanceof Rect) {
       pt.toPts().forEach(pt => this.setE(pt, e))
       return

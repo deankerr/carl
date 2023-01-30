@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as ROT from 'rot-js'
-import { EntityLabel, TerrainLabel } from '../../Core/Entity'
+import { EntityKey, TerrainKey } from '../../Core/Entity'
 import { half, makeOdd, pick, range, rnd, rndO, shuffle } from '../../lib/util'
 import { Point, point } from '../../Model/Point'
 import { Rect } from '../../Model/Rectangle'
@@ -188,13 +188,13 @@ export class Structure {
     }
   }
 
-  floor(t: TerrainLabel = 'path') {
+  floor(t: TerrainKey = 'path') {
     if (this.innerRooms.length > 0) this.innerRooms.forEach(r => r.floor(t))
     if (this.sub.length > 0) this.sub.forEach(r => r.floor(t))
     else this.O.mutate().setT(this.rect, t)
   }
 
-  degradedFloor(template: TerrainLabel | TerrainLabel[], chance = 16) {
+  degradedFloor(template: TerrainKey | TerrainKey[], chance = 16) {
     if (this.innerRooms.length > 0) this.innerRooms.forEach(r => r.degradedFloor(template))
     else {
       const isSmallRoom = this.rect.width <= 3 || this.rect.height <= 3
@@ -208,7 +208,7 @@ export class Structure {
     }
   }
 
-  feature(template: EntityLabel, n = 1, terrain?: TerrainLabel) {
+  feature(template: EntityKey, n = 1, terrain?: TerrainKey) {
     let features = 0
     const mut = this.O.mutate()
     const ptsPlaced: Point[] = []

@@ -1,12 +1,14 @@
 import { ActionTypes } from './Action'
 import { Point } from '../Model/Point'
 
-export type Comp<K extends keyof typeof ComponentFoundry> = ReturnType<typeof ComponentFoundry[K]>
-export type Complist = Comp<'name'> & Comp<'form'> & Comp<'position'> & Comp<'tag'> & Comp<'trodOn'> & Comp<'acting'>
+export type FoundryKey = keyof typeof ComponentFoundry
+export type FoundryParam = { [K in FoundryKey]: Parameters<typeof ComponentFoundry[K]> }
+type FoundaryReturn = ReturnType<typeof ComponentFoundry[FoundryKey]>
 
-export type FoundryParams = { [K in keyof typeof ComponentFoundry]: Parameters<typeof ComponentFoundry[K]> }
-export type Components = ReturnType<typeof ComponentFoundry[keyof typeof ComponentFoundry]>
-export type CNames = keyof typeof ComponentFoundry
+export type Component<K extends FoundryKey> = ReturnType<typeof ComponentFoundry[K]>
+export type Components = UnionToIntersection<FoundaryReturn>
+
+type UnionToIntersection<U> = (U extends unknown ? (k: U) => void : never) extends (k: infer I) => void ? I : never
 
 export const ComponentFoundry = {
   name: (name: string) => {

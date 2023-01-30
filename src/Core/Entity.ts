@@ -1,14 +1,14 @@
 import { Point } from '../Model/Point'
-import { CNames, Comp, Complist, ComponentFoundry, FoundryParams } from './Components'
+import { FoundryKey, Component, ComponentFoundry, FoundryParam, Components } from './Components'
 export type eID = { eID: number; label: string }
-export type Entity = eID & Comp<'name'> & Comp<'form'> & Partial<Complist>
+export type Entity = eID & Component<'name'> & Component<'form'> & Partial<Components>
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 
 type EntityTemplate = {
   label: string
-  name: FoundryParams['name']
-  form: FoundryParams['form']
-} & Partial<FoundryParams>
+  name: FoundryParam['name']
+  form: FoundryParam['form']
+} & Partial<FoundryParam>
 
 export class EntityPool {
   private count = 0
@@ -30,24 +30,24 @@ export class EntityPool {
     }
   }
 
-  add<T extends CNames>(e: Entity, componentName: T, ...p: FoundryParams[T]) {
+  add<T extends FoundryKey>(e: Entity, componentName: T, ...p: FoundryParam[T]) {
     const c = Reflect.apply(this.components[componentName], undefined, p)
     return { ...e, ...c } as EntityWith<Entity, 'trodOn'>
   }
 
-  private thaw(key: EntityLabel) {
+  private thaw(key: EntityKey) {
     const thawed = this.pool.get(key)
     if (!thawed) throw new Error(`Could not thaw entity ${key}`)
     return thawed
   }
   // create a new instance of an entity with a position
-  spawn(key: EntityLabel, at: Point) {
+  spawn(key: EntityKey, at: Point) {
     const e = { ...this.thaw(key), eID: this.count++, ...this.components.position(at) }
     return e
   }
 
   // return the base copy of the entity (ie. for terrain)
-  symbolic(key: EntityLabel) {
+  symbolic(key: EntityKey) {
     return this.thaw(key)
   }
 
@@ -56,14 +56,14 @@ export class EntityPool {
     if (index < 0) throw new Error(`Unable to locate entity to modify, ${entity.label}`)
     let store = entity
 
-    const modify = <T extends CNames>(cName: T, ...p: FoundryParams[T]) => {
+    const modify = <T extends FoundryKey>(cName: T, ...p: FoundryParam[T]) => {
       store = this.add(store, cName, ...p)
       localState[index] = store
       console.log('MODIFY:', store.name, cName, p)
       return options
     }
 
-    const remove = <T extends keyof Complist>(cName: T) => {
+    const remove = <T extends keyof Components>(cName: T) => {
       const e = { ...store }
       Reflect.deleteProperty(e, cName)
       store = e
@@ -78,7 +78,7 @@ export class EntityPool {
   }
 }
 
-export type BeingLabel = 'player' | 'spider' | 'ghost' | 'demon' | 'crab' | 'crab2'
+export type BeingKey = 'player' | 'spider' | 'ghost' | 'demon' | 'crab' | 'crab2'
 export const beings: EntityTemplate[] = [
   {
     label: 'player',
@@ -98,7 +98,7 @@ export const beings: EntityTemplate[] = [
   { label: 'crab2', name: ['turncoat crab'], form: ['crab', '#32cd44'], tag: ['actor', 'blocksMovement', 'being'] },
 ]
 
-export type FeatureLabel = 'shrub' | 'statue' | 'tombstone' | 'flames' | 'deadTree'
+export type FeatureKey = 'shrub' | 'statue' | 'tombstone' | 'flames' | 'deadTree'
 export const features: EntityTemplate[] = [
   { label: 'shrub', name: ['shrub'], form: ['shrub', '#58a54a'], tag: ['memorable', 'feature'] },
   {
@@ -123,7 +123,7 @@ export const features: EntityTemplate[] = [
   { label: 'flames', name: ['flames'], form: ['flames1', '#FF8000'], tag: ['memorable', 'feature'] },
 ]
 
-export type TerrainLabel =
+export type TerrainKey =
   | 'path'
   | 'wall'
   | 'water'
@@ -161,6 +161,6 @@ export const terrain: EntityTemplate[] = [
   },
 ]
 
-export type EntityLabel = BeingLabel | FeatureLabel | TerrainLabel
+export type EntityKey = BeingKey | FeatureKey | TerrainKey
 
 export const gameTemplates = [...beings, ...features, ...terrain]

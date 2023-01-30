@@ -5,7 +5,7 @@ import { Overseer, Mutator } from './Overseer'
 import { Rect } from '../Model/Rectangle'
 import { CONFIG } from '../config'
 import { Structure } from './structures/Structure'
-import { EntityLabel, TerrainLabel } from '../Core/Entity'
+import { EntityKey, TerrainKey } from '../Core/Entity'
 
 // stairs/connectors?
 export function overworld(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
@@ -143,7 +143,7 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
 
 function walk(
   start: Point,
-  type: TerrainLabel,
+  type: TerrainKey,
   life: number,
   mutator: Mutator,
   weighting?: { n?: number; e?: number; s?: number; w?: number }
@@ -163,7 +163,7 @@ function walk(
   }
 }
 
-function sparseWalk(start: Point, type: EntityLabel, amount: number, mutator: Mutator, terrain?: TerrainLabel) {
+function sparseWalk(start: Point, type: EntityKey, amount: number, mutator: Mutator, terrain?: TerrainKey) {
   repeat(amount, () => {
     const pt = start.add(point(rnd(-4, 4), rnd(-4, 4)))
     if (terrain) mutator.setT(pt, terrain)

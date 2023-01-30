@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Queue } from '../lib/util'
 import { Point, point, grid } from '../Model/Point'
-import { Entity, EntityPool, EntityLabel, EntityWith, TerrainLabel } from './Entity'
+import { Entity, EntityPool, EntityKey, EntityWith, TerrainKey } from './Entity'
 
 export class Region {
   terrainMap = new Map<Point, Entity>()
@@ -9,7 +9,7 @@ export class Region {
   entities: Entity[] = []
   turnQueue = new Queue<number>()
 
-  constructor(readonly width: number, readonly height: number, readonly pool: EntityPool, baseTerrain: TerrainLabel) {
+  constructor(readonly width: number, readonly height: number, readonly pool: EntityPool, baseTerrain: TerrainKey) {
     const t = this.pool.symbolic(baseTerrain)
     if (!t) throw new Error('Unable to get base terrain')
     this.terrainBase = t
@@ -26,23 +26,23 @@ export class Region {
     })
   }
 
-  createEntity(key: EntityLabel, pt: Point) {
+  createEntity(key: EntityKey, pt: Point) {
     const entity = this.pool.spawn(key, pt)
     this.entities.push(entity)
   }
 
-  createTerrain(key: TerrainLabel, pt: Point) {
+  createTerrain(key: TerrainKey, pt: Point) {
     const terrain = this.pool.symbolic(key)
     this.terrainMap.set(pt, terrain)
   }
 
-  being(key: EntityLabel, pt: Point) {
+  being(key: EntityKey, pt: Point) {
     const being = window.game.pool.spawn(key, pt)
     this.entities.push(being)
     this.turnQueue.add(being.eID, true)
   }
 
-  feature(key: EntityLabel, pt: Point) {
+  feature(key: EntityKey, pt: Point) {
     const feature = window.game.pool.spawn(key, pt)
     this.entities.push(feature)
   }
