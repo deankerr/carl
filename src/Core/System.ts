@@ -1,11 +1,19 @@
-// import * as Sys from '../System'
-import { handleBump, handleMeleeAttack, handleMovement, handleTread, processDeath } from '../System'
+import * as ROT from 'rot-js'
+import {
+  handleBump,
+  handleMeleeAttack,
+  handleMovement,
+  handleTread,
+  processDeath,
+  processRenderRegion,
+} from '../System'
 import { Region } from './Region'
 import * as Action from './Action'
 import { ActionTypes } from './Action'
 
 export class System {
   turnProcess = [handleMovement, handleTread, handleBump, handleMeleeAttack, processDeath]
+  renderProcess = [processRenderRegion]
 
   player(local: Region, playerAction: ActionTypes) {
     console.group('player')
@@ -43,5 +51,9 @@ export class System {
     const nextID = local.turnQueue.next()
     if (nextID === undefined) throw new Error('System: turn queue empty')
     return local.getByID(nextID)
+  }
+
+  runRender(local: Region, mainDisplay: ROT.Display) {
+    this.renderProcess.forEach(sys => sys(local, mainDisplay))
   }
 }

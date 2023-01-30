@@ -8,7 +8,7 @@ import { ComponentFoundry } from './Components'
 import { EntityPool, gameTemplates } from './Entity'
 import { input } from './Input'
 import { Region } from './Region'
-import { renderMessages, renderRegion } from './Render'
+import { renderMessages } from './Render'
 import { System } from './System'
 
 export type Message = { turn: number; text: string }
@@ -37,16 +37,13 @@ export class Engine {
   }
 
   init() {
-    // const region = new Region(CONFIG.generateWidth, CONFIG.generateHeight, this.pool, 'grass')
-    // region.being('player', this.point.pt(1, 0))
-    // region.being('spider', this.point.pt(9, 5))
-    // region.feature('shrub', this.point.pt(8, 7))
     const overseer = Generate.overworld()
     this.local = overseer.current
     this.local.initTurnQueue()
 
-    this.system.run(this.local)
     this.render()
+
+    this.system.run(this.local)
     this.keys.add(this.update.bind(this))
     console.log('Engine ready', this)
   }
@@ -59,18 +56,18 @@ export class Engine {
       if (playerAction.ui === 'debug_logworld') console.log(this)
       if (playerAction.ui === 'debug_logentities') console.log('Local entities', this.local.entities)
       if (playerAction.ui === 'debug_loglocal') console.log('Local', this.local)
-      this.render()
       return
     }
 
     this.system.player(this.local, playerAction)
     this.playerTurns++
-    this.render()
   }
 
   render() {
-    renderRegion(this.local)
+    // renderRegion(this.local)
+    this.system.runRender(this.local, this.display)
     renderMessages(this.messageLog)
+    setTimeout(() => requestAnimationFrame(this.render.bind(this)), CONFIG.frameLimit)
   }
 
   message(newMsg: string) {

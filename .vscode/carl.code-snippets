@@ -74,7 +74,7 @@
   },
 
   "import ROT.JS": {
-    "prefix": "impROTJS",
+    "prefix": "irotjs",
     "body": "import * as ROT from 'rot-js'",
     "description": "Import our favourite roguelike library."
   },
