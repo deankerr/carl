@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */ // !!! dev
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
+import * as Generate from '../Generate'
 import { createGameDisplay } from '../lib/display'
 import { Keys } from '../lib/Keys'
 import { PointMan } from '../Model/Point'
@@ -7,7 +9,7 @@ import { ComponentFoundry } from './Components'
 import { EntityPool, gameTemplates } from './Entity'
 import { input } from './Input'
 import { Region } from './Region'
-import { renderMessages, renderRegion } from './RenderNew'
+import { renderMessages, renderRegion } from './Render'
 import { System } from './System'
 
 export type Message = { turn: number; text: string }
@@ -37,12 +39,13 @@ export class Engine {
   }
 
   init() {
-    const region = new Region(CONFIG.generateWidth, CONFIG.generateHeight, this.pool, 'grass')
-
-    region.being('player', this.point.pt(1, 0))
-    region.being('spider', this.point.pt(9, 5))
-    region.feature('shrub', this.point.pt(8, 7))
-    this.local = region
+    // const region = new Region(CONFIG.generateWidth, CONFIG.generateHeight, this.pool, 'grass')
+    // region.being('player', this.point.pt(1, 0))
+    // region.being('spider', this.point.pt(9, 5))
+    // region.feature('shrub', this.point.pt(8, 7))
+    const overseer = Generate.overworld()
+    this.local = overseer.current
+    this.local.initTurnQueue()
 
     // this.system.run(region)
     this.render()
@@ -57,6 +60,7 @@ export class Engine {
     if ('ui' in playerAction) {
       if (playerAction.ui === 'debug_logworld') console.log(this)
       if (playerAction.ui === 'debug_logentities') console.log('Local entities', this.local.entities)
+      if (playerAction.ui === 'debug_loglocal') console.log('Local', this.local)
       this.render()
       return
     }

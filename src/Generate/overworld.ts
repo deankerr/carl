@@ -5,19 +5,23 @@ import { Overseer, Mutator } from './Overseer'
 import { Rect } from '../Model/Rectangle'
 import { CONFIG } from '../config'
 import { Structure } from './structures/Structure'
+import { EntityLabel, TerrainLabel } from '../Core/Entity'
 
 // stairs/connectors?
 export function overworld(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
   const t = Date.now()
+  const { point } = window.game
+
+  const Pt = point.pt.bind(point)
 
   console.log(ROT.RNG.getState())
 
-  const O = new Overseer(width, height)
+  const O = new Overseer(width, height, window.game.pool)
 
   // const center = Pt(half(width), half(height))
 
-  repeat(10, () => walk(O.grid.rndPt(), Terrain.grass, 400, O.mutate())) // grass
-  repeat(10, () => walk(O.grid.rndPt(), Terrain.deadGrass, 100, O.mutate())) // dead grass
+  repeat(10, () => walk(O.grid.rndPt(), 'grass', 400, O.mutate())) // grass
+  repeat(10, () => walk(O.grid.rndPt(), 'deadGrass', 100, O.mutate())) // dead grass
 
   // outer/inner space markers
   const levelRect = Rect.at(Pt(0, 0), width, height)
@@ -27,37 +31,37 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   // western lake
   const westLakePt = Pt(half(inner.x), rnd(inner.y, inner.y2))
   const westLakeMut = O.mutate()
-  repeat(30, () => walk(westLakePt, Terrain.water, 12, westLakeMut, { n: 2, s: 2 }))
+  repeat(30, () => walk(westLakePt, 'water', 12, westLakeMut, { n: 2, s: 2 }))
 
   // southern lake
   const southLakePt = Pt(rnd(levelRect.x, levelRect.x2), levelRect.y2 - 3)
   const southLakeMut = O.mutate()
-  repeat(15, () => walk(southLakePt, Terrain.water, 12, southLakeMut, { e: 2, w: 2 }))
+  repeat(15, () => walk(southLakePt, 'water', 12, southLakeMut, { e: 2, w: 2 }))
 
   const nsPeak = O.mutate()
   const nsMound = O.mutate()
   for (const x of range(0, width - 1, 3)) {
-    walk(Pt(x, outer.y), Terrain.peak, 3, nsPeak)
-    walk(Pt(x, outer.y), Terrain.mound, 3, nsMound)
-    walk(Pt(x, outer.y2), Terrain.mound, 3, nsMound)
-    walk(Pt(x, outer.y2), Terrain.peak, 3, nsPeak)
+    walk(Pt(x, outer.y), 'peak', 3, nsPeak)
+    walk(Pt(x, outer.y), 'mound', 3, nsMound)
+    walk(Pt(x, outer.y2), 'mound', 3, nsMound)
+    walk(Pt(x, outer.y2), 'peak', 3, nsPeak)
   }
 
   const ewPeak = O.mutate()
   const ewMound = O.mutate()
   for (const y of range(0, height - 1, 3)) {
-    walk(Pt(outer.x, y), Terrain.mound, 2, ewMound)
-    walk(Pt(outer.x, y), Terrain.peak, 2, ewPeak)
-    walk(Pt(outer.x2, y), Terrain.peak, 2, ewPeak)
-    walk(Pt(outer.x2, y), Terrain.mound, 2, ewMound)
+    walk(Pt(outer.x, y), 'mound', 2, ewMound)
+    walk(Pt(outer.x, y), 'peak', 2, ewPeak)
+    walk(Pt(outer.x2, y), 'peak', 2, ewPeak)
+    walk(Pt(outer.x2, y), 'mound', 2, ewMound)
   }
 
   const cornersPeak = O.mutate()
-  for (const pt of outer.scale(-3).cornerPts()) walk(pt, pick([Terrain.peak, Terrain.mound]), 10, cornersPeak)
+  for (const pt of outer.scale(-3).cornerPts()) walk(pt, pick(['peak', 'mound']), 10, cornersPeak)
 
   // scattered shrubs
   // const shrubMut = O.mutate()
-  repeat(5, () => sparseWalk(inner.rndEdgePt(), Features.shrub, 5, O.mutate(), Terrain.void))
+  repeat(5, () => sparseWalk(inner.rndEdgePt(), 'shrub', 5, O.mutate(), 'void'))
 
   // smaller southern lake
   // const southLakePt = Pt(center.x + rnd(-4, -4), outskirtsRect.y2)
@@ -73,15 +77,12 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
 
   // * graveyard
   const graveyard = featureArea.center(9, 7)
-  graveyard.degradedFloor(
-    [Terrain.path, Terrain.crackedPath1, Terrain.crackedPath2, Terrain.crackedPath3, Terrain.crackedPath4],
-    1
-  )
+  graveyard.degradedFloor('path', 1)
 
-  graveyard.feature(Features.tombstone, rnd(4, 8), Terrain.void)
-  graveyard.feature(Features.statue, 2, Terrain.void)
+  graveyard.feature('tombstone', rnd(4, 8), 'void')
+  graveyard.feature('statue', 2, 'void')
 
-  featureArea.feature(Features.deadTree, 6, Terrain.void)
+  featureArea.feature('deadTree', 6, 'void')
 
   // ruin
   O.mutate().clear()
@@ -90,25 +91,25 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   ruin.bisectRooms(rnd(2, 4))
   ruin.buildInnerWalls()
   ruin.connectInnerRooms()
-  ruin.degradedFloor(Terrain.void, 1)
+  ruin.degradedFloor('void', 1)
 
   // add features to rooms
   const ruinRooms = ROT.RNG.shuffle([...ruin.innerRooms])
   ruinRooms.forEach((r, i) => {
     if (i === 0) {
-      r.feature(Features.magentaFlames, 1)
+      r.feature('flames', 1)
       // const stairPt = r.feature(Terrain.stairsDescending)
       // O.domainConnections.set(stairPt[0].s, 'dungeon')
-      r.feature(Terrain.stairsDescending)
+      r.feature('stairsDown')
     } else {
       switch (i % 3) {
         case 1:
-          r.feature(pick([Features.cyanFlames, Features.greenFlames]), 1)
-          r.feature(Beings.ghost, 3)
+          r.feature(pick(['flames', 'flames']), 1)
+          r.feature('ghost', 3)
           break
         case 2:
-          r.feature(Features.flames)
-          r.feature(Beings.demon, 1)
+          r.feature('flames')
+          r.feature('demon', 1)
       }
     }
   })
@@ -121,15 +122,15 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
     annex.bisectRooms(rnd(1))
     annex.buildInnerWalls()
     annex.connectInnerRooms()
-    annex.degradedFloor(Terrain.void)
+    annex.degradedFloor('void')
 
     if (i === 0) {
       const waterRoom = pick(annex.innerRooms)
-      waterRoom.degradedFloor(Terrain.water)
-      waterRoom.feature(Beings.crab)
-      waterRoom.feature(Beings.crab2)
+      waterRoom.degradedFloor('water')
+      waterRoom.feature('crab')
+      waterRoom.feature('crab2')
     } else if (i === 1) {
-      annex.degradedFloor(Terrain.path)
+      annex.degradedFloor('path')
     }
   })
   ruin.connectAnnexes()
@@ -137,7 +138,7 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
 
   console.log('ruin:', ruin)
 
-  O.mutate().set(outer.rndEdgePt(), Beings.player)
+  O.mutate().setE(outer.rndEdgePt(), 'player')
   // * End
   console.log(`Overworld done: ${Date.now() - t}ms`, O)
   return O
@@ -145,11 +146,12 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
 
 function walk(
   start: Point,
-  type: EntityTemplate,
+  type: TerrainLabel,
   life: number,
   mutator: Mutator,
   weighting?: { n?: number; e?: number; s?: number; w?: number }
 ) {
+  const Pt = window.game.point.pt.bind(window.game.point)
   let pt = Pt(start.x, start.y)
   // north, east, south, west
   const north = new Array(weighting?.n ?? 1).fill(Pt(0, -1))
@@ -160,15 +162,16 @@ function walk(
   for (const i of range(life)) {
     const dir = pick(moves)
     pt = pt.add(dir)
-    mutator.set(pt.s, type)
+    mutator.setT(pt.s, type)
     i // durr
   }
 }
 
-function sparseWalk(start: Point, type: EntityTemplate, amount: number, mutator: Mutator, terrain?: EntityTemplate) {
+function sparseWalk(start: Point, type: EntityLabel, amount: number, mutator: Mutator, terrain?: TerrainLabel) {
   repeat(amount, () => {
+    const Pt = window.game.point.pt.bind(window.game.point)
     const pt = start.add(Pt(rnd(-4, 4), rnd(-4, 4)))
-    if (terrain) mutator.set(pt, terrain)
-    mutator.set(pt, type)
+    if (terrain) mutator.setT(pt, terrain)
+    mutator.setE(pt, type)
   })
 }

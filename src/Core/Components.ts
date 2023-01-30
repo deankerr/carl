@@ -1,6 +1,5 @@
 import { ActionTypes } from '../Action'
 import { Point } from '../Model/Point'
-import { Entity } from './Entity'
 
 export type Comp<K extends keyof typeof ComponentFoundry> = ReturnType<typeof ComponentFoundry[K]>
 export type Complist = Comp<'name'> & Comp<'form'> & Comp<'position'> & Comp<'tag'> & Comp<'trodOn'> & Comp<'acting'>
@@ -32,32 +31,6 @@ export const ComponentFoundry = {
   },
 }
 
-export const mod = (e: Entity) => {
-  const stored = e
-
-  const add = (cName: keyof typeof ComponentFoundry) => {
-    return (...p: FoundryParams[typeof cName]) => {
-      // const c = ComponentFoundry[cName](...p)
-      const c = Reflect.apply(ComponentFoundry[cName], undefined, p)
-      console.log('c:', c)
-      return { ...stored, ...c }
-    }
-  }
-
-  return add
-
-  // const addTag = (p: FoundryParams['tag']) => {
-  //   const c = ComponentFoundry.tag(...p)
-  // }
-}
-
-/*
-
-  region.modify(player).add('tag')()
-
-
-*/
-
 export type TagKeys =
   | 'blocksMovement'
   | 'blocksLight'
@@ -66,4 +39,6 @@ export type TagKeys =
   | 'actor'
   | 'meleeAttackTarget'
   | 'dead'
-  | 'testTag'
+  | 'being'
+  | 'feature'
+  | 'terrain'

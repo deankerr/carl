@@ -60,6 +60,8 @@ export function input(code: string): ActionTypes | null {
     // Debug log world
     case 'KeyQ':
       return UI('debug_logworld')
+    case 'KeyW':
+      return UI('debug_loglocal')
     case 'KeyE':
       return UI('debug_logentities')
 

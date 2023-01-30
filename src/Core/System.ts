@@ -28,7 +28,7 @@ export class System {
         return
       }
 
-      console.group('Sys:', e.label)
+      console.groupCollapsed('Sys:', e.label)
       local.entity(e).modify('acting', Action.__randomMove())
       this.turnProcess.forEach(sys => sys(local, false))
       local.entity(local.get('acting')[0]).remove('acting')

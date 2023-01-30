@@ -1,7 +1,5 @@
 import { repeat, rnd } from '../../lib/util'
-import { Pt } from '../../Model/Point'
 import { Rect } from '../../Model/Rectangle'
-import { Features } from '../../Templates'
 import { Overseer } from '../Overseer'
 
 type BSPConfig = {
@@ -19,6 +17,7 @@ const BSPConfigDefault = {
 }
 
 export function BSPRooms(startRect: Rect, BSPConfig?: BSPConfig) {
+  const Pt = window.game.point.pt.bind(window.game.point) // ! compat
   const config = { ...BSPConfigDefault, ...BSPConfig }
   const { minResultSize, O } = config
   const attempts = config.attempts ?? rnd(3, 6)
@@ -73,16 +72,16 @@ export function BSPRooms(startRect: Rect, BSPConfig?: BSPConfig) {
     queue.push(sub1, sub2)
     walls.push(subW)
 
-    const mut = O?.mutate()
-    if (mut) [sub1, sub2].forEach(s => s.traverse(pt => mut.set(pt, Features.debugMarker)))
+    // const mut = O?.mutate()
+    // if (mut) [sub1, sub2].forEach(s => s.traverse(pt => mut.set(pt, Features.debugMarker)))
     return false
   })
 
   const results = [...queue, ...complete]
   console.log(`BSP: created ${results.length} rooms`, results, 'Walls', walls)
 
-  const wallMut = O?.mutate()
-  if (wallMut) walls.forEach(w => w.traverse(pt => wallMut.set(pt, Features.debugMarker)))
+  // const wallMut = O?.mutate()
+  // if (wallMut) walls.forEach(w => w.traverse(pt => wallMut.set(pt, Features.debugMarker)))
 
   O?.mutate().clear()
   return [[...queue, ...complete], walls]

@@ -4,13 +4,13 @@ import { Point } from '../Model/Point'
 import { Entity, EntityPool, EntityLabel, EntityWith, TerrainLabel } from './Entity'
 
 export class Region {
-  terrain = new Map<Point, Entity>()
+  terrainMap = new Map<Point, Entity>()
   terrainBase: Entity
   entities: Entity[] = []
   turnQueue = new Queue<number>()
 
   constructor(readonly width: number, readonly height: number, readonly pool: EntityPool, baseTerrain: TerrainLabel) {
-    const t = this.pool.pool.get(baseTerrain)
+    const t = this.pool.symbolic(baseTerrain)
     if (!t) throw new Error('Unable to get base terrain')
     this.terrainBase = t
   }
@@ -22,6 +22,16 @@ export class Region {
 
       callback(pt, [terrain, ...entities] as Entity[])
     })
+  }
+
+  createEntity(key: EntityLabel, pt: Point) {
+    const entity = this.pool.spawn(key, pt)
+    this.entities.push(entity)
+  }
+
+  createTerrain(key: TerrainLabel, pt: Point) {
+    const terrain = this.pool.symbolic(key)
+    this.terrainMap.set(pt, terrain)
   }
 
   being(key: EntityLabel, pt: Point) {
@@ -49,7 +59,7 @@ export class Region {
   }
 
   terrainAt(pt: Point) {
-    return this.inBounds(pt) ? this.terrain.get(pt) ?? this.terrainBase : this.pool.spawn('endlessVoid', pt)
+    return this.inBounds(pt) ? this.terrainMap.get(pt) ?? this.terrainBase : this.pool.spawn('endlessVoid', pt)
   }
 
   getByID(eID: number) {
@@ -74,5 +84,16 @@ export class Region {
     if (entity.actor) {
       this.turnQueue.remove(entity.eID)
     }
+  }
+
+  initTurnQueue() {
+    const player = this.player()
+    const actors = this.get('actor').filter(a => !a.playerControlled)
+
+    const queue = new Queue<number>()
+    queue.add(player.eID, true)
+    actors.forEach(a => queue.add(a.eID, true))
+
+    this.turnQueue = queue
   }
 }

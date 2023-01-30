@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as ROT from 'rot-js'
-import { EntityTemplate } from '../../../dev-assets/graveyard/ECS/Template/Entity'
+import { EntityLabel, TerrainLabel } from '../../Core/Entity'
 import { half, makeOdd, pick, range, rnd, rndO, shuffle } from '../../lib/util'
-import { Point, PointSet, Pt } from '../../Model/Point'
+import { Point } from '../../Model/Point'
 import { Rect } from '../../Model/Rectangle'
-import { Features, Marker, Terrain } from '../../Templates'
 import { BSPRooms } from '../modules/BSP'
 import { Overseer } from '../Overseer'
 
@@ -26,6 +25,7 @@ export class Structure {
 
   // split the main rect into two sub rects
   bisect(variance = 0) {
+    const Pt = window.game.point.pt.bind(window.game.point) // ! compat
     const self = this.rect //tvhis.rect.scale(-1)
 
     const canSplitV = self.height >= 5
@@ -51,6 +51,7 @@ export class Structure {
   }
 
   inner(width: number, height: number) {
+    const Pt = window.game.point.pt.bind(window.game.point) // ! compat
     const self = this.rect
 
     const x = rnd(self.x, self.x2 - width)
@@ -100,16 +101,17 @@ export class Structure {
     const mutator = this.O.mutate()
 
     self.traverse((pt, edge) => {
-      if (edge) mutator.set(pt, Terrain.wall)
+      if (edge) mutator.setT(pt, 'wall')
     })
   }
 
   buildInnerWalls() {
     const mut = this.O.mutate()
-    this.innerWalls.forEach(w => w.traverse(pt => mut.set(pt, Terrain.wall)))
+    this.innerWalls.forEach(w => w.traverse(pt => mut.setT(pt, 'wall')))
   }
 
   connectInnerRooms() {
+    const Pt = window.game.point.pt.bind(window.game.point) // ! compat
     const unconnected = new Set(this.innerRooms)
     const connected = new Set<Structure>()
     while (unconnected.size > 0) {
@@ -126,14 +128,14 @@ export class Structure {
 
       // scan along each edge, looking for adj rooms
       const self = current.rect
-      const adjRoomPts = new Map<Structure, PointSet>()
+      const adjRoomPts = new Map<Structure, Set<Point>>()
 
       for (const yi of range(self.y, self.y2)) {
         // left
         const left = Pt(self.x, yi)
         const cRoomL = this.innerRooms.filter(r => r.rect.intersectsPt(left.add(-2, 0)))
         cRoomL.forEach(cr => {
-          if (!adjRoomPts.has(cr)) adjRoomPts.set(cr, new PointSet())
+          if (!adjRoomPts.has(cr)) adjRoomPts.set(cr, new Set<Point>())
           adjRoomPts.get(cr)?.add(left.add(-1, 0))
         })
 
@@ -141,7 +143,7 @@ export class Structure {
         const right = Pt(self.x2, yi)
         const cRoomR = this.innerRooms.filter(r => r.rect.intersectsPt(right.add(2, 0)))
         cRoomR.forEach(cr => {
-          if (!adjRoomPts.has(cr)) adjRoomPts.set(cr, new PointSet())
+          if (!adjRoomPts.has(cr)) adjRoomPts.set(cr, new Set<Point>())
           adjRoomPts.get(cr)?.add(right.add(1, 0))
         })
       }
@@ -151,7 +153,7 @@ export class Structure {
         const top = Pt(xi, self.y)
         const cRoomT = this.innerRooms.filter(r => r.rect.intersectsPt(top.add(0, -2)))
         cRoomT.forEach(cr => {
-          if (!adjRoomPts.has(cr)) adjRoomPts.set(cr, new PointSet())
+          if (!adjRoomPts.has(cr)) adjRoomPts.set(cr, new Set<Point>())
           adjRoomPts.get(cr)?.add(top.add(0, -1))
         })
 
@@ -159,7 +161,7 @@ export class Structure {
         const bottom = Pt(xi, self.y2)
         const cRoomB = this.innerRooms.filter(r => r.rect.intersectsPt(bottom.add(0, 2)))
         cRoomB.forEach(cr => {
-          if (!adjRoomPts.has(cr)) adjRoomPts.set(cr, new PointSet())
+          if (!adjRoomPts.has(cr)) adjRoomPts.set(cr, new Set<Point>())
           adjRoomPts.get(cr)?.add(bottom.add(0, 1))
         })
       }
@@ -173,7 +175,7 @@ export class Structure {
         // check if a connection has already been made
         if (!existing.some(rooms => rooms.includes(current) && rooms.includes(room))) {
           // create a connection if not
-          this.innerRoomConnections.set(pick(PtS.toPt()), [current, room])
+          this.innerRoomConnections.set(pick([...PtS]), [current, room])
         }
       }
     }
@@ -182,40 +184,40 @@ export class Structure {
     // todo different connection themes, eg crumbled wall gap
     const doorsMut = this.O.mutate()
     for (const [pt] of this.innerRoomConnections) {
-      doorsMut.set(pt, Terrain.void)
-      doorsMut.set(pt, Features.door)
+      doorsMut.setT(pt, 'void')
+      // doorsMut.setE(pt, 'door') // !!
     }
   }
 
-  floor(t = Terrain.path) {
+  floor(t: TerrainLabel = 'path') {
     if (this.innerRooms.length > 0) this.innerRooms.forEach(r => r.floor(t))
     if (this.sub.length > 0) this.sub.forEach(r => r.floor(t))
-    else this.O.mutate().set(this.rect, t)
+    else this.O.mutate().setT(this.rect, t)
   }
 
-  degradedFloor(template: EntityTemplate | EntityTemplate[], chance = 16) {
+  degradedFloor(template: TerrainLabel | TerrainLabel[], chance = 16) {
     if (this.innerRooms.length > 0) this.innerRooms.forEach(r => r.degradedFloor(template))
     else {
       const isSmallRoom = this.rect.width <= 3 || this.rect.height <= 3
       const mut = this.O.mutate()
       this.rect.traverse((pt, edge) => {
         const t = Array.isArray(template) ? pick(template) : template
-        if (edge && !isSmallRoom) rnd(1) && mut.set(pt, t)
-        else if (isSmallRoom) rnd(4) && mut.set(pt, t)
-        else if (rnd(chance)) mut.set(pt, t)
+        if (edge && !isSmallRoom) rnd(1) && mut.setT(pt, t)
+        else if (isSmallRoom) rnd(4) && mut.setT(pt, t)
+        else if (rnd(chance)) mut.setT(pt, t)
       })
     }
   }
 
-  feature(template: EntityTemplate, n = 1, terrain?: EntityTemplate) {
+  feature(template: EntityLabel, n = 1, terrain?: TerrainLabel) {
     let features = 0
     const mut = this.O.mutate()
     const ptsPlaced: Point[] = []
     while (features < n) {
       const rect = this.innerRooms.length > 1 ? pick(this.innerRooms).rect : this.rect
       const pt = rect.rndPt()
-      if (terrain) mut.set(pt, terrain)
-      mut.set(pt, template)
+      if (terrain) mut.setT(pt, terrain)
+      mut.setE(pt, template)
       ptsPlaced.push(pt)
       features++
     }
@@ -223,6 +225,7 @@ export class Structure {
   }
 
   createAnnex() {
+    const Pt = window.game.point.pt.bind(window.game.point) // ! compat
     const self = this.rect
     // prepare relatively sized widths/heights for each orientation
     const nsWidth = makeOdd(self.width - 2)
@@ -261,11 +264,11 @@ export class Structure {
         if (!pt) continue
 
         // avoid building a door next to an internal wall
-        const walkable = pt.orthNeighbours().filter(nPt => mut.query(nPt)?.tag.includes('walkable'))
+        const walkable = pt.neighbours4().filter(nPt => !mut.query(nPt).blocksMovement)
         if (walkable.length < 2) continue
 
-        mut.set(pt, Terrain.void)
-        mut.set(pt, Features.door)
+        mut.setT(pt, 'void')
+        // mut.setE(pt, Features.door) // !
         break
       }
     }
@@ -276,16 +279,16 @@ export class Structure {
     let connections = 0
 
     // list of all edge points excluding corners
-    const edgePts = new PointSet(...this.rect.toPtsEdge())
-    edgePts.del(...this.rect.cornerPts())
-    const validEdgePts = shuffle(edgePts.toPt())
+    const cor = this.rect.cornerPts()
+    const edgePts = [...this.rect.toPtsEdge()].filter(pt => cor.includes(pt))
+    const validEdgePts = shuffle(edgePts)
 
     while (connections < n) {
       const pt = validEdgePts.pop()
       if (!pt) return
 
       // avoid building a door next to an internal wall
-      const walkable = pt.orthNeighbours().filter(nPt => mut.query(nPt)?.tag.includes('walkable'))
+      const walkable = pt.neighbours4().filter(nPt => !mut.query(nPt).blocksMovement)
       if (walkable.length < 2) continue
 
       // avoid building a door to an annex
@@ -294,17 +297,17 @@ export class Structure {
 
       // if no inner walls, or the point isn't adjacent to an inner wall
 
-      mut.set(pt, Terrain.void)
-      mut.set(pt, Features.door)
+      mut.setT(pt, 'void')
+      // mut.setE(pt, 'door') //!
       connections++
     }
   }
 
   mark(edgeOnly = false) {
-    const m = this.O.mutate()
-    this.rect.traverse((pt, edge) => {
-      if (!edgeOnly) m.set(pt, Features.debugMarker)
-      else if (edge) m.set(pt, Features.debugMarker)
-    })
+    // const m = this.O.mutate()
+    // this.rect.traverse((pt, edge) => {
+    //   if (!edgeOnly) m.setE(pt, Features.debugMarker)
+    //   else if (edge) m.set(pt, Features.debugMarker)
+    // })
   }
 }
