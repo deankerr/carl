@@ -1,5 +1,6 @@
 import { repeat, rnd } from '../../lib/util'
 import { Rect } from '../../Model/Rectangle'
+import { point } from '../../Model/Point'
 import { Overseer } from '../Overseer'
 
 type BSPConfig = {
@@ -17,7 +18,6 @@ const BSPConfigDefault = {
 }
 
 export function BSPRooms(startRect: Rect, BSPConfig?: BSPConfig) {
-  const Pt = window.game.point.pt.bind(window.game.point) // ! compat
   const config = { ...BSPConfigDefault, ...BSPConfig }
   const { minResultSize, O } = config
   const attempts = config.attempts ?? rnd(3, 6)
@@ -62,12 +62,16 @@ export function BSPRooms(startRect: Rect, BSPConfig?: BSPConfig) {
 
     //create two sub rects, and a border rect
     const sub1 =
-      dir === 'vert' ? Rect.atxy2(Pt(r.x, r.y), Pt(split - 1, r.y2)) : Rect.atxy2(Pt(r.x, r.y), Pt(r.x2, split - 1))
+      dir === 'vert'
+        ? Rect.atxy2(point(r.x, r.y), point(split - 1, r.y2))
+        : Rect.atxy2(point(r.x, r.y), point(r.x2, split - 1))
 
     const sub2 =
-      dir === 'vert' ? Rect.atxy2(Pt(split + 1, r.y), Pt(r.x2, r.y2)) : Rect.atxy2(Pt(r.x, split + 1), Pt(r.x2, r.y2))
+      dir === 'vert'
+        ? Rect.atxy2(point(split + 1, r.y), point(r.x2, r.y2))
+        : Rect.atxy2(point(r.x, split + 1), point(r.x2, r.y2))
 
-    const subW = dir === 'vert' ? Rect.at(Pt(split, r.y), 1, r.height) : Rect.at(Pt(r.x, split), r.width, 1)
+    const subW = dir === 'vert' ? Rect.at(point(split, r.y), 1, r.height) : Rect.at(point(r.x, split), r.width, 1)
 
     queue.push(sub1, sub2)
     walls.push(subW)

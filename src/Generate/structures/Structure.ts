@@ -2,7 +2,7 @@
 import * as ROT from 'rot-js'
 import { EntityLabel, TerrainLabel } from '../../Core/Entity'
 import { half, makeOdd, pick, range, rnd, rndO, shuffle } from '../../lib/util'
-import { Point } from '../../Model/Point'
+import { Point, point } from '../../Model/Point'
 import { Rect } from '../../Model/Rectangle'
 import { BSPRooms } from '../modules/BSP'
 import { Overseer } from '../Overseer'
@@ -25,7 +25,6 @@ export class Structure {
 
   // split the main rect into two sub rects
   bisect(variance = 0) {
-    const Pt = window.game.point.pt.bind(window.game.point) // ! compat
     const self = this.rect //tvhis.rect.scale(-1)
 
     const canSplitV = self.height >= 5
@@ -38,25 +37,26 @@ export class Structure {
     // get split point
     const split = dir ? rnd(self.x + 2, self.x2 - 2) : rnd(self.y + 2, self.y2 - 2)
 
-    const splitPt1 = dir ? Pt(self.cx - 1, self.y2) : Pt(self.x2, self.cy - 1)
-    const splitPt2 = dir ? Pt(self.cx + 1, self.y) : Pt(self.x, self.cy + 1)
-    const sub1 = new Structure(Rect.atxy2(Pt(self.x, self.y), splitPt1), this.O)
-    const sub2 = new Structure(Rect.atxy2(splitPt2, Pt(self.x2, self.y2)), this.O)
+    const splitPt1 = dir ? point(self.cx - 1, self.y2) : point(self.x2, self.cy - 1)
+    const splitPt2 = dir ? point(self.cx + 1, self.y) : point(self.x, self.cy + 1)
+    const sub1 = new Structure(Rect.atxy2(point(self.x, self.y), splitPt1), this.O)
+    const sub2 = new Structure(Rect.atxy2(splitPt2, point(self.x2, self.y2)), this.O)
 
     // border region
-    const splitC = dir ? Rect.at(Pt(self.cx, self.y), 1, self.height) : Rect.at(Pt(self.x, self.cy), self.width, 1)
+    const splitC = dir
+      ? Rect.at(point(self.cx, self.y), 1, self.height)
+      : Rect.at(point(self.x, self.cy), self.width, 1)
     const sub3 = new Structure(splitC, this.O)
     this.sub.push(sub1, sub2, sub3)
     return [sub1, sub2, sub3]
   }
 
   inner(width: number, height: number) {
-    const Pt = window.game.point.pt.bind(window.game.point) // ! compat
     const self = this.rect
 
     const x = rnd(self.x, self.x2 - width)
     const y = rnd(self.y, self.y2 - height)
-    const sub = new Structure(Rect.at(Pt(x, y), width, height), this.O)
+    const sub = new Structure(Rect.at(point(x, y), width, height), this.O)
     this.sub.push(sub)
 
     return sub
@@ -111,7 +111,6 @@ export class Structure {
   }
 
   connectInnerRooms() {
-    const Pt = window.game.point.pt.bind(window.game.point) // ! compat
     const unconnected = new Set(this.innerRooms)
     const connected = new Set<Structure>()
     while (unconnected.size > 0) {
@@ -132,7 +131,7 @@ export class Structure {
 
       for (const yi of range(self.y, self.y2)) {
         // left
-        const left = Pt(self.x, yi)
+        const left = point(self.x, yi)
         const cRoomL = this.innerRooms.filter(r => r.rect.intersectsPt(left.add(-2, 0)))
         cRoomL.forEach(cr => {
           if (!adjRoomPts.has(cr)) adjRoomPts.set(cr, new Set<Point>())
@@ -140,7 +139,7 @@ export class Structure {
         })
 
         // right
-        const right = Pt(self.x2, yi)
+        const right = point(self.x2, yi)
         const cRoomR = this.innerRooms.filter(r => r.rect.intersectsPt(right.add(2, 0)))
         cRoomR.forEach(cr => {
           if (!adjRoomPts.has(cr)) adjRoomPts.set(cr, new Set<Point>())
@@ -150,7 +149,7 @@ export class Structure {
 
       for (const xi of range(self.x, self.x2)) {
         // top
-        const top = Pt(xi, self.y)
+        const top = point(xi, self.y)
         const cRoomT = this.innerRooms.filter(r => r.rect.intersectsPt(top.add(0, -2)))
         cRoomT.forEach(cr => {
           if (!adjRoomPts.has(cr)) adjRoomPts.set(cr, new Set<Point>())
@@ -158,7 +157,7 @@ export class Structure {
         })
 
         // bottom
-        const bottom = Pt(xi, self.y2)
+        const bottom = point(xi, self.y2)
         const cRoomB = this.innerRooms.filter(r => r.rect.intersectsPt(bottom.add(0, 2)))
         cRoomB.forEach(cr => {
           if (!adjRoomPts.has(cr)) adjRoomPts.set(cr, new Set<Point>())
@@ -225,7 +224,6 @@ export class Structure {
   }
 
   createAnnex() {
-    const Pt = window.game.point.pt.bind(window.game.point) // ! compat
     const self = this.rect
     // prepare relatively sized widths/heights for each orientation
     const nsWidth = makeOdd(self.width - 2)
@@ -233,10 +231,10 @@ export class Structure {
     const ewWidth = makeOdd(half(self.width))
     const ewHeight = makeOdd(self.height - 2)
     const dirs = ROT.RNG.shuffle([
-      Rect.atC(Pt(self.cx, self.y - half(nsHeight)), nsWidth, nsHeight), // north
-      Rect.atC(Pt(self.cx, self.y2 + half(nsHeight)), nsWidth, nsHeight), // south
-      Rect.atC(Pt(self.x - half(ewWidth), self.cy), ewWidth, ewHeight), // east
-      Rect.atC(Pt(self.x2 + half(ewWidth), self.cy), ewWidth, ewHeight), // west
+      Rect.atC(point(self.cx, self.y - half(nsHeight)), nsWidth, nsHeight), // north
+      Rect.atC(point(self.cx, self.y2 + half(nsHeight)), nsWidth, nsHeight), // south
+      Rect.atC(point(self.x - half(ewWidth), self.cy), ewWidth, ewHeight), // east
+      Rect.atC(point(self.x2 + half(ewWidth), self.cy), ewWidth, ewHeight), // west
     ])
 
     while (dirs.length > 0) {

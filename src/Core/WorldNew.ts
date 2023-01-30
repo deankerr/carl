@@ -1,3 +1,3 @@
-export class WorldNew {
-  regions: Region[]
-}
+// export class WorldNew {
+//   regions: Region[]
+// }

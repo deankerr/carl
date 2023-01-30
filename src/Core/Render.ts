@@ -5,7 +5,7 @@ import { Message } from './Engine'
 import { Region } from './Region'
 
 export function renderRegion(local: Region) {
-  const { display, point } = window.game
+  const { display } = window.game
 
   local.render((pt, entities) => {
     const chars = entities.map(e => e.form.char)

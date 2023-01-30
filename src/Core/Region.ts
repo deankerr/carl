@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Queue } from '../lib/util'
-import { Point } from '../Model/Point'
+import { Point, point, grid } from '../Model/Point'
 import { Entity, EntityPool, EntityLabel, EntityWith, TerrainLabel } from './Entity'
 
 export class Region {
@@ -13,10 +13,12 @@ export class Region {
     const t = this.pool.symbolic(baseTerrain)
     if (!t) throw new Error('Unable to get base terrain')
     this.terrainBase = t
+    const p = point(2, 2)
+    console.log('p:', p)
   }
 
   render(callback: (pt: Point, entities: Entity[]) => unknown) {
-    window.game.point.grid(this.width, this.height, pt => {
+    grid(this.width, this.height, pt => {
       const terrain = this.terrainAt(pt)
       const entities = this.get('form', 'position').filter(e => e.position.pt === pt)
 

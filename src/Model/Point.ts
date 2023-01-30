@@ -1,4 +1,4 @@
-export class PointManager {
+class PointManager {
   store = new Map<string, Point>()
   count = 0
 
@@ -6,6 +6,7 @@ export class PointManager {
     const s = x + ',' + y
     const storedPt = this.store.get(s)
     if (storedPt) return storedPt
+
     const pt = new Point(x, y, this.count++)
     this.store.set(s, pt)
     return pt
@@ -20,7 +21,9 @@ export class PointManager {
   }
 }
 
-export const PointMan = new PointManager()
+const PointMan = new PointManager()
+export const point = PointMan.pt.bind(PointMan)
+export const grid = PointMan.grid.bind(PointMan)
 
 export class Point {
   readonly s: string
@@ -31,26 +34,22 @@ export class Point {
   add(vector: Point | string | number, y?: number) {
     let pt: Point
     if (typeof vector === 'number') {
-      if (typeof y === 'number') pt = Pt(vector, y)
+      if (typeof y === 'number') pt = point(vector, y)
       else throw new Error('Both parameters must be number')
     } else if (typeof vector === 'string') {
       pt = strToPt(vector)
     } else pt = vector
 
-    return Pt(this.x + pt.x, this.y + pt.y)
+    return point(this.x + pt.x, this.y + pt.y)
   }
 
   neighbours4() {
-    return orthNeighbours().map(n => this.add(n))
+    return neighbours4.map(n => this.add(n))
   }
 
   neighbours8() {
-    return neighbours().map(n => this.add(n))
+    return neighbours8.map(n => this.add(n))
   }
-}
-
-function Pt(x: number, y: number) {
-  return PointMan.pt(x, y)
 }
 
 export function strToPt(s: string | Point) {
@@ -60,47 +59,14 @@ export function strToPt(s: string | Point) {
   } else return s
 }
 
-export function ptToStr(pt: Point | string) {
-  if (typeof pt === 'string') {
-    return pt
-  } else {
-    return pt.s
-  }
-}
-
-function neighbours() {
-  return [Pt(0, -1), Pt(1, -1), Pt(1, 0), Pt(1, 1), Pt(0, 1), Pt(-1, 1), Pt(-1, 0), Pt(-1, -1)]
-}
-function orthNeighbours() {
-  return [Pt(0, -1), Pt(1, 0), Pt(0, 1), Pt(-1, 0)]
-}
-
-// export class PointSet {
-//   private set = new Set<string>()
-//   constructor(...args: Point[] | string[]) {
-//     for (const pt of args) {
-//       if (typeof pt === 'string') {
-//         this.set.add(pt)
-//       } else {
-//         this.set.add(pt.s)
-//       }
-//     }
-//   }
-
-//   add(pt: Point | string) {
-//     this.set.add(ptToStr(pt))
-//   }
-
-//   has(pt: Point | string) {
-//     return this.set.has(ptToStr(pt))
-//   }
-
-//   del(...args: Point[] | string[]) {
-//     args.forEach(a => this.set.delete(ptToStr(a)))
-//   }
-
-//   toPt() {
-//     const sPtA = [...this.set]
-//     return sPtA.map(pts => strToPt(pts))
-//   }
-// }
+const neighbours8 = [
+  point(0, -1),
+  point(1, -1),
+  point(1, 0),
+  point(1, 1),
+  point(0, 1),
+  point(-1, 1),
+  point(-1, 0),
+  point(-1, -1),
+]
+const neighbours4 = [point(0, -1), point(1, 0), point(0, 1), point(-1, 0)]

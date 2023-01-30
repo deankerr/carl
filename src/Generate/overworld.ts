@@ -1,5 +1,5 @@
 import * as ROT from 'rot-js'
-import { Point } from '../Model/Point'
+import { Point, point } from '../Model/Point'
 import { half, pick, range, repeat, rnd, rndO } from '../lib/util'
 import { Overseer, Mutator } from './Overseer'
 import { Rect } from '../Model/Rectangle'
@@ -10,9 +10,6 @@ import { EntityLabel, TerrainLabel } from '../Core/Entity'
 // stairs/connectors?
 export function overworld(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
   const t = Date.now()
-  const { point } = window.game
-
-  const Pt = point.pt.bind(point)
 
   console.log(ROT.RNG.getState())
 
@@ -24,36 +21,36 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   repeat(10, () => walk(O.grid.rndPt(), 'deadGrass', 100, O.mutate())) // dead grass
 
   // outer/inner space markers
-  const levelRect = Rect.at(Pt(0, 0), width, height)
+  const levelRect = Rect.at(point(0, 0), width, height)
   const outer = levelRect.scale(-1)
   const inner = levelRect.scale(-6)
 
   // western lake
-  const westLakePt = Pt(half(inner.x), rnd(inner.y, inner.y2))
+  const westLakePt = point(half(inner.x), rnd(inner.y, inner.y2))
   const westLakeMut = O.mutate()
   repeat(30, () => walk(westLakePt, 'water', 12, westLakeMut, { n: 2, s: 2 }))
 
   // southern lake
-  const southLakePt = Pt(rnd(levelRect.x, levelRect.x2), levelRect.y2 - 3)
+  const southLakePt = point(rnd(levelRect.x, levelRect.x2), levelRect.y2 - 3)
   const southLakeMut = O.mutate()
   repeat(15, () => walk(southLakePt, 'water', 12, southLakeMut, { e: 2, w: 2 }))
 
   const nsPeak = O.mutate()
   const nsMound = O.mutate()
   for (const x of range(0, width - 1, 3)) {
-    walk(Pt(x, outer.y), 'peak', 3, nsPeak)
-    walk(Pt(x, outer.y), 'mound', 3, nsMound)
-    walk(Pt(x, outer.y2), 'mound', 3, nsMound)
-    walk(Pt(x, outer.y2), 'peak', 3, nsPeak)
+    walk(point(x, outer.y), 'peak', 3, nsPeak)
+    walk(point(x, outer.y), 'mound', 3, nsMound)
+    walk(point(x, outer.y2), 'mound', 3, nsMound)
+    walk(point(x, outer.y2), 'peak', 3, nsPeak)
   }
 
   const ewPeak = O.mutate()
   const ewMound = O.mutate()
   for (const y of range(0, height - 1, 3)) {
-    walk(Pt(outer.x, y), 'mound', 2, ewMound)
-    walk(Pt(outer.x, y), 'peak', 2, ewPeak)
-    walk(Pt(outer.x2, y), 'peak', 2, ewPeak)
-    walk(Pt(outer.x2, y), 'mound', 2, ewMound)
+    walk(point(outer.x, y), 'mound', 2, ewMound)
+    walk(point(outer.x, y), 'peak', 2, ewPeak)
+    walk(point(outer.x2, y), 'peak', 2, ewPeak)
+    walk(point(outer.x2, y), 'mound', 2, ewMound)
   }
 
   const cornersPeak = O.mutate()
@@ -151,26 +148,24 @@ function walk(
   mutator: Mutator,
   weighting?: { n?: number; e?: number; s?: number; w?: number }
 ) {
-  const Pt = window.game.point.pt.bind(window.game.point)
-  let pt = Pt(start.x, start.y)
+  let pt = point(start.x, start.y)
   // north, east, south, west
-  const north = new Array(weighting?.n ?? 1).fill(Pt(0, -1))
-  const east = new Array(weighting?.e ?? 1).fill(Pt(1, 0))
-  const south = new Array(weighting?.s ?? 1).fill(Pt(0, 1))
-  const west = new Array(weighting?.w ?? 1).fill(Pt(-1, 0))
+  const north = new Array(weighting?.n ?? 1).fill(point(0, -1))
+  const east = new Array(weighting?.e ?? 1).fill(point(1, 0))
+  const south = new Array(weighting?.s ?? 1).fill(point(0, 1))
+  const west = new Array(weighting?.w ?? 1).fill(point(-1, 0))
   const moves = [...north, ...east, ...south, ...west]
   for (const i of range(life)) {
     const dir = pick(moves)
     pt = pt.add(dir)
-    mutator.setT(pt.s, type)
+    mutator.setT(pt, type)
     i // durr
   }
 }
 
 function sparseWalk(start: Point, type: EntityLabel, amount: number, mutator: Mutator, terrain?: TerrainLabel) {
   repeat(amount, () => {
-    const Pt = window.game.point.pt.bind(window.game.point)
-    const pt = start.add(Pt(rnd(-4, 4), rnd(-4, 4)))
+    const pt = start.add(point(rnd(-4, 4), rnd(-4, 4)))
     if (terrain) mutator.setT(pt, terrain)
     mutator.setE(pt, type)
   })

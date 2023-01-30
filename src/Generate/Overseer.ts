@@ -2,7 +2,7 @@
 import { Entity, EntityLabel, EntityPool, TerrainLabel } from '../Core/Entity'
 import { Region } from '../Core/Region'
 import { rnd } from '../lib/util'
-import { Point, strToPt } from '../Model/Point'
+import { Point, point } from '../Model/Point'
 import { Rect } from '../Model/Rectangle'
 
 export type Mutation = [Map<Point, Entity>, Entity[]]
@@ -16,7 +16,7 @@ export class Overseer {
   // compatibility
   grid = {
     rndPt: () => {
-      return window.game.point.pt(rnd(0, this.width - 1), rnd(0, this.height - 1))
+      return point(rnd(0, this.width - 1), rnd(0, this.height - 1))
     },
   }
 
@@ -45,24 +45,20 @@ export class Overseer {
 export class Mutator {
   constructor(readonly current: Region) {}
 
-  setT(setPt: Point | string | Rect, t: TerrainLabel) {
-    if (setPt instanceof Rect) {
-      setPt.toPts().forEach(pt => this.setT(pt, t))
+  setT(pt: Point | Rect, t: TerrainLabel) {
+    if (pt instanceof Rect) {
+      pt.toPts().forEach(pt => this.setT(pt, t))
       return
     }
-    const ptOLD = typeof setPt === 'string' ? strToPt(setPt) : setPt
-    const pt = window.game.point.pt(ptOLD.x, ptOLD.y)
 
     this.current.createTerrain(t, pt)
   }
 
-  setE(setPt: Point | string | Rect, e: EntityLabel) {
-    if (setPt instanceof Rect) {
-      setPt.toPts().forEach(pt => this.setE(pt, e))
+  setE(pt: Point | Rect, e: EntityLabel) {
+    if (pt instanceof Rect) {
+      pt.toPts().forEach(pt => this.setE(pt, e))
       return
     }
-    const ptOLD = typeof setPt === 'string' ? strToPt(setPt) : setPt
-    const pt = window.game.point.pt(ptOLD.x, ptOLD.y)
 
     this.current.createEntity(e, pt)
   }

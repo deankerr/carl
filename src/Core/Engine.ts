@@ -4,7 +4,6 @@ import { CONFIG } from '../config'
 import * as Generate from '../Generate'
 import { createGameDisplay } from '../lib/display'
 import { Keys } from '../lib/Keys'
-import { PointMan } from '../Model/Point'
 import { ComponentFoundry } from './Components'
 import { EntityPool, gameTemplates } from './Entity'
 import { input } from './Input'
@@ -19,7 +18,6 @@ export class Engine {
   msgDisplay: ROT.Display
   keys = new Keys()
 
-  point = PointMan
   component = ComponentFoundry
   pool = new EntityPool(this.component, gameTemplates)
   system = new System()
@@ -47,7 +45,7 @@ export class Engine {
     this.local = overseer.current
     this.local.initTurnQueue()
 
-    // this.system.run(region)
+    this.system.run(this.local)
     this.render()
     this.keys.add(this.update.bind(this))
     console.log('Engine ready', this)
