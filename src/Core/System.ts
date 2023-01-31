@@ -4,6 +4,7 @@ import {
   handleMovement,
   handleTread,
   processDeath,
+  processFieldOfVision,
   renderMessageLog,
   renderRegion,
 } from '../System'
@@ -13,7 +14,8 @@ import { ActionTypes } from './Action'
 import { Engine } from './Engine'
 
 export class System {
-  turnProcess = [handleMovement, handleTread, handleBump, handleMeleeAttack, processDeath]
+  localInitProcess = [processFieldOfVision]
+  turnProcess = [handleMovement, handleTread, handleBump, handleMeleeAttack, processDeath, processFieldOfVision]
   renderProcess = [renderRegion, renderMessageLog]
 
   player(engine: Engine, playerAction: ActionTypes) {
@@ -57,5 +59,9 @@ export class System {
 
   runRender(engine: Engine) {
     this.renderProcess.forEach(sys => sys(engine))
+  }
+
+  runLocalInit(engine: Engine) {
+    this.localInitProcess.forEach(sys => sys(engine))
   }
 }

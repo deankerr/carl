@@ -25,6 +25,7 @@ export class EntityPool {
 
       if (t.tag) e = this.add(e, 'tag', ...t.tag)
       if (t.trodOn) e = this.add(e, 'trodOn', ...t.trodOn)
+      if (t.fieldOfView) e = this.add(e, 'fieldOfView', ...t.fieldOfView)
 
       this.pool.set(t.label, e)
     }
@@ -85,6 +86,7 @@ export const beings: EntityTemplate[] = [
     name: ['player'],
     form: ['@', '#EE82EE'],
     tag: ['playerControlled', 'actor', 'blocksMovement', 'being'],
+    fieldOfView: [8],
   },
   { label: 'spider', name: ['spider'], form: ['spider', '#00B3B3'], tag: ['actor', 'blocksMovement', 'being'] },
   { label: 'ghost', name: ['ghost'], form: ['ghost', '#FFFFFF'], tag: ['actor', 'blocksMovement', 'being'] },

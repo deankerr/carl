@@ -17,8 +17,8 @@ export const ComponentFoundry = {
   form: (char: string, color: string, bgColor = 'transparent') => {
     return { form: { char, color, bgColor } }
   },
-  position: (pt: Point) => {
-    return { position: { pt } }
+  position: (position: Point) => {
+    return { position }
   },
   tag: (...tags: TagKeys[]) => {
     return tags.reduce((acc, curr) => {
@@ -30,6 +30,9 @@ export const ComponentFoundry = {
   },
   acting: (action: ActionTypes) => {
     return { acting: action }
+  },
+  fieldOfView: (radius: number, visible = new Set<Point>()) => {
+    return { fieldOfView: { radius, visible } }
   },
 }
 

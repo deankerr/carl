@@ -20,7 +20,7 @@ export const handleMovement = (engine: Engine, isPlayerTurn: boolean) => {
     return
   }
 
-  const newPt = currentEntity.position.pt.add(action.move.x, action.move.y)
+  const newPt = currentEntity.position.add(action.move.x, action.move.y)
 
   // debug no clip
   // if (world.options.debugMode && currentIsPlayer) {

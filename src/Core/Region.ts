@@ -9,6 +9,8 @@ export class Region {
   entities: Entity[] = []
   turnQueue = new Queue<number>()
 
+  revealed = new Set<Point>()
+
   constructor(readonly width: number, readonly height: number, readonly pool: EntityPool, baseTerrain: TerrainKey) {
     const t = this.pool.symbolic(baseTerrain)
     if (!t) throw new Error('Unable to get base terrain')
@@ -17,12 +19,12 @@ export class Region {
     console.log('p:', p)
   }
 
-  render(callback: (pt: Point, entities: Entity[]) => unknown) {
+  render(callback: (pt: Point, entities: Entity[], revealed: boolean) => unknown) {
     grid(this.width, this.height, pt => {
       const terrain = this.terrainAt(pt)
-      const entities = this.get('form', 'position').filter(e => e.position.pt === pt)
-
-      callback(pt, [terrain, ...entities] as Entity[])
+      const entities = this.get('form', 'position').filter(e => e.position === pt)
+      const revealed = this.revealed.has(pt)
+      callback(pt, [terrain, ...entities], revealed)
     })
   }
 
@@ -57,7 +59,7 @@ export class Region {
   }
 
   at(pt: Point): [Entity, Entity[]] {
-    return [this.terrainAt(pt), this.entities.filter(e => e.position && e.position.pt === pt)]
+    return [this.terrainAt(pt), this.entities.filter(e => e.position && e.position === pt)]
   }
 
   terrainAt(pt: Point) {
@@ -72,6 +74,11 @@ export class Region {
 
   inBounds(pt: Point) {
     return pt.x >= 0 && pt.x < this.width && pt.y >= 0 && pt.y < this.height
+  }
+
+  ROTisTransparent(x: number, y: number) {
+    const [terrain, entities] = this.at(point(x, y))
+    return !(terrain.blocksLight || entities.some(e => e.blocksLight))
   }
 
   entity(entity: Entity) {

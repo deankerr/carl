@@ -38,6 +38,7 @@ export class Engine {
     this.local = overseer.current
     this.local.initTurnQueue()
 
+    this.system.runLocalInit(this)
     this.system.run(this)
     this.keys.add(this.update.bind(this))
     console.log('Engine ready', this)
