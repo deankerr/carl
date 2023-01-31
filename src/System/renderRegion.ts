@@ -8,12 +8,12 @@ export function renderRegion(engine: Engine) {
 
   mainDisplay.clear()
 
-  local.render((pt, entities, visible, revealed) => {
+  local.render((pt, entities, visible, recalled) => {
     const stack: Component<'form'>['form'][] = []
 
     if (visible) {
       entities.forEach(e => stack.push(e.form))
-    } else if (revealed) {
+    } else if (recalled) {
       const recalledEntities = entities.filter(e => e.terrain || e.memorable)
       recalledEntities.forEach(e => stack.push({ ...e.form, color: transformHSL(e.form.color, fade) }))
     }

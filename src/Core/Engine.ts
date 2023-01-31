@@ -49,9 +49,13 @@ export class Engine {
     if (!playerAction) return
 
     if ('ui' in playerAction) {
-      if (playerAction.ui === 'debug_logworld') console.log(this)
-      if (playerAction.ui === 'debug_logentities') console.log('Local entities', this.local.entities)
-      if (playerAction.ui === 'debug_loglocal') console.log('Local', this.local)
+      const { ui } = playerAction
+      if (ui === 'debug_logworld') console.log(this)
+      if (ui === 'debug_logentities') console.log('Local entities', this.local.entities)
+      if (ui === 'debug_loglocal') console.log('Local', this.local)
+      if (ui === 'localRevealAll') this.local.revealAll = !this.local.revealAll
+      if (ui === 'localRecallAll') this.local.recallAll = !this.local.recallAll
+      this.local.hasChanged = true
       return
     }
 

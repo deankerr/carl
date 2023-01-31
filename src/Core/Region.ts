@@ -9,7 +9,9 @@ export class Region {
   entities: Entity[] = []
   turnQueue = new Queue<number>()
 
-  revealed = new Set<Point>()
+  seenByPlayer = new Set<Point>()
+  recallAll = true
+  revealAll = false
 
   hasChanged = true
 
@@ -21,13 +23,13 @@ export class Region {
     console.log('p:', p)
   }
 
-  render(callback: (pt: Point, entities: Entity[], visible: boolean, revealed: boolean) => unknown) {
+  render(callback: (pt: Point, entities: Entity[], visible: boolean, recalled: boolean) => unknown) {
     const player = this.player().fieldOfView
     grid(this.width, this.height, pt => {
       const [terrain, entities] = this.at(pt)
       const visible = player.visible.has(pt)
-      const revealed = this.revealed.has(pt)
-      callback(pt, [terrain, ...entities], visible, revealed)
+      const recalled = this.seenByPlayer.has(pt)
+      callback(pt, [terrain, ...entities], this.revealAll || visible, this.recallAll || recalled)
     })
   }
 

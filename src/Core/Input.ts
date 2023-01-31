@@ -52,10 +52,10 @@ export function input(code: string): ActionTypes | null {
     case 'KeyV':
       return UI('visualizer')
     // debug
-    case 'KeyT':
-      return UI('toggleLightSwitch')
     case 'KeyR':
-      return UI('render')
+      return UI('localRevealAll')
+    case 'KeyT':
+      return UI('localRecallAll')
 
     // Debug log world
     case 'KeyQ':

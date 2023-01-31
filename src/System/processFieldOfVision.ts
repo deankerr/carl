@@ -21,8 +21,8 @@ export const processFieldOfVision = (engine: Engine) => {
     // player specific
     if (entity.playerControlled) {
       // update level memory
-      const revealed = new Set<Point>([...local.revealed, ...visible])
-      local.revealed = revealed
+      const revealed = new Set<Point>([...local.seenByPlayer, ...visible])
+      local.seenByPlayer = revealed
 
       // see through everything to reveal void decor
       // const voidFunction = new ROT.FOV.RecursiveShadowcasting(() => true)
