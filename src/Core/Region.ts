@@ -62,17 +62,13 @@ export class Region {
     }
   }
 
-  // Entity Queries
+  // * Entity Queries *
   get<Key extends keyof Entity>(...components: Key[]): EntityWith<Entity, Key>[] {
     const results = this.entities.filter(e => components.every(name => name in e)) as EntityWith<
       Entity,
       Key
     >[]
     return results
-  }
-
-  player() {
-    return this.entities.filter(e => e.playerControlled)[0] as EntityWith<Entity, 'fieldOfView'>
   }
 
   at(pt: Point) {
@@ -88,12 +84,22 @@ export class Region {
       : this.pool.spawn('endlessVoid', pt)
   }
 
+  has<Key extends keyof Entity>(
+    entity: Entity,
+    ...components: Key[]
+  ): EntityWith<Entity, Key> | null {
+    return components.every(c => c in entity) ? (entity as EntityWith<Entity, Key>) : null
+  }
+
   getByID(eID: number) {
     const e = this.entities.find(e => e.eID === eID)
     if (!e) throw new Error(`Unable to find entity for id ${e}`)
     return e
   }
 
+  player() {
+    return this.entities.filter(e => e.playerControlled)[0] as EntityWith<Entity, 'fieldOfView'>
+  }
   // Utility
   inBounds(pt: Point) {
     return pt.x >= 0 && pt.x < this.width && pt.y >= 0 && pt.y < this.height

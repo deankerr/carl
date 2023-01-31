@@ -22,26 +22,20 @@ export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
     const [bumpedEntity] = bumped
     if (isPlayerTurn) {
       // * handle door
-      // const door = world.with(bumpedEntity, 'doorGraphic')
-      // if (door) {
-      //   console.log('handleBump: result - open door')
-      //   const door = world.with(bumpedEntity, 'doorGraphic')
-      //   if (door)
-      //     world
-      //       .modify(bumpedEntity)
-      //       .add(tagWalkable())
-      //       .add(tagDoorOpen())
-      //       .add(tagLightPathUpdated())
-      //       .change(door.doorGraphic.open)
-      //       .remove('tagBlocksLight')
+      const door = local.has(bumpedEntity, 'isClosed', 'formSet', 'formSetTriggers')
+      if (door) {
+        local
+          .entity(door)
+          .remove('isClosed')
+          .remove('blocksLight')
+          .remove('blocksMovement')
+          .modify('tag', 'isOpen')
 
-      //   world.message('You slowly push or pull the door open.')
-      //   return
-      // }
+        engine.message('Knock knock!!!')
+        return
+      }
 
       // * attack!
-      // local.modify(bumpedEntity).add(tagMeleeAttackTarget())
-      // local.addTag(bumpedEntity, 'meleeAttackTarget')
       local.entity(bumpedEntity).modify('tag', 'meleeAttackTarget')
 
       // update acting component

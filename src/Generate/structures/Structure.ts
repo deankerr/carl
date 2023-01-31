@@ -184,7 +184,7 @@ export class Structure {
     const doorsMut = this.O.mutate()
     for (const [pt] of this.innerRoomConnections) {
       doorsMut.setT(pt, 'void')
-      // doorsMut.setE(pt, 'door') // !!
+      doorsMut.setE(pt, 'door')
     }
   }
 
@@ -266,7 +266,7 @@ export class Structure {
         if (walkable.length < 2) continue
 
         mut.setT(pt, 'void')
-        // mut.setE(pt, Features.door) // !
+        mut.setE(pt, 'door')
         break
       }
     }
@@ -296,7 +296,7 @@ export class Structure {
       // if no inner walls, or the point isn't adjacent to an inner wall
 
       mut.setT(pt, 'void')
-      // mut.setE(pt, 'door') //!
+      mut.setE(pt, 'door')
       connections++
     }
   }

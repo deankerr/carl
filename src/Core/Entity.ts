@@ -23,17 +23,19 @@ export class EntityPool {
         ...components.form(...t.form),
       }
 
-      if (t.tag) e = this.add(e, 'tag', ...t.tag)
-      if (t.trodOn) e = this.add(e, 'trodOn', ...t.trodOn)
-      if (t.fieldOfView) e = this.add(e, 'fieldOfView', ...t.fieldOfView)
+      if (t.tag) e = this.attach(e, 'tag', ...t.tag)
+      if (t.trodOn) e = this.attach(e, 'trodOn', ...t.trodOn)
+      if (t.fieldOfView) e = this.attach(e, 'fieldOfView', ...t.fieldOfView)
+      if (t.formSet) e = this.attach(e, 'formSet', ...t.formSet)
+      if (t.formSetTriggers) e = this.attach(e, 'formSetTriggers', ...t.formSetTriggers)
 
       this.pool.set(t.label, e)
     }
   }
 
-  add<T extends FoundryKey>(e: Entity, componentName: T, ...p: FoundryParam[T]) {
+  attach<T extends FoundryKey>(e: Entity, componentName: T, ...p: FoundryParam[T]) {
     const c = Reflect.apply(this.components[componentName], undefined, p)
-    return { ...e, ...c } as EntityWith<Entity, 'trodOn'>
+    return { ...e, ...c }
   }
 
   private thaw(key: EntityKey) {
@@ -43,7 +45,9 @@ export class EntityPool {
   }
   // create a new instance of an entity with a position
   spawn(key: EntityKey, at: Point) {
-    const e = { ...this.thaw(key), eID: this.count++, ...this.components.position(at) }
+    const eID = this.count++
+    const label = key + '-' + eID
+    const e = { ...this.thaw(key), eID, label, ...this.components.position(at) }
     return e
   }
 
@@ -55,10 +59,10 @@ export class EntityPool {
   entity(localState: Entity[], entity: Entity) {
     const index = localState.findIndex(e => e === entity)
     if (index < 0) throw new Error(`Unable to locate entity to modify, ${entity.label}`)
-    let store = entity
+    let store = this.attach(entity, 'tag', 'signalModified')
 
     const modify = <T extends FoundryKey>(cName: T, ...p: FoundryParam[T]) => {
-      store = this.add(store, cName, ...p)
+      store = this.attach(store, cName, ...p)
       localState[index] = store
       console.log('MODIFY:', store.name, cName, p)
       return options
@@ -88,20 +92,49 @@ export const beings: EntityTemplate[] = [
     tag: ['playerControlled', 'actor', 'blocksMovement', 'being'],
     fieldOfView: [8],
   },
-  { label: 'spider', name: ['spider'], form: ['spider', '#00B3B3'], tag: ['actor', 'blocksMovement', 'being'] },
-  { label: 'ghost', name: ['ghost'], form: ['ghost', '#FFFFFF'], tag: ['actor', 'blocksMovement', 'being'] },
+  {
+    label: 'spider',
+    name: ['spider'],
+    form: ['spider', '#00B3B3'],
+    tag: ['actor', 'blocksMovement', 'being'],
+  },
+  {
+    label: 'ghost',
+    name: ['ghost'],
+    form: ['ghost', '#FFFFFF'],
+    tag: ['actor', 'blocksMovement', 'being'],
+  },
   {
     label: 'demon',
     name: ['Natas, the mysterious wanderer'],
     form: ['demon', '#FF0000'],
     tag: ['actor', 'blocksMovement', 'being'],
   },
-  { label: 'crab', name: ['crab'], form: ['crab', '#cc3131'], tag: ['actor', 'blocksMovement', 'being'] },
-  { label: 'crab2', name: ['turncoat crab'], form: ['crab', '#32cd44'], tag: ['actor', 'blocksMovement', 'being'] },
+  {
+    label: 'crab',
+    name: ['crab'],
+    form: ['crab', '#cc3131'],
+    tag: ['actor', 'blocksMovement', 'being'],
+  },
+  {
+    label: 'crab2',
+    name: ['turncoat crab'],
+    form: ['crab', '#32cd44'],
+    tag: ['actor', 'blocksMovement', 'being'],
+  },
 ]
 
-export type FeatureKey = 'shrub' | 'statue' | 'tombstone' | 'flames' | 'deadTree'
+export type FeatureKey = 'door' | 'shrub' | 'statue' | 'tombstone' | 'flames' | 'deadTree'
 export const features: EntityTemplate[] = [
+  {
+    label: 'door',
+    name: ['door'],
+    form: ['doorClosed', '#73513d'],
+    tag: ['memorable', 'feature', 'blocksLight', 'blocksMovement', 'isClosed'],
+    trodOn: ['You carefully backflip through the door.'],
+    formSet: [['doorClosed', '', '', 'doorOpen', '', '']],
+    formSetTriggers: ['isClosed', 'isOpen'],
+  },
   {
     label: 'shrub',
     name: ['shrub'],
@@ -129,7 +162,13 @@ export const features: EntityTemplate[] = [
     tag: ['memorable', 'feature', 'blocksLight'],
     trodOn: ['You smile as you continue to outlive this ancient tree.'],
   },
-  { label: 'flames', name: ['flames'], form: ['flames1', '#FF8000'], tag: ['feature'] },
+  {
+    label: 'flames',
+    name: ['flames'],
+    form: ['flames1', '#FF8000'],
+    tag: ['feature'],
+    formSet: [['flames1', '', '', 'flames2', '', '']],
+  },
 ]
 
 export type TerrainKey =
@@ -147,9 +186,25 @@ export type TerrainKey =
   | 'peak'
 export const terrain: EntityTemplate[] = [
   { label: 'path', name: ['path'], form: ['path', '#262626'], tag: ['terrain'] },
-  { label: 'wall', name: ['wall'], form: ['wall', '#767676'], tag: ['blocksMovement', 'blocksLight', 'terrain'] },
-  { label: 'water', name: ['water'], form: ['water', '#4084bf'], tag: ['terrain'], trodOn: ['You tread water.'] },
-  { label: 'stairsDown', name: ['descending stairs'], form: ['stairsDown', '#767676'], tag: ['terrain'] },
+  {
+    label: 'wall',
+    name: ['wall'],
+    form: ['wall', '#767676'],
+    tag: ['blocksMovement', 'blocksLight', 'terrain'],
+  },
+  {
+    label: 'water',
+    name: ['water'],
+    form: ['water', '#4084bf'],
+    tag: ['terrain'],
+    trodOn: ['You tread water.'],
+  },
+  {
+    label: 'stairsDown',
+    name: ['descending stairs'],
+    form: ['stairsDown', '#767676'],
+    tag: ['terrain'],
+  },
   { label: 'stairsUp', name: ['ascending'], form: ['stairsUp', '#767676'], tag: ['terrain'] },
   {
     label: 'crackedWall',

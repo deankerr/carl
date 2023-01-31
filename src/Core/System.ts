@@ -12,10 +12,21 @@ import { Region } from './Region'
 import * as Action from './Action'
 import { ActionTypes } from './Action'
 import { Engine } from './Engine'
+import { processFormUpdate } from '../System/processFormUpdate'
 
 export class System {
   localInitProcess = [processFieldOfVision]
-  turnProcess = [handleMovement, handleTread, handleBump, handleMeleeAttack, processDeath, processFieldOfVision]
+
+  turnProcess = [
+    handleMovement,
+    handleTread,
+    handleBump,
+    handleMeleeAttack,
+    processDeath,
+    processFieldOfVision,
+  ]
+  postTurnProcess = [processFormUpdate]
+
   renderProcess = [renderRegion, renderMessageLog]
 
   player(engine: Engine, playerAction: ActionTypes) {
@@ -37,6 +48,7 @@ export class System {
       const e = this.next(local)
       if (e.playerControlled) {
         console.log('Sys: Player Input Required')
+        this.postTurnProcess.forEach(sys => sys(engine))
         return
       }
 
