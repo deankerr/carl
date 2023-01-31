@@ -26,12 +26,19 @@ export function renderRegion(engine: Engine) {
     }
 
     if (stack.length === 0) return
+    // mainDisplay.draw(
+    //   pt.x,
+    //   pt.y,
+    //   stack.map(s => s.char),
+    //   stack.map(s => s.color),
+    //   stack.map(s => s.bgColor)
+    // )
     mainDisplay.draw(
       pt.x,
       pt.y,
-      stack.map(s => s.char),
-      stack.map(s => s.color),
-      stack.map(s => s.bgColor)
+      stack.map(s => s.char).at(-1),
+      stack.map(s => s.color).at(-1),
+      stack.map(s => s.bgColor).at(-1)
     )
   })
 }
