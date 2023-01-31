@@ -4,8 +4,9 @@ const appInitial = 'game'
 // const seed = 1234
 const seed = null
 
-const mainDisplayWidth = 59
-const mainDisplayHeight = 29
+// 59 x 29
+const mainDisplayWidth = 79
+const mainDisplayHeight = 39
 const messageDisplayWidth = 60
 const messageDisplayHeight = 4
 

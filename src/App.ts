@@ -4,7 +4,7 @@ import { logger } from './lib/logger'
 import { Engine } from './Core/Engine'
 
 export function App() {
-  const log = logger('app')
+  const log = logger('app', 'init')
   document.body.style.backgroundColor = CONFIG.htmlBackgroundColor
 
   if (CONFIG?.seed) ROT.RNG.setSeed(CONFIG.seed)
@@ -14,7 +14,6 @@ export function App() {
   engine.init()
   engine.render()
 
-  log.msg('engine init')
   log.end()
 }
 

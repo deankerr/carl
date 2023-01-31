@@ -27,6 +27,7 @@ class Logger {
     const end = (...text: string[]) => {
       if (text.length > 0) msg(...text)
       const tEnd = Date.now() - t
+      if (group.times.length > 10000) group.times = group.times.slice(-100)
       group.times.push(tEnd)
       group.avg = group.times.reduce((a, b) => a + b) / group.times.length
     }

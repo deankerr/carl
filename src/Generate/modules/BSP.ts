@@ -19,7 +19,7 @@ const BSPConfigDefault = {
 
 export function BSPRooms(startRect: Rect, BSPConfig?: BSPConfig) {
   const config = { ...BSPConfigDefault, ...BSPConfig }
-  const { minResultSize, O } = config
+  const { minResultSize } = config
   const attempts = config.attempts ?? rnd(3, 6)
 
   const queue = [startRect]
@@ -27,8 +27,6 @@ export function BSPRooms(startRect: Rect, BSPConfig?: BSPConfig) {
   const walls: Rect[] = []
 
   if (attempts === 0) return [queue, walls]
-
-  if (O) O.mutate().mark(startRect)
 
   console.log('Start BSP:', config)
 
@@ -58,7 +56,9 @@ export function BSPRooms(startRect: Rect, BSPConfig?: BSPConfig) {
 
     // choose bisect point along top or left edge
     const split =
-      dir === 'vert' ? rnd(r.x + minResultSize, r.x2 - minResultSize) : rnd(r.y + minResultSize, r.y2 - minResultSize)
+      dir === 'vert'
+        ? rnd(r.x + minResultSize, r.x2 - minResultSize)
+        : rnd(r.y + minResultSize, r.y2 - minResultSize)
 
     //create two sub rects, and a border rect
     const sub1 =
@@ -71,7 +71,10 @@ export function BSPRooms(startRect: Rect, BSPConfig?: BSPConfig) {
         ? Rect.atxy2(point(split + 1, r.y), point(r.x2, r.y2))
         : Rect.atxy2(point(r.x, split + 1), point(r.x2, r.y2))
 
-    const subW = dir === 'vert' ? Rect.at(point(split, r.y), 1, r.height) : Rect.at(point(r.x, split), r.width, 1)
+    const subW =
+      dir === 'vert'
+        ? Rect.at(point(split, r.y), 1, r.height)
+        : Rect.at(point(r.x, split), r.width, 1)
 
     queue.push(sub1, sub2)
     walls.push(subW)
@@ -87,6 +90,5 @@ export function BSPRooms(startRect: Rect, BSPConfig?: BSPConfig) {
   // const wallMut = O?.mutate()
   // if (wallMut) walls.forEach(w => w.traverse(pt => wallMut.set(pt, Features.debugMarker)))
 
-  O?.mutate().clear()
   return [[...queue, ...complete], walls]
 }

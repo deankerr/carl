@@ -83,7 +83,6 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   featureArea.feature('deadTree', 6, 'void')
 
   // ruin
-  O.mutate().clear()
   const ruin = ruinsArea.center(rndO(13, 15), rndO(11, 13))
   ruin.walls()
   ruin.bisectRooms(rnd(2, 4))
@@ -169,7 +168,13 @@ function walk(
   }
 }
 
-function sparseWalk(start: Point, type: EntityKey, amount: number, mutator: Mutator, terrain?: TerrainKey) {
+function sparseWalk(
+  start: Point,
+  type: EntityKey,
+  amount: number,
+  mutator: Mutator,
+  terrain?: TerrainKey
+) {
   repeat(amount, () => {
     const pt = start.add(point(rnd(-4, 4), rnd(-4, 4)))
     if (terrain) mutator.setT(pt, terrain)

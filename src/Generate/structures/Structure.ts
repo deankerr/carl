@@ -240,14 +240,12 @@ export class Structure {
     while (dirs.length > 0) {
       const rect = dirs.pop()
       if (!rect) continue
-      this.O?.mutate().mark(rect)
+
       if (!this.sub.some(sub => sub.rect.intersects(rect).length > 0)) {
         const annex = new Structure(rect, this.O)
         this.sub.push(annex)
-        this.O?.mutate().clear()
         return annex
       }
-      this.O?.mutate().clear()
     }
     return undefined
   }
