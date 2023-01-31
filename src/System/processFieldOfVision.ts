@@ -13,9 +13,14 @@ export const processFieldOfVision = (engine: Engine) => {
     const fovFunction = new ROT.FOV.RecursiveShadowcasting(local.ROTisTransparent.bind(local))
 
     const visible = new Set<Point>()
-    fovFunction.compute(entity.position.x, entity.position.y, entity.fieldOfView.radius, (x, y, _r, isVisible) => {
-      if (isVisible) visible.add(point(x, y))
-    })
+    fovFunction.compute(
+      entity.position.x,
+      entity.position.y,
+      entity.fieldOfView.radius,
+      (x, y, _r, isVisible) => {
+        if (isVisible) visible.add(point(x, y))
+      }
+    )
     local.entity(entity).modify('fieldOfView', entity.fieldOfView.radius, visible)
 
     // player specific
@@ -34,6 +39,4 @@ export const processFieldOfVision = (engine: Engine) => {
       // world.active.voidAreaKnown = [...voidSet]
     }
   }
-
-  console.log('processFOV: done')
 }

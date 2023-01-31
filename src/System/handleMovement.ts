@@ -1,22 +1,24 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as Action from '../Core/Action'
 import { Engine } from '../Core/Engine'
+import { logger } from '../lib/logger'
 
 export const handleMovement = (engine: Engine, isPlayerTurn: boolean) => {
+  const log = logger('sys', 'handleMovement')
   const { local } = engine
   const [currentEntity] = local.get('acting', 'position')
   const action = currentEntity.acting
 
   if (!('move' in action)) {
-    console.log('handleMovement: not a move action', action)
+    log.msg(`handleMovement: not a move action`)
     return
   }
 
-  console.log('handleMovement:', currentEntity.label, action.move)
+  log.msg('handleMovement:', currentEntity.label, action.move.dir)
 
   // wait, just return (for now)
   if (action.move.dir === 'WAIT') {
-    console.log('handleMovement: result - wait')
+    log.msg('handleMovement: result - wait')
     return
   }
 
@@ -32,12 +34,12 @@ export const handleMovement = (engine: Engine, isPlayerTurn: boolean) => {
 
   // walkable check
   if (entitiesHere.some(e => e.blocksMovement)) {
-    console.log('handleMovement: new action - Bump ')
+    log.msg('handleMovement: new action - Bump ')
     local.entity(currentEntity).modify('acting', Action.Bump(newPt))
     return
   }
 
   // valid move, create tread action and update position
-  console.log('handleMovement: new action - Tread')
+  log.msg('handleMovement: new action - Tread')
   local.entity(currentEntity).modify('acting', Action.Tread(newPt)).modify('position', newPt)
 }

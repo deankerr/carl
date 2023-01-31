@@ -1,18 +1,20 @@
 import { Engine } from '../Core/Engine'
+import { logger } from '../lib/logger'
 
 // remove dead entities from game
 export const processDeath = (engine: Engine) => {
+  const log = logger('sys', 'processDeath')
   const { local } = engine
   const currentEntities = local.get('dead')
 
-  if (currentEntities.length === 0) return console.log('processDeath: no entities to remove')
+  if (currentEntities.length === 0) return log.msg('processDeath: no entities to remove')
 
-  console.log('processDeath: reaping')
+  log.msg('processDeath: reaping')
   for (const entity of currentEntities) {
-    console.log('processDeath: removing', entity.label)
+    log.msg('processDeath: removing', entity.label)
     local.destroy(entity)
-    console.log('processDeath: removed', entity.label)
+    log.msg('processDeath: removed', entity.label)
   }
 
-  console.log('processDeath: process complete')
+  log.msg('processDeath: process complete')
 }

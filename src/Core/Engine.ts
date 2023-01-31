@@ -4,6 +4,7 @@ import { CONFIG } from '../config'
 import * as Generate from '../Generate'
 import { createGameDisplay } from '../lib/display'
 import { Keys } from '../lib/Keys'
+import { logger } from '../lib/logger'
 import { ComponentFoundry } from './Components'
 import { EntityPool, gameTemplates } from './Entity'
 import { input } from './Input'
@@ -53,8 +54,10 @@ export class Engine {
       if (ui === 'debug_logworld') console.log(this)
       if (ui === 'debug_logentities') console.log('Local entities', this.local.entities)
       if (ui === 'debug_loglocal') console.log('Local', this.local)
+      if (ui === 'debug_loglogger') console.log(window.logger)
       if (ui === 'localRevealAll') this.local.revealAll = !this.local.revealAll
       if (ui === 'localRecallAll') this.local.recallAll = !this.local.recallAll
+
       this.local.hasChanged = true
       return
     }
@@ -66,12 +69,14 @@ export class Engine {
   render() {
     this.system.runRender(this)
 
-    if (CONFIG.frameLimit) setTimeout(() => requestAnimationFrame(this.render.bind(this)), CONFIG.frameLimit)
+    if (CONFIG.frameLimit)
+      setTimeout(() => requestAnimationFrame(this.render.bind(this)), CONFIG.frameLimit)
     else requestAnimationFrame(this.render.bind(this))
   }
 
   message(newMsg: string) {
-    console.log('newMsg:', newMsg)
-    if (this.local.player().acting) this.messageLog.unshift({ turn: this.playerTurns, text: newMsg })
+    logger('engine', 'message').msg(newMsg)
+    if (this.local.player().acting)
+      this.messageLog.unshift({ turn: this.playerTurns, text: newMsg })
   }
 }

@@ -1,22 +1,24 @@
 // import { tagMeleeAttackTarget, acting, tagWalkable, tagDoorOpen, tagLightPathUpdated } from '../Component'
 import * as Action from '../Core/Action'
 import { Engine } from '../Core/Engine'
+import { logger } from '../lib/logger'
 
 export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
+  const log = logger('sys', 'handleBump')
   const { local } = engine
   const [currentEntity] = local.get('acting', 'position')
   const { acting: action } = currentEntity
 
-  if (!('bump' in action)) return console.log('handleBump: not a bump action')
+  if (!('bump' in action)) return log.msg('handleBump: not a bump action')
 
   const bumped = local.at(action.bump).filter(e => !e.acting && e.blocksMovement)
 
   if (bumped.some(e => e.terrain)) {
-    console.log('handleBump: result - terrain bump')
+    log.msg('handleBump: result - terrain bump')
     if (isPlayerTurn) engine.message(`You bounce off the ${bumped[0].name}.`)
   } else {
     // entities
-    console.log('handleBump: entity bump')
+    log.msg('handleBump: entity bump')
 
     // ? assuming there can only be one entity here
     const [bumpedEntity] = bumped
@@ -41,12 +43,12 @@ export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
       // update acting component
       // local.entity(currentEntity, component.acting(Action.MeleeAttack(action.bump)))
       local.entity(currentEntity).modify('acting', Action.MeleeAttack(action.bump))
-      console.log(`handleBump: action - MeleeAttack ${bumpedEntity.label}`)
+      log.msg(`handleBump: action - MeleeAttack ${bumpedEntity.label}`)
     }
 
     // * NPC attack something
     else {
-      console.log('handleBump:', currentEntity.label, 'bumped', bumpedEntity.label)
+      log.msg('handleBump:', currentEntity.label, 'bumped', bumpedEntity.label)
       // TODO
     }
   }

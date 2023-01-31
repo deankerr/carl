@@ -65,7 +65,7 @@ export class EntityPool {
     const modify = <T extends FoundryKey>(cName: T, ...p: FoundryParam[T]) => {
       store = this.attach(store, cName, ...p)
       localState[index] = store
-      // console.log('MODIFY:', store.name, cName, p)
+      // logger('pool', 'modify').msg('MODIFY:', store.name, cName)
       return options
     }
 

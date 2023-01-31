@@ -1,6 +1,8 @@
 import { Engine } from '../Core/Engine'
+// import { logger } from '../lib/logger'
 
 export function processFormUpdate(engine: Engine) {
+  // const log = logger()
   const { local } = engine
 
   // iterate through each entity with triggers, if a matching tag is found, update the entity's

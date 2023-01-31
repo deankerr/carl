@@ -19,10 +19,10 @@ export function renderMessageLog(engine: Engine) {
       msgDisplay.drawText(x, i, messageLog[i]?.text)
     }
   })
-
-  msgDisplay.drawText(0, last, spinner.next() + fps())
-
   local.hasChanged = false
+
+  // debug info
+  msgDisplay.drawText(0, last, `${spinner.next()} ${fps()} ${getLogTimes()}`)
 }
 
 // FPS Spinner
@@ -51,4 +51,10 @@ function fps() {
   }
   lastFrameTime = now
   return fpsMsg
+}
+
+function getLogTimes() {
+  const turn = window.logger.groups.get('sys,runTurns')?.avg.toFixed(0) ?? ''
+  const render = window.logger.groups.get('sys,runRender')?.avg.toFixed(0) ?? ''
+  return `T:${turn}ms R:${render}ms`
 }

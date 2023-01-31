@@ -64,6 +64,8 @@ export function input(code: string): ActionTypes | null {
       return UI('debug_loglocal')
     case 'KeyE':
       return UI('debug_logentities')
+    case 'Backslash':
+      return UI('debug_loglogger')
 
     // case 'KeyN':
     //   return UI('newMap')
