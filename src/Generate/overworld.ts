@@ -11,7 +11,8 @@ import { EntityKey, TerrainKey } from '../Core/Entity'
 export function overworld(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
   const t = Date.now()
 
-  console.log(ROT.RNG.getState())
+  console.groupCollapsed('Generate Overworld')
+  console.log('seed state:', ROT.RNG.getState())
 
   const O = new Overseer(width, height, window.game.pool)
 
@@ -137,7 +138,12 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
 
   O.mutate().setE(outer.rndEdgePt(), 'player')
   // * End
-  console.log(`Overworld done: ${Date.now() - t}ms`, O)
+
+  console.groupEnd()
+  console.groupCollapsed(`Done: ${Date.now() - t}ms`)
+  console.log(O)
+  console.groupEnd()
+
   return O
 }
 

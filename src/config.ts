@@ -17,7 +17,7 @@ const messageColor = '#FFF'
 const messageBackgroundColor = 'transparent'
 const htmlBackgroundColor = mainBackgroundColor
 
-const frameLimit = 500
+const frameLimit = 0
 const lightsOnInitial = PROD ? false : true
 const debugShowLightInfo = false
 

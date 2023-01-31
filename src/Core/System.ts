@@ -1,33 +1,35 @@
-import * as ROT from 'rot-js'
 import {
   handleBump,
   handleMeleeAttack,
   handleMovement,
   handleTread,
   processDeath,
-  processRenderRegion,
+  renderMessageLog,
+  renderRegion,
 } from '../System'
 import { Region } from './Region'
 import * as Action from './Action'
 import { ActionTypes } from './Action'
+import { Engine } from './Engine'
 
 export class System {
   turnProcess = [handleMovement, handleTread, handleBump, handleMeleeAttack, processDeath]
-  renderProcess = [processRenderRegion]
+  renderProcess = [renderRegion, renderMessageLog]
 
-  player(local: Region, playerAction: ActionTypes) {
+  player(engine: Engine, playerAction: ActionTypes) {
     console.group('player')
 
-    local.entity(local.player()).modify('acting', playerAction)
-    this.turnProcess.forEach(sys => sys(local, true))
-    local.entity(local.get('acting')[0]).remove('acting')
+    engine.local.entity(engine.local.player()).modify('acting', playerAction)
+    this.turnProcess.forEach(sys => sys(engine, true))
+    engine.local.entity(engine.local.get('acting')[0]).remove('acting')
 
     console.groupEnd()
 
-    this.run(local)
+    this.run(engine)
   }
 
-  run(local: Region) {
+  run(engine: Engine) {
+    const { local } = engine
     let maxLoops = 100
     while (maxLoops-- > 0) {
       const e = this.next(local)
@@ -38,7 +40,7 @@ export class System {
 
       console.groupCollapsed('Sys:', e.label)
       local.entity(e).modify('acting', Action.__randomMove())
-      this.turnProcess.forEach(sys => sys(local, false))
+      this.turnProcess.forEach(sys => sys(engine, false))
       local.entity(local.get('acting')[0]).remove('acting')
       console.groupEnd()
     }
@@ -53,7 +55,7 @@ export class System {
     return local.getByID(nextID)
   }
 
-  runRender(local: Region, mainDisplay: ROT.Display) {
-    this.renderProcess.forEach(sys => sys(local, mainDisplay))
+  runRender(engine: Engine) {
+    this.renderProcess.forEach(sys => sys(engine))
   }
 }

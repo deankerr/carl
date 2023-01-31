@@ -1,7 +1,8 @@
-import { Region } from '../Core/Region'
+import { Engine } from '../Core/Engine'
 
-export const handleTread = (region: Region, isPlayerTurn: boolean) => {
-  const [currentEntity] = region.get('acting', 'position')
+export const handleTread = (engine: Engine, isPlayerTurn: boolean) => {
+  const { local } = engine
+  const [currentEntity] = local.get('acting', 'position')
   const { acting: action } = currentEntity
 
   if (!('tread' in action)) return console.log('handleTread: not a tread action')
@@ -11,7 +12,7 @@ export const handleTread = (region: Region, isPlayerTurn: boolean) => {
     return
   }
 
-  const [terrainHere, entities] = region.at(action.tread)
+  const [terrainHere, entities] = local.at(action.tread)
   const entitiesHere = entities.filter(e => e !== currentEntity)
 
   if (entitiesHere.length > 0) {
@@ -19,12 +20,11 @@ export const handleTread = (region: Region, isPlayerTurn: boolean) => {
     for (const entity of entitiesHere) {
       if (entity.trodOn) {
         console.log('handleTread: treading on', entity.label)
-        window.game.message(entity.trodOn.msg)
+        engine.message(entity.trodOn.msg + ' ' + currentEntity.label)
       }
     }
   } else if (terrainHere.trodOn) {
-    console.log('tread: terrain msg?')
-    window.game.message(terrainHere.trodOn.msg)
+    engine.message(terrainHere.trodOn.msg + ' ' + currentEntity.label)
   }
 
   console.log('handleTread: done')

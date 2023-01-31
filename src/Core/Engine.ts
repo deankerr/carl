@@ -8,13 +8,12 @@ import { ComponentFoundry } from './Components'
 import { EntityPool, gameTemplates } from './Entity'
 import { input } from './Input'
 import { Region } from './Region'
-import { renderMessages } from './Render'
 import { System } from './System'
 
 export type Message = { turn: number; text: string }
 
 export class Engine {
-  display: ROT.Display
+  mainDisplay: ROT.Display
   msgDisplay: ROT.Display
   keys = new Keys()
 
@@ -30,10 +29,8 @@ export class Engine {
 
   constructor() {
     const [msg, main] = createGameDisplay()
-    this.display = main
+    this.mainDisplay = main
     this.msgDisplay = msg
-    msg.drawText(0, 0, 'msg hello')
-    main.drawText(0, 0, 'main hello')
   }
 
   init() {
@@ -41,9 +38,7 @@ export class Engine {
     this.local = overseer.current
     this.local.initTurnQueue()
 
-    this.render()
-
-    this.system.run(this.local)
+    this.system.run(this)
     this.keys.add(this.update.bind(this))
     console.log('Engine ready', this)
   }
@@ -59,20 +54,19 @@ export class Engine {
       return
     }
 
-    this.system.player(this.local, playerAction)
+    this.system.player(this, playerAction)
     this.playerTurns++
   }
 
   render() {
-    // renderRegion(this.local)
-    this.system.runRender(this.local, this.display)
-    renderMessages(this.messageLog)
-    setTimeout(() => requestAnimationFrame(this.render.bind(this)), CONFIG.frameLimit)
+    this.system.runRender(this)
+
+    if (CONFIG.frameLimit) setTimeout(() => requestAnimationFrame(this.render.bind(this)), CONFIG.frameLimit)
+    else requestAnimationFrame(this.render.bind(this))
   }
 
   message(newMsg: string) {
     console.log('newMsg:', newMsg)
-    console.log('this.:', this)
-    this.messageLog.unshift({ turn: this.playerTurns, text: newMsg })
+    if (this.local.player().acting) this.messageLog.unshift({ turn: this.playerTurns, text: newMsg })
   }
 }

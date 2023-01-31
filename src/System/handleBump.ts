@@ -1,21 +1,21 @@
 // import { tagMeleeAttackTarget, acting, tagWalkable, tagDoorOpen, tagLightPathUpdated } from '../Component'
 import * as Action from '../Core/Action'
-import { Region } from '../Core/Region'
+import { Engine } from '../Core/Engine'
 
-export const handleBump = (region: Region, isPlayerTurn: boolean) => {
-  const [currentEntity] = region.get('acting', 'position')
+export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
+  const { local } = engine
+  const [currentEntity] = local.get('acting', 'position')
   const { acting: action } = currentEntity
 
   if (!('bump' in action)) return console.log('handleBump: not a bump action')
 
-  const { game } = window
-  const [terrain, entities] = region.at(action.bump)
+  const [terrain, entities] = local.at(action.bump)
   const bumpableEntities = entities.filter(e => !('tagCurrentTurn' in e) && !('tagWalkable' in e))
 
   if (bumpableEntities.length === 0) {
     // no entities, terrain bump
     console.log('handleBump: result - terrain bump')
-    if (isPlayerTurn) game.message(`You bounce off the ${terrain.name}.`)
+    if (isPlayerTurn) engine.message(`You bounce off the ${terrain.name}.`)
   } else {
     // entities
     console.log('handleBump: entity bump')
@@ -42,13 +42,13 @@ export const handleBump = (region: Region, isPlayerTurn: boolean) => {
       // }
 
       // * attack!
-      // region.modify(bumpedEntity).add(tagMeleeAttackTarget())
-      // region.addTag(bumpedEntity, 'meleeAttackTarget')
-      region.entity(bumpedEntity).modify('tag', 'meleeAttackTarget')
+      // local.modify(bumpedEntity).add(tagMeleeAttackTarget())
+      // local.addTag(bumpedEntity, 'meleeAttackTarget')
+      local.entity(bumpedEntity).modify('tag', 'meleeAttackTarget')
 
       // update acting component
-      // region.entity(currentEntity, component.acting(Action.MeleeAttack(action.bump)))
-      region.entity(currentEntity).modify('acting', Action.MeleeAttack(action.bump))
+      // local.entity(currentEntity, component.acting(Action.MeleeAttack(action.bump)))
+      local.entity(currentEntity).modify('acting', Action.MeleeAttack(action.bump))
       console.log(`handleBump: action - MeleeAttack ${bumpedEntity.label}`)
     }
 

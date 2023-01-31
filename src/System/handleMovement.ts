@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import * as Action from '../Core/Action'
-import { Region } from '../Core/Region'
+import { Engine } from '../Core/Engine'
 
-export const handleMovement = (region: Region, isPlayerTurn: boolean) => {
-  const [currentEntity] = region.get('acting', 'position')
+export const handleMovement = (engine: Engine, isPlayerTurn: boolean) => {
+  const { local } = engine
+  const [currentEntity] = local.get('acting', 'position')
   const action = currentEntity.acting
 
   if (!('move' in action)) {
@@ -27,16 +28,16 @@ export const handleMovement = (region: Region, isPlayerTurn: boolean) => {
   //   return
   // }
 
-  const [terrain, entitiesHere] = region.at(newPt)
+  const [terrain, entitiesHere] = local.at(newPt)
 
   // walkable check
   if (terrain.blocksMovement || entitiesHere.some(e => e.blocksMovement)) {
     console.log('handleMovement: new action - Bump ')
-    region.entity(currentEntity).modify('acting', Action.Bump(newPt))
+    local.entity(currentEntity).modify('acting', Action.Bump(newPt))
     return
   }
 
   // valid move, create tread action and update position
   console.log('handleMovement: new action - Tread')
-  region.entity(currentEntity).modify('acting', Action.Tread(newPt)).modify('position', newPt)
+  local.entity(currentEntity).modify('acting', Action.Tread(newPt)).modify('position', newPt)
 }
