@@ -12,7 +12,7 @@ class Logger {
   }
 
   createLogger(...pIDs: string[]) {
-    const pID = pIDs.join(',')
+    const pID = pIDs.join('.')
     if (!this.groups.has(pID)) this.createLogGroup(pID)
     const group = this.groups.get(pID)!
 

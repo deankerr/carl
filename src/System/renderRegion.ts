@@ -5,7 +5,7 @@ import { addLight, transformHSL } from '../lib/color'
 import { clamp, floor, half } from '../lib/util'
 
 export function renderRegion(engine: Engine) {
-  const { mainDisplay, local } = engine
+  const { mainDisplay, local, options } = engine
   if (local.hasChanged === false) return
   const { mainDisplayWidth, mainDisplayHeight } = CONFIG
 
@@ -71,20 +71,23 @@ export function renderRegion(engine: Engine) {
     }
 
     if (stack.length === 0) return
-    // mainDisplay.draw(
-    //   pt.x,
-    //   pt.y,
-    //   stack.map(s => s.char),
-    //   stack.map(s => s.color),
-    //   stack.map(s => s.bgColor)
-    // )
-    mainDisplay.draw(
-      render.x,
-      render.y,
-      stack[stack.length - 1].char,
-      stack[stack.length - 1].color,
-      stack[stack.length - 1].bgColor
-    )
+    if (options.renderStack) {
+      mainDisplay.draw(
+        pt.x,
+        pt.y,
+        stack.map(s => s.char),
+        stack.map(s => s.color),
+        stack.map(s => s.bgColor)
+      )
+    } else {
+      mainDisplay.draw(
+        render.x,
+        render.y,
+        stack[stack.length - 1].char,
+        stack[stack.length - 1].color,
+        stack[stack.length - 1].bgColor
+      )
+    }
   })
 }
 

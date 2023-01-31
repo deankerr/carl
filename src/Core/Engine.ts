@@ -10,6 +10,7 @@ import { EntityPool, gameTemplates } from './Entity'
 import { input } from './Input'
 import { Region } from './Region'
 import { System } from './System'
+import { GUI } from './UI'
 
 export type Message = { turn: number; text: string }
 
@@ -27,6 +28,8 @@ export class Engine {
 
   messageLog: Message[] = []
   playerTurns = 0
+
+  options = { renderStack: false, playerLight: true }
 
   constructor() {
     const [msg, main] = createGameDisplay()
@@ -50,14 +53,7 @@ export class Engine {
     if (!playerAction) return
 
     if ('ui' in playerAction) {
-      const { ui } = playerAction
-      if (ui === 'debug_logworld') console.log(this)
-      if (ui === 'debug_logentities') console.log('Local entities', this.local.entities)
-      if (ui === 'debug_loglocal') console.log('Local', this.local)
-      if (ui === 'debug_loglogger') console.log(window.logger)
-      if (ui === 'localRevealAll') this.local.revealAll = !this.local.revealAll
-      if (ui === 'localRecallAll') this.local.recallAll = !this.local.recallAll
-
+      GUI(this, playerAction.ui)
       this.local.hasChanged = true
       return
     }
@@ -78,5 +74,10 @@ export class Engine {
     logger('engine', 'message').msg(newMsg)
     if (this.local.player().acting)
       this.messageLog.unshift({ turn: this.playerTurns, text: newMsg })
+  }
+
+  uiMessage(newMsg: string) {
+    logger('engine', 'uiMessage').msg(newMsg)
+    this.messageLog.unshift({ turn: this.playerTurns, text: newMsg })
   }
 }

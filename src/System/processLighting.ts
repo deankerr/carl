@@ -35,6 +35,8 @@ export const processLighting = (engine: Engine) => {
 
   // set the light points and colors for each emitter
   for (const emitter of emitters) {
+    if (!engine.options.playerLight && emitter === local.player()) continue
+
     const { position, emitLight } = emitter
 
     // process animators if necessary
@@ -61,6 +63,9 @@ export const processLighting = (engine: Engine) => {
 
     lighting.setLight(position.x, position.y, lightColor)
   }
+
+  // clear previous lighting data
+  local.lighting.clear()
 
   const lightingCallback = (x: number, y: number, color: Color) => {
     local.lighting.set(point(x, y), color)

@@ -215,7 +215,7 @@ export const terrain: EntityTemplate[] = [
   {
     label: 'water',
     name: ['water'],
-    form: ['water', '#4084bf'],
+    form: ['water', '#4084bf', '#09121b'],
     tag: ['terrain'],
     trodOn: ['You tread water.'],
   },
