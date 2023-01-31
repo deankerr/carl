@@ -11,6 +11,8 @@ export class Region {
 
   revealed = new Set<Point>()
 
+  hasChanged = true
+
   constructor(readonly width: number, readonly height: number, readonly pool: EntityPool, baseTerrain: TerrainKey) {
     const t = this.pool.symbolic(baseTerrain)
     if (!t) throw new Error('Unable to get base terrain')
@@ -83,6 +85,7 @@ export class Region {
   }
 
   entity(entity: Entity) {
+    this.hasChanged = true
     return this.pool.entity(this.entities, entity)
   }
 

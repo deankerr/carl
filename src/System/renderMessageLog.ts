@@ -3,7 +3,8 @@ import { Engine } from '../Core/Engine'
 import { half, repeat } from '../lib/util'
 
 export function renderMessageLog(engine: Engine) {
-  const { msgDisplay, messageLog, playerTurns } = engine
+  const { local, msgDisplay, messageLog, playerTurns } = engine
+  if (!local.hasChanged) return
 
   const displayOptions = msgDisplay.getOptions()
   const { width, height } = displayOptions
@@ -20,6 +21,8 @@ export function renderMessageLog(engine: Engine) {
   })
 
   msgDisplay.drawText(0, last, spinner.next() + fps())
+
+  local.hasChanged = false
 }
 
 // FPS Spinner

@@ -4,6 +4,8 @@ import { transformHSL } from '../lib/color'
 
 export function renderRegion(engine: Engine) {
   const { mainDisplay, local } = engine
+  if (local.hasChanged === false) return
+
   mainDisplay.clear()
 
   local.render((pt, entities, visible, revealed) => {

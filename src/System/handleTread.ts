@@ -20,11 +20,11 @@ export const handleTread = (engine: Engine, isPlayerTurn: boolean) => {
     for (const entity of entitiesHere) {
       if (entity.trodOn) {
         console.log('handleTread: treading on', entity.label)
-        engine.message(entity.trodOn.msg + ' ' + currentEntity.label)
+        engine.message(entity.trodOn.msg)
       }
     }
   } else if (terrainHere.trodOn) {
-    engine.message(terrainHere.trodOn.msg + ' ' + currentEntity.label)
+    engine.message(terrainHere.trodOn.msg)
   }
 
   console.log('handleTread: done')
