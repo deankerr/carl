@@ -22,4 +22,16 @@ export function GUI(engine: Engine, ui: string) {
     options.playerLight = !options.playerLight
     engine.uiMessage(`playerLight: ${options.playerLight}`)
   }
+  if (ui === 'formCycle') {
+    options.formUpdate = !options.formUpdate
+    engine.uiMessage(`formUpdate: ${options.formUpdate}`)
+  }
+  if (ui === 'lightingUpdate') {
+    options.lightingUpdate = !options.lightingUpdate
+    engine.uiMessage(`lightingUpdate: ${options.lightingUpdate}`)
+  }
+  if (ui === 'bgCycle') {
+    options.bgCycle = !options.bgCycle
+    engine.uiMessage(`cycleBg: ${options.bgCycle}`)
+  }
 }

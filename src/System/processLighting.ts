@@ -6,7 +6,8 @@ import { transformHSL } from '../lib/color'
 import { point } from '../Model/Point'
 
 export const processLighting = (engine: Engine) => {
-  const { local } = engine
+  const { local, options } = engine
+  if (!options.lightingUpdate) return
   const emitters = local.get('emitLight', 'position')
   if (emitters.length === 0) return
 

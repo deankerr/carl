@@ -60,6 +60,12 @@ export function input(code: string): ActionTypes | null {
       return UI('renderStack')
     case 'Digit2':
       return UI('playerLight')
+    case 'Digit3':
+      return UI('formCycle')
+    case 'Digit4':
+      return UI('lightingUpdate')
+    case 'Digit5':
+      return UI('bgCycle')
 
     // Debug log world
     case 'KeyQ':

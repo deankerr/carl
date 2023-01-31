@@ -3,7 +3,8 @@ import { Engine } from '../Core/Engine'
 
 export function processFormUpdate(engine: Engine) {
   // const log = logger()
-  const { local } = engine
+  const { local, options } = engine
+  if (!options.formUpdate) return
 
   // iterate through each entity with triggers, if a matching tag is found, update the entity's
   // form to the relevant set

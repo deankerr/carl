@@ -4,6 +4,10 @@ import { Engine } from '../Core/Engine'
 import { addLight, transformHSL } from '../lib/color'
 import { clamp, floor, half } from '../lib/util'
 
+let last = 0
+const freq = 120
+const add = 0.01
+
 export function renderRegion(engine: Engine) {
   const { mainDisplay, local, options } = engine
   if (local.hasChanged === false) return
@@ -69,6 +73,12 @@ export function renderRegion(engine: Engine) {
         stack.push({ ...e.form, color: transformHSL(e.form.color, fade) })
       )
     }
+
+    if (options.bgCycle && Date.now() - last > freq) {
+      options.bgColor = transformHSL(options.bgColor, { hue: { add } })
+      last = Date.now()
+    }
+    stack.unshift({ char: 'demon', color: options.bgColor, bgColor: options.bgColor })
 
     if (stack.length === 0) return
     if (options.renderStack) {

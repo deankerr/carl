@@ -29,7 +29,14 @@ export class Engine {
   messageLog: Message[] = []
   playerTurns = 0
 
-  options = { renderStack: false, playerLight: true }
+  options = {
+    renderStack: true,
+    playerLight: false,
+    bgColor: '#111a0e',
+    formUpdate: true,
+    lightingUpdate: true,
+    bgCycle: false,
+  }
 
   constructor() {
     const [msg, main] = createGameDisplay()

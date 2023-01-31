@@ -4,16 +4,16 @@ const appInitial = 'game'
 // const seed = 1234
 const seed = null
 
-// 59 x 29
-const mainDisplayWidth = 79
-const mainDisplayHeight = 39
+// 59 x 29 | 79 x 39
+const mainDisplayWidth = 69
+const mainDisplayHeight = 35
 const messageDisplayWidth = 60
 const messageDisplayHeight = 4
 
 const generateWidth = mainDisplayWidth
 const generateHeight = mainDisplayHeight
 // '#111a0e'
-const mainBackgroundColor = '#131313'
+const mainBackgroundColor = '#000000'
 const messageColor = '#FFF'
 const messageBackgroundColor = 'transparent'
 const htmlBackgroundColor = mainBackgroundColor

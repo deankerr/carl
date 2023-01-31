@@ -1,3 +1,4 @@
+import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
 import { Engine } from '../Core/Engine'
 import { half, repeat } from '../lib/util'
@@ -22,7 +23,11 @@ export function renderMessageLog(engine: Engine) {
   local.hasChanged = false
 
   // debug info
-  msgDisplay.drawText(0, last, `${spinner.next()} ${fps()} ${getLogTimes()}`)
+  msgDisplay.drawText(
+    0,
+    last,
+    `${spinner.next()} ${fps()} ${getLogTimes()} ${ROT.Color.fromString(engine.options.bgColor)}`
+  )
 }
 
 // FPS Spinner

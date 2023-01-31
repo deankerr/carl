@@ -104,9 +104,9 @@ export const beings: EntityTemplate[] = [
     form: ['@', '#EE82EE'],
     tag: ['playerControlled', 'actor', 'blocksMovement', 'being'],
     fieldOfView: [12],
-    emitLight: ['auto'],
-    lightFlicker: [120],
-    lightHueRotate: [0.02],
+    // emitLight: ['auto'],
+    // lightFlicker: [120],
+    // lightHueRotate: [0.02],
   },
   {
     label: 'spider',
