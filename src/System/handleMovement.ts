@@ -28,10 +28,10 @@ export const handleMovement = (engine: Engine, isPlayerTurn: boolean) => {
   //   return
   // }
 
-  const [terrain, entitiesHere] = local.at(newPt)
+  const entitiesHere = local.at(newPt)
 
   // walkable check
-  if (terrain.blocksMovement || entitiesHere.some(e => e.blocksMovement)) {
+  if (entitiesHere.some(e => e.blocksMovement)) {
     console.log('handleMovement: new action - Bump ')
     local.entity(currentEntity).modify('acting', Action.Bump(newPt))
     return

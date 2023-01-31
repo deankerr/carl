@@ -9,19 +9,17 @@ export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
 
   if (!('bump' in action)) return console.log('handleBump: not a bump action')
 
-  const [terrain, entities] = local.at(action.bump)
-  const bumpableEntities = entities.filter(e => !('tagCurrentTurn' in e) && !('tagWalkable' in e))
+  const bumped = local.at(action.bump).filter(e => !e.acting && e.blocksMovement)
 
-  if (bumpableEntities.length === 0) {
-    // no entities, terrain bump
+  if (bumped.some(e => e.terrain)) {
     console.log('handleBump: result - terrain bump')
-    if (isPlayerTurn) engine.message(`You bounce off the ${terrain.name}.`)
+    if (isPlayerTurn) engine.message(`You bounce off the ${bumped[0].name}.`)
   } else {
     // entities
     console.log('handleBump: entity bump')
 
     // ? assuming there can only be one entity here
-    const [bumpedEntity] = bumpableEntities
+    const [bumpedEntity] = bumped
     if (isPlayerTurn) {
       // * handle door
       // const door = world.with(bumpedEntity, 'doorGraphic')

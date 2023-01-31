@@ -102,7 +102,13 @@ export const beings: EntityTemplate[] = [
 
 export type FeatureKey = 'shrub' | 'statue' | 'tombstone' | 'flames' | 'deadTree'
 export const features: EntityTemplate[] = [
-  { label: 'shrub', name: ['shrub'], form: ['shrub', '#58a54a'], tag: ['memorable', 'feature'] },
+  {
+    label: 'shrub',
+    name: ['shrub'],
+    form: ['shrub', '#58a54a'],
+    tag: ['memorable', 'feature'],
+    trodOn: ['You trample the pathetic shrub.'],
+  },
   {
     label: 'statue',
     name: ['statue'],
@@ -121,8 +127,9 @@ export const features: EntityTemplate[] = [
     name: ['dead tree'],
     form: ['tree', '#602e15'],
     tag: ['memorable', 'feature', 'blocksLight'],
+    trodOn: ['You smile as you continue to outlive this ancient tree.'],
   },
-  { label: 'flames', name: ['flames'], form: ['flames1', '#FF8000'], tag: ['memorable', 'feature'] },
+  { label: 'flames', name: ['flames'], form: ['flames1', '#FF8000'], tag: ['feature'] },
 ]
 
 export type TerrainKey =

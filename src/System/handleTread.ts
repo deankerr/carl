@@ -12,19 +12,12 @@ export const handleTread = (engine: Engine, isPlayerTurn: boolean) => {
     return
   }
 
-  const [terrainHere, entities] = local.at(action.tread)
-  const entitiesHere = entities.filter(e => e !== currentEntity)
-
-  if (entitiesHere.length > 0) {
-    // entity tread
-    for (const entity of entitiesHere) {
-      if (entity.trodOn) {
-        console.log('handleTread: treading on', entity.label)
-        engine.message(entity.trodOn.msg)
-      }
+  const entitiesHere = local.at(action.tread).filter(e => e !== currentEntity)
+  for (const entity of entitiesHere) {
+    if (entity.trodOn) {
+      console.log('handleTread: treading on', entity.label)
+      engine.message(entity.trodOn.msg)
     }
-  } else if (terrainHere.trodOn) {
-    engine.message(terrainHere.trodOn.msg)
   }
 
   console.log('handleTread: done')
