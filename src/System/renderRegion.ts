@@ -1,6 +1,6 @@
 import { Component } from '../Core/Components'
 import { Engine } from '../Core/Engine'
-import { transformHSL } from '../lib/color'
+import { addLight, transformHSL } from '../lib/color'
 
 export function renderRegion(engine: Engine) {
   const { mainDisplay, local } = engine
@@ -12,10 +12,17 @@ export function renderRegion(engine: Engine) {
     const stack: Component<'form'>['form'][] = []
 
     if (visible) {
-      entities.forEach(e => stack.push(e.form))
+      const lighting = local.lighting.get(pt)
+      if (lighting) {
+        entities.forEach(e => {
+          stack.push({ ...e.form, color: addLight(e.form.color, lighting) })
+        })
+      } else entities.forEach(e => stack.push(e.form))
     } else if (recalled) {
       const recalledEntities = entities.filter(e => e.terrain || e.memorable)
-      recalledEntities.forEach(e => stack.push({ ...e.form, color: transformHSL(e.form.color, fade) }))
+      recalledEntities.forEach(e =>
+        stack.push({ ...e.form, color: transformHSL(e.form.color, fade) })
+      )
     }
 
     if (stack.length === 0) return

@@ -43,6 +43,14 @@ export const ComponentFoundry = {
   formSetAutoCycle: (frequency: number, current = 0, lastUpdate = 0) => {
     return { formSetAutoCycle: { frequency, current, lastUpdate } }
   },
+
+  emitLight: (color: string) => {
+    return { emitLight: color }
+  },
+
+  lightFlicker: (frequency = 0, current = false, lastUpdate = 0) => {
+    return { lightFlicker: { frequency, current, lastUpdate } }
+  },
 }
 
 export type Tag =
@@ -59,6 +67,7 @@ export type Tag =
   | 'isClosed'
   | 'isOpen'
   | 'signalModified'
+  | 'signalLightPathUpdated'
 
 export type FoundryKey = keyof typeof ComponentFoundry
 export type FoundryParam = { [K in FoundryKey]: Parameters<typeof ComponentFoundry[K]> }

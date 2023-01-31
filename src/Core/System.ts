@@ -8,6 +8,7 @@ import {
   renderMessageLog,
   renderRegion,
   processFormUpdate,
+  processLighting,
 } from '../System'
 import { Region } from './Region'
 import * as Action from './Action'
@@ -28,7 +29,7 @@ export class System {
   ]
   // postTurnProcess = []
 
-  preRenderProcess = [processFormUpdate]
+  preRenderProcess = [processFormUpdate, processLighting]
   renderProcess = [renderRegion, renderMessageLog]
 
   player(engine: Engine, playerAction: ActionTypes) {

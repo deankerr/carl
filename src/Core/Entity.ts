@@ -1,3 +1,4 @@
+import { transformHSL } from '../lib/color'
 import { Point } from '../Model/Point'
 import { FoundryKey, Component, ComponentFoundry, FoundryParam, Components } from './Components'
 export type eID = { eID: number; label: string }
@@ -29,6 +30,14 @@ export class EntityPool {
       if (t.formSet) e = this.attach(e, 'formSet', ...t.formSet)
       if (t.formSetTriggers) e = this.attach(e, 'formSetTriggers', ...t.formSetTriggers)
       if (t.formSetAutoCycle) e = this.attach(e, 'formSetAutoCycle', ...t.formSetAutoCycle)
+
+      if (t.emitLight) {
+        const color =
+          t.emitLight[0] === 'auto'
+            ? transformHSL(e.form.color, { lum: { to: 0.25 } })
+            : t.emitLight[0]
+        e = this.attach(e, 'emitLight', color)
+      }
 
       this.pool.set(t.label, e)
     }
@@ -171,6 +180,7 @@ export const features: EntityTemplate[] = [
     trodOn: ['You crackle and pop as you wade through the flames.'],
     formSet: [['flames1', '', '', 'flames2', '', '']],
     formSetAutoCycle: [120],
+    emitLight: ['auto'],
   },
 ]
 

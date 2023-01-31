@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { Color } from 'rot-js/lib/color'
 import { Queue } from '../lib/util'
 import { Point, point, grid } from '../Model/Point'
 import { Entity, EntityPool, EntityKey, EntityWith, TerrainKey } from './Entity'
@@ -12,6 +13,8 @@ export class Region {
   seenByPlayer = new Set<Point>()
   recallAll = true
   revealAll = false
+
+  lighting = new Map<Point, Color>()
 
   hasChanged = true
 

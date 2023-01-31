@@ -19,7 +19,7 @@ class Logger {
     const t = Date.now()
 
     const msg = (...text: string[]) => {
-      const item: LogItem = { pID, level: logLevel.info, text: text.join(' ') }
+      const item: LogItem = { pID, text: text.join(' '), level: logLevel.info }
       group.items.push(item)
       this.items.push(item)
     }
