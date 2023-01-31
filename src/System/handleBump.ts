@@ -32,6 +32,7 @@ export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
           .remove('blocksLight')
           .remove('blocksMovement')
           .modify('tag', 'isOpen')
+          .modify('tag', 'signalLightPathUpdated')
 
         engine.message('Knock knock!!!')
         return

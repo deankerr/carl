@@ -39,6 +39,8 @@ export class EntityPool {
         e = this.attach(e, 'emitLight', color)
       }
 
+      if (t.lightFlicker) e = this.attach(e, 'lightFlicker', ...t.lightFlicker)
+
       this.pool.set(t.label, e)
     }
   }
@@ -181,6 +183,7 @@ export const features: EntityTemplate[] = [
     formSet: [['flames1', '', '', 'flames2', '', '']],
     formSetAutoCycle: [120],
     emitLight: ['auto'],
+    lightFlicker: [120],
   },
 ]
 

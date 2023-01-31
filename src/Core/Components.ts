@@ -48,7 +48,7 @@ export const ComponentFoundry = {
     return { emitLight: color }
   },
 
-  lightFlicker: (frequency = 0, current = false, lastUpdate = 0) => {
+  lightFlicker: (frequency: number, current = false, lastUpdate = 0) => {
     return { lightFlicker: { frequency, current, lastUpdate } }
   },
 }
