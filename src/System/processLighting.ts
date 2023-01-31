@@ -46,7 +46,16 @@ export const processLighting = (engine: Engine) => {
         if (current) {
           lightColor = transformHSL(emitLight, { lum: { by: 0.85, min: 0 } })
         }
-        local.entity(flickerer).modify('lightFlicker', frequency, !current, Date.now())
+        const hue = local.has(emitter, 'lightHueRotate')
+        if (hue) {
+          local
+            .entity(hue)
+            .modify(
+              'emitLight',
+              transformHSL(emitter.emitLight, { hue: { add: hue.lightHueRotate } })
+            )
+            .modify('lightFlicker', frequency, !current, Date.now())
+        } else local.entity(flickerer).modify('lightFlicker', frequency, !current, Date.now())
       }
     }
 

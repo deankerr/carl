@@ -51,6 +51,10 @@ export const ComponentFoundry = {
   lightFlicker: (frequency: number, current = false, lastUpdate = 0) => {
     return { lightFlicker: { frequency, current, lastUpdate } }
   },
+
+  lightHueRotate: (addHue: number) => {
+    return { lightHueRotate: addHue }
+  },
 }
 
 export type Tag =
@@ -66,7 +70,7 @@ export type Tag =
   | 'terrain'
   | 'isClosed'
   | 'isOpen'
-  | 'signalModified'
+  | 'signalModified' // todo Pool should add these
   | 'signalLightPathUpdated'
 
 export type FoundryKey = keyof typeof ComponentFoundry

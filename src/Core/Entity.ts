@@ -40,6 +40,7 @@ export class EntityPool {
       }
 
       if (t.lightFlicker) e = this.attach(e, 'lightFlicker', ...t.lightFlicker)
+      if (t.lightHueRotate) e = this.attach(e, 'lightHueRotate', ...t.lightHueRotate)
 
       this.pool.set(t.label, e)
     }
@@ -103,6 +104,9 @@ export const beings: EntityTemplate[] = [
     form: ['@', '#EE82EE'],
     tag: ['playerControlled', 'actor', 'blocksMovement', 'being'],
     fieldOfView: [8],
+    emitLight: ['auto'],
+    lightFlicker: [120],
+    lightHueRotate: [0.02],
   },
   {
     label: 'spider',
