@@ -101,7 +101,10 @@ export class Region {
   }
 
   player() {
-    return this.entities.filter(e => e.playerControlled)[0] as EntityWith<Entity, 'fieldOfView'>
+    return this.entities.filter(e => e.playerControlled)[0] as EntityWith<
+      Entity,
+      'fieldOfView' | 'position'
+    >
   }
   // Utility
   inBounds(pt: Point) {
