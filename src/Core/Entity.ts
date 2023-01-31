@@ -28,6 +28,7 @@ export class EntityPool {
       if (t.fieldOfView) e = this.attach(e, 'fieldOfView', ...t.fieldOfView)
       if (t.formSet) e = this.attach(e, 'formSet', ...t.formSet)
       if (t.formSetTriggers) e = this.attach(e, 'formSetTriggers', ...t.formSetTriggers)
+      if (t.formSetAutoCycle) e = this.attach(e, 'formSetAutoCycle', ...t.formSetAutoCycle)
 
       this.pool.set(t.label, e)
     }
@@ -64,7 +65,7 @@ export class EntityPool {
     const modify = <T extends FoundryKey>(cName: T, ...p: FoundryParam[T]) => {
       store = this.attach(store, cName, ...p)
       localState[index] = store
-      console.log('MODIFY:', store.name, cName, p)
+      // console.log('MODIFY:', store.name, cName, p)
       return options
     }
 
@@ -73,7 +74,7 @@ export class EntityPool {
       Reflect.deleteProperty(e, cName)
       store = e
       localState[index] = store
-      console.log('REMOVE:', store.name, cName)
+      // console.log('REMOVE:', store.name, cName)
       return options
     }
 
@@ -167,7 +168,9 @@ export const features: EntityTemplate[] = [
     name: ['flames'],
     form: ['flames1', '#FF8000'],
     tag: ['feature'],
+    trodOn: ['You crackle and pop as you wade through the flames.'],
     formSet: [['flames1', '', '', 'flames2', '', '']],
+    formSetAutoCycle: [120],
   },
 ]
 
@@ -204,8 +207,15 @@ export const terrain: EntityTemplate[] = [
     name: ['descending stairs'],
     form: ['stairsDown', '#767676'],
     tag: ['terrain'],
+    trodOn: ["There's some stairs leading down here."],
   },
-  { label: 'stairsUp', name: ['ascending'], form: ['stairsUp', '#767676'], tag: ['terrain'] },
+  {
+    label: 'stairsUp',
+    name: ['ascending'],
+    form: ['stairsUp', '#767676'],
+    tag: ['terrain'],
+    trodOn: ["There's some stairs leading up here."],
+  },
   {
     label: 'crackedWall',
     name: ['cracked wall'],

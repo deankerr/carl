@@ -25,8 +25,9 @@ export class System {
     processDeath,
     processFieldOfVision,
   ]
-  postTurnProcess = [processFormUpdate]
+  // postTurnProcess = []
 
+  preRenderProcess = [processFormUpdate]
   renderProcess = [renderRegion, renderMessageLog]
 
   player(engine: Engine, playerAction: ActionTypes) {
@@ -48,7 +49,7 @@ export class System {
       const e = this.next(local)
       if (e.playerControlled) {
         console.log('Sys: Player Input Required')
-        this.postTurnProcess.forEach(sys => sys(engine))
+        // this.postTurnProcess.forEach(sys => sys(engine))
         return
       }
 
@@ -70,6 +71,7 @@ export class System {
   }
 
   runRender(engine: Engine) {
+    this.preRenderProcess.forEach(sys => sys(engine))
     this.renderProcess.forEach(sys => sys(engine))
   }
 

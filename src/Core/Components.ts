@@ -39,6 +39,10 @@ export const ComponentFoundry = {
   formSetTriggers: (...tags: Tag[]) => {
     return { formSetTriggers: tags }
   },
+
+  formSetAutoCycle: (frequency: number, current = 0, lastUpdate = 0) => {
+    return { formSetAutoCycle: { frequency, current, lastUpdate } }
+  },
 }
 
 export type Tag =

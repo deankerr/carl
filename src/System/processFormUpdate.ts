@@ -25,4 +25,25 @@ export function processFormUpdate(engine: Engine) {
       }
     })
   }
+
+  // find any cycle entity whose last update time has exceeded frequency, and update their form
+  const autoCyclers = local.get('formSet', 'formSetAutoCycle')
+  for (const entity of autoCyclers) {
+    const { form, formSet, formSetAutoCycle: cycle } = entity
+    if (Date.now() - cycle.lastUpdate > cycle.frequency) {
+      const nextI = cycle.current + 3
+      const i = nextI >= formSet.length ? 0 : nextI
+
+      const newForm = [
+        formSet[i] === '' ? form.char : formSet[i],
+        formSet[i + 1] === '' ? form.color : formSet[i + 1],
+        formSet[i + 2] === '' ? form.bgColor : formSet[i + 2],
+      ] as [string, string, string]
+
+      local
+        .entity(entity)
+        .modify('form', ...newForm)
+        .modify('formSetAutoCycle', cycle.frequency, i, Date.now())
+    }
+  }
 }
