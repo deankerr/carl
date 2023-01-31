@@ -5,10 +5,8 @@ import { transformHSL } from '../lib/color'
 export function renderRegion(engine: Engine) {
   const { mainDisplay, local } = engine
   mainDisplay.clear()
-  const [player] = local.get('playerControlled', 'fieldOfView')
-  local.render((pt, entities, revealed) => {
-    const visible = player.fieldOfView.visible.has(pt)
 
+  local.render((pt, entities, visible, revealed) => {
     const stack: Component<'form'>['form'][] = []
 
     if (visible) {
@@ -19,13 +17,13 @@ export function renderRegion(engine: Engine) {
     }
 
     if (stack.length === 0) return
-
-    const split = {
-      char: stack.map(s => s.char),
-      color: stack.map(s => s.color),
-      bgColor: stack.map(s => s.bgColor),
-    }
-    mainDisplay.draw(pt.x, pt.y, split.char, split.color, split.bgColor)
+    mainDisplay.draw(
+      pt.x,
+      pt.y,
+      stack.map(s => s.char),
+      stack.map(s => s.color),
+      stack.map(s => s.bgColor)
+    )
   })
 }
 

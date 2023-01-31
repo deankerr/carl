@@ -19,12 +19,13 @@ export class Region {
     console.log('p:', p)
   }
 
-  render(callback: (pt: Point, entities: Entity[], revealed: boolean) => unknown) {
+  render(callback: (pt: Point, entities: Entity[], visible: boolean, revealed: boolean) => unknown) {
+    const player = this.player().fieldOfView
     grid(this.width, this.height, pt => {
-      const terrain = this.terrainAt(pt)
-      const entities = this.get('form', 'position').filter(e => e.position === pt)
+      const [terrain, entities] = this.at(pt)
+      const visible = player.visible.has(pt)
       const revealed = this.revealed.has(pt)
-      callback(pt, [terrain, ...entities], revealed)
+      callback(pt, [terrain, ...entities], visible, revealed)
     })
   }
 
@@ -55,7 +56,7 @@ export class Region {
   }
 
   player() {
-    return this.entities.filter(e => e.playerControlled)[0]
+    return this.entities.filter(e => e.playerControlled)[0] as EntityWith<Entity, 'fieldOfView'>
   }
 
   at(pt: Point): [Entity, Entity[]] {

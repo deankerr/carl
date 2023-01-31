@@ -7,7 +7,7 @@ export const handleTread = (engine: Engine, isPlayerTurn: boolean) => {
 
   if (!('tread' in action)) return console.log('handleTread: not a tread action')
   // Only the player
-  if (isPlayerTurn) {
+  if (!isPlayerTurn) {
     console.log('handleTread: result - not the player')
     return
   }

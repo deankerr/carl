@@ -9,9 +9,11 @@ export function renderMessageLog(engine: Engine) {
   const { width, height } = displayOptions
   const last = height - 1
 
+  msgDisplay.clear()
+
   repeat(CONFIG.messageDisplayHeight, i => {
     const msg = messageLog[i]
-    if (msg && playerTurns - msg.turn < 5) {
+    if (msg && playerTurns - msg.turn < 8) {
       const x = half(width) - half(msg.text.length)
       msgDisplay.drawText(x, i, messageLog[i]?.text)
     }
