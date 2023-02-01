@@ -7,8 +7,8 @@ const seed = null
 // 59 x 29 | 69 x 35 | 79 x 39 ?
 const mainDisplayWidth = 69
 const mainDisplayHeight = 35
-const messageDisplayWidth = 60
-const messageDisplayHeight = 4
+const messageDisplayWidth = 69
+const messageDisplayHeight = 35
 
 const generateWidth = mainDisplayWidth
 const generateHeight = mainDisplayHeight

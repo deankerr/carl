@@ -3,14 +3,11 @@ import { CONFIG } from '../config'
 import { tileMapOryxMessages, tileMapOryxMain } from './tilemap'
 
 const mainTileSize = 32
-export const createTileDisplay = (
-  width = CONFIG.mainDisplayWidth,
-  height = CONFIG.mainDisplayHeight
-) => {
+export const createTileDisplay = () => {
   const display = new ROT.Display({
     layout: 'tile-gl',
-    width,
-    height,
+    width: CONFIG.mainDisplayWidth,
+    height: CONFIG.mainDisplayHeight,
     bg: CONFIG.mainBackgroundColor,
     tileWidth: mainTileSize,
     tileHeight: mainTileSize,
@@ -22,20 +19,17 @@ export const createTileDisplay = (
   return display
 }
 
-const msgTileSize = 24
-export const createMessageDisplay = (
-  width = CONFIG.messageDisplayWidth,
-  height = CONFIG.messageDisplayHeight
-) => {
+const msgTileSize = 32
+export const createMessageDisplay = () => {
   const display = new ROT.Display({
     layout: 'tile-gl',
-    width,
-    height,
+    width: CONFIG.messageDisplayWidth,
+    height: CONFIG.messageDisplayHeight,
     fg: CONFIG.messageColor,
     bg: CONFIG.messageBackgroundColor,
     tileWidth: msgTileSize,
     tileHeight: msgTileSize,
-    tileSet: window.tileSet24,
+    tileSet: window.tileSet32,
     tileColorize: true,
     tileMap: tileMapOryxMessages,
   })
@@ -69,7 +63,7 @@ export const createGameDisplay = () => {
   const wrapper = createHTMLWrapper()
 
   // message display canvas
-  const msgDisplay = createMessageDisplay(CONFIG.messageDisplayWidth, CONFIG.messageDisplayHeight)
+  const msgDisplay = createMessageDisplay()
   const msg = msgDisplay.getContainer()
   if (!msg) throw new Error('Unable to get msgDisplay container')
 
@@ -77,7 +71,7 @@ export const createGameDisplay = () => {
   msg.style.position = 'absolute'
 
   // main game display canvas
-  const mainDisplay = createTileDisplay(CONFIG.mainDisplayWidth, CONFIG.mainDisplayHeight)
+  const mainDisplay = createTileDisplay()
   const main = mainDisplay.getContainer()
   if (!main) throw new Error('Unable to get mainDisplay container')
 
