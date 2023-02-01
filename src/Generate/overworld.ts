@@ -6,8 +6,9 @@ import { Rect } from '../Model/Rectangle'
 import { CONFIG } from '../config'
 import { Structure } from './structures/Structure'
 import { EntityKey } from '../Core/Entity'
-import { TerrainKey } from '../Templates'
+import { FeatureKey, TerrainKey } from '../Templates'
 
+const flames: FeatureKey[] = ['flames', 'greenFlames', 'blueFlames', 'magentaFlames']
 // stairs/connectors?
 export function overworld(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
   const t = Date.now()
@@ -93,18 +94,18 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   const ruinRooms = ROT.RNG.shuffle([...ruin.innerRooms])
   ruinRooms.forEach((r, i) => {
     if (i === 0) {
-      r.feature('flames', 1)
+      r.feature(pick(flames), 1)
       // const stairPt = r.feature(Terrain.stairsDescending)
       // O.domainConnections.set(stairPt[0].s, 'dungeon')
       r.feature('stairsDown')
     } else {
       switch (i % 3) {
         case 1:
-          r.feature(pick(['flames', 'flames']), 1)
+          r.feature(pick(flames), 1)
           r.feature('ghost', 3)
           break
         case 2:
-          r.feature('flames')
+          r.feature(pick(flames))
           r.feature('demon', 1)
       }
     }

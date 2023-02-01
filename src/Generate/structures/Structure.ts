@@ -1,5 +1,6 @@
 import * as ROT from 'rot-js'
-import { EntityKey, TerrainKey } from '../../Core/Entity'
+import { EntityKey } from '../../Core/Entity'
+import { TerrainKey } from '../../Templates'
 import { half, makeOdd, pick, range, rnd, shuffle } from '../../lib/util'
 import { Point, point } from '../../Model/Point'
 import { Rect } from '../../Model/Rectangle'
