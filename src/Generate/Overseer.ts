@@ -1,4 +1,5 @@
-import { Entity, EntityKey, EntityPool, TerrainKey } from '../Core/Entity'
+import { Entity, EntityKey, EntityPool } from '../Core/Entity'
+import { TerrainKey } from '../Templates'
 import { Region } from '../Core/Region'
 import { rnd } from '../lib/util'
 import { Point, point } from '../Model/Point'
@@ -19,12 +20,7 @@ export class Overseer {
     },
   }
 
-  constructor(
-    readonly width: number,
-    readonly height: number,
-    readonly pool: EntityPool,
-    readonly initial: TerrainKey = 'void'
-  ) {
+  constructor(readonly width: number, readonly height: number, readonly pool: EntityPool) {
     this.current = new Region(width, height, pool)
   }
 

@@ -2,7 +2,8 @@ import { Color } from 'rot-js/lib/color'
 import { CONFIG } from '../config'
 import { Queue } from '../lib/util'
 import { Point, point, grid } from '../Model/Point'
-import { Entity, EntityPool, EntityKey, EntityWith, TerrainKey } from './Entity'
+import { Entity, EntityPool, EntityKey, EntityWith } from './Entity'
+import { TerrainKey } from '../Templates'
 
 export class Region {
   terrainMap = new Map<Point, Entity>()

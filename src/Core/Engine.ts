@@ -4,12 +4,7 @@ import * as Generate from '../Generate'
 import { createGameDisplay } from '../lib/display'
 import { Keys } from '../lib/Keys'
 import { logger } from '../lib/logger'
-import { ComponentFoundry } from './Components'
-import { EntityPool, gameTemplates } from './Entity'
-import { input } from './Input'
-import { Region } from './Region'
-import { System } from './System'
-import { GUI } from './UI'
+import { ComponentFoundry, EntityPool, GUI, input, Region, System } from './'
 
 export type Message = { turn: number; text: string }
 
@@ -19,7 +14,7 @@ export class Engine {
   keys = new Keys()
 
   component = ComponentFoundry
-  pool = new EntityPool(this.component, gameTemplates)
+  pool = new EntityPool(this.component)
   system = new System()
 
   regions: Region[] = []
@@ -29,12 +24,9 @@ export class Engine {
   playerTurns = 0
 
   options = {
-    // renderStack: false,
-    playerLight: false,
+    playerLight: true,
     formUpdate: true,
     lightingUpdate: true,
-    // bgColor: '#090909',
-    // bgCycle: false,
   }
 
   constructor() {

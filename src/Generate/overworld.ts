@@ -5,7 +5,8 @@ import { Overseer, Mutator } from './Overseer'
 import { Rect } from '../Model/Rectangle'
 import { CONFIG } from '../config'
 import { Structure } from './structures/Structure'
-import { EntityKey, TerrainKey } from '../Core/Entity'
+import { EntityKey } from '../Core/Entity'
+import { TerrainKey } from '../Templates'
 
 // stairs/connectors?
 export function overworld(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {

@@ -16,7 +16,11 @@ export function GUI(engine: Engine, ui: string) {
   }
   if (ui === 'playerLight') {
     options.playerLight = !options.playerLight
-    engine.local.entity(engine.local.player()).mutate('emitLight', 'enabled', options.playerLight)
+
+    const [player] = engine.local.get('playerControlled', 'emitLight')
+    if (player)
+      engine.local.entity(player).modify('emitLight', player.emitLight.color, options.playerLight)
+
     engine.uiMessage(`playerLight: ${options.playerLight}`)
   }
   if (ui === 'formCycle') {

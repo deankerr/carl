@@ -1,3 +1,4 @@
+import { logger } from '../lib/logger'
 import {
   handleBump,
   handleMeleeAttack,
@@ -5,16 +6,15 @@ import {
   handleTread,
   processDeath,
   processFieldOfVision,
-  renderMessageLog,
-  renderRegion,
   processFormUpdate,
   processLighting,
+  renderMessageLog,
+  renderRegion,
 } from '../System'
-import { Region } from './Region'
 import * as Action from './Action'
 import { ActionTypes } from './Action'
 import { Engine } from './Engine'
-import { logger } from '../lib/logger'
+import { Region } from './Region'
 
 export class System {
   localInitProcess = [processFieldOfVision]

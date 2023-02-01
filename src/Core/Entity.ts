@@ -1,12 +1,15 @@
 import { transformHSL } from '../lib/color'
 import { logger } from '../lib/logger'
 import { Point } from '../Model/Point'
+import { BeingKey, beings, FeatureKey, features, TerrainKey, terrain } from '../Templates'
 import { FoundryKey, Component, ComponentFoundry, FoundryParam, Components } from './Components'
+
 export type eID = { eID: number; label: string }
 export type Entity = eID & Component<'name'> & Component<'form'> & Partial<Components>
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
+export type EntityKey = BeingKey | FeatureKey | TerrainKey
 
-type EntityTemplate = {
+export type EntityTemplate = {
   label: string
   name: FoundryParam['name']
   form: FoundryParam['form']
@@ -16,7 +19,8 @@ export class EntityPool {
   private count = 0
   readonly pool = new Map<string, Entity>()
 
-  constructor(readonly components: typeof ComponentFoundry, templates: EntityTemplate[]) {
+  constructor(readonly components: typeof ComponentFoundry) {
+    const templates = [...beings, ...features, ...terrain]
     for (const t of templates) {
       let e = {
         eID: 0,
@@ -77,7 +81,7 @@ export class EntityPool {
     const index = localState.findIndex(e => e === entity)
     if (index < 0) throw new Error(`Unable to locate entity to modify ${entity.label}`)
 
-    let store = this.attach(entity, 'tag', 'signalModified')
+    let store = entity
 
     const modify = <T extends FoundryKey>(cName: T, ...p: FoundryParam[T]) => {
       store = this.attach(store, cName, ...p)
@@ -94,195 +98,8 @@ export class EntityPool {
       return options
     }
 
-    const mutate = <
-      T extends keyof Components,
-      K extends keyof Components[T],
-      P extends Components[T][K]
-    >(
-      cName: T,
-      cKey: K,
-      cProp: P
-    ) => {
-      if (store[cName]) {
-        if (store[cName][cKey]) {
-          store[cName][cKey] = cProp
-        }
-      }
-      return options
-    }
-
-    const options = { modify, remove, mutate }
+    const options = { modify, remove }
 
     return options
   }
 }
-
-export type BeingKey = 'player' | 'spider' | 'ghost' | 'demon' | 'crab' | 'crab2'
-export const beings: EntityTemplate[] = [
-  {
-    label: 'player',
-    name: ['player'],
-    form: ['@', '#EE82EE'],
-    tag: ['playerControlled', 'actor', 'blocksMovement', 'being'],
-    fieldOfView: [12],
-    emitLight: ['auto'],
-    lightFlicker: [120],
-    lightHueRotate: [0.02],
-  },
-  {
-    label: 'spider',
-    name: ['spider'],
-    form: ['spider', '#00B3B3'],
-    tag: ['actor', 'blocksMovement', 'being'],
-  },
-  {
-    label: 'ghost',
-    name: ['ghost'],
-    form: ['ghost', '#FFFFFF'],
-    tag: ['actor', 'blocksMovement', 'being'],
-  },
-  {
-    label: 'demon',
-    name: ['Natas, the mysterious wanderer'],
-    form: ['demon', '#FF0000'],
-    tag: ['actor', 'blocksMovement', 'being'],
-  },
-  {
-    label: 'crab',
-    name: ['crab'],
-    form: ['crab', '#cc3131'],
-    tag: ['actor', 'blocksMovement', 'being'],
-  },
-  {
-    label: 'crab2',
-    name: ['turncoat crab'],
-    form: ['crab', '#32cd44'],
-    tag: ['actor', 'blocksMovement', 'being'],
-  },
-]
-
-export type FeatureKey = 'door' | 'shrub' | 'statue' | 'tombstone' | 'flames' | 'deadTree'
-export const features: EntityTemplate[] = [
-  {
-    label: 'door',
-    name: ['door'],
-    form: ['doorClosed', '#73513d'],
-    tag: ['memorable', 'feature', 'blocksLight', 'blocksMovement', 'isClosed'],
-    trodOn: ['You carefully backflip through the door.'],
-    formSet: [['doorClosed', '', '', 'doorOpen', '', '']],
-    formSetTriggers: ['isClosed', 'isOpen'],
-  },
-  {
-    label: 'shrub',
-    name: ['shrub'],
-    form: ['shrub', '#58a54a'],
-    tag: ['memorable', 'feature'],
-    trodOn: ['You trample the pathetic shrub.'],
-  },
-  {
-    label: 'statue',
-    name: ['statue'],
-    form: ['statue', '#adadad'],
-    tag: ['memorable', 'feature', 'blocksLight', 'blocksMovement'],
-  },
-  {
-    label: 'tombstone',
-    name: ['tombstone'],
-    form: ['tombstone', '#9c9c9c'],
-    tag: ['memorable', 'feature'],
-    trodOn: ['You bow your head solemnly in thoughtful prayer.'],
-  },
-  {
-    label: 'deadTree',
-    name: ['dead tree'],
-    form: ['tree', '#602e15'],
-    tag: ['memorable', 'feature', 'blocksLight'],
-    trodOn: ['You smile as you continue to outlive this ancient tree.'],
-  },
-  {
-    label: 'flames',
-    name: ['flames'],
-    form: ['flames1', '#FF8000'],
-    tag: ['feature', 'renderUnderBeing'],
-    trodOn: ['You crackle and pop as you wade through the flames.'],
-    formSet: [['flames1', '', '', 'flames2', '', '']],
-    formSetAutoCycle: [120],
-    emitLight: ['auto'],
-    lightFlicker: [120],
-  },
-]
-
-export type TerrainKey =
-  | 'path'
-  | 'wall'
-  | 'water'
-  | 'stairsDown'
-  | 'stairsUp'
-  | 'crackedWall'
-  | 'grass'
-  | 'deadGrass'
-  | 'mound'
-  | 'void'
-  | 'endlessVoid'
-  | 'peak'
-export const terrain: EntityTemplate[] = [
-  {
-    label: 'path',
-    name: ['path'],
-    form: ['path', '#262626'],
-    tag: ['terrain', 'renderUnderBeing'],
-  },
-  {
-    label: 'wall',
-    name: ['wall'],
-    form: ['wall', '#767676'],
-    tag: ['blocksMovement', 'blocksLight', 'terrain'],
-  },
-  {
-    label: 'water',
-    name: ['water'],
-    form: ['water', '#4084bf'],
-    tag: ['terrain'],
-    trodOn: ['You tread water.'],
-  },
-  {
-    label: 'stairsDown',
-    name: ['descending stairs'],
-    form: ['stairsDown', '#767676'],
-    tag: ['terrain'],
-    trodOn: ["There's some stairs leading down here."],
-  },
-  {
-    label: 'stairsUp',
-    name: ['ascending'],
-    form: ['stairsUp', '#767676'],
-    tag: ['terrain'],
-    trodOn: ["There's some stairs leading up here."],
-  },
-  {
-    label: 'crackedWall',
-    name: ['cracked wall'],
-    form: ['crackedWall', '#767676'],
-    tag: ['blocksMovement', 'blocksLight', 'terrain'],
-  },
-  { label: 'grass', name: ['grass'], form: ['grass', '#65712b'], tag: ['terrain'] },
-  { label: 'deadGrass', name: ['dead grass'], form: ['deadGrass', '#664f47'], tag: ['terrain'] },
-  { label: 'mound', name: ['mound'], form: ['mound', '#6a4b39'], tag: ['blocksLight', 'terrain'] },
-  { label: 'peak', name: ['peak'], form: ['peak', '#2a5a3e'], tag: ['blocksLight', 'terrain'] },
-  {
-    label: 'void',
-    name: ['void'],
-    form: ['void', '#FF00FF'],
-    tag: ['terrain', 'renderUnderBeing'],
-  },
-  {
-    label: 'endlessVoid',
-    name: ['endless void'],
-    form: ['v', '#FF00FF'],
-    tag: ['blocksLight', 'blocksMovement', 'terrain'],
-  },
-]
-
-export type EntityKey = BeingKey | FeatureKey | TerrainKey
-
-export const gameTemplates = [...beings, ...features, ...terrain]

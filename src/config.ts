@@ -22,8 +22,8 @@ const frameLimit = 0
 const lightsOnInitial = PROD ? false : true
 const debugShowLightInfo = false
 
-const autoStartVisualizer = false
-const visualizerAutoplay = true
+// const autoStartVisualizer = false
+// const visualizerAutoplay = true
 
 const CONFIG = {
   appInitial,
@@ -41,8 +41,8 @@ const CONFIG = {
   frameLimit,
   debugShowLightInfo,
   lightsOnInitial,
-  autoStartVisualizer,
-  visualizerAutoplay,
+  // autoStartVisualizer,
+  // visualizerAutoplay,
 }
 
 export { CONFIG }
