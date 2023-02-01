@@ -1,6 +1,6 @@
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
-import * as Generate from '../Generate'
+
 import { createGameDisplay } from '../lib/display'
 import { logger } from '../lib/logger'
 import { ComponentFoundry, EntityPool, UI, handle, listen, Region, System } from './'
@@ -13,7 +13,7 @@ export class Engine {
 
   component = ComponentFoundry
   pool = new EntityPool(this.component)
-  system = new System()
+  system: System
 
   regions: Region[] = []
   local = this.regions[0]
@@ -31,13 +31,11 @@ export class Engine {
     const [msg, main] = createGameDisplay()
     this.mainDisplay = main
     this.msgDisplay = msg
+    this.system = new System(this)
   }
 
   init() {
-    const overseer = Generate.overworld()
-    this.local = overseer.current
-
-    this.system.initLocal(this)
+    this.system.init()
 
     listen(this.update.bind(this))
     console.log(this)
@@ -48,6 +46,11 @@ export class Engine {
     if (!action) return
 
     if ('ui' in action) return UI(this, action.ui)
+
+    if ('changeRegion' in action) {
+      this.system.change(action)
+      return
+    }
 
     this.system.run(this, action)
     this.playerTurns++

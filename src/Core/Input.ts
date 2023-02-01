@@ -1,7 +1,7 @@
 // * Translate key code into Action
 
 import { logger } from '../lib/logger'
-import { ActionTypes, ChangeLevel, Move, MetaUI } from './Action'
+import { ActionTypes, ChangeRegion, Move, MetaUI } from './Action'
 
 type KeyMap = Record<string, ActionTypes>
 
@@ -41,13 +41,13 @@ export function handle(event: KeyboardEvent): ActionTypes | undefined {
   }
 
   // * Gameplay
-  switch (key) {
-    case 'Enter':
-    case 'Space':
-    case ',':
-    case '.':
-      return ChangeLevel('anywhere')
+  const game: KeyMap = {
+    Enter: ChangeRegion('anywhere'),
+    ' ': ChangeRegion('anywhere'),
+    ',': ChangeRegion('up'),
+    '.': ChangeRegion('down'),
   }
+  if (game[key]) return game[key]
 
   // * Dev
   const dev: KeyMap = {

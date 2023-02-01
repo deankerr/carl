@@ -5,6 +5,8 @@ const suppress = [
   'entity.attach.emitLight',
 ]
 
+const promote = ['sys.handleRegionChange']
+
 class Logger {
   logGroups = new Map<string, LogGroup>()
   items: LogItem[] = []
@@ -38,6 +40,8 @@ class Logger {
       const item: LogItem = { pID, text: text.join(' '), level: logLevel.info }
       group.items.push(item)
       this.items.push(item)
+
+      if (promote.includes(pID)) console.log(item.pID, item.text)
     }
 
     const end = (...text: string[]) => {

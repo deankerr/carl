@@ -1,9 +1,9 @@
 import { logger } from '../lib/logger'
-import { Queue } from '../lib/util'
 import {
   handleBump,
   handleMeleeAttack,
   handleMovement,
+  handleRegionChange,
   handleTread,
   processDeath,
   processFieldOfVision,
@@ -13,13 +13,10 @@ import {
   renderRegion,
 } from '../System'
 import * as Action from './Action'
-import { ActionTypes } from './Action'
-import { Engine } from './Engine'
-import { Region } from './Region'
+
+import { ActionTypes, Engine, Region } from './'
 
 export class System {
-  initLocalProcess = [processFieldOfVision]
-
   turnProcess = [
     handleMovement,
     handleTread,
@@ -31,6 +28,8 @@ export class System {
 
   preRenderProcess = [processFormUpdate, processLighting]
   renderProcess = [renderRegion, renderMessageLog]
+
+  constructor(readonly engine: Engine) {}
 
   run(engine: Engine, playerAction: ActionTypes) {
     const log = logger('sys', 'runTurns')
@@ -71,19 +70,11 @@ export class System {
     log.end()
   }
 
-  // set up turn queue starting on player turn, run init systems
-  initLocal(engine: Engine) {
-    const { local } = engine
+  init() {
+    this.change(Action.ChangeRegion('initial'))
+  }
 
-    const player = local.player()
-    const actors = local.get('actor').filter(a => !a.playerControlled)
-
-    const queue = new Queue<number>()
-    queue.add(player.eID, true)
-    actors.forEach(a => queue.add(a.eID, true))
-
-    local.turnQueue = queue
-
-    this.initLocalProcess.forEach(sys => sys(engine))
+  change(change: Action.ChangeRegion) {
+    handleRegionChange(this.engine, change)
   }
 }
