@@ -41,5 +41,9 @@ export const handleMovement = (engine: Engine) => {
 
   // valid move, create tread action and update position
   log.msg('handleMovement: new action - Tread')
-  local.entity(currentEntity).modify('acting', Action.Tread(newPt)).modify('position', newPt)
+  local
+    .entity(currentEntity)
+    .modify('acting', Action.Tread(newPt))
+    .modify('position', newPt)
+    .modify('tag', 'signalLightPathUpdated')
 }

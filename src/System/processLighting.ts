@@ -2,12 +2,14 @@ import * as ROT from 'rot-js'
 import { Color } from 'rot-js/lib/color'
 import { Engine } from '../Core/Engine'
 import { transformHSL } from '../lib/color'
+import { logger } from '../lib/logger'
 // import { transformHSL } from '../lib/color'
 import { point } from '../Model/Point'
 
 export const processLighting = (engine: Engine) => {
   const { local, options } = engine
   if (!options.lightingUpdate) return
+
   const emitters = local.get('emitLight', 'position')
   if (emitters.length === 0) return
 
@@ -24,8 +26,7 @@ export const processLighting = (engine: Engine) => {
   // - lighting has been calculated and light blockers haven't changed, or
   // - there are no light emitting animators who need updating
   if (local.lighting.size > 0 && lightPathUpdate.length === 0 && !animatorUpdate) return
-  // const t = Date.now()
-  // console.log('processLighting')
+  const log = logger('sys', 'processLighting')
 
   // set up infrastructure for ROT.JS lighting
   const fov = new ROT.FOV.PreciseShadowcasting(local.ROTisTransparent.bind(local))
@@ -74,9 +75,9 @@ export const processLighting = (engine: Engine) => {
   lighting.compute(lightingCallback)
 
   // remove update tag from entities if any
-  lightPathUpdate.forEach(e => local.entity(e).remove('signalLightPathUpdated'))
+  local.get('signalLightPathUpdated').forEach(e => local.entity(e).remove('signalLightPathUpdated'))
   local.hasChanged = true
-  // console.log(`processLighting complete ${Date.now() - t}ms`)
+  log.end()
 }
 
 // enhanced mode

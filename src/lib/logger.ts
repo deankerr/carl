@@ -3,7 +3,7 @@ class Logger {
   items: LogItem[] = []
 
   constructor() {
-    console.log('Logger init')
+    console.log(this)
   }
 
   createGroup(pID: string) {
@@ -37,8 +37,6 @@ class Logger {
     }
 
     const timer = {
-      pID,
-      logKey: pID,
       msg,
       end,
     }

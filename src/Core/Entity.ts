@@ -1,4 +1,5 @@
 import { transformHSL } from '../lib/color'
+import { logger } from '../lib/logger'
 import { Point } from '../Model/Point'
 import { FoundryKey, Component, ComponentFoundry, FoundryParam, Components } from './Components'
 export type eID = { eID: number; label: string }
@@ -48,6 +49,9 @@ export class EntityPool {
 
   attach<T extends FoundryKey>(e: Entity, componentName: T, ...p: FoundryParam[T]) {
     const c = Reflect.apply(this.components[componentName], undefined, p)
+    logger('entity', 'attach', `${componentName}`).msg(
+      `attach ${e.label} ${componentName} [${[...p.values()]}]`
+    )
     return { ...e, ...c }
   }
 
@@ -71,24 +75,22 @@ export class EntityPool {
 
   entity(localState: Entity[], entity: Entity) {
     const index = localState.findIndex(e => e === entity)
-    if (index < 0) throw new Error(`Unable to locate entity to modify, ${entity.label}`)
-    let store = this.attach(entity, 'tag', 'signalModified')
+    if (index < 0) throw new Error(`Unable to locate entity to modify ${entity.label}`)
 
-    if (store.emitLight?.enabled) this.attach(store, 'tag', 'signalLightPathUpdated')
+    let store = this.attach(entity, 'tag', 'signalModified')
 
     const modify = <T extends FoundryKey>(cName: T, ...p: FoundryParam[T]) => {
       store = this.attach(store, cName, ...p)
       localState[index] = store
-      // logger('pool', 'modify').msg('MODIFY:', store.name, cName)
       return options
     }
 
-    const remove = <T extends keyof Components>(cName: T) => {
+    const remove = <T extends keyof Components>(componentName: T) => {
       const e = { ...store }
-      Reflect.deleteProperty(e, cName)
+      Reflect.deleteProperty(e, componentName)
       store = e
       localState[index] = store
-      // console.log('REMOVE:', store.name, cName)
+      logger('entity', 'remove', `${componentName}`).msg(`remove ${e.label} ${componentName}`)
       return options
     }
 
