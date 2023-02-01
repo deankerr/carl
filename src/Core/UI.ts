@@ -14,10 +14,10 @@ export function GUI(engine: Engine, ui: string) {
     local.recallAll = !local.recallAll
     engine.uiMessage(`recallAll: ${local.recallAll}`)
   }
-  if (ui === 'renderStack') {
-    options.renderStack = !options.renderStack
-    engine.uiMessage(`renderStack: ${options.renderStack}`)
-  }
+  // if (ui === 'renderStack') {
+  //   options.renderStack = !options.renderStack
+  //   engine.uiMessage(`renderStack: ${options.renderStack}`)
+  // }
   if (ui === 'playerLight') {
     options.playerLight = !options.playerLight
     engine.uiMessage(`playerLight: ${options.playerLight}`)
@@ -30,8 +30,8 @@ export function GUI(engine: Engine, ui: string) {
     options.lightingUpdate = !options.lightingUpdate
     engine.uiMessage(`lightingUpdate: ${options.lightingUpdate}`)
   }
-  if (ui === 'bgCycle') {
-    options.bgCycle = !options.bgCycle
-    engine.uiMessage(`cycleBg: ${options.bgCycle}`)
-  }
+  // if (ui === 'bgCycle') {
+  //   options.bgCycle = !options.bgCycle
+  //   engine.uiMessage(`cycleBg: ${options.bgCycle}`)
+  // }
 }

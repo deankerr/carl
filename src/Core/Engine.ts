@@ -30,12 +30,12 @@ export class Engine {
   playerTurns = 0
 
   options = {
-    renderStack: true,
+    // renderStack: false,
     playerLight: false,
-    bgColor: '#111a0e',
     formUpdate: true,
     lightingUpdate: true,
-    bgCycle: false,
+    // bgColor: '#090909',
+    // bgCycle: false,
   }
 
   constructor() {

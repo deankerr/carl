@@ -1,19 +1,16 @@
 import { CONFIG } from '../config'
 import { Component } from '../Core/Components'
 import { Engine } from '../Core/Engine'
+import { Entity } from '../Core/Entity'
 import { addLight, transformHSL } from '../lib/color'
 import { clamp, floor, half } from '../lib/util'
 
-let last = 0
-const freq = 120
-const add = 0.01
-
 export function renderRegion(engine: Engine) {
-  const { mainDisplay, local, options } = engine
+  const { mainDisplay, local } = engine
   if (local.hasChanged === false) return
-  const { mainDisplayWidth, mainDisplayHeight } = CONFIG
 
   // * ========== Viewport ========== *
+  const { mainDisplayWidth, mainDisplayHeight } = CONFIG
   const viewport = {
     w: mainDisplayWidth,
     h: mainDisplayHeight,
@@ -58,47 +55,76 @@ export function renderRegion(engine: Engine) {
       return
     }
 
-    const stack: Component<'form'>['form'][] = []
+    const lighting = local.lighting.get(pt)
 
+    // * determine which entities should be rendered and in what order
+    let terrain: Entity[] = []
+    const feature: Entity[] = []
+    const being: Entity[] = []
+
+    // if visible, render everything
     if (visible) {
-      const lighting = local.lighting.get(pt)
-      if (lighting) {
-        entities.forEach(e => {
-          stack.push({ ...e.form, color: addLight(e.form.color, lighting) })
-        })
-      } else entities.forEach(e => stack.push(e.form))
+      entities.forEach(e => {
+        if (e.terrain) terrain.push(e)
+        else if (e.being) being.push(e)
+        else feature.push(e) // ? render anything without a tag as feature
+      })
     } else if (recalled) {
-      const recalledEntities = entities.filter(e => e.terrain || e.memorable)
-      recalledEntities.forEach(e =>
-        stack.push({ ...e.form, color: transformHSL(e.form.color, fade) })
-      )
-    }
+      // if recalled, render only terrain and memorable things
+      entities.forEach(e => {
+        if (e.terrain) terrain.push(e)
+        else if (e.memorable) feature.push(e)
+      })
+    } // ... if not visible or recalled, render nothing
 
-    if (options.bgCycle && Date.now() - last > freq) {
-      options.bgColor = transformHSL(options.bgColor, { hue: { add } })
-      last = Date.now()
+    // * strip any "void" terrain, insert a custom void with local color (ie. local background color)
+    const voidLocal = {
+      ...local.pool.symbolic('void'),
+      form: { char: 'void', color: local.voidColor, bgColor: local.voidColor },
     }
-    stack.unshift({ char: 'demon', color: options.bgColor, bgColor: options.bgColor })
+    terrain = [voidLocal, ...terrain.filter(t => t.label !== 'void')]
 
-    if (stack.length === 0) return
-    if (options.renderStack) {
-      mainDisplay.draw(
-        pt.x,
-        pt.y,
-        stack.map(s => s.char),
-        stack.map(s => s.color),
-        stack.map(s => s.bgColor)
-      )
+    // * assemble stack of render data
+    const formStack: Component<'form'>['form'][] = []
+
+    // - render only flagged terrain/features under a being
+    if (being.length > 0) {
+      formStack.push(...terrain.filter(t => t.renderUnderBeing).map(t => t.form))
+      formStack.push(...feature.filter(f => f.renderUnderBeing).map(f => f.form))
+      formStack.push(...being.map(b => b.form))
     } else {
-      mainDisplay.draw(
-        render.x,
-        render.y,
-        stack[stack.length - 1].char,
-        stack[stack.length - 1].color,
-        stack[stack.length - 1].bgColor
-      )
+      // otherwise everything
+      formStack.push(...terrain.map(t => t.form))
+      formStack.push(...feature.map(f => f.form))
     }
+
+    // * apply lighting/faded color if applicable
+    let colorStack: Component<'form'>['form'][] = []
+
+    if (visible && lighting)
+      colorStack = formStack.map(f => (f = { ...f, color: addLight(f.color, lighting) }))
+    else if (!visible && recalled)
+      colorStack = formStack.map(f => (f = { ...f, color: transformHSL(f.color, recalledFade) }))
+    else colorStack = formStack
+
+    // * abort if we ended up with nothing or ROT.JS will error
+    if (colorStack.length === 0) return
+
+    // * draw
+    mainDisplay.draw(
+      pt.x,
+      pt.y,
+      colorStack.map(s => s.char),
+      colorStack.map(s => s.color),
+      colorStack.map(s => s.bgColor)
+    )
   })
 }
 
-const fade = { sat: { by: 0.8 }, lum: { by: 0.8, min: 0.12 } }
+const recalledFade = { sat: { by: 0.8 }, lum: { by: 0.8, min: 0.12 } }
+
+// background color cycle
+// if (options.bgColor !== '' && options.bgCycle && Date.now() - last > freq) {
+//   options.bgColor = transformHSL(options.bgColor, { hue: { add } })
+//   last = Date.now()
+// }

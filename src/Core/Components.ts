@@ -70,6 +70,7 @@ export type Tag =
   | 'terrain'
   | 'isClosed'
   | 'isOpen'
+  | 'renderUnderBeing'
   | 'signalModified' // todo Pool should add these
   | 'signalLightPathUpdated'
 

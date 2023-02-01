@@ -70,8 +70,6 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   const [main1, main2] = main.bisect()
 
   const [ruinsArea, featureArea] = ROT.RNG.shuffle([main1, main2])
-  ruinsArea.mark(true)
-  featureArea.mark(true)
 
   // * graveyard
   const graveyard = featureArea.center(9, 7)

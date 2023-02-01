@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Color } from 'rot-js/lib/color'
 import { Queue } from '../lib/util'
 import { Point, point, grid } from '../Model/Point'
@@ -6,26 +5,19 @@ import { Entity, EntityPool, EntityKey, EntityWith, TerrainKey } from './Entity'
 
 export class Region {
   terrainMap = new Map<Point, Entity>()
-  terrainBase: Entity
   entities: Entity[] = []
   turnQueue = new Queue<number>()
 
   seenByPlayer = new Set<Point>()
   recallAll = true
-  revealAll = false
+  revealAll = true
 
+  voidColor = '#001E00'
   lighting = new Map<Point, Color>()
 
   hasChanged = true
 
-  constructor(
-    readonly width: number,
-    readonly height: number,
-    readonly pool: EntityPool,
-    baseTerrain: TerrainKey
-  ) {
-    this.terrainBase = this.pool.symbolic(baseTerrain)
-  }
+  constructor(readonly width: number, readonly height: number, readonly pool: EntityPool) {}
 
   render(
     callback: (pt: Point, entities: Entity[], visible: boolean, recalled: boolean) => unknown
@@ -39,7 +31,7 @@ export class Region {
     })
   }
 
-  // Entity Management
+  //  * Entity Management
   createEntity(key: EntityKey, pt: Point) {
     const entity = this.pool.spawn(key, pt)
     this.entities.push(entity)
@@ -65,7 +57,8 @@ export class Region {
     }
   }
 
-  // * Entity Queries *
+  // * Entity Queries
+  // return all local entities with these components
   get<Key extends keyof Entity>(...components: Key[]): EntityWith<Entity, Key>[] {
     const results = this.entities.filter(e => components.every(name => name in e)) as EntityWith<
       Entity,
@@ -74,6 +67,7 @@ export class Region {
     return results
   }
 
+  // all entities with a specified position
   at(pt: Point) {
     return [
       this.terrainAt(pt),
@@ -81,12 +75,14 @@ export class Region {
     ] as EntityWith<Entity, 'position'>[]
   }
 
+  // terrain entity at this position
   terrainAt(pt: Point) {
     return this.inBounds(pt)
-      ? this.terrainMap.get(pt) ?? this.terrainBase
-      : this.pool.spawn('endlessVoid', pt)
+      ? this.terrainMap.get(pt) ?? this.pool.symbolic('void')
+      : this.pool.symbolic('endlessVoid')
   }
 
+  // test if an entity has components, mark as available if so, otherwise return null
   has<Key extends keyof Entity>(
     entity: Entity,
     ...components: Key[]
@@ -106,11 +102,13 @@ export class Region {
       'fieldOfView' | 'position'
     >
   }
-  // Utility
+
+  // * Utility
   inBounds(pt: Point) {
     return pt.x >= 0 && pt.x < this.width && pt.y >= 0 && pt.y < this.height
   }
 
+  // callback for ROT.JS fov/light functions
   ROTisTransparent(x: number, y: number) {
     const entities = this.at(point(x, y))
     return !entities.some(e => e.blocksLight)

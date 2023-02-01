@@ -56,16 +56,16 @@ export function input(code: string): ActionTypes | null {
       return UI('localRevealAll')
     case 'KeyT':
       return UI('localRecallAll')
-    case 'Digit1':
-      return UI('renderStack')
+    // case 'Digit1':
+    //   return UI('renderStack')
     case 'Digit2':
       return UI('playerLight')
     case 'Digit3':
       return UI('formCycle')
     case 'Digit4':
       return UI('lightingUpdate')
-    case 'Digit5':
-      return UI('bgCycle')
+    // case 'Digit5':
+    //   return UI('bgCycle')
 
     // Debug log world
     case 'KeyQ':

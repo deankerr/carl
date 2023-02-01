@@ -4,7 +4,7 @@ const appInitial = 'game'
 // const seed = 1234
 const seed = null
 
-// 59 x 29 | 79 x 39
+// 59 x 29 | 69 x 35 | 79 x 39 ?
 const mainDisplayWidth = 69
 const mainDisplayHeight = 35
 const messageDisplayWidth = 60

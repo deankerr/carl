@@ -101,7 +101,7 @@ export const beings: EntityTemplate[] = [
   {
     label: 'player',
     name: ['player'],
-    form: ['@', '#EE82EE'],
+    form: ['demon', '#EE82EE'],
     tag: ['playerControlled', 'actor', 'blocksMovement', 'being'],
     fieldOfView: [12],
     // emitLight: ['auto'],
@@ -182,7 +182,7 @@ export const features: EntityTemplate[] = [
     label: 'flames',
     name: ['flames'],
     form: ['flames1', '#FF8000'],
-    tag: ['feature'],
+    tag: ['feature', 'renderUnderBeing'],
     trodOn: ['You crackle and pop as you wade through the flames.'],
     formSet: [['flames1', '', '', 'flames2', '', '']],
     formSetAutoCycle: [120],
@@ -205,7 +205,12 @@ export type TerrainKey =
   | 'endlessVoid'
   | 'peak'
 export const terrain: EntityTemplate[] = [
-  { label: 'path', name: ['path'], form: ['path', '#262626'], tag: ['terrain'] },
+  {
+    label: 'path',
+    name: ['path'],
+    form: ['path', '#262626'],
+    tag: ['terrain', 'renderUnderBeing'],
+  },
   {
     label: 'wall',
     name: ['wall'],
@@ -215,7 +220,7 @@ export const terrain: EntityTemplate[] = [
   {
     label: 'water',
     name: ['water'],
-    form: ['water', '#4084bf', '#09121b'],
+    form: ['water', '#4084bf'],
     tag: ['terrain'],
     trodOn: ['You tread water.'],
   },
@@ -243,11 +248,16 @@ export const terrain: EntityTemplate[] = [
   { label: 'deadGrass', name: ['dead grass'], form: ['deadGrass', '#664f47'], tag: ['terrain'] },
   { label: 'mound', name: ['mound'], form: ['mound', '#6a4b39'], tag: ['blocksLight', 'terrain'] },
   { label: 'peak', name: ['peak'], form: ['peak', '#2a5a3e'], tag: ['blocksLight', 'terrain'] },
-  { label: 'void', name: ['void'], form: ['void', '#FF00FF'], tag: ['terrain'] },
+  {
+    label: 'void',
+    name: ['void'],
+    form: ['void', '#FF00FF'],
+    tag: ['terrain', 'renderUnderBeing'],
+  },
   {
     label: 'endlessVoid',
     name: ['endless void'],
-    form: ['void', '#FF00FF'],
+    form: ['v', '#FF00FF'],
     tag: ['blocksLight', 'blocksMovement', 'terrain'],
   },
 ]
