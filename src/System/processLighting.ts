@@ -17,9 +17,7 @@ export const processLighting = (engine: Engine) => {
 
   const animators = local.get('emitLight', 'position', 'lightFlicker')
   const animatorUpdate = animators.some(e => {
-    return (
-      e.lightFlicker.frequency && Date.now() - e.lightFlicker.lastUpdate >= e.lightFlicker.frequency
-    )
+    return e.emitLight.enabled && Date.now() - e.lightFlicker.lastUpdate >= e.lightFlicker.frequency
   })
 
   // skip update if:
