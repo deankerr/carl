@@ -14,12 +14,9 @@ export function GUI(engine: Engine, ui: string) {
     local.recallAll = !local.recallAll
     engine.uiMessage(`recallAll: ${local.recallAll}`)
   }
-  // if (ui === 'renderStack') {
-  //   options.renderStack = !options.renderStack
-  //   engine.uiMessage(`renderStack: ${options.renderStack}`)
-  // }
   if (ui === 'playerLight') {
     options.playerLight = !options.playerLight
+    engine.local.entity(engine.local.player()).mutate('emitLight', 'enabled', options.playerLight)
     engine.uiMessage(`playerLight: ${options.playerLight}`)
   }
   if (ui === 'formCycle') {

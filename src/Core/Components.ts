@@ -44,8 +44,8 @@ export const ComponentFoundry = {
     return { formSetAutoCycle: { frequency, current, lastUpdate } }
   },
 
-  emitLight: (color: string) => {
-    return { emitLight: color }
+  emitLight: (color: string, enabled = true) => {
+    return { emitLight: { color, enabled } }
   },
 
   lightFlicker: (frequency: number, current = false, lastUpdate = 0) => {

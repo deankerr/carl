@@ -36,18 +36,18 @@ export const processLighting = (engine: Engine) => {
 
   // set the light points and colors for each emitter
   for (const emitter of emitters) {
-    if (!engine.options.playerLight && emitter === local.player()) continue
+    if (!emitter.emitLight.enabled) continue
 
     const { position, emitLight } = emitter
 
     // process animators if necessary
-    let lightColor = emitLight
+    let lightColor = emitLight.color
     const flickerer = local.has(emitter, 'lightFlicker')
     if (flickerer) {
       const { frequency, lastUpdate, current } = flickerer.lightFlicker
       if (frequency && Date.now() - lastUpdate >= frequency) {
         if (current) {
-          lightColor = transformHSL(emitLight, { lum: { by: 0.85, min: 0 } })
+          lightColor = transformHSL(emitLight.color, { lum: { by: 0.85, min: 0 } })
         }
         const hue = local.has(emitter, 'lightHueRotate')
         if (hue) {
@@ -55,7 +55,7 @@ export const processLighting = (engine: Engine) => {
             .entity(hue)
             .modify(
               'emitLight',
-              transformHSL(emitter.emitLight, { hue: { add: hue.lightHueRotate } })
+              transformHSL(emitter.emitLight.color, { hue: { add: hue.lightHueRotate } })
             )
             .modify('lightFlicker', frequency, !current, Date.now())
         } else local.entity(flickerer).modify('lightFlicker', frequency, !current, Date.now())

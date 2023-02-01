@@ -90,7 +90,25 @@ export class EntityPool {
       return options
     }
 
-    const options = { modify, remove }
+    const mutate = <
+      C extends Components,
+      T extends keyof C,
+      K extends keyof C[T],
+      P extends C[T][K]
+    >(
+      cName: T,
+      cKey: K,
+      cProp: P
+    ) => {
+      store[cName][cKey] = cProp
+      // Reflect.deleteProperty(e, cName)
+      // store = e
+      // localState[index] = store
+      // console.log('REMOVE:', store.name, cName)
+      return options
+    }
+
+    const options = { modify, remove, mutate }
 
     return options
   }
@@ -101,12 +119,12 @@ export const beings: EntityTemplate[] = [
   {
     label: 'player',
     name: ['player'],
-    form: ['demon', '#EE82EE'],
+    form: ['@', '#EE82EE'],
     tag: ['playerControlled', 'actor', 'blocksMovement', 'being'],
     fieldOfView: [12],
-    // emitLight: ['auto'],
-    // lightFlicker: [120],
-    // lightHueRotate: [0.02],
+    emitLight: ['auto'],
+    lightFlicker: [120],
+    lightHueRotate: [0.02],
   },
   {
     label: 'spider',
