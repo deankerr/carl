@@ -194,7 +194,7 @@ export class Structure {
     else this.O.mutate().setT(this.rect, t)
   }
 
-  degradedFloor(template: TerrainKey | TerrainKey[], chance = 16) {
+  degradedFloor(template: TerrainKey | TerrainKey[], chance = 16, chance2?: number) {
     if (this.innerRooms.length > 0) this.innerRooms.forEach(r => r.degradedFloor(template))
     else {
       const isSmallRoom = this.rect.width <= 3 || this.rect.height <= 3
@@ -203,6 +203,7 @@ export class Structure {
         const t = Array.isArray(template) ? pick(template) : template
         if (edge && !isSmallRoom) rnd(1) && mut.setT(pt, t)
         else if (isSmallRoom) rnd(4) && mut.setT(pt, t)
+        else if (chance2) rnd(100) < chance2 ? mut.setT(pt, t) : ''
         else if (rnd(chance)) mut.setT(pt, t)
       })
     }

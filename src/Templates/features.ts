@@ -29,7 +29,7 @@ export const features: EntityTemplate[] = [
     label: 'tombstone',
     name: ['tombstone'],
     form: ['tombstone', '#9c9c9c'],
-    tag: ['memorable', 'feature'],
+    tag: ['memorable', 'feature', 'blocksLight'],
     trodOn: ['You bow your head solemnly in thoughtful prayer.'],
   },
   {

@@ -62,6 +62,7 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   // scattered shrubs
   // const shrubMut = O.mutate()
   repeat(5, () => sparseWalk(inner.rndEdgePt(), 'shrub', 5, O.mutate(), 'void'))
+  repeat(5, () => sparseWalk(inner.rndEdgePt(), 'deadTree', 5, O.mutate(), 'void'))
 
   // smaller southern lake
   // const southLakePt = Pt(center.x + rnd(-4, -4), outskirtsRect.y2)
@@ -74,13 +75,14 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   const [ruinsArea, featureArea] = ROT.RNG.shuffle([main1, main2])
 
   // * graveyard
-  const graveyard = featureArea.center(9, 7)
-  graveyard.degradedFloor('path', 1)
+  const graveyard = featureArea.center(20, 20)
+  graveyard.degradedFloor('path', 1, 10)
+  // graveyard.floor('path')
 
-  graveyard.feature('tombstone', rnd(4, 8), 'void')
+  graveyard.feature('tombstone', rnd(8, 12), 'void')
   graveyard.feature('statue', 2, 'void')
 
-  featureArea.feature('deadTree', 6, 'void')
+  featureArea.feature('deadTree', 22, 'void')
 
   // ruin
   const ruin = ruinsArea.center(rndO(13, 15), rndO(11, 13))
