@@ -55,7 +55,7 @@ function fps() {
 }
 
 function getLogTimes() {
-  const turn = window.logger.groups.get('sys.runTurns')?.avg.toFixed(0) ?? ''
-  const render = window.logger.groups.get('sys.runRender')?.avg.toFixed(0) ?? ''
+  const turn = window.logger.logGroups.get('sys.runTurns')?.avg.toFixed(0) ?? ''
+  const render = window.logger.logGroups.get('sys.runRender')?.avg.toFixed(0) ?? ''
   return `T:${turn}ms R:${render}ms`
 }

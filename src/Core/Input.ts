@@ -1,7 +1,7 @@
 // * Translate key code into Action
 
 // import { Move, Direction, Wait, UI, ChangeLevel } from './Actions'
-import { ActionTypes, ChangeLevel, Move, UI } from './Action'
+import { ActionTypes, ChangeLevel, Move, MetaUI } from './Action'
 
 export function input(code: string): ActionTypes | null {
   switch (code) {
@@ -50,32 +50,32 @@ export function input(code: string): ActionTypes | null {
 
     // UI
     case 'KeyV':
-      return UI('visualizer')
+      return MetaUI('visualizer')
     // debug
     case 'KeyR':
-      return UI('localRevealAll')
+      return MetaUI('localRevealAll')
     case 'KeyT':
-      return UI('localRecallAll')
+      return MetaUI('localRecallAll')
     // case 'Digit1':
     //   return UI('renderStack')
     case 'Digit2':
-      return UI('playerLight')
+      return MetaUI('playerLight')
     case 'Digit3':
-      return UI('formCycle')
+      return MetaUI('formCycle')
     case 'Digit4':
-      return UI('lightingUpdate')
+      return MetaUI('lightingUpdate')
     // case 'Digit5':
     //   return UI('bgCycle')
 
     // Debug log world
     case 'KeyQ':
-      return UI('debug_logworld')
+      return MetaUI('debug_logworld')
     case 'KeyW':
-      return UI('debug_loglocal')
+      return MetaUI('debug_loglocal')
     case 'KeyE':
-      return UI('debug_logentities')
+      return MetaUI('debug_logentities')
     case 'Backslash':
-      return UI('debug_loglogger')
+      return MetaUI('debug_loglogger')
 
     // case 'KeyN':
     //   return UI('newMap')

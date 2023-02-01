@@ -4,7 +4,7 @@ import * as Generate from '../Generate'
 import { createGameDisplay } from '../lib/display'
 import { Keys } from '../lib/Keys'
 import { logger } from '../lib/logger'
-import { ComponentFoundry, EntityPool, GUI, input, Region, System } from './'
+import { ComponentFoundry, EntityPool, UI, input, Region, System } from './'
 
 export type Message = { turn: number; text: string }
 
@@ -40,10 +40,9 @@ export class Engine {
     this.local = overseer.current
 
     this.system.initLocal(this)
-    // this.system.run(this, playerAction)
 
     this.keys.add(this.update.bind(this))
-    console.log('Engine ready', this)
+    console.log(this)
   }
 
   update(code: string) {
@@ -51,7 +50,7 @@ export class Engine {
     if (!playerAction) return
 
     if ('ui' in playerAction) {
-      GUI(this, playerAction.ui)
+      UI(this, playerAction.ui)
       this.local.hasChanged = true
       return
     }

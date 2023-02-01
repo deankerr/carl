@@ -1,6 +1,6 @@
 import { Engine } from './Engine'
 
-export function GUI(engine: Engine, ui: string) {
+export function UI(engine: Engine, ui: string) {
   const { local, options } = engine
   if (ui === 'debug_logworld') console.log(engine)
   if (ui === 'debug_logentities') console.log('Local entities', local.entities)

@@ -2,7 +2,7 @@ import * as ROT from 'rot-js'
 import { Point } from '../Model/Point'
 import { Direction, DIRECTIONS } from '../lib/direction'
 
-export type ActionTypes = Move | UI | Bump | MeleeAttack | Tread | ChangeLevel | None
+export type ActionTypes = Move | MetaUI | Bump | MeleeAttack | Tread | ChangeLevel | None
 
 export type Bump = { bump: Point }
 export const Bump = (pt: Point): Bump => {
@@ -55,16 +55,12 @@ export const Tread = (pt: Point): Tread => {
   return { tread: pt }
 }
 
-export type UI = { ui: string }
-export const UI = (doThing: string) => {
+export type MetaUI = { ui: string }
+export const MetaUI = (doThing: string) => {
   return { ui: doThing }
 }
 
 export function __randomMove(): ActionTypes {
   const dir = ROT.RNG.getItem(Object.keys(DIRECTIONS)) as Direction
   return Move(dir)
-}
-
-export function __wait(): ActionTypes {
-  return Move('WAIT')
 }

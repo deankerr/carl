@@ -1,5 +1,12 @@
+const suppress = [
+  'entity.attach.lightFlicker',
+  'entity.attach.form',
+  'entity.attach.formSetAutoCycle',
+  'entity.attach.emitLight',
+]
+
 class Logger {
-  groups = new Map<string, logGroup>()
+  logGroups = new Map<string, LogGroup>()
   items: LogItem[] = []
 
   constructor() {
@@ -8,21 +15,26 @@ class Logger {
 
   createGroup(pID: string) {
     const group = { pID, times: [], avg: 0, items: [] }
-    this.groups.set(pID, group)
+    this.logGroups.set(pID, group)
     return group
   }
 
   getGroup(pID: string) {
-    return this.groups.get(pID) ?? this.createGroup(pID)
+    return this.logGroups.get(pID) ?? this.createGroup(pID)
   }
 
-  createLogger(...pIDs: string[]) {
-    const pID = pIDs.join('.')
+  createLogger(top: string, ...pIDs: string[]) {
+    const pID = top + '.' + pIDs.join('.')
     const group = this.getGroup(pID)
 
     const t = Date.now()
 
     const msg = (...text: string[]) => {
+      if (suppress.includes(pID)) {
+        group.items.push(suppressedItem)
+        return
+      }
+
       const item: LogItem = { pID, text: text.join(' '), level: logLevel.info }
       group.items.push(item)
       this.items.push(item)
@@ -36,12 +48,24 @@ class Logger {
       group.avg = group.times.reduce((a, b) => a + b) / group.times.length
     }
 
-    const timer = {
-      msg,
-      end,
-    }
+    const timer = { msg, end }
 
     return timer
+  }
+
+  cull() {
+    if (this.items.length < 100000) return
+    this.logGroups = new Map<string, LogGroup>()
+    this.items = []
+    console.log('Logs culled!')
+  }
+
+  info() {
+    const info = []
+    for (const [key, group] of this.logGroups) {
+      info.push({ key, avg: group.avg.toFixed(2), items: group.items.length })
+    }
+    console.table(info)
   }
 }
 
@@ -55,7 +79,7 @@ declare global {
   }
 }
 
-type logGroup = {
+type LogGroup = {
   pID: string
   times: number[]
   avg: number
@@ -64,5 +88,7 @@ type logGroup = {
 
 type LogItem = { pID: string; level: LogLevel; text: string }
 
-const logLevel = { info: 'info' } as const
+const logLevel = { info: 'info', suppressed: 'suppressed' } as const
 type LogLevel = keyof typeof logLevel
+
+const suppressedItem = { pID: '', text: '', level: logLevel.suppressed }
