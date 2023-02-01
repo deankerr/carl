@@ -1,7 +1,5 @@
 import { CONFIG } from '../config'
-import { Component } from '../Core/Components'
 import { Engine } from '../Core/Engine'
-import { Entity } from '../Core/Entity'
 import { addLight, transformHSL } from '../lib/color'
 import { clamp, floor, half } from '../lib/util'
 
@@ -40,6 +38,9 @@ export function renderRegion(engine: Engine) {
 
   // * ========== Rendering ========== *
 
+  // replace any void terrain with this locally colored one
+  const voidLocal = { char: 'void', color: local.voidColor, bgColor: local.voidColor }
+
   mainDisplay.clear()
 
   local.render((pt, entities, visible, recalled) => {
@@ -57,66 +58,48 @@ export function renderRegion(engine: Engine) {
 
     const lighting = local.lighting.get(pt)
 
-    // * determine which entities should be rendered and in what order
-    let terrain: Entity[] = []
-    const feature: Entity[] = []
-    const being: Entity[] = []
+    const stack = [
+      voidLocal,
+      ...entities
+        // 1. remove void terrain
+        .filter(e => e.label !== 'void')
+        // 2. determine which beings are to be rendered
+        .filter(e => {
+          if (visible) {
+            const beingPresent = entities.some(e => e.being)
+            // if player can see the area, render beings + renderUnderBeings flagged
+            if (e.being) return true
+            else if (beingPresent) {
+              return e.renderUnderBeing
+            } else return true
+          } else if (recalled) {
+            // if area remembered, render just terrain + memorable features
+            return e.terrain || e.memorable
+          }
+          // if not visible or recalled, render nothing
+          return false
+        })
+        // 3. extract relevant display data, applying lighting or fade effects
+        .map(e => {
+          const form = { ...e.form }
+          if (visible && lighting) {
+            // don't add light to something that is emitting light, which can look bad
+            if (!e.emitLight?.enabled) form.color = addLight(form.color, lighting)
+          } else if (recalled) form.color = transformHSL(form.color, recalledFade)
+          return form
+        }), // ? sort
+    ]
 
-    // if visible, render everything
-    if (visible) {
-      entities.forEach(e => {
-        if (e.terrain) terrain.push(e)
-        else if (e.being) being.push(e)
-        else feature.push(e) // ? render anything without a tag as feature
-      })
-    } else if (recalled) {
-      // if recalled, render only terrain and memorable things
-      entities.forEach(e => {
-        if (e.terrain) terrain.push(e)
-        else if (e.memorable) feature.push(e)
-      })
-    } // ... if not visible or recalled, render nothing
-
-    // * strip any "void" terrain, insert a custom void with local color (ie. local background color)
-    const voidLocal = {
-      ...local.pool.symbolic('void'),
-      form: { char: 'void', color: local.voidColor, bgColor: local.voidColor },
-    }
-    terrain = [voidLocal, ...terrain.filter(t => t.label !== 'void')]
-
-    // * assemble stack of render data
-    const formStack: Component<'form'>['form'][] = []
-
-    // - render only flagged terrain/features under a being
-    if (being.length > 0) {
-      formStack.push(...terrain.filter(t => t.renderUnderBeing).map(t => t.form))
-      formStack.push(...feature.filter(f => f.renderUnderBeing).map(f => f.form))
-      formStack.push(...being.map(b => b.form))
-    } else {
-      // otherwise everything
-      formStack.push(...terrain.map(t => t.form))
-      formStack.push(...feature.map(f => f.form))
-    }
-
-    // * apply lighting/faded color if applicable
-    let colorStack: Component<'form'>['form'][] = []
-
-    if (visible && lighting)
-      colorStack = formStack.map(f => (f = { ...f, color: addLight(f.color, lighting) }))
-    else if (!visible && recalled)
-      colorStack = formStack.map(f => (f = { ...f, color: transformHSL(f.color, recalledFade) }))
-    else colorStack = formStack
-
-    // * abort if we ended up with nothing or ROT.JS will error
-    if (colorStack.length === 0) return
+    // * abort if we somehow ended up with nothing or ROT.JS will error
+    if (stack.length === 0) return
 
     // * draw
     mainDisplay.draw(
       pt.x,
       pt.y,
-      colorStack.map(s => s.char),
-      colorStack.map(s => s.color),
-      colorStack.map(s => s.bgColor)
+      stack.map(s => s.char),
+      stack.map(s => s.color),
+      stack.map(s => s.bgColor)
     )
   })
 }

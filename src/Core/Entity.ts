@@ -74,6 +74,8 @@ export class EntityPool {
     if (index < 0) throw new Error(`Unable to locate entity to modify, ${entity.label}`)
     let store = this.attach(entity, 'tag', 'signalModified')
 
+    if (store.emitLight?.enabled) this.attach(store, 'tag', 'signalLightPathUpdated')
+
     const modify = <T extends FoundryKey>(cName: T, ...p: FoundryParam[T]) => {
       store = this.attach(store, cName, ...p)
       localState[index] = store
@@ -91,20 +93,19 @@ export class EntityPool {
     }
 
     const mutate = <
-      C extends Components,
-      T extends keyof C,
-      K extends keyof C[T],
-      P extends C[T][K]
+      T extends keyof Components,
+      K extends keyof Components[T],
+      P extends Components[T][K]
     >(
       cName: T,
       cKey: K,
       cProp: P
     ) => {
-      store[cName][cKey] = cProp
-      // Reflect.deleteProperty(e, cName)
-      // store = e
-      // localState[index] = store
-      // console.log('REMOVE:', store.name, cName)
+      if (store[cName]) {
+        if (store[cName][cKey]) {
+          store[cName][cKey] = cProp
+        }
+      }
       return options
     }
 

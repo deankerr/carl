@@ -13,7 +13,7 @@ export class Region {
   recallAll = true
   revealAll = true
 
-  voidColor = CONFIG.mainBackgroundColor
+  voidColor = '' || CONFIG.mainBackgroundColor
   lighting = new Map<Point, Color>()
 
   hasChanged = true
