@@ -1,88 +1,83 @@
 // * Translate key code into Action
 
-// import { Move, Direction, Wait, UI, ChangeLevel } from './Actions'
+import { logger } from '../lib/logger'
 import { ActionTypes, ChangeLevel, Move, MetaUI } from './Action'
 
-export function input(code: string): ActionTypes | null {
-  switch (code) {
-    // Movement
-    case 'KeyI':
-    case 'Numpad7':
-      return Move('NW')
-    case 'KeyO':
-    case 'ArrowUp':
-    case 'Numpad8':
-      return Move('N')
-    case 'KeyP':
-    case 'Numpad9':
-      return Move('NE')
-    case 'KeyK':
-    case 'ArrowLeft':
-    case 'Numpad4':
-      return Move('W')
-    case 'KeyL':
-    case 'Numpad5':
-      return Move('WAIT')
-    case 'Semicolon':
-    case 'ArrowRight':
-    case 'Numpad6':
-      return Move('E')
-    case 'Comma':
-    case 'Numpad1':
-      return Move('SW')
-    case 'Period':
-    case 'ArrowDown':
-    case 'Numpad2':
-      return Move('S')
-    case 'Slash':
-    case 'Numpad3':
-      return Move('SE')
+type KeyMap = Record<string, ActionTypes>
 
-    // Change Level
+export function handle(event: KeyboardEvent): ActionTypes | undefined {
+  const { key, code, ctrlKey: ctrl, shiftKey: shift } = event
+  // console.log('event:', event)
+  // console.log(key, code, ctrl ? 'ctrl' : '', shift ? 'shift' : '')
+
+  // * Numpad movement
+  const move: KeyMap = {
+    Numpad7: Move('NW'),
+    Numpad8: Move('N'),
+    Numpad9: Move('NE'),
+    Numpad4: Move('W'),
+    Numpad5: Move('WAIT'),
+    Numpad6: Move('E'),
+    Numpad1: Move('SW'),
+    Numpad2: Move('S'),
+    Numpad3: Move('SE'),
+  }
+  if (move[code]) return move[code]
+
+  // * Arrow key movement
+  switch (code) {
+    case 'ArrowLeft':
+      if (ctrl) return Move('SW')
+      if (shift) return Move('NW')
+      return Move('W')
+    case 'ArrowRight':
+      if (ctrl) return Move('SE')
+      if (shift) return Move('NE')
+      return Move('W')
+    case 'ArrowDown':
+      return Move('S')
+    case 'ArrowUp':
+      return Move('N')
+  }
+
+  // * Gameplay
+  switch (key) {
     case 'Enter':
     case 'Space':
+    case ',':
+    case '.':
       return ChangeLevel('anywhere')
-    // Debug change level
-    case 'Equal':
-      return ChangeLevel('debug_down')
-    case 'Minus':
-      return ChangeLevel('debug_up')
-
-    // UI
-    case 'KeyV':
-      return MetaUI('visualizer')
-    // debug
-    case 'KeyR':
-      return MetaUI('localRevealAll')
-    case 'KeyT':
-      return MetaUI('localRecallAll')
-    // case 'Digit1':
-    //   return UI('renderStack')
-    case 'Digit2':
-      return MetaUI('playerLight')
-    case 'Digit3':
-      return MetaUI('formCycle')
-    case 'Digit4':
-      return MetaUI('lightingUpdate')
-    // case 'Digit5':
-    //   return UI('bgCycle')
-
-    // Debug log world
-    case 'KeyQ':
-      return MetaUI('debug_logworld')
-    case 'KeyW':
-      return MetaUI('debug_loglocal')
-    case 'KeyE':
-      return MetaUI('debug_logentities')
-    case 'Backslash':
-      return MetaUI('debug_loglogger')
-
-    // case 'KeyN':
-    //   return UI('newMap')
-
-    // Utility
-    default:
-      console.log(`Key '${code}' not recognised`)
-      return null
   }
+
+  // * Dev
+  const dev: KeyMap = {
+    KeyR: MetaUI('localRevealAll'),
+    KeyT: MetaUI('localRecallAll'),
+    Digit2: MetaUI('playerLight'),
+    Digit3: MetaUI('formCycle'),
+    Digit4: MetaUI('lightingUpdate'),
+    // Debug log world
+    KeyQ: MetaUI('debug_logworld'),
+    KeyW: MetaUI('debug_loglocal'),
+    KeyE: MetaUI('debug_logentities'),
+    KeyA: MetaUI('debug_loglogger'),
+  }
+  if (shift && dev[code]) return dev[code]
+
+  logger('input').msg(`Key '${code}' not recognised`)
+  return
+}
+
+export function listen(callback: (event: KeyboardEvent) => unknown) {
+  document.addEventListener('keydown', event => {
+    // ignore meta keys only
+    switch (event.key) {
+      case 'Shift':
+      case 'Control':
+      case 'Alt':
+      case 'Meta':
+        return
+    }
+    callback(event)
+  })
 }

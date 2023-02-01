@@ -35,4 +35,5 @@ export function UI(engine: Engine, ui: string) {
   //   options.bgCycle = !options.bgCycle
   //   engine.uiMessage(`cycleBg: ${options.bgCycle}`)
   // }
+  local.hasChanged = true
 }

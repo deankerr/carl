@@ -2,16 +2,14 @@ import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
 import * as Generate from '../Generate'
 import { createGameDisplay } from '../lib/display'
-import { Keys } from '../lib/Keys'
 import { logger } from '../lib/logger'
-import { ComponentFoundry, EntityPool, UI, input, Region, System } from './'
+import { ComponentFoundry, EntityPool, UI, handle, listen, Region, System } from './'
 
 export type Message = { turn: number; text: string }
 
 export class Engine {
   mainDisplay: ROT.Display
   msgDisplay: ROT.Display
-  keys = new Keys()
 
   component = ComponentFoundry
   pool = new EntityPool(this.component)
@@ -41,21 +39,17 @@ export class Engine {
 
     this.system.initLocal(this)
 
-    this.keys.add(this.update.bind(this))
+    listen(this.update.bind(this))
     console.log(this)
   }
 
-  update(code: string) {
-    const playerAction = input(code)
-    if (!playerAction) return
+  update(event: KeyboardEvent) {
+    const action = handle(event)
+    if (!action) return
 
-    if ('ui' in playerAction) {
-      UI(this, playerAction.ui)
-      this.local.hasChanged = true
-      return
-    }
+    if ('ui' in action) return UI(this, action.ui)
 
-    this.system.run(this, playerAction)
+    this.system.run(this, action)
     this.playerTurns++
   }
 
