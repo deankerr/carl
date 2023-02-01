@@ -2,12 +2,44 @@ import { ActionTypes } from './Action'
 import { Point } from '../Model/Point'
 
 export const ComponentFoundry = {
-  name: (name: string) => {
-    return { name }
+  acting: (action: ActionTypes) => {
+    return { acting: action }
+  },
+
+  emitLight: (color: string, enabled = true) => {
+    return { emitLight: { color, enabled } }
+  },
+
+  fieldOfView: (radius: number, visible = new Set<Point>()) => {
+    return { fieldOfView: { radius, visible } }
   },
 
   form: (char: string, color: string, bgColor = 'transparent') => {
     return { form: { char, color, bgColor } }
+  },
+
+  formSet: (formSet: string[]) => {
+    return { formSet }
+  },
+
+  formSetAutoCycle: (frequency: number, current = 0, lastUpdate = 0) => {
+    return { formSetAutoCycle: { frequency, current, lastUpdate } }
+  },
+
+  formSetTriggers: (...tags: Tag[]) => {
+    return { formSetTriggers: tags }
+  },
+
+  lightFlicker: (frequency: number, current = false, lastUpdate = 0) => {
+    return { lightFlicker: { frequency, current, lastUpdate } }
+  },
+
+  lightHueRotate: (addHue: number) => {
+    return { lightHueRotate: addHue }
+  },
+
+  name: (name: string) => {
+    return { name }
   },
 
   position: (position: Point) => {
@@ -23,56 +55,24 @@ export const ComponentFoundry = {
   trodOn: (msg: string) => {
     return { trodOn: { msg } }
   },
-
-  acting: (action: ActionTypes) => {
-    return { acting: action }
-  },
-
-  fieldOfView: (radius: number, visible = new Set<Point>()) => {
-    return { fieldOfView: { radius, visible } }
-  },
-
-  formSet: (formSet: string[]) => {
-    return { formSet }
-  },
-
-  formSetTriggers: (...tags: Tag[]) => {
-    return { formSetTriggers: tags }
-  },
-
-  formSetAutoCycle: (frequency: number, current = 0, lastUpdate = 0) => {
-    return { formSetAutoCycle: { frequency, current, lastUpdate } }
-  },
-
-  emitLight: (color: string, enabled = true) => {
-    return { emitLight: { color, enabled } }
-  },
-
-  lightFlicker: (frequency: number, current = false, lastUpdate = 0) => {
-    return { lightFlicker: { frequency, current, lastUpdate } }
-  },
-
-  lightHueRotate: (addHue: number) => {
-    return { lightHueRotate: addHue }
-  },
 }
 
 export type Tag =
-  | 'blocksMovement'
-  | 'blocksLight'
-  | 'playerControlled'
-  | 'memorable'
   | 'actor'
-  | 'meleeAttackTarget'
-  | 'dead'
   | 'being'
+  | 'blocksLight'
+  | 'blocksMovement'
+  | 'dead'
   | 'feature'
-  | 'terrain'
   | 'isClosed'
   | 'isOpen'
+  | 'meleeAttackTarget'
+  | 'memorable'
+  | 'playerControlled'
   | 'renderUnderBeing'
-  | 'signalModified' // todo Pool should add these
   | 'signalLightPathUpdated'
+  | 'signalModified'
+  | 'terrain'
 
 export type FoundryKey = keyof typeof ComponentFoundry
 export type FoundryParam = { [K in FoundryKey]: Parameters<typeof ComponentFoundry[K]> }
