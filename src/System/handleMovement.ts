@@ -10,7 +10,7 @@ export const handleMovement = (engine: Engine) => {
   const action = currentEntity.acting
 
   if (!('move' in action)) {
-    log.msg(`handleMovement: not a move action`)
+    // log.msg(`handleMovement: not a move action`)
     return
   }
 
@@ -36,7 +36,7 @@ export const handleMovement = (engine: Engine) => {
   if (entitiesHere.some(e => e.blocksMovement)) {
     log.msg('handleMovement: new action - Bump ')
     local.entity(currentEntity).modify('acting', Action.Bump(newPt))
-    return
+    return log.end()
   }
 
   // valid move, create tread action and update position
@@ -46,4 +46,6 @@ export const handleMovement = (engine: Engine) => {
     .modify('acting', Action.Tread(newPt))
     .modify('position', newPt)
     .modify('tag', 'signalLightPathUpdated')
+
+  log.end()
 }

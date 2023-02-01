@@ -20,6 +20,7 @@ export class EntityPool {
   readonly pool = new Map<string, Entity>()
 
   constructor(readonly components: typeof ComponentFoundry) {
+    const log = logger('entity', 'init')
     const templates = [...beings, ...features, ...terrain]
     for (const t of templates) {
       let e = {
@@ -49,13 +50,14 @@ export class EntityPool {
 
       this.pool.set(t.label, e)
     }
+    log.end()
   }
 
   attach<T extends FoundryKey>(e: Entity, componentName: T, ...p: FoundryParam[T]) {
     const c = Reflect.apply(this.components[componentName], undefined, p)
-    logger('entity', 'attach', `${componentName}`).msg(
-      `attach ${e.label} ${componentName} [${[...p.values()]}]`
-    )
+    // logger('entity', 'attach', `${componentName}`).msg(
+    //   `attach ${e.label} ${componentName} [${[...p.values()]}]`
+    // )
     return { ...e, ...c }
   }
 
@@ -94,7 +96,7 @@ export class EntityPool {
       Reflect.deleteProperty(e, componentName)
       store = e
       localState[index] = store
-      logger('entity', 'remove', `${componentName}`).msg(`remove ${e.label} ${componentName}`)
+      // logger('entity', 'remove', `${componentName}`).msg(`remove ${e.label} ${componentName}`)
       return options
     }
 

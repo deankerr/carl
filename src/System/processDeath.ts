@@ -7,7 +7,7 @@ export const processDeath = (engine: Engine) => {
   const { local } = engine
   const currentEntities = local.get('dead')
 
-  if (currentEntities.length === 0) return log.msg('processDeath: no entities to remove')
+  if (currentEntities.length === 0) return
 
   log.msg('processDeath: reaping')
   for (const entity of currentEntities) {
@@ -16,5 +16,5 @@ export const processDeath = (engine: Engine) => {
     log.msg('processDeath: removed', entity.label)
   }
 
-  log.msg('processDeath: process complete')
+  log.end('processDeath: process complete')
 }

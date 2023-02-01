@@ -43,7 +43,7 @@ export class System {
       const e = this.next(local)
 
       if (e.playerControlled) {
-        if (playerTurnTaken) return log.msg('Sys: Player Input Required')
+        if (playerTurnTaken) return log.end('Sys: Player Input Required')
         else playerTurnTaken = true
       }
 

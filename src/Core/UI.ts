@@ -5,7 +5,7 @@ export function UI(engine: Engine, ui: string) {
   if (ui === 'debug_logworld') console.log(engine)
   if (ui === 'debug_logentities') console.log('Local entities', local.entities)
   if (ui === 'debug_loglocal') console.log('Local', local)
-  if (ui === 'debug_loglogger') console.log(window.logger)
+  if (ui === 'debug_loglogger') window.logger.info()
   if (ui === 'localRevealAll') {
     local.revealAll = !local.revealAll
     engine.uiMessage(`revealAll: ${local.revealAll}`)

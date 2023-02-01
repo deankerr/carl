@@ -7,7 +7,7 @@ export const handleTread = (engine: Engine, isPlayerTurn: boolean) => {
   const [currentEntity] = local.get('acting', 'position')
   const { acting: action } = currentEntity
 
-  if (!('tread' in action)) return log.msg('handleTread: not a tread action')
+  if (!('tread' in action)) return //log.msg('handleTread: not a tread action')
   // Only the player
   if (!isPlayerTurn) {
     log.msg('handleTread: result - not the player')
@@ -22,5 +22,5 @@ export const handleTread = (engine: Engine, isPlayerTurn: boolean) => {
     }
   }
 
-  log.msg('handleTread: done')
+  log.end('handleTread: done')
 }

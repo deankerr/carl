@@ -9,7 +9,7 @@ export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
   const [currentEntity] = local.get('acting', 'position')
   const { acting: action } = currentEntity
 
-  if (!('bump' in action)) return log.msg('handleBump: not a bump action')
+  if (!('bump' in action)) return //log.msg('handleBump: not a bump action')
 
   const bumped = local.at(action.bump).filter(e => !e.acting && e.blocksMovement)
 
@@ -35,7 +35,7 @@ export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
           .modify('tag', 'signalLightPathUpdated')
 
         engine.message('Knock knock!!!')
-        return
+        return log.end()
       }
 
       // * attack!
@@ -53,4 +53,5 @@ export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
       // TODO
     }
   }
+  log.end()
 }

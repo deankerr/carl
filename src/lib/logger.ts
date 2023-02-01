@@ -43,7 +43,7 @@ class Logger {
     const end = (...text: string[]) => {
       if (text.length > 0) msg(...text)
       const tEnd = Date.now() - t
-      if (group.times.length > 10000) group.times = group.times.slice(-100)
+      if (group.times.length > 1000) group.times = group.times.slice(-200)
       group.times.push(tEnd)
       group.avg = group.times.reduce((a, b) => a + b) / group.times.length
     }
@@ -66,6 +66,7 @@ class Logger {
       info.push({ key, avg: group.avg.toFixed(2), items: group.items.length })
     }
     console.table(info)
+    console.log(this)
   }
 }
 
