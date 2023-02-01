@@ -115,15 +115,4 @@ export class Region {
     const entities = this.at(point(x, y))
     return !entities.some(e => e.blocksLight)
   }
-
-  initTurnQueue() {
-    const player = this.player()
-    const actors = this.get('actor').filter(a => !a.playerControlled)
-
-    const queue = new Queue<number>()
-    queue.add(player.eID, true)
-    actors.forEach(a => queue.add(a.eID, true))
-
-    this.turnQueue = queue
-  }
 }

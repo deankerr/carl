@@ -38,10 +38,10 @@ export class Engine {
   init() {
     const overseer = Generate.overworld()
     this.local = overseer.current
-    this.local.initTurnQueue()
 
-    this.system.runLocalInit(this)
-    this.system.run(this)
+    this.system.initLocal(this)
+    // this.system.run(this, playerAction)
+
     this.keys.add(this.update.bind(this))
     console.log('Engine ready', this)
   }
@@ -56,12 +56,12 @@ export class Engine {
       return
     }
 
-    this.system.player(this, playerAction)
+    this.system.run(this, playerAction)
     this.playerTurns++
   }
 
   render() {
-    this.system.runRender(this)
+    this.system.render(this)
 
     if (CONFIG.frameLimit)
       setTimeout(() => requestAnimationFrame(this.render.bind(this)), CONFIG.frameLimit)

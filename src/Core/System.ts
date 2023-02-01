@@ -1,4 +1,5 @@
 import { logger } from '../lib/logger'
+import { Queue } from '../lib/util'
 import {
   handleBump,
   handleMeleeAttack,
@@ -17,7 +18,7 @@ import { Engine } from './Engine'
 import { Region } from './Region'
 
 export class System {
-  localInitProcess = [processFieldOfVision]
+  initLocalProcess = [processFieldOfVision]
 
   turnProcess = [
     handleMovement,
@@ -27,44 +28,35 @@ export class System {
     processDeath,
     processFieldOfVision,
   ]
-  // postTurnProcess = []
 
   preRenderProcess = [processFormUpdate, processLighting]
   renderProcess = [renderRegion, renderMessageLog]
 
-  player(engine: Engine, playerAction: ActionTypes) {
-    const log = logger('sys', 'runPlayerTurn')
-
-    log.msg('runTurn Player')
-    engine.local.entity(engine.local.player()).modify('acting', playerAction)
-    this.turnProcess.forEach(sys => sys(engine, true))
-    engine.local.entity(engine.local.get('acting')[0]).remove('acting')
-
-    this.run(engine)
-    log.end()
-  }
-
-  run(engine: Engine) {
+  run(engine: Engine, playerAction: ActionTypes) {
     const log = logger('sys', 'runTurns')
     const { local } = engine
+
+    let playerTurnTaken = false
     let maxLoops = 100
+
     while (maxLoops-- > 0) {
       const e = this.next(local)
-      if (e.playerControlled) {
-        log.msg('Sys: Player Input Required')
-        // this.postTurnProcess.forEach(sys => sys(engine))
-        return
-      }
-      log.msg('runTurn', e.label)
 
-      local.entity(e).modify('acting', Action.__randomMove())
-      this.turnProcess.forEach(sys => sys(engine, false))
+      if (e.playerControlled) {
+        if (playerTurnTaken) return log.msg('Sys: Player Input Required')
+        else playerTurnTaken = true
+      }
+
+      const action = e.playerControlled ? playerAction : Action.__randomMove()
+
+      log.msg('Start turn:', e.label)
+      local.entity(e).modify('acting', action)
+      this.turnProcess.forEach(sys => sys(engine, e.playerControlled == true))
       local.entity(local.get('acting')[0]).remove('acting')
     }
+
     if (maxLoops < 1) throw new Error('Sys loop maximum exceeded')
   }
-
-  // process(region: Region) {}
 
   next(local: Region) {
     const nextID = local.turnQueue.next()
@@ -72,14 +64,26 @@ export class System {
     return local.getByID(nextID)
   }
 
-  runRender(engine: Engine) {
+  render(engine: Engine) {
     const log = logger('sys', 'runRender')
     this.preRenderProcess.forEach(sys => sys(engine))
     this.renderProcess.forEach(sys => sys(engine))
     log.end()
   }
 
-  runLocalInit(engine: Engine) {
-    this.localInitProcess.forEach(sys => sys(engine))
+  // set up turn queue starting on player turn, run init systems
+  initLocal(engine: Engine) {
+    const { local } = engine
+
+    const player = local.player()
+    const actors = local.get('actor').filter(a => !a.playerControlled)
+
+    const queue = new Queue<number>()
+    queue.add(player.eID, true)
+    actors.forEach(a => queue.add(a.eID, true))
+
+    local.turnQueue = queue
+
+    this.initLocalProcess.forEach(sys => sys(engine))
   }
 }
