@@ -1,4 +1,5 @@
 import { Color } from 'rot-js/lib/color'
+import { CONFIG } from '../config'
 import { Queue } from '../lib/util'
 import { Point, point, grid } from '../Model/Point'
 import { Entity, EntityPool, EntityKey, EntityWith, TerrainKey } from './Entity'
@@ -12,7 +13,7 @@ export class Region {
   recallAll = true
   revealAll = true
 
-  voidColor = '#001E00'
+  voidColor = CONFIG.mainBackgroundColor
   lighting = new Map<Point, Color>()
 
   hasChanged = true

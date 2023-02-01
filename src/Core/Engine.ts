@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */ // !!! dev
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
 import * as Generate from '../Generate'

@@ -66,7 +66,7 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   // repeat(2, () => walk(grid, Terrain.water, 20, southLakePt))
 
   const main = new Structure(inner, O)
-  main.mark(true)
+  // main.mark(true)
   const [main1, main2] = main.bisect()
 
   const [ruinsArea, featureArea] = ROT.RNG.shuffle([main1, main2])

@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as ROT from 'rot-js'
 import { EntityKey, TerrainKey } from '../../Core/Entity'
-import { half, makeOdd, pick, range, rnd, rndO, shuffle } from '../../lib/util'
+import { half, makeOdd, pick, range, rnd, shuffle } from '../../lib/util'
 import { Point, point } from '../../Model/Point'
 import { Rect } from '../../Model/Rectangle'
-import { BSPRooms } from '../modules/BSP'
+import { BSPRooms } from '../modules/BSPRooms'
 import { Overseer } from '../Overseer'
 
 export class Structure {
@@ -24,7 +23,7 @@ export class Structure {
   }
 
   // split the main rect into two sub rects
-  bisect(variance = 0) {
+  bisect() {
     const self = this.rect //tvhis.rect.scale(-1)
 
     const canSplitV = self.height >= 5
@@ -35,7 +34,7 @@ export class Structure {
     const dir = true
 
     // get split point
-    const split = dir ? rnd(self.x + 2, self.x2 - 2) : rnd(self.y + 2, self.y2 - 2)
+    // const split = dir ? rnd(self.x + 2, self.x2 - 2) : rnd(self.y + 2, self.y2 - 2)
 
     const splitPt1 = dir ? point(self.cx - 1, self.y2) : point(self.x2, self.cy - 1)
     const splitPt2 = dir ? point(self.cx + 1, self.y) : point(self.x, self.cy + 1)
@@ -299,7 +298,7 @@ export class Structure {
     }
   }
 
-  mark(edgeOnly = false) {
+  mark() {
     // const m = this.O.mutate()
     // this.rect.traverse((pt, edge) => {
     //   if (!edgeOnly) m.setE(pt, Features.debugMarker)

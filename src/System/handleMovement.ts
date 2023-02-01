@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as Action from '../Core/Action'
 import { Engine } from '../Core/Engine'
 import { logger } from '../lib/logger'
 
-export const handleMovement = (engine: Engine, isPlayerTurn: boolean) => {
+// , isPlayerTurn: boolean
+export const handleMovement = (engine: Engine) => {
   const log = logger('sys', 'handleMovement')
   const { local } = engine
   const [currentEntity] = local.get('acting', 'position')

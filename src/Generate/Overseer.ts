@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Entity, EntityKey, EntityPool, TerrainKey } from '../Core/Entity'
 import { Region } from '../Core/Region'
 import { rnd } from '../lib/util'
@@ -26,7 +25,7 @@ export class Overseer {
     readonly pool: EntityPool,
     readonly initial: TerrainKey = 'void'
   ) {
-    this.current = new Region(width, height, pool, initial)
+    this.current = new Region(width, height, pool)
   }
 
   mutate() {

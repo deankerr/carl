@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
 import { tileMapOryxMessages, tileMapOryxMain } from './tilemap'
@@ -6,14 +5,13 @@ import { tileMapOryxMessages, tileMapOryxMain } from './tilemap'
 const mainTileSize = 32
 export const createTileDisplay = (
   width = CONFIG.mainDisplayWidth,
-  height = CONFIG.mainDisplayHeight,
-  bg = CONFIG.mainBackgroundColor
+  height = CONFIG.mainDisplayHeight
 ) => {
   const display = new ROT.Display({
     layout: 'tile-gl',
     width,
     height,
-    bg,
+    bg: CONFIG.mainBackgroundColor,
     tileWidth: mainTileSize,
     tileHeight: mainTileSize,
     tileSet: window.tileSet32,
@@ -27,14 +25,14 @@ export const createTileDisplay = (
 const msgTileSize = 24
 export const createMessageDisplay = (
   width = CONFIG.messageDisplayWidth,
-  height = CONFIG.messageDisplayHeight,
-  bg = CONFIG.messageBackgroundColor
+  height = CONFIG.messageDisplayHeight
 ) => {
   const display = new ROT.Display({
     layout: 'tile-gl',
     width,
     height,
-    bg,
+    fg: CONFIG.messageColor,
+    bg: CONFIG.messageBackgroundColor,
     tileWidth: msgTileSize,
     tileHeight: msgTileSize,
     tileSet: window.tileSet24,
@@ -72,17 +70,17 @@ export const createGameDisplay = () => {
 
   // message display canvas
   const msgDisplay = createMessageDisplay(CONFIG.messageDisplayWidth, CONFIG.messageDisplayHeight)
-  const msg = msgDisplay.getContainer()!
+  const msg = msgDisplay.getContainer()
+  if (!msg) throw new Error('Unable to get msgDisplay container')
+
   msg.style.maxWidth = '99vw'
   msg.style.position = 'absolute'
 
-  // msg.style.bottom = '0'
-  // msg.style.top = '140px'
-  // msg.style.height = '300px'
-
   // main game display canvas
   const mainDisplay = createTileDisplay(CONFIG.mainDisplayWidth, CONFIG.mainDisplayHeight)
-  const main = mainDisplay.getContainer()!
+  const main = mainDisplay.getContainer()
+  if (!main) throw new Error('Unable to get mainDisplay container')
+
   main.style.maxWidth = '99vw'
   main.style.maxHeight = '99vh'
 

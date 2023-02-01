@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 class Logger {
   groups = new Map<string, logGroup>()
   items: LogItem[] = []
@@ -7,14 +6,19 @@ class Logger {
     console.log('Logger init')
   }
 
-  createLogGroup(pID: string) {
-    this.groups.set(pID, { pID, times: [], avg: 0, items: [] })
+  createGroup(pID: string) {
+    const group = { pID, times: [], avg: 0, items: [] }
+    this.groups.set(pID, group)
+    return group
+  }
+
+  getGroup(pID: string) {
+    return this.groups.get(pID) ?? this.createGroup(pID)
   }
 
   createLogger(...pIDs: string[]) {
     const pID = pIDs.join('.')
-    if (!this.groups.has(pID)) this.createLogGroup(pID)
-    const group = this.groups.get(pID)!
+    const group = this.getGroup(pID)
 
     const t = Date.now()
 
