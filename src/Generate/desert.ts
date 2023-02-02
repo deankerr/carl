@@ -3,73 +3,77 @@ import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
 import { EntityKey, Region } from '../Core'
 import { logger } from '../lib/logger'
-import { half, pick, repeat, rnd } from '../lib/util'
+import { half, pick, loop, rnd } from '../lib/util'
 import { point, Point, neighbours4 } from '../Model/Point'
+import { walk, hop } from './modules/drunkards'
+import { Overseer2 } from './Overseer2'
 // ? #bb6244 desert sunset
 
 export function desert(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
   const log = logger('generate', 'desert')
 
   const region = new Region(width, height, window.game.pool)
+  const O2 = new Overseer2(region)
   region.voidColor = '#bba344'
+  // region.voidColor = '#000'
 
   const center = point(half(width), half(height))
 
-  function baseGrass() {
-    const gen = walk(rndPoint())
-    repeat(100, () => {
-      region.createTerrain('deadGrass', gen.next().value)
-    })
-  }
+  // dead grass
+  walk(
+    12,
+    200,
+    rndPt,
+    pt => O2.terrain(pt, 'deadGrass'),
+    () => O2.snapshot('deadGrass')
+  )
 
-  function scattered(key: EntityKey, start: Point) {
-    const gen = jump(start, 5)
-    repeat(10, () => {
-      region.createTerrain(key, gen.next().value)
-    })
-  }
+  // grass
+  hop(
+    10,
+    10,
+    5,
+    rndPt,
+    pt => O2.terrain(pt, 'grass'),
+    () => O2.snapshot('grass')
+  )
 
-  repeat(10, baseGrass)
+  // mound
+  hop(
+    8,
+    8,
+    8,
+    rndPt,
+    pt => O2.terrain(pt, 'mound'),
+    () => O2.snapshot('mound')
+  )
 
-  repeat(10, () => {
-    scattered('grass', rndPoint())
-  })
+  // dead Tree
+  hop(
+    8,
+    10,
+    8,
+    rndPt,
+    pt => O2.feature(pt, 'deadTree'),
+    () => O2.snapshot('deadTree')
+  )
 
-  repeat(5, () => {
-    scattered('deadTree', rndPoint())
-  })
+  // cactus
+  hop(
+    8,
+    10,
+    8,
+    rndPt,
+    pt => O2.feature(pt, 'cactus'),
+    () => O2.snapshot('cactus')
+  )
 
-  repeat(10, () => {
-    scattered('cactus', rndPoint())
-  })
-
-  repeat(10, () => {
-    scattered('mound', rndPoint())
-  })
-
+  O2.finalize()
+  console.log('O2:', O2)
   log.end()
   return region
 
-  function rndPoint() {
+  function rndPt() {
     return point(rnd(0, width), rnd(0, height))
   }
-}
-
-function* walk(start: Point) {
-  let pt = point(start.x, start.y)
-  while (1) {
-    yield (pt = pt.add(pick(neighbours4)))
-  }
-  return pt
-}
-
-function* jump(start: Point, mag: number) {
-  let pt = point(start.x, start.y)
-
-  while (1) {
-    const dir = pick(neighbours4)
-    pt = pt.add(dir.x * rnd(mag), dir.y * rnd(mag))
-    yield pt
-  }
-  return pt
 }

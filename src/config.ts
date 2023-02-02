@@ -21,7 +21,7 @@ const htmlBackgroundColor = mainBackgroundColor
 const frameLimit = 0
 const recallAll = PROD ? false : true
 const revealAll = PROD ? false : false
-const debugShowLightInfo = false
+const playerLight = false
 
 const initialDomain = 0
 
@@ -42,9 +42,9 @@ const CONFIG = {
   messageBackgroundColor,
   htmlBackgroundColor,
   frameLimit,
-  debugShowLightInfo,
   recallAll,
   revealAll,
+  playerLight,
   initialDomain,
   // autoStartVisualizer,
   // visualizerAutoplay,

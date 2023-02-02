@@ -1,4 +1,4 @@
-import { repeat, rnd } from '../../lib/util'
+import { loop, rnd } from '../../lib/util'
 import { Rect } from '../../Model/Rectangle'
 import { point } from '../../Model/Point'
 import { Overseer } from '../Overseer'
@@ -30,7 +30,7 @@ export function BSPRooms(startRect: Rect, BSPConfig?: BSPConfig) {
 
   console.log('Start BSP:', config)
 
-  repeat(attempts, () => {
+  loop(attempts, () => {
     if (config.favorLargest) queue.sort((a, b) => b.area - a.area)
     const r = queue.shift()
     if (!r) {

@@ -42,7 +42,7 @@ export class EntityPool {
           t.emitLight[0] === 'auto'
             ? transformHSL(e.form.color, { lum: { to: 0.25 } })
             : t.emitLight[0]
-        e = this.attach(e, 'emitLight', color)
+        e = this.attach(e, 'emitLight', color, t.emitLight[1])
       }
 
       if (t.lightFlicker) e = this.attach(e, 'lightFlicker', ...t.lightFlicker)

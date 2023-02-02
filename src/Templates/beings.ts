@@ -1,3 +1,4 @@
+// import { CONFIG } from '../config'
 import { EntityTemplate } from '../Core/Entity'
 
 export type BeingKey = 'player' | 'spider' | 'ghost' | 'demon' | 'crab' | 'crab2'
@@ -9,9 +10,9 @@ export const beings: EntityTemplate[] = [
     form: ['@', '#EE82EE'],
     tag: ['playerControlled', 'actor', 'blocksMovement', 'being'],
     fieldOfView: [12],
-    emitLight: ['auto'],
-    lightFlicker: [120],
-    lightHueRotate: [0.02],
+    // emitLight: ['auto', CONFIG.playerLight],
+    // lightFlicker: [120],
+    // lightHueRotate: [0.02],
   },
   {
     label: 'spider',

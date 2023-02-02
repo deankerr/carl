@@ -1,6 +1,6 @@
 import * as ROT from 'rot-js'
 import { Point, point } from '../Model/Point'
-import { half, pick, range, repeat, rnd, rndO } from '../lib/util'
+import { half, pick, range, loop, rnd, rndO } from '../lib/util'
 import { Overseer, Mutator } from './Overseer'
 import { Rect } from '../Model/Rectangle'
 import { CONFIG } from '../config'
@@ -20,8 +20,8 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
 
   // const center = Pt(half(width), half(height))
 
-  repeat(10, () => walk(O.grid.rndPt(), 'grass', 400, O.mutate())) // grass
-  repeat(10, () => walk(O.grid.rndPt(), 'deadGrass', 100, O.mutate())) // dead grass
+  loop(10, () => walk(O.grid.rndPt(), 'grass', 400, O.mutate())) // grass
+  loop(10, () => walk(O.grid.rndPt(), 'deadGrass', 100, O.mutate())) // dead grass
 
   // outer/inner space markers
   const levelRect = Rect.at(point(0, 0), width, height)
@@ -31,12 +31,12 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   // western lake
   const westLakePt = point(half(inner.x), rnd(inner.y, inner.y2))
   const westLakeMut = O.mutate()
-  repeat(30, () => walk(westLakePt, 'water', 12, westLakeMut, { n: 2, s: 2 }))
+  loop(30, () => walk(westLakePt, 'water', 12, westLakeMut, { n: 2, s: 2 }))
 
   // southern lake
   const southLakePt = point(rnd(levelRect.x, levelRect.x2), levelRect.y2 - 3)
   const southLakeMut = O.mutate()
-  repeat(15, () => walk(southLakePt, 'water', 12, southLakeMut, { e: 2, w: 2 }))
+  loop(15, () => walk(southLakePt, 'water', 12, southLakeMut, { e: 2, w: 2 }))
 
   const nsPeak = O.mutate()
   const nsMound = O.mutate()
@@ -61,8 +61,8 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
 
   // scattered shrubs
   // const shrubMut = O.mutate()
-  repeat(5, () => sparseWalk(inner.rndEdgePt(), 'shrub', 5, O.mutate(), 'void'))
-  repeat(5, () => sparseWalk(inner.rndEdgePt(), 'deadTree', 5, O.mutate(), 'void'))
+  loop(5, () => sparseWalk(inner.rndEdgePt(), 'shrub', 5, O.mutate(), 'void'))
+  loop(5, () => sparseWalk(inner.rndEdgePt(), 'deadTree', 5, O.mutate(), 'void'))
 
   // smaller southern lake
   // const southLakePt = Pt(center.x + rnd(-4, -4), outskirtsRect.y2)
@@ -178,7 +178,7 @@ function sparseWalk(
   mutator: Mutator,
   terrain?: TerrainKey
 ) {
-  repeat(amount, () => {
+  loop(amount, () => {
     const pt = start.add(point(rnd(-4, 4), rnd(-4, 4)))
     if (terrain) mutator.setT(pt, terrain)
     mutator.setE(pt, type)

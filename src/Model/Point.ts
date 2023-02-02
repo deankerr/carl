@@ -53,6 +53,10 @@ export class Point {
     return point(this.x + pt.x, this.y + pt.y)
   }
 
+  mul(by: number) {
+    return point(this.x * by, this.y * by)
+  }
+
   neighbours4() {
     return neighbours4.map(n => this.add(n))
   }

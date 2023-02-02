@@ -76,6 +76,13 @@ export const repeat = (times: number, callback: (i: number) => unknown) => {
   }
 }
 
+// same as above with shorter name and zero times does nothing
+export const loop = (times: number, callback: (i: number) => unknown) => {
+  for (let i = 0; i <= times; i++) {
+    if (callback(i)) break
+  }
+}
+
 export function* range(n: number, max?: number, step = 1) {
   let value = max ? n : 0
   const to = max ?? n

@@ -1,7 +1,7 @@
 // import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
 import { Engine } from '../Core/Engine'
-import { half, repeat } from '../lib/util'
+import { half, loop } from '../lib/util'
 
 export function renderMessageLog(engine: Engine) {
   const { local, msgDisplay, messageLog, playerTurns } = engine
@@ -13,7 +13,7 @@ export function renderMessageLog(engine: Engine) {
 
   msgDisplay.clear()
 
-  repeat(CONFIG.messageDisplayHeight, i => {
+  loop(CONFIG.messageDisplayHeight, i => {
     const msg = messageLog[i]
     if (msg && playerTurns - msg.turn < 8) {
       const x = half(width) - half(msg.text.length)
