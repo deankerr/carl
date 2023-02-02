@@ -3,8 +3,7 @@ import { CONFIG } from '../config'
 
 import { createGameDisplay } from '../lib/display'
 import { logger } from '../lib/logger'
-import { ComponentFoundry, EntityPool, UI, handle, listen, System } from './'
-import { atlas } from '../Templates/domains'
+import { ComponentFoundry, EntityPool, UI, handle, listen, System, Atlas } from './'
 
 export type Message = { turn: number; text: string }
 
@@ -16,9 +15,8 @@ export class Engine {
   pool = new EntityPool(this.component)
   system = new System(this)
 
-  atlas = atlas
-  index = 0
-  local = atlas[0].regions[0]
+  atlas = new Atlas()
+  local = this.atlas.local()
 
   messageLog: Message[] = []
   playerTurns = 0
@@ -45,7 +43,7 @@ export class Engine {
   update(event: KeyboardEvent) {
     const action = handle(event)
     if (!action) return
-    console.log('action:', action)
+
     if ('ui' in action) return UI(this, action.ui)
 
     if ('changeRegion' in action || 'changeDomain' in action) {

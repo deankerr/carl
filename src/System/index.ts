@@ -10,7 +10,5 @@ export * from './processLighting'
 export * from './renderRegion'
 export * from './renderMessageLog'
 
-export * from './handleRegionChange'
-export * from './handleDomainChange'
-export * from './processRegionGeneration'
+export * from './handleLocationChange'
 export * from './processRegionInitialization'

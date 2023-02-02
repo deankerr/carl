@@ -18,12 +18,12 @@ export const Bump = (pt: Point): Bump => {
 }
 
 export type ChangeRegion = { changeRegion: { going: 'down' | 'up' } }
-export const changeRegion = (going: 'down' | 'up') => {
+export const ChangeRegion = (going: 'down' | 'up') => {
   return { changeRegion: { going } }
 }
 
 export type ChangeDomain = { changeDomain: { to: number } }
-export const changeDomain = (to: number) => {
+export const ChangeDomain = (to: number) => {
   return { changeDomain: { to } }
 }
 

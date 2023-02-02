@@ -23,6 +23,8 @@ const recallAll = PROD ? false : true
 const revealAll = PROD ? false : false
 const debugShowLightInfo = false
 
+const initialDomain = 1
+
 // const autoStartVisualizer = false
 // const visualizerAutoplay = true
 
@@ -43,6 +45,7 @@ const CONFIG = {
   debugShowLightInfo,
   recallAll,
   revealAll,
+  initialDomain,
   // autoStartVisualizer,
   // visualizerAutoplay,
 }

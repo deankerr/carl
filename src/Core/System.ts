@@ -1,9 +1,9 @@
+import { CONFIG } from '../config'
 import { logger } from '../lib/logger'
 import {
   handleBump,
   handleMeleeAttack,
   handleMovement,
-  handleRegionChange,
   handleTread,
   processDeath,
   processFieldOfVision,
@@ -11,8 +11,7 @@ import {
   processLighting,
   renderMessageLog,
   renderRegion,
-  handleDomainChange,
-  processRegionGeneration,
+  handleLocationChange,
   processRegionInitialization,
 } from '../System'
 import * as Action from './Action'
@@ -29,13 +28,7 @@ export class System {
     processFieldOfVision,
   ]
 
-  regionChangeProcess = [
-    handleDomainChange,
-    handleRegionChange,
-    processRegionGeneration,
-    processRegionInitialization,
-    processFieldOfVision,
-  ]
+  regionChangeProcess = [handleLocationChange, processRegionInitialization, processFieldOfVision]
 
   preRenderProcess = [processFormUpdate, processLighting]
   renderProcess = [renderRegion, renderMessageLog]
@@ -82,7 +75,7 @@ export class System {
   }
 
   init() {
-    this.change(Action.none())
+    this.change(Action.ChangeDomain(CONFIG.initialDomain))
   }
 
   change(change: ActionTypes) {

@@ -12,6 +12,7 @@ export function desert(width = CONFIG.generateWidth, height = CONFIG.generateHei
   const region = new Region(width, height, window.game.pool)
   region.voidColor = '#bba344'
   // region.voidColor = '#000'
+  // bb6244 sunset
   const center = point(half(width), half(height))
 
   function baseGrass() {

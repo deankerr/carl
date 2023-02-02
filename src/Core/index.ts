@@ -1,4 +1,5 @@
 export * from './Action'
+export * from './Atlas'
 export * from './Components'
 export * from './Engine'
 export * from './Entity'

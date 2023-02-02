@@ -1,7 +1,7 @@
 // * Translate key code into Action
 
 import { logger } from '../lib/logger'
-import { ActionTypes, Move, MetaUI, changeRegion, changeDomain } from './Action'
+import { ActionTypes, Move, MetaUI, ChangeRegion, ChangeDomain } from './Action'
 
 type KeyMap = Record<string, ActionTypes>
 
@@ -42,8 +42,8 @@ export function handle(event: KeyboardEvent): ActionTypes | undefined {
 
   // * Gameplay
   const game: KeyMap = {
-    ',': changeRegion('up'),
-    '.': changeRegion('down'),
+    ',': ChangeRegion('up'),
+    '.': ChangeRegion('down'),
   }
   if (game[key]) return game[key]
 
@@ -63,9 +63,9 @@ export function handle(event: KeyboardEvent): ActionTypes | undefined {
   if (shift && dev[code]) return dev[code]
 
   const domain: KeyMap = {
-    '1': changeDomain(0),
-    2: changeDomain(1),
-    3: changeDomain(2),
+    1: ChangeDomain(0),
+    2: ChangeDomain(1),
+    3: ChangeDomain(2),
   }
   if (ctrl && domain[key]) return domain[key]
 
