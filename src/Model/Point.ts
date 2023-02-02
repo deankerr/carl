@@ -19,9 +19,19 @@ class PointManager {
       }
     }
   }
+
+  __debug_count() {
+    const count: Record<string, number> = {}
+    for (const [k] of this.store) {
+      if (!count[k]) count[k] = 1
+      else count[k]++
+    }
+    console.log('count:', count)
+  }
 }
 
 const PointMan = new PointManager()
+window.pointMan = PointMan
 export const point = PointMan.pt.bind(PointMan)
 export const grid = PointMan.grid.bind(PointMan)
 
@@ -69,4 +79,11 @@ const neighbours8 = [
   point(-1, 0),
   point(-1, -1),
 ]
-const neighbours4 = [point(0, -1), point(1, 0), point(0, 1), point(-1, 0)]
+
+export const neighbours4 = [point(0, -1), point(1, 0), point(0, 1), point(-1, 0)]
+
+declare global {
+  interface Window {
+    pointMan: PointManager
+  }
+}

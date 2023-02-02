@@ -1,7 +1,7 @@
 // * Translate key code into Action
 
 import { logger } from '../lib/logger'
-import { ActionTypes, ChangeRegion, Move, MetaUI } from './Action'
+import { ActionTypes, Move, MetaUI, changeRegion, changeDomain } from './Action'
 
 type KeyMap = Record<string, ActionTypes>
 
@@ -42,10 +42,8 @@ export function handle(event: KeyboardEvent): ActionTypes | undefined {
 
   // * Gameplay
   const game: KeyMap = {
-    Enter: ChangeRegion('anywhere'),
-    ' ': ChangeRegion('anywhere'),
-    ',': ChangeRegion('up'),
-    '.': ChangeRegion('down'),
+    ',': changeRegion('up'),
+    '.': changeRegion('down'),
   }
   if (game[key]) return game[key]
 
@@ -63,6 +61,13 @@ export function handle(event: KeyboardEvent): ActionTypes | undefined {
     KeyA: MetaUI('debug_loglogger'),
   }
   if (shift && dev[code]) return dev[code]
+
+  const domain: KeyMap = {
+    '1': changeDomain(0),
+    2: changeDomain(1),
+    3: changeDomain(2),
+  }
+  if (ctrl && domain[key]) return domain[key]
 
   logger('input').msg(`Key '${code}' not recognised`)
   return

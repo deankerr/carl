@@ -2,16 +2,29 @@ import * as ROT from 'rot-js'
 import { Point } from '../Model/Point'
 import { Direction, DIRECTIONS } from '../lib/direction'
 
-export type ActionTypes = Move | MetaUI | Bump | MeleeAttack | Tread | ChangeRegion | None
+export type ActionTypes =
+  | Move
+  | MetaUI
+  | Bump
+  | MeleeAttack
+  | Tread
+  | ChangeRegion
+  | ChangeDomain
+  | None
 
 export type Bump = { bump: Point }
 export const Bump = (pt: Point): Bump => {
   return { bump: pt }
 }
 
-export type ChangeRegion = { changeRegion: { to: string } }
-export const ChangeRegion = (to: string) => {
-  return { changeRegion: { to } }
+export type ChangeRegion = { changeRegion: { going: 'down' | 'up' } }
+export const changeRegion = (going: 'down' | 'up') => {
+  return { changeRegion: { going } }
+}
+
+export type ChangeDomain = { changeDomain: { to: number } }
+export const changeDomain = (to: number) => {
+  return { changeDomain: { to } }
 }
 
 export type MeleeAttack = { meleeAttack: Point }

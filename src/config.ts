@@ -19,7 +19,8 @@ const messageBackgroundColor = 'transparent'
 const htmlBackgroundColor = mainBackgroundColor
 
 const frameLimit = 0
-const lightsOnInitial = PROD ? false : true
+const recallAll = PROD ? false : true
+const revealAll = PROD ? false : false
 const debugShowLightInfo = false
 
 // const autoStartVisualizer = false
@@ -40,7 +41,8 @@ const CONFIG = {
   htmlBackgroundColor,
   frameLimit,
   debugShowLightInfo,
-  lightsOnInitial,
+  recallAll,
+  revealAll,
   // autoStartVisualizer,
   // visualizerAutoplay,
 }

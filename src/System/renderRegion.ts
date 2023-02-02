@@ -81,10 +81,10 @@ export function renderRegion(engine: Engine) {
         })
         // 3. extract relevant display data, applying lighting or fade effects
         .map(e => {
-          const form = { ...e.form }
-          if (visible && lighting) {
+          const form = { char: e.form.char, color: e.form.color, bgColor: e.form.bgColor }
+          if (visible) {
             // don't add light to something that is emitting light, which can look bad
-            if (!e.emitLight?.enabled) form.color = addLight(form.color, lighting)
+            if (lighting && !e.emitLight?.enabled) form.color = addLight(form.color, lighting)
           } else if (recalled) form.color = transformHSL(form.color, recalledFade)
           return form
         }), // ? sort

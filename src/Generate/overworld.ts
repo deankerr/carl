@@ -145,7 +145,8 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   console.log(O)
   console.groupEnd()
 
-  return O
+  // return O
+  return O.current
 }
 
 function walk(

@@ -26,7 +26,7 @@ export const tileMapOryxMessages = {
   ...mapRange(numbers, 7, s),
   ...mapRange(punctuation, 5, s),
   "'": mapChar(27, 3, s),
-  ' ': mapChar(13, 0, s),
+  ' ': mapChar(27, 0, s),
 }
 
 export const tileMapOryxMain = {
@@ -41,6 +41,8 @@ export const tileMapOryxMain = {
   bones: mapChar(5, 3, t),
   bigCheck: mapChar(21, 7, t),
   smallCheck: mapChar(20, 7, t),
+  stalk: mapChar(12, 0, t),
+  cactus: mapChar(13, 0, t),
   chicken: mapChar(18, 3, t),
   column: mapChar(19, 4, t),
   crab: mapChar(10, 3, t),

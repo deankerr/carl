@@ -1,7 +1,15 @@
 import { EntityTemplate } from '../Core/Entity'
 import { flameVariants, FlameKey } from './flames'
 
-export type FeatureKey = FlameKey | 'door' | 'shrub' | 'statue' | 'tombstone' | 'deadTree'
+export type FeatureKey =
+  | FlameKey
+  | 'door'
+  | 'shrub'
+  | 'statue'
+  | 'tombstone'
+  | 'deadTree'
+  | 'cactus'
+
 export const features: EntityTemplate[] = [
   {
     label: 'door',
@@ -38,6 +46,14 @@ export const features: EntityTemplate[] = [
     form: ['tree', '#602e15'],
     tag: ['memorable', 'feature', 'blocksLight'],
     trodOn: ['You smile as you continue to outlive this ancient tree.'],
+  },
+  { label: 'cactus', name: ['cactus'], form: ['cactus', '#0f840f'], tag: ['terrain'] },
+  {
+    label: 'shrubD',
+    name: ['shrub'],
+    form: ['shrub', '#6c2a14'],
+    tag: ['memorable', 'feature'],
+    trodOn: ['You trample the pathetic shrub.'],
   },
   ...flameVariants,
 ]

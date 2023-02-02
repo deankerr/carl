@@ -5,7 +5,7 @@ const suppress = [
   'entity.attach.emitLight',
 ]
 
-const promote = ['sys.handleRegionChange']
+const promote = ['sys.handleRegionChange', 'generate.desert']
 
 class Logger {
   logGroups = new Map<string, LogGroup>()
@@ -50,6 +50,8 @@ class Logger {
       if (group.times.length > 1000) group.times = group.times.slice(-200)
       group.times.push(tEnd)
       group.avg = group.times.reduce((a, b) => a + b) / group.times.length
+
+      if (promote.includes(pID)) console.log(pID, `${tEnd}ms`)
     }
 
     const timer = { msg, end }

@@ -11,6 +11,9 @@ import {
   processLighting,
   renderMessageLog,
   renderRegion,
+  handleDomainChange,
+  processRegionGeneration,
+  processRegionInitialization,
 } from '../System'
 import * as Action from './Action'
 
@@ -23,6 +26,14 @@ export class System {
     handleBump,
     handleMeleeAttack,
     processDeath,
+    processFieldOfVision,
+  ]
+
+  regionChangeProcess = [
+    handleDomainChange,
+    handleRegionChange,
+    processRegionGeneration,
+    processRegionInitialization,
     processFieldOfVision,
   ]
 
@@ -71,10 +82,10 @@ export class System {
   }
 
   init() {
-    this.change(Action.ChangeRegion('initial'))
+    this.change(Action.none())
   }
 
-  change(change: Action.ChangeRegion) {
-    handleRegionChange(this.engine, change)
+  change(change: ActionTypes) {
+    this.regionChangeProcess.forEach(sys => sys(this.engine, change))
   }
 }

@@ -3,7 +3,6 @@ import { CONFIG } from '../config'
 import { Queue } from '../lib/util'
 import { Point, point, grid } from '../Model/Point'
 import { Entity, EntityPool, EntityKey, EntityWith } from './Entity'
-import { TerrainKey } from '../Templates'
 
 export class Region {
   terrainMap = new Map<Point, Entity>()
@@ -11,8 +10,8 @@ export class Region {
   turnQueue = new Queue<number>()
 
   seenByPlayer = new Set<Point>()
-  recallAll = true
-  revealAll = true
+  recallAll = CONFIG.recallAll
+  revealAll = CONFIG.revealAll
 
   voidColor = '' || CONFIG.mainBackgroundColor
   lighting = new Map<Point, Color>()
@@ -39,7 +38,7 @@ export class Region {
     this.entities.push(entity)
   }
 
-  createTerrain(key: TerrainKey, pt: Point) {
+  createTerrain(key: EntityKey, pt: Point) {
     const terrain = this.pool.symbolic(key)
     this.terrainMap.set(pt, terrain)
   }

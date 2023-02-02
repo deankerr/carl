@@ -13,6 +13,7 @@ export type TerrainKey =
   | 'void'
   | 'endlessVoid'
   | 'peak'
+  | 'deadGrassD'
 export const terrain: EntityTemplate[] = [
   {
     label: 'path',
@@ -57,6 +58,8 @@ export const terrain: EntityTemplate[] = [
   { label: 'deadGrass', name: ['dead grass'], form: ['deadGrass', '#664f47'], tag: ['terrain'] },
   { label: 'mound', name: ['mound'], form: ['mound', '#6a4b39'], tag: ['blocksLight', 'terrain'] },
   { label: 'peak', name: ['peak'], form: ['peak', '#2a5a3e'], tag: ['blocksLight', 'terrain'] },
+  // { label: 'sand', name: ['sand'], form: ['CHAR', '#COLOR'], tag: ['terrain'] },
+  { label: 'deadGrassD', name: ['dead grass'], form: ['deadGrass', '#553930'], tag: ['terrain'] },
   {
     label: 'void',
     name: ['void'],
