@@ -5,14 +5,14 @@ import { EntityKey, Region } from '../Core'
 import { logger } from '../lib/logger'
 import { half, pick, repeat, rnd } from '../lib/util'
 import { point, Point, neighbours4 } from '../Model/Point'
+// ? #bb6244 desert sunset
 
 export function desert(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
   const log = logger('generate', 'desert')
 
   const region = new Region(width, height, window.game.pool)
   region.voidColor = '#bba344'
-  // region.voidColor = '#000'
-  // bb6244 sunset
+
   const center = point(half(width), half(height))
 
   function baseGrass() {

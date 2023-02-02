@@ -2,6 +2,8 @@ import * as ROT from 'rot-js'
 import { Color } from 'rot-js/lib/color'
 import { min } from './util'
 
+// ? #bb6244 desert sunset
+
 type tHSLOpts = {
   hue: { to?: number; add?: number }
   sat: { to?: number; by?: number; min?: number }

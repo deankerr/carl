@@ -23,7 +23,7 @@ const recallAll = PROD ? false : true
 const revealAll = PROD ? false : false
 const debugShowLightInfo = false
 
-const initialDomain = 1
+const initialDomain = 0
 
 // const autoStartVisualizer = false
 // const visualizerAutoplay = true
