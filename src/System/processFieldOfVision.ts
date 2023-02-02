@@ -8,7 +8,11 @@ export const processFieldOfVision = (engine: Engine) => {
   const log = logger('sys', 'turn', 'processFieldOfVision')
   // *** currently updating all entities' fov each turn ***
   const { local } = engine
-  const entities = local.get('fieldOfView', 'position')
+
+  const entities = local
+    .get('fieldOfView', 'position')
+    .filter(e => 'acting' in e || 'signalUpdatePlayerFOV' in e)
+
   if (!entities) return
 
   for (const entity of entities) {
@@ -23,7 +27,10 @@ export const processFieldOfVision = (engine: Engine) => {
         if (isVisible) visible.add(point(x, y))
       }
     )
-    local.entity(entity).modify('fieldOfView', entity.fieldOfView.radius, visible)
+    local
+      .entity(entity)
+      .modify('fieldOfView', entity.fieldOfView.radius, visible)
+      .remove('signalUpdatePlayerFOV')
 
     // player specific
     if (entity.playerControlled) {

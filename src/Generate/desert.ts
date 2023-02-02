@@ -68,6 +68,16 @@ export function desert(width = CONFIG.generateWidth, height = CONFIG.generateHei
     () => O2.snapshot('cactus')
   )
 
+  // snakes!
+  hop(
+    8,
+    4,
+    4,
+    rndPt,
+    pt => O2.being(pt, 'snake'),
+    () => O2.snapshot('snake')
+  )
+
   O2.finalize()
   console.log('O2:', O2)
   log.end()

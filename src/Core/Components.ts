@@ -72,6 +72,7 @@ export type Tag =
   | 'renderUnderBeing'
   | 'signalLightPathUpdated'
   | 'signalModified'
+  | 'signalUpdatePlayerFOV'
   | 'terrain'
 
 export type FoundryKey = keyof typeof ComponentFoundry

@@ -1,14 +1,14 @@
 // import { CONFIG } from '../config'
 import { EntityTemplate } from '../Core/Entity'
 
-export type BeingKey = 'player' | 'spider' | 'ghost' | 'demon' | 'crab' | 'crab2'
+export type BeingKey = 'player' | 'spider' | 'ghost' | 'demon' | 'crab' | 'crab2' | 'snake'
 
 export const beings: EntityTemplate[] = [
   {
     label: 'player',
     name: ['player'],
     form: ['@', '#EE82EE'],
-    tag: ['playerControlled', 'actor', 'blocksMovement', 'being'],
+    tag: ['playerControlled', 'actor', 'blocksMovement', 'being', 'signalUpdatePlayerFOV'],
     fieldOfView: [12],
     // emitLight: ['auto', CONFIG.playerLight],
     // lightFlicker: [120],
@@ -42,6 +42,12 @@ export const beings: EntityTemplate[] = [
     label: 'crab2',
     name: ['turncoat crab'],
     form: ['crab', '#32cd44'],
+    tag: ['actor', 'blocksMovement', 'being'],
+  },
+  {
+    label: 'snake',
+    name: ['snake'],
+    form: ['snake', '#32cd32'],
     tag: ['actor', 'blocksMovement', 'being'],
   },
 ]

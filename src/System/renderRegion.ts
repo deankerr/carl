@@ -1,4 +1,5 @@
 import { CONFIG } from '../config'
+import { Entity } from '../Core'
 import { Engine } from '../Core/Engine'
 import { addLight, transformHSL } from '../lib/color'
 import { clamp, floor, half } from '../lib/util'
@@ -83,7 +84,9 @@ export function renderRegion(engine: Engine) {
           // if not visible or recalled, render nothing
           return false
         })
-        // 3. extract relevant display data, applying lighting or fade effects
+        // 3. sort beings on top, then features, terrain
+        .sort((a, b) => order(a) - order(b))
+        // 4. extract relevant display data, applying lighting or fade effects
         .map(e => {
           const form = { char: e.form.char, color: e.form.color, bgColor: e.form.bgColor }
           if (visible) {
@@ -110,6 +113,10 @@ export function renderRegion(engine: Engine) {
 
 const recalledFade = { sat: { by: 0.8 }, lum: { by: 0.8, min: 0.12 } }
 
+// const renderOrder = { terrain: 0, feature: 1, being: 2}
+const order = (e: Entity) => {
+  return 'being' in e ? 2 : 'feature' in e ? 1 : 0
+}
 // background color cycle
 // if (options.bgColor !== '' && options.bgCycle && Date.now() - last > freq) {
 //   options.bgColor = transformHSL(options.bgColor, { hue: { add } })
