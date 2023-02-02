@@ -9,7 +9,7 @@ export function renderRegion(engine: Engine) {
 
   // * ========== Viewport ========== *
   const { mainDisplayWidth, mainDisplayHeight } = CONFIG
-  const viewport = {
+  const viewportSize = {
     w: mainDisplayWidth,
     h: mainDisplayHeight,
     x1: 0,
@@ -23,18 +23,22 @@ export function renderRegion(engine: Engine) {
   const centerY = floor(mainDisplayHeight / 2)
 
   const offsetX =
-    local.width > viewport.w
-      ? clamp(viewport.w - local.width, viewport.x1 + centerX - player.position.x, viewport.x1)
-      : viewport.x1 + half(viewport.w - local.width)
+    local.width > viewportSize.w
+      ? clamp(
+          viewportSize.w - local.width,
+          viewportSize.x1 + centerX - player.position.x,
+          viewportSize.x1
+        )
+      : viewportSize.x1 + half(viewportSize.w - local.width)
 
   const offsetY =
-    local.height >= viewport.h
+    local.height >= viewportSize.h
       ? clamp(
-          viewport.y1 + viewport.h - local.height,
-          viewport.y1 + centerY - player.position.y,
-          viewport.y1
+          viewportSize.y1 + viewportSize.h - local.height,
+          viewportSize.y1 + centerY - player.position.y,
+          viewportSize.y1
         )
-      : viewport.y1 + half(viewport.h - local.height)
+      : viewportSize.y1 + half(viewportSize.h - local.height)
 
   // * ========== Rendering ========== *
 
@@ -44,14 +48,14 @@ export function renderRegion(engine: Engine) {
   mainDisplay.clear()
 
   local.render((pt, entities, visible, recalled) => {
-    const render = { x: offsetX + pt.x, y: offsetY + pt.y }
+    const viewPort = { x: offsetX + pt.x, y: offsetY + pt.y }
 
     // skip this location if we're outside of the viewport
     if (
-      render.x < viewport.x1 ||
-      render.x > viewport.x2 ||
-      render.y < viewport.y1 ||
-      render.y > viewport.y2
+      viewPort.x < viewportSize.x1 ||
+      viewPort.x > viewportSize.x2 ||
+      viewPort.y < viewportSize.y1 ||
+      viewPort.y > viewportSize.y2
     ) {
       return
     }
@@ -95,8 +99,8 @@ export function renderRegion(engine: Engine) {
 
     // * draw
     mainDisplay.draw(
-      pt.x,
-      pt.y,
+      viewPort.x,
+      viewPort.y,
       stack.map(s => s.char),
       stack.map(s => s.color),
       stack.map(s => s.bgColor)
