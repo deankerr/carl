@@ -1,18 +1,20 @@
+import { Engine } from '../Core/Engine'
+import { logger } from '../lib/logger'
+
 // remove dead entities from game
-// TODO handle non "beings" ie items
-import { World } from '../Core/World'
+export const processDeath = (engine: Engine) => {
+  const log = logger('sys', 'processDeath')
+  const { local } = engine
+  const currentEntities = local.get('dead')
 
-export const processDeath = (world: World) => {
-  const currentEntities = world.get('tagDead')
+  if (currentEntities.length === 0) return
 
-  if (currentEntities.length === 0) return console.log('processDeath: no entities to remove')
-
-  console.log('processDeath: reaping')
+  log.msg('processDeath: reaping')
   for (const entity of currentEntities) {
-    console.log('processDeath: removing', entity.id)
-    world.destroy(entity)
-    console.log('processDeath: removed', entity.id)
+    log.msg('processDeath: removing', entity.label)
+    local.destroy(entity)
+    log.msg('processDeath: removed', entity.label)
   }
 
-  console.log('processDeath: process complete')
+  log.end('processDeath: process complete')
 }

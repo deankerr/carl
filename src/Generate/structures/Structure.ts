@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import * as ROT from 'rot-js'
-import { EntityTemplate } from '../../Core/Entity'
-import { half, makeOdd, pick, range, rnd, rndO, shuffle } from '../../lib/util'
-import { Point, PointSet, Pt } from '../../Model/Point'
+import { EntityKey } from '../../Core/Entity'
+import { TerrainKey } from '../../Templates'
+import { half, makeOdd, pick, range, rnd, shuffle } from '../../lib/util'
+import { Point, point } from '../../Model/Point'
 import { Rect } from '../../Model/Rectangle'
-import { Features, Marker, Terrain } from '../../Templates'
-import { BSPRooms } from '../modules/BSP'
+import { BSPRooms } from '../modules/BSPRooms'
 import { Overseer } from '../Overseer'
 
 export class Structure {
@@ -25,7 +24,7 @@ export class Structure {
   }
 
   // split the main rect into two sub rects
-  bisect(variance = 0) {
+  bisect() {
     const self = this.rect //tvhis.rect.scale(-1)
 
     const canSplitV = self.height >= 5
@@ -36,15 +35,17 @@ export class Structure {
     const dir = true
 
     // get split point
-    const split = dir ? rnd(self.x + 2, self.x2 - 2) : rnd(self.y + 2, self.y2 - 2)
+    // const split = dir ? rnd(self.x + 2, self.x2 - 2) : rnd(self.y + 2, self.y2 - 2)
 
-    const splitPt1 = dir ? Pt(self.cx - 1, self.y2) : Pt(self.x2, self.cy - 1)
-    const splitPt2 = dir ? Pt(self.cx + 1, self.y) : Pt(self.x, self.cy + 1)
-    const sub1 = new Structure(Rect.atxy2(Pt(self.x, self.y), splitPt1), this.O)
-    const sub2 = new Structure(Rect.atxy2(splitPt2, Pt(self.x2, self.y2)), this.O)
+    const splitPt1 = dir ? point(self.cx - 1, self.y2) : point(self.x2, self.cy - 1)
+    const splitPt2 = dir ? point(self.cx + 1, self.y) : point(self.x, self.cy + 1)
+    const sub1 = new Structure(Rect.atxy2(point(self.x, self.y), splitPt1), this.O)
+    const sub2 = new Structure(Rect.atxy2(splitPt2, point(self.x2, self.y2)), this.O)
 
     // border region
-    const splitC = dir ? Rect.at(Pt(self.cx, self.y), 1, self.height) : Rect.at(Pt(self.x, self.cy), self.width, 1)
+    const splitC = dir
+      ? Rect.at(point(self.cx, self.y), 1, self.height)
+      : Rect.at(point(self.x, self.cy), self.width, 1)
     const sub3 = new Structure(splitC, this.O)
     this.sub.push(sub1, sub2, sub3)
     return [sub1, sub2, sub3]
@@ -55,7 +56,7 @@ export class Structure {
 
     const x = rnd(self.x, self.x2 - width)
     const y = rnd(self.y, self.y2 - height)
-    const sub = new Structure(Rect.at(Pt(x, y), width, height), this.O)
+    const sub = new Structure(Rect.at(point(x, y), width, height), this.O)
     this.sub.push(sub)
 
     return sub
@@ -100,13 +101,13 @@ export class Structure {
     const mutator = this.O.mutate()
 
     self.traverse((pt, edge) => {
-      if (edge) mutator.set(pt, Terrain.wall)
+      if (edge) mutator.setT(pt, 'wall')
     })
   }
 
   buildInnerWalls() {
     const mut = this.O.mutate()
-    this.innerWalls.forEach(w => w.traverse(pt => mut.set(pt, Terrain.wall)))
+    this.innerWalls.forEach(w => w.traverse(pt => mut.setT(pt, 'wall')))
   }
 
   connectInnerRooms() {
@@ -126,40 +127,40 @@ export class Structure {
 
       // scan along each edge, looking for adj rooms
       const self = current.rect
-      const adjRoomPts = new Map<Structure, PointSet>()
+      const adjRoomPts = new Map<Structure, Set<Point>>()
 
       for (const yi of range(self.y, self.y2)) {
         // left
-        const left = Pt(self.x, yi)
+        const left = point(self.x, yi)
         const cRoomL = this.innerRooms.filter(r => r.rect.intersectsPt(left.add(-2, 0)))
         cRoomL.forEach(cr => {
-          if (!adjRoomPts.has(cr)) adjRoomPts.set(cr, new PointSet())
+          if (!adjRoomPts.has(cr)) adjRoomPts.set(cr, new Set<Point>())
           adjRoomPts.get(cr)?.add(left.add(-1, 0))
         })
 
         // right
-        const right = Pt(self.x2, yi)
+        const right = point(self.x2, yi)
         const cRoomR = this.innerRooms.filter(r => r.rect.intersectsPt(right.add(2, 0)))
         cRoomR.forEach(cr => {
-          if (!adjRoomPts.has(cr)) adjRoomPts.set(cr, new PointSet())
+          if (!adjRoomPts.has(cr)) adjRoomPts.set(cr, new Set<Point>())
           adjRoomPts.get(cr)?.add(right.add(1, 0))
         })
       }
 
       for (const xi of range(self.x, self.x2)) {
         // top
-        const top = Pt(xi, self.y)
+        const top = point(xi, self.y)
         const cRoomT = this.innerRooms.filter(r => r.rect.intersectsPt(top.add(0, -2)))
         cRoomT.forEach(cr => {
-          if (!adjRoomPts.has(cr)) adjRoomPts.set(cr, new PointSet())
+          if (!adjRoomPts.has(cr)) adjRoomPts.set(cr, new Set<Point>())
           adjRoomPts.get(cr)?.add(top.add(0, -1))
         })
 
         // bottom
-        const bottom = Pt(xi, self.y2)
+        const bottom = point(xi, self.y2)
         const cRoomB = this.innerRooms.filter(r => r.rect.intersectsPt(bottom.add(0, 2)))
         cRoomB.forEach(cr => {
-          if (!adjRoomPts.has(cr)) adjRoomPts.set(cr, new PointSet())
+          if (!adjRoomPts.has(cr)) adjRoomPts.set(cr, new Set<Point>())
           adjRoomPts.get(cr)?.add(bottom.add(0, 1))
         })
       }
@@ -173,7 +174,7 @@ export class Structure {
         // check if a connection has already been made
         if (!existing.some(rooms => rooms.includes(current) && rooms.includes(room))) {
           // create a connection if not
-          this.innerRoomConnections.set(pick(PtS.toPt()), [current, room])
+          this.innerRoomConnections.set(pick([...PtS]), [current, room])
         }
       }
     }
@@ -182,40 +183,41 @@ export class Structure {
     // todo different connection themes, eg crumbled wall gap
     const doorsMut = this.O.mutate()
     for (const [pt] of this.innerRoomConnections) {
-      doorsMut.set(pt, Terrain.void)
-      doorsMut.set(pt, Features.door)
+      doorsMut.setT(pt, 'void')
+      doorsMut.setE(pt, 'door')
     }
   }
 
-  floor(t = Terrain.path) {
+  floor(t: TerrainKey = 'path') {
     if (this.innerRooms.length > 0) this.innerRooms.forEach(r => r.floor(t))
     if (this.sub.length > 0) this.sub.forEach(r => r.floor(t))
-    else this.O.mutate().set(this.rect, t)
+    else this.O.mutate().setT(this.rect, t)
   }
 
-  degradedFloor(template: EntityTemplate | EntityTemplate[], chance = 16) {
+  degradedFloor(template: TerrainKey | TerrainKey[], chance = 16, chance2?: number) {
     if (this.innerRooms.length > 0) this.innerRooms.forEach(r => r.degradedFloor(template))
     else {
       const isSmallRoom = this.rect.width <= 3 || this.rect.height <= 3
       const mut = this.O.mutate()
       this.rect.traverse((pt, edge) => {
         const t = Array.isArray(template) ? pick(template) : template
-        if (edge && !isSmallRoom) rnd(1) && mut.set(pt, t)
-        else if (isSmallRoom) rnd(4) && mut.set(pt, t)
-        else if (rnd(chance)) mut.set(pt, t)
+        if (edge && !isSmallRoom) rnd(1) && mut.setT(pt, t)
+        else if (isSmallRoom) rnd(4) && mut.setT(pt, t)
+        else if (chance2) rnd(100) < chance2 ? mut.setT(pt, t) : ''
+        else if (rnd(chance)) mut.setT(pt, t)
       })
     }
   }
 
-  feature(template: EntityTemplate, n = 1, terrain?: EntityTemplate) {
+  feature(template: EntityKey, n = 1, terrain?: TerrainKey) {
     let features = 0
     const mut = this.O.mutate()
     const ptsPlaced: Point[] = []
     while (features < n) {
       const rect = this.innerRooms.length > 1 ? pick(this.innerRooms).rect : this.rect
       const pt = rect.rndPt()
-      if (terrain) mut.set(pt, terrain)
-      mut.set(pt, template)
+      if (terrain) mut.setT(pt, terrain)
+      mut.setE(pt, template)
       ptsPlaced.push(pt)
       features++
     }
@@ -230,23 +232,21 @@ export class Structure {
     const ewWidth = makeOdd(half(self.width))
     const ewHeight = makeOdd(self.height - 2)
     const dirs = ROT.RNG.shuffle([
-      Rect.atC(Pt(self.cx, self.y - half(nsHeight)), nsWidth, nsHeight), // north
-      Rect.atC(Pt(self.cx, self.y2 + half(nsHeight)), nsWidth, nsHeight), // south
-      Rect.atC(Pt(self.x - half(ewWidth), self.cy), ewWidth, ewHeight), // east
-      Rect.atC(Pt(self.x2 + half(ewWidth), self.cy), ewWidth, ewHeight), // west
+      Rect.atC(point(self.cx, self.y - half(nsHeight)), nsWidth, nsHeight), // north
+      Rect.atC(point(self.cx, self.y2 + half(nsHeight)), nsWidth, nsHeight), // south
+      Rect.atC(point(self.x - half(ewWidth), self.cy), ewWidth, ewHeight), // east
+      Rect.atC(point(self.x2 + half(ewWidth), self.cy), ewWidth, ewHeight), // west
     ])
 
     while (dirs.length > 0) {
       const rect = dirs.pop()
       if (!rect) continue
-      this.O?.mutate().mark(rect)
+
       if (!this.sub.some(sub => sub.rect.intersects(rect).length > 0)) {
         const annex = new Structure(rect, this.O)
         this.sub.push(annex)
-        this.O?.mutate().clear()
         return annex
       }
-      this.O?.mutate().clear()
     }
     return undefined
   }
@@ -261,11 +261,11 @@ export class Structure {
         if (!pt) continue
 
         // avoid building a door next to an internal wall
-        const walkable = pt.orthNeighbours().filter(nPt => mut.query(nPt)?.tag.includes('walkable'))
+        const walkable = pt.neighbours4().filter(nPt => !mut.query(nPt).blocksMovement)
         if (walkable.length < 2) continue
 
-        mut.set(pt, Terrain.void)
-        mut.set(pt, Features.door)
+        mut.setT(pt, 'void')
+        mut.setE(pt, 'door')
         break
       }
     }
@@ -276,16 +276,16 @@ export class Structure {
     let connections = 0
 
     // list of all edge points excluding corners
-    const edgePts = new PointSet(...this.rect.toPtsEdge())
-    edgePts.del(...this.rect.cornerPts())
-    const validEdgePts = shuffle(edgePts.toPt())
+    const cor = this.rect.cornerPts()
+    const edgePts = [...this.rect.toPtsEdge()].filter(pt => cor.includes(pt))
+    const validEdgePts = shuffle(edgePts)
 
     while (connections < n) {
       const pt = validEdgePts.pop()
       if (!pt) return
 
       // avoid building a door next to an internal wall
-      const walkable = pt.orthNeighbours().filter(nPt => mut.query(nPt)?.tag.includes('walkable'))
+      const walkable = pt.neighbours4().filter(nPt => !mut.query(nPt).blocksMovement)
       if (walkable.length < 2) continue
 
       // avoid building a door to an annex
@@ -294,17 +294,17 @@ export class Structure {
 
       // if no inner walls, or the point isn't adjacent to an inner wall
 
-      mut.set(pt, Terrain.void)
-      mut.set(pt, Features.door)
+      mut.setT(pt, 'void')
+      mut.setE(pt, 'door')
       connections++
     }
   }
 
-  mark(edgeOnly = false) {
-    const m = this.O.mutate()
-    this.rect.traverse((pt, edge) => {
-      if (!edgeOnly) m.set(pt, Features.debugMarker)
-      else if (edge) m.set(pt, Features.debugMarker)
-    })
+  mark() {
+    // const m = this.O.mutate()
+    // this.rect.traverse((pt, edge) => {
+    //   if (!edgeOnly) m.setE(pt, Features.debugMarker)
+    //   else if (edge) m.set(pt, Features.debugMarker)
+    // })
   }
 }

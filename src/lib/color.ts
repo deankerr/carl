@@ -52,3 +52,9 @@ export function hexToHSL(color: string) {
 export function HSLToHex(color: Color) {
   return ROT.Color.toHex(ROT.Color.hsl2rgb(color))
 }
+
+export function addLight(color: string, light: Color) {
+  const rgb = ROT.Color.fromString(color)
+  const c = ROT.Color.add(rgb, light)
+  return ROT.Color.toHex(c)
+}

@@ -1,6 +1,6 @@
 // import * as ROT from 'rot-js'
 import { pick, rnd } from '../lib/util'
-import { Pt, Point, PointSet } from './Point'
+import { point, Point } from './Point'
 
 export class Rect {
   // Top left to bottom right
@@ -43,7 +43,7 @@ export class Rect {
   traverse(callback: (pt: Point, edge: boolean) => unknown) {
     for (let yi = this.y; yi <= this.y2; yi++) {
       for (let xi = this.x; xi <= this.x2; xi++) {
-        const pt = Pt(xi, yi)
+        const pt = point(xi, yi)
         if (callback(pt, this.isEdgePt(pt)) === false) return
       }
     }
@@ -55,12 +55,12 @@ export class Rect {
     // Quick test if rects intersect
     if (this.x2 < rect.x || this.y2 < rect.y || this.x > rect.x2 || this.y > rect.y2) return []
 
-    const ptSet = new PointSet()
+    const ptSet = new Set<Point>()
     rect.traverse(pt => {
       if (this.intersectsPt(pt)) ptSet.add(pt)
     })
 
-    return ptSet.toPt()
+    return [...ptSet]
   }
 
   // Does a point intersect this Rect?
@@ -80,11 +80,11 @@ export class Rect {
     const width = this.width + xBy * 2
     const height = this.height + xBy * 2
     // enforce minimum of size 1 to avoid weirdness
-    return Rect.at(Pt(x, y), width > 0 ? width : 1, height > 0 ? height : 1)
+    return Rect.at(point(x, y), width > 0 ? width : 1, height > 0 ? height : 1)
   }
 
   translate(x: number, y: number) {
-    return Rect.at(Pt(this.x + x, this.y + y), this.width, this.height)
+    return Rect.at(point(this.x + x, this.y + y), this.width, this.height)
   }
 
   // Return list of each pt in the rect. outer = outermost edge only
@@ -104,7 +104,7 @@ export class Rect {
 
   // Return a random point with this rect
   rndPt() {
-    return Pt(rnd(this.x, this.x2), rnd(this.y, this.y2))
+    return point(rnd(this.x, this.x2), rnd(this.y, this.y2))
   }
 
   // excludes corners
@@ -112,11 +112,11 @@ export class Rect {
     const r = rnd(0, 1)
     const x = r ? rnd(this.x + 1, this.x2 - 1) : pick([this.x, this.x2])
     const y = !r ? rnd(this.y + 1, this.y2 - 1) : pick([this.y, this.y2])
-    return Pt(x, y)
+    return point(x, y)
   }
 
   cornerPts() {
-    return [Pt(this.x, this.y), Pt(this.x2, this.y), Pt(this.x, this.y2), Pt(this.x2, this.y2)]
+    return [point(this.x, this.y), point(this.x2, this.y), point(this.x, this.y2), point(this.x2, this.y2)]
   }
 
   isEdgePt(pt: Point) {
@@ -124,7 +124,7 @@ export class Rect {
   }
 
   center() {
-    return Pt(this.cx, this.cy)
+    return point(this.cx, this.cy)
   }
 
   // Construction
@@ -138,7 +138,7 @@ export class Rect {
   static atC(pt: Point, width: number, height: number, id = 0) {
     const x = pt.x - Math.floor(width / 2)
     const y = pt.y - Math.floor(height / 2)
-    return new Rect(Pt(x, y), width, height, id)
+    return new Rect(point(x, y), width, height, id)
   }
 
   // From x/y to x2/y2

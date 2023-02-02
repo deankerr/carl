@@ -1,33 +1,26 @@
-import { World } from '../Core/World'
+import { Engine } from '../Core/Engine'
+import { logger } from '../lib/logger'
 
-export const handleTread = (world: World) => {
-  const [currentEntity] = world.get('acting', 'position')
+export const handleTread = (engine: Engine, isPlayerTurn: boolean) => {
+  const log = logger('sys', 'handleTread')
+  const { local } = engine
+  const [currentEntity] = local.get('acting', 'position')
   const { acting: action } = currentEntity
 
-  if (!('tread' in action)) return console.log('handleTread: not a tread action')
-
+  if (!('tread' in action)) return //log.msg('handleTread: not a tread action')
   // Only the player
-  const currentIsPlayer = 'tagPlayer' in currentEntity
-  if (!currentIsPlayer) {
-    console.log('handleTread: result - not the player')
+  if (!isPlayerTurn) {
+    log.msg('handleTread: result - not the player')
     return
   }
 
-  const [terrainHere, entities] = world.here(action.tread)
-  const entitiesHere = entities.filter(e => e !== currentEntity)
-
-  if (entitiesHere.length > 0) {
-    // entity tread
-    for (const entity of entitiesHere) {
-      const treaddable = world.with(entity, 'trodOn')
-      if (treaddable) {
-        console.log('handleTread: treading on', entity.id)
-        world.message(treaddable.trodOn.message)
-      }
+  const entitiesHere = local.at(action.tread).filter(e => e !== currentEntity)
+  for (const entity of entitiesHere) {
+    if (entity.trodOn) {
+      log.msg('handleTread: treading on', entity.label)
+      engine.message(entity.trodOn.msg)
     }
-  } else if (terrainHere.trodOn) {
-    world.message(terrainHere.trodOn.message)
   }
 
-  console.log('handleTread: done')
+  log.end('handleTread: done')
 }

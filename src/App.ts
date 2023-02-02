@@ -1,27 +1,24 @@
-// Initial set up/loading test modules
-import { CONFIG } from './config'
-import { createGameDisplay } from './lib/display'
 import * as ROT from 'rot-js'
-
-import { Game } from './Core/Game'
-import { PointManager } from './Model/Point'
-import { Entity } from './Core/Entity'
-import { Terrain } from './Templates'
+import { CONFIG } from './config'
+import { logger } from './lib/logger'
+import { Engine } from './Core/Engine'
 
 export function App() {
-  // dev html background
+  const log = logger('app', 'init')
   document.body.style.backgroundColor = CONFIG.htmlBackgroundColor
 
   if (CONFIG?.seed) ROT.RNG.setSeed(CONFIG.seed)
 
-  window.points = new PointManager()
-  const [msg, main] = createGameDisplay()
-  window.game = new Game(main, msg)
+  const engine = new Engine()
+  window.game = engine
+  engine.init()
+  engine.render()
+
+  log.end()
 }
 
 declare global {
   interface Window {
-    game: Game
-    points: PointManager
+    game: Engine
   }
 }

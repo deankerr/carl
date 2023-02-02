@@ -8,10 +8,6 @@ export function str(n: number) {
   return `${n}`
 }
 
-export function strCmp(a: object, b: object) {
-  return JSON.stringify(a) === JSON.stringify(b)
-}
-
 export function objLog(obj: object | object[], label = 'Object Log', collapsed = false) {
   if (Array.isArray(obj)) obj.forEach((o, i) => objLog(o, label + i, collapsed))
   else {
@@ -86,5 +82,26 @@ export function* range(n: number, max?: number, step = 1) {
   while (value <= to) {
     yield value
     value += step
+  }
+}
+
+export class Queue<T> {
+  queue: T[] = []
+  repeat: T[] = []
+
+  add(item: T, repeat = false) {
+    this.queue.push(item)
+    if (repeat) this.repeat.push(item)
+  }
+
+  next() {
+    const item = this.queue.shift()
+    if (item !== undefined && this.repeat.includes(item)) this.queue.push(item)
+    return item
+  }
+
+  remove(item: T) {
+    this.queue = this.queue.filter(i => i !== item)
+    this.repeat = this.repeat.filter(i => i !== item)
   }
 }

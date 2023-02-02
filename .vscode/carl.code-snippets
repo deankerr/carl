@@ -16,31 +16,39 @@
   // 	"description": "Log output to console"
   // }
 
-  "CARL Component": {
-    "prefix": "ccomp",
-    "body": [
-      "export type ${1:TYPE} = { ${2:PROPERTY}: ${3:PROPTYPE} }",
-      "export const ${2:PROPERTY} = (${2:PROPERTY}: ${3:PROPTYPE}): ${1:TYPE} => {",
-      "  return { ${2:PROPERTY} }",
-      "}"
-    ],
-    "description": "CARL! Component Template"
-  },
+  // "CARL Component": {
+  //   "prefix": "ccomp",
+  //   "body": [
+  //     "export type ${1:TYPE} = { ${2:PROPERTY}: ${3:PROPTYPE} }",
+  //     "export const ${2:PROPERTY} = (${2:PROPERTY}: ${3:PROPTYPE}): ${1:TYPE} => {",
+  //     "  return { ${2:PROPERTY} }",
+  //     "}"
+  //   ],
+  //   "description": "CARL! Component Template"
+  // },
 
-  "Entity Template": {
-    "prefix": "ent-template",
+  // "Entity Template": {
+  //   "prefix": "ent-template",
+  //   "body": [
+  //     "${1:monster}: (pt: Point) => {",
+  //     "  return {",
+  //     "    id: '$1',",
+  //     "    ...C.position(pt.x, pt.y),",
+  //     "    ...C.render('${2:m}', '${3:red}'),",
+  //     "    ...C.description($1)",
+  //     "    ...C.tagActor(),",
+  //     "  }",
+  //     "},"
+  //   ],
+  //   "description": "CARL! Entity Template"
+  // },
+
+  "carl template - terrain": {
+    "prefix": "ttterrain",
     "body": [
-      "${1:monster}: (pt: Point) => {",
-      "  return {",
-      "    id: '$1',",
-      "    ...C.position(pt.x, pt.y),",
-      "    ...C.render('${2:m}', '${3:red}'),",
-      "    ...C.description($1)",
-      "    ...C.tagActor(),",
-      "  }",
-      "},"
+      "{ label: '${1:NAME}', name: ['$1'], form: ['${2:CHAR}', '#${3:COLOR}'], tag: ['${4:terrain}'] },"
     ],
-    "description": "CARL! Entity Template"
+    "description": "CARL terrain template"
   },
 
   "X Y Arguments": {
@@ -61,26 +69,9 @@
     "description": "w/h: number"
   },
 
-  "2D XY For loop": {
-    "prefix": "for2d",
-    "body": [
-      "for (let yi = 0; yi <= $1.length; yi++) {",
-      "  for (let xi = 0; xi <= $1[yi].length; xi++) {",
-      "   ${2:// body}",
-      " }",
-      "}"
-    ],
-    "description": "2D XY For loop"
-  },
-
   "import ROT.JS": {
-    "prefix": "impROTJS",
+    "prefix": "irotjs",
     "body": "import * as ROT from 'rot-js'",
     "description": "Import our favourite roguelike library."
-  },
-
-  "template def": {
-    "prefix": "ttemplate",
-    "body": "{ id: '${1:NAME}', name: '$1', char: '$1', color: '#$2', tags: ['$3'] },"
   }
 }

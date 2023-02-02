@@ -1,58 +1,48 @@
-import { World } from '../Core/World'
-import { acting } from '../Component'
-import { position } from '../Component/'
-import { Pt } from '../Model/Point'
-import { Bump, Tread } from '../Action'
+import * as Action from '../Core/Action'
+import { Engine } from '../Core/Engine'
+import { logger } from '../lib/logger'
 
-export const handleMovement = (world: World) => {
-  const [currentEntity] = world.get('acting', 'position', 'tagCurrentTurn')
+// , isPlayerTurn: boolean
+export const handleMovement = (engine: Engine) => {
+  const log = logger('sys', 'handleMovement')
+  const { local } = engine
+  const [currentEntity] = local.get('acting', 'position')
   const action = currentEntity.acting
 
   if (!('move' in action)) {
-    console.log('handleMovement: not a move action', action)
+    // log.msg(`handleMovement: not a move action`)
     return
   }
 
-  console.log('handleMovement:', currentEntity.id, action.move)
-  const currentIsPlayer = 'tagPlayer' in currentEntity
+  log.msg('handleMovement:', currentEntity.label, action.move.dir)
 
   // wait, just return (for now)
   if (action.move.dir === 'WAIT') {
-    console.log('handleMovement: result - wait')
+    log.msg('handleMovement: result - wait')
     return
   }
 
-  const newPt = Pt(currentEntity.position.x + action.move.dx, currentEntity.position.y + action.move.dy)
+  const newPt = currentEntity.position.add(action.move.x, action.move.y)
 
   // debug no clip
-  if (world.options.debugMode && currentIsPlayer) {
-    world.modify(currentEntity).change(position(newPt))
-    return
+  // if (world.options.debugMode && currentIsPlayer) {
+  //   world.modify(currentEntity).change(position(newPt))
+  //   return
+  // }
+
+  const entitiesHere = local.at(newPt)
+
+  // walkable check
+  if (entitiesHere.some(e => e.blocksMovement)) {
+    log.msg('handleMovement: new action - Bump ')
+    local.entity(currentEntity).modify('acting', Action.Bump(newPt))
+    return log.end()
   }
 
-  const [terrain, entitiesHere] = world.here(newPt)
+  // valid move, create tread action and update position
+  log.msg('handleMovement: new action - Tread')
+  local.entity(currentEntity).modify('acting', Action.Tread(newPt)).modify('position', newPt)
+  // .modify('tag', 'signalLightPathUpdated')
 
-  // terrain walkable check
-  if (!terrain.tagWalkable) {
-    console.log('handleMovement: new action - Bump (terrain)', terrain)
-    const newAction = acting(Bump(newPt))
-    world.modify(currentEntity).change(newAction)
-    return
-  }
-
-  // entity blocking check
-  const entitiesAreWalkable = entitiesHere.every(e => 'tagCurrentTurn' in e || 'tagWalkable' in e)
-  if (!entitiesAreWalkable) {
-    console.log('handleMovement: new action - Bump (entity)')
-    const newAction = acting(Bump(newPt))
-    world.modify(currentEntity).change(newAction)
-    return
-  } else {
-    // create tread action
-    console.log('handleMovement: new action - Tread')
-    const tread = acting(Tread(newPt))
-    // update position
-    const newPosition = position(newPt)
-    world.modify(currentEntity).change(tread).change(newPosition)
-  }
+  log.end()
 }

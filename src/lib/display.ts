@@ -1,19 +1,14 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
 import { tileMapOryxMessages, tileMapOryxMain } from './tilemap'
 
 const mainTileSize = 32
-export const createTileDisplay = (
-  width = CONFIG.mainDisplayWidth,
-  height = CONFIG.mainDisplayHeight,
-  bg = CONFIG.mainBackgroundColor
-) => {
+export const createTileDisplay = () => {
   const display = new ROT.Display({
     layout: 'tile-gl',
-    width,
-    height,
-    bg,
+    width: CONFIG.mainDisplayWidth,
+    height: CONFIG.mainDisplayHeight,
+    bg: CONFIG.mainBackgroundColor,
     tileWidth: mainTileSize,
     tileHeight: mainTileSize,
     tileSet: window.tileSet32,
@@ -24,20 +19,17 @@ export const createTileDisplay = (
   return display
 }
 
-const msgTileSize = 24
-export const createMessageDisplay = (
-  width = CONFIG.messageDisplayWidth,
-  height = CONFIG.messageDisplayHeight,
-  bg = CONFIG.messageBackgroundColor
-) => {
+const msgTileSize = 32
+export const createMessageDisplay = () => {
   const display = new ROT.Display({
     layout: 'tile-gl',
-    width,
-    height,
-    bg,
+    width: CONFIG.messageDisplayWidth,
+    height: CONFIG.messageDisplayHeight,
+    fg: CONFIG.messageColor,
+    bg: CONFIG.messageBackgroundColor,
     tileWidth: msgTileSize,
     tileHeight: msgTileSize,
-    tileSet: window.tileSet24,
+    tileSet: window.tileSet32,
     tileColorize: true,
     tileMap: tileMapOryxMessages,
   })
@@ -71,18 +63,18 @@ export const createGameDisplay = () => {
   const wrapper = createHTMLWrapper()
 
   // message display canvas
-  const msgDisplay = createMessageDisplay(CONFIG.messageDisplayWidth, CONFIG.messageDisplayHeight)
-  const msg = msgDisplay.getContainer()!
+  const msgDisplay = createMessageDisplay()
+  const msg = msgDisplay.getContainer()
+  if (!msg) throw new Error('Unable to get msgDisplay container')
+
   msg.style.maxWidth = '99vw'
   msg.style.position = 'absolute'
 
-  // msg.style.bottom = '0'
-  // msg.style.top = '140px'
-  // msg.style.height = '300px'
-
   // main game display canvas
-  const mainDisplay = createTileDisplay(CONFIG.mainDisplayWidth, CONFIG.mainDisplayHeight)
-  const main = mainDisplay.getContainer()!
+  const mainDisplay = createTileDisplay()
+  const main = mainDisplay.getContainer()
+  if (!main) throw new Error('Unable to get mainDisplay container')
+
   main.style.maxWidth = '99vw'
   main.style.maxHeight = '99vh'
 

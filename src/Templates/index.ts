@@ -1,4 +1,4 @@
-export * from './Domains'
-export * from './Beings'
-export * from './Features'
-export * from './Terrain'
+// export * from './Domains'
+export * from './beings'
+export * from './features'
+export * from './terrain'

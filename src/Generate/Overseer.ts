@@ -1,86 +1,60 @@
-import { EntityTemplate } from '../Core/Entity'
-import { Grid } from '../Model/Grid'
-import { Point, strToPt } from '../Model/Point'
+import { Entity, EntityKey, EntityPool } from '../Core/Entity'
+import { TerrainKey } from '../Templates'
+import { Region } from '../Core/Region'
+import { rnd } from '../lib/util'
+import { Point, point } from '../Model/Point'
 import { Rect } from '../Model/Rectangle'
-import { Features, Terrain, TerrainTemplate } from '../Templates'
 
-export type Mutation = Map<string, EntityTemplate>
+export type Mutation = [Map<Point, Entity>, Entity[]]
 
 export class Overseer {
-  grid: Grid<TerrainTemplate>
-  mutators: Mutator[] = []
+  current: Region
   domainConnections = new Map<string, string>()
 
-  constructor(readonly width: number, readonly height: number, readonly initial = Terrain.void) {
-    this.grid = Grid.fill(width, height, initial)
+  history: Mutation[] = []
 
-    const initMutator = new Mutator(this.grid)
-    this.grid.each((pt, t) => initMutator.divulge().terrain.set(pt.s, t))
-    this.mutators.push(initMutator)
+  // compatibility
+  grid = {
+    rndPt: () => {
+      return point(rnd(0, this.width - 1), rnd(0, this.height - 1))
+    },
+  }
+
+  constructor(readonly width: number, readonly height: number, readonly pool: EntityPool) {
+    this.current = new Region(width, height, pool)
   }
 
   mutate() {
-    const mutator = new Mutator(this.grid)
-    this.mutators.push(mutator)
-    return mutator
-  }
+    const mutation: Mutation = [new Map([...this.current.terrainMap]), [...this.current.entities]]
+    this.history.push(mutation)
 
-  replay() {
-    return Grid.fill(this.width, this.height, this.initial)
+    const mutator = new Mutator(this.current)
+    return mutator
   }
 }
 
 export class Mutator {
-  private terrain: Mutation = new Map()
-  private entities: Mutation = new Map()
-  private markers: Mutation = new Map()
-  private clearMarkers = false
-  constructor(private grid: Grid<TerrainTemplate>) {}
+  constructor(readonly current: Region) {}
 
-  set(setPt: Point | string | Rect, e: EntityTemplate) {
-    if (setPt instanceof Rect) {
-      setPt.toPts().forEach(pt => this.set(pt, e))
+  setT(pt: Point | Rect, t: TerrainKey) {
+    if (pt instanceof Rect) {
+      pt.toPts().forEach(pt => this.setT(pt, t))
       return
     }
-    const pt = typeof setPt === 'string' ? strToPt(setPt) : setPt
-    if (this.grid.get(pt) === e) return
-    if (Object.values(Terrain).includes(e)) {
-      this.grid.set(pt, e)
-      this.terrain.set(pt.s, e)
-    } else if (e.id.includes('debug')) this.markers.set(pt.s, e)
-    else this.entities.set(pt.s, e)
+
+    this.current.createTerrain(t, pt)
   }
 
-  mark(pt: Point | Rect) {
-    if ('s' in pt) {
-      this.markers.set(pt.s, Features.debugMarker)
-    } else {
-      pt.toPts().forEach(pt => this.markers.set(pt.s, Features.debugMarker))
+  setE(pt: Point | Rect, e: EntityKey) {
+    if (pt instanceof Rect) {
+      pt.toPts().forEach(pt => this.setE(pt, e))
+      return
     }
-  }
 
-  clear() {
-    this.clearMarkers = true
-  }
-
-  divulge() {
-    return { terrain: this.terrain, entities: this.entities, markers: this.markers, clearMarkers: this.clearMarkers }
+    this.current.createEntity(e, pt)
   }
 
   query(pt: Point) {
-    return this.grid.get(pt)
+    return this.current.terrainAt(pt)
   }
 }
-
-// const pt = PointMan()
-// export class Overseer2 {
-//   main: Level2
-//   constructor(width: number, height: number, initialTerrain: Entity) {
-//     this.main = new Level2(width, height)
-//     for (let yi = 0; yi < height; yi++) {
-//       for (let xi = 0; xi < width; xi++) {
-//         // this.main.terrain.set(pt(xi, yi), initialTerrain)
-//       }
-//     }
-//   }
-// }

@@ -1,57 +1,107 @@
-import { Components } from './Components'
-import * as C from '../Component'
-import { Point } from '../Model/Point'
-import { BeingTemplate, FeatureTemplate, TerrainTemplate } from '../Templates'
 import { transformHSL } from '../lib/color'
+import { logger } from '../lib/logger'
+import { Point } from '../Model/Point'
+import { BeingKey, beings, FeatureKey, features, TerrainKey, terrain } from '../Templates'
+import { FoundryKey, Component, ComponentFoundry, FoundryParam, Components } from './Components'
 
-export type EntityID = { readonly id: string; name: string; char: string; color: string }
+export type eID = { eID: number; label: string }
+export type Entity = eID & Component<'name'> & Component<'form'> & Partial<Components>
+export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
+export type EntityKey = BeingKey | FeatureKey | TerrainKey
 
-export type Entity = EntityID & Components
+export type EntityTemplate = {
+  label: string
+  name: FoundryParam['name']
+  form: FoundryParam['form']
+} & Partial<FoundryParam>
 
-export type EntityTemplate = BeingTemplate | FeatureTemplate | TerrainTemplate
+export class EntityPool {
+  private count = 0
+  readonly pool = new Map<string, Entity>()
 
-export function hydrate(t: EntityTemplate, pt?: Point, fov?: number): Entity {
-  let entity = {
-    id: t.id,
-    name: t.name,
-    char: t.char,
-    color: t.color,
-  }
-
-  if (pt) entity = { ...entity, ...C.position(pt) }
-  if (fov) entity = { ...entity, ...C.fov(fov) }
-
-  // TODO map components to templates to avoid doing this manually
-  if ('tag' in t) {
-    if (t.tag.includes('walkable')) entity = { ...entity, ...C.tagWalkable() }
-    if (t.tag.includes('memorable')) entity = { ...entity, ...C.tagMemorable() }
-    if (t.tag.includes('blocksLight')) entity = { ...entity, ...C.tagBlocksLight() }
-    if (t.tag.includes('actor')) entity = { ...entity, ...C.tagActor() }
-    if (t.tag.includes('player')) entity = { ...entity, ...C.tagPlayer() }
-    if (t.tag.includes('door')) {
-      entity = {
-        ...entity,
-        ...C.tagDoor(),
-        ...C.doorGraphic(C.graphic('doorClosed', entity.color), C.graphic('doorOpen', entity.color)),
+  constructor(readonly components: typeof ComponentFoundry) {
+    const log = logger('entity', 'init')
+    const templates = [...beings, ...features, ...terrain]
+    for (const t of templates) {
+      let e = {
+        eID: 0,
+        label: t.label,
+        ...components.name(...t.name),
+        ...components.form(...t.form),
       }
+
+      if (t.tag) e = this.attach(e, 'tag', ...t.tag)
+      if (t.trodOn) e = this.attach(e, 'trodOn', ...t.trodOn)
+      if (t.fieldOfView) e = this.attach(e, 'fieldOfView', ...t.fieldOfView)
+      if (t.formSet) e = this.attach(e, 'formSet', ...t.formSet)
+      if (t.formSetTriggers) e = this.attach(e, 'formSetTriggers', ...t.formSetTriggers)
+      if (t.formSetAutoCycle) e = this.attach(e, 'formSetAutoCycle', ...t.formSetAutoCycle)
+
+      if (t.emitLight) {
+        const color =
+          t.emitLight[0] === 'auto'
+            ? transformHSL(e.form.color, { lum: { to: 0.25 } })
+            : t.emitLight[0]
+        e = this.attach(e, 'emitLight', color)
+      }
+
+      if (t.lightFlicker) e = this.attach(e, 'lightFlicker', ...t.lightFlicker)
+      if (t.lightHueRotate) e = this.attach(e, 'lightHueRotate', ...t.lightHueRotate)
+
+      this.pool.set(t.label, e)
     }
+    log.end()
   }
 
-  if ('trodOn' in t) entity = { ...entity, ...C.trodOn(t.trodOn) }
-
-  if ('cycleGraphic' in t) {
-    const list = t.cycleGraphic.list.map(g => {
-      return C.graphic(g, t.color)
-    })
-    entity = { ...entity, ...C.cycleGraphic(list, t.cycleGraphic.frequency) }
+  attach<T extends FoundryKey>(e: Entity, componentName: T, ...p: FoundryParam[T]) {
+    const c = Reflect.apply(this.components[componentName], undefined, p)
+    // logger('entity', 'attach', `${componentName}`).msg(
+    //   `attach ${e.label} ${componentName} [${[...p.values()]}]`
+    // )
+    return { ...e, ...c }
   }
 
-  if ('emitLight' in t) {
-    // const color = 'color' in t.emitLight ? t.emitLight.color : transformHSL(entity.color, {lum: {to: .25}})
-    // hardcoded to 25% of entity's luminance for now
-    const color = transformHSL(entity.color, { lum: { to: 0.25 } })
-    entity = { ...entity, ...C.emitLight(color, t.emitLight.flicker) }
+  private thaw(key: EntityKey) {
+    const thawed = this.pool.get(key)
+    if (!thawed) throw new Error(`Could not thaw entity ${key}`)
+    return thawed
+  }
+  // create a new instance of an entity with a position
+  spawn(key: EntityKey, at: Point) {
+    const eID = this.count++
+    const label = key + '-' + eID
+    const e = { ...this.thaw(key), eID, label, ...this.components.position(at) }
+    return e
   }
 
-  return entity
+  // return the base copy of the entity (ie. for terrain)
+  symbolic(key: EntityKey) {
+    return this.thaw(key)
+  }
+
+  entity(localState: Entity[], entity: Entity) {
+    const index = localState.findIndex(e => e === entity)
+    if (index < 0) throw new Error(`Unable to locate entity to modify ${entity.label}`)
+
+    let store = entity
+
+    const modify = <T extends FoundryKey>(cName: T, ...p: FoundryParam[T]) => {
+      store = this.attach(store, cName, ...p)
+      localState[index] = store
+      return options
+    }
+
+    const remove = <T extends keyof Components>(componentName: T) => {
+      const e = { ...store }
+      Reflect.deleteProperty(e, componentName)
+      store = e
+      localState[index] = store
+      // logger('entity', 'remove', `${componentName}`).msg(`remove ${e.label} ${componentName}`)
+      return options
+    }
+
+    const options = { modify, remove }
+
+    return options
+  }
 }

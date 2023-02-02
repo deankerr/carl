@@ -1,58 +1,57 @@
-import { World } from '../Core/World'
-import { tagMeleeAttackTarget, acting, tagWalkable, tagDoorOpen, tagLightPathUpdated } from '../Component'
-import { MeleeAttack } from '../Action'
+// import { tagMeleeAttackTarget, acting, tagWalkable, tagDoorOpen, tagLightPathUpdated } from '../Component'
+import * as Action from '../Core/Action'
+import { Engine } from '../Core/Engine'
+import { logger } from '../lib/logger'
 
-export const handleBump = (world: World) => {
-  const [currentEntity] = world.get('acting', 'position')
+export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
+  const log = logger('sys', 'handleBump')
+  const { local } = engine
+  const [currentEntity] = local.get('acting', 'position')
   const { acting: action } = currentEntity
 
-  if (!('bump' in action)) return console.log('handleBump: not a bump action')
+  if (!('bump' in action)) return //log.msg('handleBump: not a bump action')
 
-  const [terrain, entities] = world.here(action.bump)
-  const bumpableEntities = entities.filter(e => !('tagCurrentTurn' in e) && !('tagWalkable' in e))
-  const currentIsPlayer = 'tagPlayer' in currentEntity
+  const bumped = local.at(action.bump).filter(e => !e.acting && e.blocksMovement)
 
-  if (bumpableEntities.length === 0) {
-    // no entities, terrain bump
-    console.log('handleBump: result - terrain bump')
-    if (currentIsPlayer) world.message(`You bounce off the ${terrain.name}.`)
+  if (bumped.some(e => e.terrain)) {
+    log.msg('handleBump: result - terrain bump')
+    if (isPlayerTurn) engine.message(`You bounce off the ${bumped[0].name}.`)
   } else {
     // entities
-    console.log('handleBump: entity bump')
+    log.msg('handleBump: entity bump')
 
     // ? assuming there can only be one entity here
-    const [bumpedEntity] = bumpableEntities
-    if (currentIsPlayer) {
+    const [bumpedEntity] = bumped
+    if (isPlayerTurn) {
       // * handle door
-      const door = world.with(bumpedEntity, 'doorGraphic')
+      const door = local.has(bumpedEntity, 'isClosed', 'formSet', 'formSetTriggers')
       if (door) {
-        console.log('handleBump: result - open door')
-        const door = world.with(bumpedEntity, 'doorGraphic')
-        if (door)
-          world
-            .modify(bumpedEntity)
-            .add(tagWalkable())
-            .add(tagDoorOpen())
-            .add(tagLightPathUpdated())
-            .change(door.doorGraphic.open)
-            .remove('tagBlocksLight')
+        local
+          .entity(door)
+          .remove('isClosed')
+          .remove('blocksLight')
+          .remove('blocksMovement')
+          .modify('tag', 'isOpen')
+          .modify('tag', 'signalLightPathUpdated')
 
-        world.message('You slowly push or pull the door open.')
-        return
+        engine.message('Knock knock!!!')
+        return log.end()
       }
 
       // * attack!
-      world.modify(bumpedEntity).add(tagMeleeAttackTarget())
+      local.entity(bumpedEntity).modify('tag', 'meleeAttackTarget')
 
       // update acting component
-      world.modify(currentEntity).change(acting(MeleeAttack(action.bump)))
-      console.log(`handleBump: action - MeleeAttack ${bumpedEntity.id}`)
+      // local.entity(currentEntity, component.acting(Action.MeleeAttack(action.bump)))
+      local.entity(currentEntity).modify('acting', Action.MeleeAttack(action.bump))
+      log.msg(`handleBump: action - MeleeAttack ${bumpedEntity.label}`)
     }
 
     // * NPC attack something
     else {
-      console.log('handleBump:', currentEntity.id, 'bumped', bumpedEntity.id)
+      log.msg('handleBump:', currentEntity.label, 'bumped', bumpedEntity.label)
       // TODO
     }
   }
+  log.end()
 }

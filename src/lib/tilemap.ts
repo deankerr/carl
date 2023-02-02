@@ -3,7 +3,11 @@ const punctuation = '!@#$%^&*()-=+.,:;"<>?\\/|-:'
 const numbers = '1234567890'
 
 // get a range of tiles in the ROT format
-const mapRange = (chars: string, y: number, tileSize: number): { [key: string]: [number, number] } => {
+const mapRange = (
+  chars: string,
+  y: number,
+  tileSize: number
+): { [key: string]: [number, number] } => {
   return chars.split('').reduce((acc, curr, i) => {
     return (acc = { ...acc, [curr]: [tileSize * i, tileSize * y] })
   }, {})
@@ -14,7 +18,7 @@ const mapChar = (x: number, y: number, tileSize: number): [number, number] => {
 }
 
 const t = 32 // main tileset size
-const s = 24 // msg tileset size
+const s = 32 // msg tileset size
 
 export const tileMapOryxMessages = {
   ...mapRange(letters, 6, s),
@@ -22,7 +26,7 @@ export const tileMapOryxMessages = {
   ...mapRange(numbers, 7, s),
   ...mapRange(punctuation, 5, s),
   "'": mapChar(27, 3, s),
-  ' ': mapChar(13, 0, s),
+  ' ': mapChar(27, 0, s),
 }
 
 export const tileMapOryxMain = {
@@ -37,6 +41,8 @@ export const tileMapOryxMain = {
   bones: mapChar(5, 3, t),
   bigCheck: mapChar(21, 7, t),
   smallCheck: mapChar(20, 7, t),
+  stalk: mapChar(12, 0, t),
+  cactus: mapChar(13, 0, t),
   chicken: mapChar(18, 3, t),
   column: mapChar(19, 4, t),
   crab: mapChar(10, 3, t),

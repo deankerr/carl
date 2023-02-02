@@ -1,36 +1,34 @@
-import { dead } from '../Component'
-import { World } from '../Core/World'
+import { Engine } from '../Core/Engine'
+import { logger } from '../lib/logger'
 
-export const handleMeleeAttack = (world: World) => {
-  const [currentEntity] = world.get('acting')
+export const handleMeleeAttack = (engine: Engine, isPlayerTurn: boolean) => {
+  const log = logger('sys', 'handleMeleeAttack')
+  const { local } = engine
+  const [currentEntity] = local.get('acting')
   const { acting: action } = currentEntity
 
-  if (!('meleeAttack' in action)) return console.log('handleMeleeAttack: not a meleeAttack action')
+  if (!('meleeAttack' in action)) return //log.msg('handleMeleeAttack: not a meleeAttack action')
 
-  console.log('handleMeleeAttack: ', currentEntity.id)
+  log.msg('handleMeleeAttack: ', currentEntity.label)
 
   // get target
-  const [targetEntity] = world.get('tagMeleeAttackTarget')
-  const currentIsPlayer = 'tagPlayer' in currentEntity
-  const targetIsPlayer = 'tagPlayer' in targetEntity
+  const [targetEntity] = local.get('meleeAttackTarget')
 
   // hardcoded responses for now
-  if (currentIsPlayer && targetIsPlayer) {
-    throw new Error('Player is attacking player, this should not happen')
-  } else if (currentIsPlayer) {
+  if (isPlayerTurn) {
     // kill target
-    console.log(`handleMeleeAttack: player killed ${targetEntity.id}`)
-    world.modify(targetEntity).add(dead())
-    world.message(`You obliterate the ${targetEntity.name} with your mind!`)
+    log.msg(`handleMeleeAttack: player killed ${targetEntity.label}`)
+    local.entity(targetEntity).modify('tag', 'dead')
+    engine.message(`You obliterate the ${targetEntity.name} with your mind!`)
   } else {
     // TODO in player vision/hearing range only
-    world.message(`The ${currentEntity.name} glares helplessly at the ${targetEntity.id}`)
+    engine.message(`The ${currentEntity.name} glares helplessly at the ${targetEntity.name}`)
   }
 
   // ? cleanup
-  const taggedEntities = world.get('tagMeleeAttackTarget')
+  const taggedEntities = local.get('meleeAttackTarget')
   for (const entity of taggedEntities) {
-    world.modify(entity).remove('tagMeleeAttackTarget')
-    console.log(`handleMeleeAttack: cleanup - removed tagMeleeAttackTarget from ${entity.id}`)
+    local.entity(entity).remove('meleeAttackTarget')
+    log.msg(`handleMeleeAttack: cleanup - removed tagMeleeAttackTarget from ${entity.label}`)
   }
 }
