@@ -14,6 +14,7 @@ export class Region {
   revealAll = CONFIG.revealAll
 
   voidColor = '' || CONFIG.mainBackgroundColor
+  voidColorUnrevealed = '' || CONFIG.mainBackgroundColor
   lighting = new Map<Point, Color>()
 
   hasChanged = true

@@ -1,4 +1,4 @@
-const PROD = import.meta.env.PROD
+// const PROD = import.meta.env.PROD
 
 const appInitial = 'game'
 // const seed = 1234
@@ -21,8 +21,8 @@ const messageBackgroundColor = 'transparent'
 const htmlBackgroundColor = mainBackgroundColor
 
 const frameLimit = 0
-const recallAll = PROD ? false : true
-const revealAll = PROD ? false : true
+const recallAll = false
+const revealAll = false
 const playerLight = false
 
 const initialDomain = 0

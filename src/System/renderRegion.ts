@@ -46,6 +46,11 @@ export function renderRegion(engine: Engine) {
 
   // replace any void terrain with this locally colored one
   const voidLocal = { char: 'void', color: local.voidColor, bgColor: local.voidColor }
+  const voidLocalUnrevealed = {
+    char: 'void',
+    color: local.voidColorUnrevealed,
+    bgColor: local.voidColorUnrevealed,
+  }
 
   mainDisplay.clear()
 
@@ -53,7 +58,7 @@ export function renderRegion(engine: Engine) {
   rect(-offsetX, -offsetY, mainDisplayWidth - offsetX, mainDisplayHeight - offsetY, gridPt => {
     local.renderAt(gridPt, (entities, visible, recalled, lighting) => {
       const stack = [
-        voidLocal,
+        recalled ? voidLocal : voidLocalUnrevealed,
         ...entities
           // 1. remove void terrain
           .filter(e => e.label !== 'void')

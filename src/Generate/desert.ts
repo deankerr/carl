@@ -17,6 +17,7 @@ export function desert(width = CONFIG.generateWidth, height = CONFIG.generateHei
   // region.voidColor = '#bfa640'
   // region.voidColor = '#bb6244'
   region.voidColor = '#e6ce80'
+  region.voidColorUnrevealed = '#393013'
   // region.voidColor = '#000'
 
   const center = point(half(width), half(height))
@@ -45,19 +46,19 @@ export function desert(width = CONFIG.generateWidth, height = CONFIG.generateHei
     // cactus
     const cactus = (pt: Point) => O2.terrain(pt, 'cactus')
     hop(8, 10, 8, rndPt, cactus)
-
-    const snakes = (pt: Point) => O2.being(pt, 'snake')
-    const gulls = (pt: Point) => O2.being(pt, 'bloodGull')
-    const spiders = (pt: Point) => O2.being(pt, 'spider')
-    const tick = (pt: Point) => O2.being(pt, 'tick')
-    const scorpion = (pt: Point) => O2.being(pt, 'scorpion')
-
-    hop(8, 4, 4, rndPt, snakes)
-    hop(8, 4, 4, rndPt, gulls)
-    hop(8, 4, 4, rndPt, spiders)
-    hop(8, 4, 4, rndPt, tick)
-    hop(8, 4, 4, rndPt, scorpion)
   })
+
+  const snakes = (pt: Point) => O2.being(pt, 'snake')
+  const gulls = (pt: Point) => O2.being(pt, 'bloodGull')
+  const spiders = (pt: Point) => O2.being(pt, 'spider')
+  const tick = (pt: Point) => O2.being(pt, 'tick')
+  const scorpion = (pt: Point) => O2.being(pt, 'scorpion')
+
+  hop(8, 4, 4, rndPt, snakes)
+  hop(8, 4, 4, rndPt, gulls)
+  hop(8, 4, 4, rndPt, spiders)
+  hop(8, 4, 4, rndPt, tick)
+  hop(8, 4, 4, rndPt, scorpion)
 
   O2.finalize()
   console.log('O2:', O2)

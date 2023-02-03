@@ -83,6 +83,6 @@ export function listen(callback: (event: KeyboardEvent) => unknown) {
       case 'Meta':
         return
     }
-    setTimeout(() => callback(event), 0)
+    callback(event)
   })
 }

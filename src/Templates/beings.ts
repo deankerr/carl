@@ -19,7 +19,7 @@ export const beings: EntityTemplate[] = [
     name: ['player'],
     form: ['@', '#EE82EE'],
     tag: ['playerControlled', 'actor', 'blocksMovement', 'being', 'signalUpdatePlayerFOV'],
-    fieldOfView: [12],
+    fieldOfView: [16],
     // emitLight: ['auto', CONFIG.playerLight],
     // lightFlicker: [120],
     // lightHueRotate: [0.02],
