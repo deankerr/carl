@@ -14,84 +14,49 @@ export function desert(width = CONFIG.generateWidth, height = CONFIG.generateHei
 
   const region = new Region(width, height, window.game.pool)
   const O2 = new Overseer2(region)
-  region.voidColor = '#bba344'
+  // region.voidColor = '#bfa640'
+  // region.voidColor = '#bb6244'
+  region.voidColor = '#e6ce80'
   // region.voidColor = '#000'
 
   const center = point(half(width), half(height))
 
   repeat(2, () => {
     // dead grass
-    walk(
-      24,
-      200,
-      rndPt,
-      pt => O2.terrain(pt, 'deadGrass'),
-      () => O2.snapshot('deadGrass')
-    )
+    const deadGrass = (pt: Point) => O2.terrain(pt, 'deadGrass')
+    walk(24, 200, rndPt, deadGrass)
 
     // grass
-    hop(
-      10,
-      10,
-      5,
-      rndPt,
-      pt => O2.terrain(pt, 'grass'),
-      () => O2.snapshot('grass')
-    )
+    const grass = (pt: Point) => O2.terrain(pt, 'grass')
+    hop(10, 10, 5, rndPt, grass)
 
     // shrub
-    const writeShrub = (pt: Point) => O2.terrain(pt, 'shrub')
-    const snapShrub = () => O2.snapshot('shrub')
-    hop(6, 4, 12, rndPt, writeShrub, snapShrub)
-
-    hop(
-      10,
-      10,
-      5,
-      rndPt,
-      pt => O2.terrain(pt, 'grass'),
-      () => O2.snapshot('grass')
-    )
+    const shrub = (pt: Point) => O2.terrain(pt, 'shrub')
+    hop(6, 4, 12, rndPt, shrub)
 
     // mound
-    hop(
-      8,
-      8,
-      8,
-      rndPt,
-      pt => O2.terrain(pt, 'mound'),
-      () => O2.snapshot('mound')
-    )
+    const mound = (pt: Point) => O2.terrain(pt, 'mound')
+    hop(8, 8, 8, rndPt, mound)
 
     // dead Tree
-    hop(
-      6,
-      4,
-      12,
-      rndPt,
-      pt => O2.terrain(pt, 'deadTree'),
-      () => O2.snapshot('deadTree')
-    )
+    const deadTree = (pt: Point) => O2.terrain(pt, 'deadTree')
+    hop(6, 4, 12, rndPt, deadTree)
 
     // cactus
-    hop(
-      8,
-      10,
-      8,
-      rndPt,
-      pt => O2.terrain(pt, 'cactus'),
-      () => O2.snapshot('cactus')
-    )
+    const cactus = (pt: Point) => O2.terrain(pt, 'cactus')
+    hop(8, 10, 8, rndPt, cactus)
 
-    // snakes!
-    hop(
-      8,
-      4,
-      4,
-      rndPt,
-      pt => O2.being(pt, 'snake'),
-      () => O2.snapshot('snake')
-    )
+    const snakes = (pt: Point) => O2.being(pt, 'snake')
+    const gulls = (pt: Point) => O2.being(pt, 'bloodGull')
+    const spiders = (pt: Point) => O2.being(pt, 'spider')
+    const tick = (pt: Point) => O2.being(pt, 'tick')
+    const scorpion = (pt: Point) => O2.being(pt, 'scorpion')
+
+    hop(8, 4, 4, rndPt, snakes)
+    hop(8, 4, 4, rndPt, gulls)
+    hop(8, 4, 4, rndPt, spiders)
+    hop(8, 4, 4, rndPt, tick)
+    hop(8, 4, 4, rndPt, scorpion)
   })
 
   O2.finalize()

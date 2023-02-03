@@ -79,5 +79,11 @@ export const tileMapOryxMain = {
   tree: mapChar(5, 0, t),
   void: mapChar(13, 0, t),
   wall: mapChar(0, 2, t),
+  gull1: mapChar(23, 3, t),
+  gull2: mapChar(24, 3, t),
   water: mapChar(0, 1, t),
+  tick1: mapChar(25, 3, t),
+  tick2: mapChar(26, 3, t),
+  scorpion1: mapChar(0, 8, t),
+  scorpion2: mapChar(1, 8, t),
 } satisfies { [key: string]: [number, number] }

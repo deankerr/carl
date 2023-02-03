@@ -56,9 +56,8 @@ export const terrain: EntityTemplate[] = [
   },
   { label: 'grass', name: ['grass'], form: ['grass', '#414c12'], tag: ['terrain'] },
   { label: 'deadGrass', name: ['dead grass'], form: ['deadGrass', '#664f47'], tag: ['terrain'] },
-  { label: 'mound', name: ['mound'], form: ['mound', '#523626'], tag: ['blocksLight', 'terrain'] },
+  { label: 'mound', name: ['mound'], form: ['mound', '#4d372a'], tag: ['blocksLight', 'terrain'] },
   { label: 'peak', name: ['peak'], form: ['peak', '#004027'], tag: ['blocksLight', 'terrain'] },
-  // { label: 'sand', name: ['sand'], form: ['CHAR', '#COLOR'], tag: ['terrain'] },
   { label: 'deadGrassD', name: ['dead grass'], form: ['deadGrass', '#553930'], tag: ['terrain'] },
   {
     label: 'void',

@@ -1,7 +1,17 @@
 // import { CONFIG } from '../config'
 import { EntityTemplate } from '../Core/Entity'
 
-export type BeingKey = 'player' | 'spider' | 'ghost' | 'demon' | 'crab' | 'crab2' | 'snake'
+export type BeingKey =
+  | 'player'
+  | 'spider'
+  | 'ghost'
+  | 'demon'
+  | 'crab'
+  | 'crab2'
+  | 'snake'
+  | 'bloodGull'
+  | 'tick'
+  | 'scorpion'
 
 export const beings: EntityTemplate[] = [
   {
@@ -17,7 +27,7 @@ export const beings: EntityTemplate[] = [
   {
     label: 'spider',
     name: ['spider'],
-    form: ['spider', '#00B3B3'],
+    form: ['spider', '#29adff'],
     tag: ['actor', 'blocksMovement', 'being'],
   },
   {
@@ -49,5 +59,29 @@ export const beings: EntityTemplate[] = [
     name: ['snake'],
     form: ['snake', '#32cd32'],
     tag: ['actor', 'blocksMovement', 'being'],
+  },
+  {
+    label: 'bloodGull',
+    name: ['blood gull'],
+    form: ['gull1', '#CC0000'],
+    tag: ['actor', 'blocksMovement', 'being'],
+    formSet: [['gull1', '', '', 'gull2', '', '']],
+    formSetAutoCycle: [150],
+  },
+  {
+    label: 'tick',
+    name: ['tick'],
+    form: ['tick1', '#7e2553'],
+    tag: ['actor', 'blocksMovement', 'being'],
+    formSet: [['tick1', '', '', 'tick2', '', '']],
+    formSetAutoCycle: [1000],
+  },
+  {
+    label: 'scorpion',
+    name: ['scorpion'],
+    form: ['scorpion1', '#ff8000'],
+    tag: ['actor', 'blocksMovement', 'being'],
+    formSet: [['scorpion1', '', '', 'scorpion2', '', '']],
+    formSetAutoCycle: [1000],
   },
 ]
