@@ -43,7 +43,7 @@ export const features: EntityTemplate[] = [
   },
   {
     label: 'deadTree',
-    name: ['dead tree'],
+    name: ['ancient tree'],
     form: ['tree', '#602e15'],
     tag: ['memorable', 'feature', 'blocksLight'],
     trodOn: ['You smile as you continue to outlive this ancient tree.'],
@@ -53,7 +53,7 @@ export const features: EntityTemplate[] = [
     name: ['cactus'],
     form: ['cactus', '#0f840f'],
     tag: ['terrain'],
-    trodOn: ['You collect some cactus spines in your arms and legs.'],
+    trodOn: ['You collect some cactus spines in your legs and arms.'],
   },
   {
     label: 'deadShrub',

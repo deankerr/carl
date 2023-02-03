@@ -19,6 +19,7 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   const O = new Overseer(width, height, window.game.pool)
   O.current.voidColor = '#090909'
   O.current.voidColorUnrevealed = '#000000'
+  O.current.name = `Pippin's Fortress`
 
   // const center = Pt(half(width), half(height))
 

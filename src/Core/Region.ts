@@ -3,6 +3,7 @@ import { CONFIG } from '../config'
 import { Queue } from '../lib/util'
 import { Point, point, pointRect } from '../Model/Point'
 import { Entity, EntityPool, EntityKey, EntityWith } from './Entity'
+import { transformHSL } from '../lib/color'
 
 export class Region {
   name = 'Somewhere'
@@ -133,5 +134,32 @@ export class Region {
   ROTisTransparent(x: number, y: number) {
     const entities = this.at(point(x, y))
     return !entities.some(e => e.blocksLight)
+  }
+
+  voidTiles() {
+    const visible = { char: 'v', color: this.voidColor, bgColor: this.voidColor }
+
+    const recalledColor = transformHSL(this.voidColor, {
+      sat: { by: 0.9, min: 0 },
+      lum: { by: 0.95, min: 0 },
+    })
+    const recalled = { ...visible, color: recalledColor, bgColor: recalledColor }
+
+    const unrevealed = {
+      char: 'v',
+      color: this.voidColorUnrevealed,
+      bgColor: this.voidColorUnrevealed,
+    }
+
+    return { visible, recalled, unrevealed }
+  }
+
+  voidAt(pt: Point) {
+    const tiles = this.voidTiles()
+
+    const visible = this.player().fieldOfView.visible.has(pt)
+    const recalled = this.seenByPlayer.has(pt)
+
+    return visible ? tiles.visible : recalled ? tiles.recalled : tiles.unrevealed
   }
 }

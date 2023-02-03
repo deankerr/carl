@@ -3,9 +3,9 @@ import { CONFIG } from '../config'
 
 import { createGameDisplay } from '../lib/display'
 import { logger } from '../lib/logger'
-import { ComponentFoundry, EntityPool, UI, handle, listen, System, Atlas } from './'
+import { ComponentFoundry, EntityPool, UI, handle, listen, System, Atlas, Entity } from './'
 
-export type Message = { turn: number; text: string }
+export type Message = { turn: number; text: string; highlight: string; color: string }
 
 export class Engine {
   mainDisplay: ROT.Display
@@ -36,7 +36,6 @@ export class Engine {
 
   init() {
     this.system.init()
-
     listen(this.update.bind(this))
     console.log(this)
   }
@@ -64,14 +63,19 @@ export class Engine {
     else requestAnimationFrame(this.render.bind(this))
   }
 
-  message(newMsg: string) {
+  message(newMsg: string, entity: Entity) {
     logger('engine', 'message').msg(newMsg)
     if (this.local.player().acting)
-      this.messageLog.unshift({ turn: this.playerTurns, text: newMsg })
+      this.messageLog.push({
+        turn: this.playerTurns,
+        text: newMsg,
+        highlight: entity?.name ?? '',
+        color: entity?.form.color ?? '',
+      })
   }
 
   uiMessage(newMsg: string) {
     logger('engine', 'uiMessage').msg(newMsg)
-    this.messageLog.unshift({ turn: this.playerTurns, text: newMsg })
+    this.messageLog.push({ turn: this.playerTurns, text: newMsg, highlight: '', color: '' })
   }
 }

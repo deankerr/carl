@@ -35,7 +35,7 @@ export const tileMapOryxMain = {
   ...mapRange(numbers, 7, t),
   ...mapRange(punctuation, 5, t),
   "'": mapChar(27, 3, t),
-  ' ': mapChar(13, 0, t),
+  ' ': mapChar(27, 0, t),
   bat: mapChar(21, 3, t),
   blob: mapChar(16, 3, t),
   bones: mapChar(5, 3, t),

@@ -19,10 +19,13 @@ export const handleMeleeAttack = (engine: Engine, isPlayerTurn: boolean) => {
     // kill target
     log.msg(`handleMeleeAttack: player killed ${targetEntity.label}`)
     local.entity(targetEntity).modify('tag', 'dead')
-    engine.message(`You obliterate the ${targetEntity.name} with your mind!`)
+    engine.message(`You obliterate the ${targetEntity.name} with your mind!`, targetEntity)
   } else {
     // TODO in player vision/hearing range only
-    engine.message(`The ${currentEntity.name} glares helplessly at the ${targetEntity.name}`)
+    engine.message(
+      `The ${currentEntity.name} glares helplessly at the ${targetEntity.name}`,
+      targetEntity
+    )
   }
 
   // ? cleanup

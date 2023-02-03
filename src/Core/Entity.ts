@@ -15,13 +15,15 @@ export type EntityTemplate = {
   form: FoundryParam['form']
 } & Partial<FoundryParam>
 
+const templates = [...beings, ...features, ...terrain]
+
 export class EntityPool {
   private count = 0
   readonly pool = new Map<string, Entity>()
 
   constructor(readonly components: typeof ComponentFoundry) {
     const log = logger('entity', 'init')
-    const templates = [...beings, ...features, ...terrain]
+
     for (const t of templates) {
       let e = {
         eID: 0,
@@ -79,6 +81,7 @@ export class EntityPool {
     return this.thaw(key)
   }
 
+  // region entity manager
   entity(localState: Entity[], entity: Entity) {
     const index = localState.findIndex(e => e === entity)
     if (index < 0) throw new Error(`Unable to locate entity to modify ${entity.label}`)

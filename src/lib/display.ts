@@ -11,6 +11,7 @@ export const createTileDisplay = (
     layout: 'tile-gl',
     width,
     height,
+    fg: CONFIG.messageColor,
     bg: CONFIG.mainBackgroundColor,
     tileWidth: mainTileSize,
     tileHeight: mainTileSize,

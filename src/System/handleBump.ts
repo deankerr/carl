@@ -15,7 +15,7 @@ export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
 
   if (bumped.some(e => e.terrain)) {
     log.msg('handleBump: result - terrain bump')
-    if (isPlayerTurn) engine.message(`You bounce off the ${bumped[0].name}.`)
+    if (isPlayerTurn) engine.message(`You bounce off the ${bumped[0].name}.`, bumped[0])
   } else {
     // entities
     log.msg('handleBump: entity bump')
@@ -34,7 +34,7 @@ export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
           .modify('tag', 'isOpen')
           .modify('tag', 'signalLightPathUpdated')
 
-        engine.message('Knock knock!!!')
+        engine.message('Knock knock!!!', door)
         return log.end()
       }
 

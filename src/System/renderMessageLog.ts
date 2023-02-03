@@ -1,34 +1,40 @@
-// import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
-import { Engine } from '../Core/Engine'
-import { half, loop } from '../lib/util'
+import { Engine, Message } from '../Core/Engine'
+// import { transformHSL } from '../lib/color'
+import { half, loop, range } from '../lib/util'
 
 export function renderMessageLog(engine: Engine) {
-  const { messageDisplayHeight, messageBufferDisplaySize, messageColor } = CONFIG
-  const { local, msgDisplay, messageLog, playerTurns, options } = engine
-  if (!local.hasChanged) return
+  if (!engine.local.hasChanged) return
+
+  const { messageDisplayHeight, messageBufferDisplaySize } = CONFIG
+  const { local, mainDisplay, msgDisplay, messageLog, playerTurns, options } = engine
 
   const displayOptions = msgDisplay.getOptions()
   const { width, height } = displayOptions
-  const last = height - 1
+
+  // const lastY = height - 1
+  const center = { x: half(width), y: half(height) }
 
   msgDisplay.clear()
 
-  const fg = messageColor
+  // const v = local.voidTiles()
 
-  const bg = local.voidColorUnrevealed || 'black'
-  // const bg = 'transparent'
+  // region name
+  const name = local.name
+  msgDisplay.drawText(center.x - half(name.length), 0, name)
 
   // message buffer
+  const msgStack = messageLog.slice(-messageBufferDisplaySize).reverse()
+  const msgBufferY = height - messageBufferDisplaySize
+
   loop(messageDisplayHeight, i => {
-    const msg = messageLog[i]
-    if (msg && playerTurns - msg.turn < 8) {
-      const x = half(width) - half(msg.text.length)
-      msgDisplay.drawText(
-        x,
-        last - messageBufferDisplaySize + i,
-        ` %b{${bg}}%c{${fg}}${messageLog[i]?.text} `
-      )
+    const msg = msgStack[i]
+    if (msg && playerTurns - msg.turn < 10) {
+      const x = center.x - half(msg.text.length)
+
+      textToTile(msg, (xi, char, color) => {
+        mainDisplay.drawOver(x + xi, msgBufferY + i, char, color, null)
+      })
     }
   })
   local.hasChanged = false
@@ -44,6 +50,27 @@ function debugInfo(engine: Engine) {
 
   const playerPos = local.player().position.s ?? '?'
   msgDisplay.drawText(0, 0, `${spinner.next()} ${fps()} ${getLogTimes()} P:${playerPos}`)
+}
+
+// ROT.JS text color code format
+// function fg(color?: string) {
+//   return `%c{${color ?? ''}}`
+// }
+// fg('')
+
+// function bg(color: string) {
+//   return `%b{${color}}`
+// }
+
+function textToTile(msg: Message, callback: (xi: number, char: string, color: string) => unknown) {
+  if (msg.text.length === 0) return
+  const start = msg.text.indexOf(msg.highlight)
+  const end = start + msg.highlight.length
+
+  for (const i of range(0, msg.text.length - 1)) {
+    if (start >= 0 && i >= start && i <= end) callback(i, msg.text[i], msg.color)
+    else callback(i, msg.text[i], CONFIG.messageColor)
+  }
 }
 
 // FPS Spinner

@@ -18,6 +18,7 @@ export function desert(width = CONFIG.generateWidth, height = CONFIG.generateHei
   // region.voidColor = '#bb6244'
   region.voidColor = '#e6ce80'
   region.voidColorUnrevealed = '#31261b'
+  region.name = 'Arid ZoneA'
   // region.voidColor = '#000'
 
   const center = point(half(width), half(height))

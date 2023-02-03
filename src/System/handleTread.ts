@@ -18,7 +18,7 @@ export const handleTread = (engine: Engine, isPlayerTurn: boolean) => {
   for (const entity of entitiesHere) {
     if (entity.trodOn) {
       log.msg('handleTread: treading on', entity.label)
-      engine.message(entity.trodOn.msg)
+      engine.message(entity.trodOn.msg, entity)
     }
   }
 
