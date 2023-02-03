@@ -43,6 +43,7 @@ export class Engine {
   update(event: KeyboardEvent) {
     const action = handle(event)
     if (!action) return
+    console.log(action)
 
     if ('ui' in action) return UI(this, action.ui)
 

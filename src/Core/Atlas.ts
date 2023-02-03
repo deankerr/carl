@@ -47,6 +47,7 @@ export class Atlas {
     logger('atlas').msg('atlas setDomain')
     this.domainIndex = index
     this.domain = this.domains[index]
+    if (this.domain) localStorage.setItem('initialDomain', String(index))
 
     const i = this.domain.regionIndex
     this.region = this.domains[index].regions[i]

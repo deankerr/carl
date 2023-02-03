@@ -47,27 +47,20 @@ export function handle(event: KeyboardEvent): ActionTypes | undefined {
   }
   if (game[key]) return game[key]
 
-  // * Dev
+  // * Dev SHIFT +
   const dev: KeyMap = {
-    KeyR: MetaUI('localRevealAll'),
-    KeyT: MetaUI('localRecallAll'),
-    Digit2: MetaUI('playerLight'),
-    Digit3: MetaUI('formCycle'),
-    Digit4: MetaUI('lightingUpdate'),
-    // Debug log world
+    Digit1: ChangeDomain(0),
+    Digit2: ChangeDomain(1),
+    Digit3: ChangeDomain(2),
+    KeyR: MetaUI('revealAll'),
+    KeyL: MetaUI('animation'),
+    // logs
     KeyQ: MetaUI('debug_logworld'),
     KeyW: MetaUI('debug_loglocal'),
     KeyE: MetaUI('debug_logentities'),
     KeyA: MetaUI('debug_loglogger'),
   }
   if (shift && dev[code]) return dev[code]
-
-  const domain: KeyMap = {
-    1: ChangeDomain(0),
-    2: ChangeDomain(1),
-    3: ChangeDomain(2),
-  }
-  if (ctrl && domain[key]) return domain[key]
 
   logger('input').msg(`Key '${code}' not recognised`)
   return

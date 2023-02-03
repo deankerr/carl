@@ -58,7 +58,7 @@ export function renderRegion(engine: Engine) {
   rect(-offsetX, -offsetY, mainDisplayWidth - offsetX, mainDisplayHeight - offsetY, gridPt => {
     local.renderAt(gridPt, (entities, visible, recalled, lighting) => {
       const stack = [
-        recalled ? voidLocal : voidLocalUnrevealed,
+        visible || recalled ? voidLocal : voidLocalUnrevealed,
         ...entities
           // 1. remove void terrain
           .filter(e => e.label !== 'void')

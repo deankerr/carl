@@ -22,10 +22,10 @@ const htmlBackgroundColor = mainBackgroundColor
 
 const frameLimit = 0
 const recallAll = false
-const revealAll = false
+const revealAll = localStorage.getItem('revealAll') === 'true'
 const playerLight = false
 
-const initialDomain = 0
+const initialDomain = parseInt(localStorage.getItem('initialDomain') ?? '0')
 
 // const autoStartVisualizer = false
 // const visualizerAutoplay = true
