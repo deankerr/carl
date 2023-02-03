@@ -33,7 +33,7 @@ export function handle(event: KeyboardEvent): ActionTypes | undefined {
     case 'ArrowRight':
       if (ctrl) return Move('SE')
       if (shift) return Move('NE')
-      return Move('W')
+      return Move('E')
     case 'ArrowDown':
       return Move('S')
     case 'ArrowUp':

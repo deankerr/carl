@@ -22,7 +22,7 @@ const htmlBackgroundColor = mainBackgroundColor
 
 const frameLimit = 0
 const recallAll = PROD ? false : true
-const revealAll = PROD ? false : false
+const revealAll = PROD ? false : true
 const playerLight = false
 
 const initialDomain = 0

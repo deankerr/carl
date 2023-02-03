@@ -22,7 +22,7 @@ export function desert(width = CONFIG.generateWidth, height = CONFIG.generateHei
   repeat(2, () => {
     // dead grass
     walk(
-      12,
+      24,
       200,
       rndPt,
       pt => O2.terrain(pt, 'deadGrass'),
@@ -40,14 +40,9 @@ export function desert(width = CONFIG.generateWidth, height = CONFIG.generateHei
     )
 
     // shrub
-    hop(
-      10,
-      6,
-      10,
-      rndPt,
-      pt => O2.feature(pt, 'deadShrub'),
-      () => O2.snapshot('dead shrub')
-    )
+    const writeShrub = (pt: Point) => O2.terrain(pt, 'shrub')
+    const snapShrub = () => O2.snapshot('shrub')
+    hop(6, 4, 12, rndPt, writeShrub, snapShrub)
 
     hop(
       10,
@@ -70,11 +65,11 @@ export function desert(width = CONFIG.generateWidth, height = CONFIG.generateHei
 
     // dead Tree
     hop(
-      8,
+      6,
       4,
       12,
       rndPt,
-      pt => O2.feature(pt, 'deadTree'),
+      pt => O2.terrain(pt, 'deadTree'),
       () => O2.snapshot('deadTree')
     )
 
@@ -84,7 +79,7 @@ export function desert(width = CONFIG.generateWidth, height = CONFIG.generateHei
       10,
       8,
       rndPt,
-      pt => O2.feature(pt, 'cactus'),
+      pt => O2.terrain(pt, 'cactus'),
       () => O2.snapshot('cactus')
     )
 

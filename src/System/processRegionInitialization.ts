@@ -14,4 +14,6 @@ export function processRegionInitialization(engine: Engine) {
   actors.forEach(a => queue.add(a.eID, true))
 
   local.turnQueue = queue
+
+  local.entity(player).modify('tag', 'signalUpdatePlayerFOV')
 }

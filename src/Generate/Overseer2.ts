@@ -24,7 +24,7 @@ export class Overseer2 {
     this.current = mutation()
   }
 
-  terrain(pt: Point, terrain: TerrainKey) {
+  terrain(pt: Point, terrain: EntityKey) {
     if (!this.region.inBounds(pt)) return
     const t = this.pool.symbolic(terrain)
     this.region.terrainMap.set(pt, t)
