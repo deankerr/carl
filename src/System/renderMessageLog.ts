@@ -23,7 +23,9 @@ export function renderMessageLog(engine: Engine) {
   local.hasChanged = false
 
   // debug info
-  msgDisplay.drawText(0, last, `${spinner.next()} ${fps()} ${getLogTimes()}`)
+  const playerPos = engine.local.player().position.s ?? '?'
+
+  msgDisplay.drawText(0, last, `${spinner.next()} ${fps()} ${getLogTimes()} P:${playerPos}`)
 }
 
 // FPS Spinner

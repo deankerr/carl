@@ -12,9 +12,9 @@ class PointManager {
     return pt
   }
 
-  grid(width: number, height: number, callback: (pt: Point) => unknown) {
-    for (let yi = 0; yi < height; yi++) {
-      for (let xi = 0; xi < width; xi++) {
+  rect(x: number, y: number, width: number, height: number, callback: (pt: Point) => unknown) {
+    for (let yi = y; yi < height; yi++) {
+      for (let xi = x; xi < width; xi++) {
         callback(this.pt(xi, yi))
       }
     }
@@ -33,7 +33,7 @@ class PointManager {
 const PointMan = new PointManager()
 window.pointMan = PointMan
 export const point = PointMan.pt.bind(PointMan)
-export const grid = PointMan.grid.bind(PointMan)
+export const rect = PointMan.rect.bind(PointMan)
 
 export class Point {
   readonly s: string

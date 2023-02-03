@@ -1,7 +1,7 @@
 import { Color } from 'rot-js/lib/color'
 import { CONFIG } from '../config'
 import { Queue } from '../lib/util'
-import { Point, point, grid } from '../Model/Point'
+import { Point, point, rect } from '../Model/Point'
 import { Entity, EntityPool, EntityKey, EntityWith } from './Entity'
 
 export class Region {
@@ -20,16 +20,33 @@ export class Region {
 
   constructor(readonly width: number, readonly height: number, readonly pool: EntityPool) {}
 
-  render(
+  renderAll(
     callback: (pt: Point, entities: Entity[], visible: boolean, recalled: boolean) => unknown
   ) {
     const player = this.player().fieldOfView
-    grid(this.width, this.height, pt => {
+    rect(0, 0, this.width, this.height, pt => {
       const entities = this.at(pt)
       const visible = player.visible.has(pt)
       const recalled = this.seenByPlayer.has(pt)
       callback(pt, entities, this.revealAll || visible, this.recallAll || recalled)
     })
+  }
+
+  renderAt(
+    pt: Point,
+    callback: (
+      entities: Entity[],
+      visible: boolean,
+      recalled: boolean,
+      lighting: Color | undefined
+    ) => unknown
+  ) {
+    const entities = this.at(pt)
+    const visible = this.player().fieldOfView.visible.has(pt)
+    const recalled = this.seenByPlayer.has(pt)
+    const lighting = this.lighting.get(pt)
+
+    callback(entities, this.revealAll || visible, this.recallAll || recalled, lighting)
   }
 
   //  * Entity Management
