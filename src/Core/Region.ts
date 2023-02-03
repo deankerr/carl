@@ -1,7 +1,7 @@
 import { Color } from 'rot-js/lib/color'
 import { CONFIG } from '../config'
 import { Queue } from '../lib/util'
-import { Point, point, rect } from '../Model/Point'
+import { Point, point, pointRect } from '../Model/Point'
 import { Entity, EntityPool, EntityKey, EntityWith } from './Entity'
 
 export class Region {
@@ -25,7 +25,7 @@ export class Region {
     callback: (pt: Point, entities: Entity[], visible: boolean, recalled: boolean) => unknown
   ) {
     const player = this.player().fieldOfView
-    rect(0, 0, this.width, this.height, pt => {
+    pointRect(0, 0, this.width, this.height, pt => {
       const entities = this.at(pt)
       const visible = player.visible.has(pt)
       const recalled = this.seenByPlayer.has(pt)
@@ -116,10 +116,10 @@ export class Region {
   }
 
   player() {
-    return this.entities.filter(e => e.playerControlled)[0] as EntityWith<
-      Entity,
-      'fieldOfView' | 'position'
-    >
+    const player =
+      this.entities.filter(e => e.playerControlled)[0] ??
+      this.createEntity('player', point(this.width >> 1, this.height >> 1))
+    return player as EntityWith<Entity, 'fieldOfView' | 'position'>
   }
 
   // * Utility

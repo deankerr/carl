@@ -10,15 +10,17 @@ const mainDisplayHeight = 35
 const messageDisplayWidth = 69
 const messageDisplayHeight = 35
 
+const messageBufferDisplaySize = 5
+
 // const generateWidth = mainDisplayWidth
 // const generateHeight = mainDisplayHeight
-const generateWidth = 100
-const generateHeight = 100
+const generateWidth = 120
+const generateHeight = 120
 // '#111a0e'
 const mainBackgroundColor = '#000000'
 const messageColor = '#FFF'
 const messageBackgroundColor = 'transparent'
-const htmlBackgroundColor = mainBackgroundColor
+const htmlBackgroundColor = '#000000'
 
 const frameLimit = 0
 const recallAll = false
@@ -37,6 +39,7 @@ const CONFIG = {
   mainDisplayHeight,
   messageDisplayWidth,
   messageDisplayHeight,
+  messageBufferDisplaySize,
   generateWidth,
   generateHeight,
   mainBackgroundColor,

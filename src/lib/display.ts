@@ -3,11 +3,14 @@ import { CONFIG } from '../config'
 import { tileMapOryxMessages, tileMapOryxMain } from './tilemap'
 
 const mainTileSize = 32
-export const createTileDisplay = () => {
+export const createTileDisplay = (
+  width = CONFIG.mainDisplayWidth,
+  height = CONFIG.mainDisplayHeight
+) => {
   const display = new ROT.Display({
     layout: 'tile-gl',
-    width: CONFIG.mainDisplayWidth,
-    height: CONFIG.mainDisplayHeight,
+    width,
+    height,
     bg: CONFIG.mainBackgroundColor,
     tileWidth: mainTileSize,
     tileHeight: mainTileSize,
@@ -53,8 +56,9 @@ export const createHTMLWrapper = () => {
   wrapper.id = 'wrapper'
   wrapper.style.display = 'flex'
   wrapper.style.flexDirection = 'column'
-  wrapper.style.justifyContent = 'flex-end'
+  wrapper.style.justifyContent = 'center'
   wrapper.style.alignItems = 'center'
+  wrapper.style.backgroundColor = '#440000'
 
   return wrapper
 }
@@ -68,6 +72,7 @@ export const createGameDisplay = () => {
   if (!msg) throw new Error('Unable to get msgDisplay container')
 
   msg.style.maxWidth = '99vw'
+  msg.style.maxHeight = '99vh'
   msg.style.position = 'absolute'
 
   // main game display canvas
@@ -77,6 +82,8 @@ export const createGameDisplay = () => {
 
   main.style.maxWidth = '99vw'
   main.style.maxHeight = '99vh'
+  // main.style.minWidth = '98vw'
+  // main.style.minHeight = '100%'
 
   wrapper.appendChild(msg)
   wrapper.appendChild(main)

@@ -71,7 +71,7 @@ class Logger {
     for (const [key, group] of this.logGroups) {
       info.push({ key, avg: group.avg.toFixed(2), items: group.items.length })
     }
-    console.table(info)
+    // console.table(info)
     console.log(this)
   }
 }

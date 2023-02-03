@@ -10,7 +10,7 @@ export type BeingKey =
   | 'crab2'
   | 'snake'
   | 'bloodGull'
-  | 'tick'
+  | 'warboy'
   | 'scorpion'
 
 export const beings: EntityTemplate[] = [
@@ -69,9 +69,9 @@ export const beings: EntityTemplate[] = [
     formSetAutoCycle: [150],
   },
   {
-    label: 'tick',
-    name: ['tick'],
-    form: ['tick1', '#7e2553'],
+    label: 'warboy',
+    name: ['warboy'],
+    form: ['tick1', '#9e0052'],
     tag: ['actor', 'blocksMovement', 'being'],
     formSet: [['tick1', '', '', 'tick2', '', '']],
     formSetAutoCycle: [1000],

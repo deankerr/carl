@@ -1,28 +1,27 @@
-import { CONFIG } from '../config'
 import { Entity } from '../Core'
 import { Engine } from '../Core/Engine'
 import { addLight, transformHSL } from '../lib/color'
 import { clamp, floor, half } from '../lib/util'
-import { rect } from '../Model/Point'
+import { pointRect } from '../Model/Point'
 
 export function renderRegion(engine: Engine) {
   const { mainDisplay, local } = engine
-  if (local.hasChanged === false) return
+  if (!local.hasChanged) return
 
   // * ========== Viewport ========== *
-  const { mainDisplayWidth, mainDisplayHeight } = CONFIG
+  const { width, height } = mainDisplay.getOptions()
   const viewportRect = {
-    w: mainDisplayWidth,
-    h: mainDisplayHeight,
+    w: width,
+    h: height,
     x1: 0,
-    x2: mainDisplayWidth - 1,
+    x2: width - 1,
     y1: 0,
-    y2: mainDisplayHeight - 1,
+    y2: height - 1,
   }
 
   const player = local.player()
-  const centerX = floor(mainDisplayWidth / 2)
-  const centerY = floor(mainDisplayHeight / 2)
+  const centerX = floor(width / 2)
+  const centerY = floor(height / 2)
 
   const offsetX =
     local.width > viewportRect.w
@@ -55,7 +54,7 @@ export function renderRegion(engine: Engine) {
   mainDisplay.clear()
 
   // Iterate through the visible set of points the size of the main display
-  rect(-offsetX, -offsetY, mainDisplayWidth - offsetX, mainDisplayHeight - offsetY, gridPt => {
+  pointRect(-offsetX, -offsetY, width - offsetX, height - offsetY, gridPt => {
     local.renderAt(gridPt, (entities, visible, recalled, lighting) => {
       const stack = [
         visible || recalled ? voidLocal : voidLocalUnrevealed,
@@ -86,7 +85,13 @@ export function renderRegion(engine: Engine) {
             if (visible) {
               // don't add light to something that is emitting light, which can look bad
               if (lighting && !e.emitLight?.enabled) form.color = addLight(form.color, lighting)
-            } else if (recalled) form.color = transformHSL(form.color, recalledFade)
+            } else if (recalled) {
+              form.color = transformHSL(form.color, recalledFade)
+              if (form.bgColor !== 'transparent') {
+                form.bgColor = transformHSL(form.bgColor, recalledFade)
+                console.log(e.label, e.form.bgColor, form.bgColor)
+              }
+            }
             return form
           }), // ? sort
       ]

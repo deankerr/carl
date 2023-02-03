@@ -33,7 +33,7 @@ class PointManager {
 const PointMan = new PointManager()
 window.pointMan = PointMan
 export const point = PointMan.pt.bind(PointMan)
-export const rect = PointMan.rect.bind(PointMan)
+export const pointRect = PointMan.rect.bind(PointMan)
 
 export class Point {
   readonly s: string
