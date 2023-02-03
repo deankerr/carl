@@ -1,8 +1,5 @@
 # TODO
 
-- display resizing
-- seen color
-
 ## Soon
 
 - Refactor Game - extract meta action processing (UI etc), clarify system loop

@@ -27,6 +27,10 @@ export function UI(engine: Engine, ui: string) {
     case 'decreaseMainDisplay':
       msg = main(engine, -1)
       break
+    case 'debugMode':
+      options.debugMode = !options.debugMode
+      msg = options.debugMode ? 'Welcome to Debug' : 'Bugs crushed'
+      break
   }
 
   msg ? engine.uiMessage(msg) : engine.uiMessage(`UI:${ui} unhandled`)

@@ -25,6 +25,7 @@ export class Engine {
     playerLight: true,
     formUpdate: true,
     lightingUpdate: true,
+    debugMode: false,
   }
 
   constructor() {

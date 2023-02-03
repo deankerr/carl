@@ -5,6 +5,8 @@ import { Point, point, pointRect } from '../Model/Point'
 import { Entity, EntityPool, EntityKey, EntityWith } from './Entity'
 
 export class Region {
+  name = 'Somewhere'
+
   terrainMap = new Map<Point, Entity>()
   entities: Entity[] = []
   turnQueue = new Queue<number>()

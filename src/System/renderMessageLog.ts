@@ -4,8 +4,8 @@ import { Engine } from '../Core/Engine'
 import { half, loop } from '../lib/util'
 
 export function renderMessageLog(engine: Engine) {
-  const { messageDisplayHeight, messageBufferDisplaySize } = CONFIG
-  const { local, msgDisplay, messageLog, playerTurns } = engine
+  const { messageDisplayHeight, messageBufferDisplaySize, messageColor } = CONFIG
+  const { local, msgDisplay, messageLog, playerTurns, options } = engine
   if (!local.hasChanged) return
 
   const displayOptions = msgDisplay.getOptions()
@@ -14,8 +14,12 @@ export function renderMessageLog(engine: Engine) {
 
   msgDisplay.clear()
 
-  const bg = local.voidColorUnrevealed || 'black'
+  const fg = messageColor
 
+  const bg = local.voidColorUnrevealed || 'black'
+  // const bg = 'transparent'
+
+  // message buffer
   loop(messageDisplayHeight, i => {
     const msg = messageLog[i]
     if (msg && playerTurns - msg.turn < 8) {
@@ -23,15 +27,22 @@ export function renderMessageLog(engine: Engine) {
       msgDisplay.drawText(
         x,
         last - messageBufferDisplaySize + i,
-        `%b{${bg}} ${messageLog[i]?.text} `
+        ` %b{${bg}}%c{${fg}}${messageLog[i]?.text} `
       )
     }
   })
   local.hasChanged = false
 
-  // debug info
-  const playerPos = engine.local.player().position.s ?? '?'
+  // render spinner
+  msgDisplay.drawText(0, 0, `${spinner.next()}`)
 
+  if (options.debugMode) debugInfo(engine)
+}
+
+function debugInfo(engine: Engine) {
+  const { msgDisplay, local } = engine
+
+  const playerPos = local.player().position.s ?? '?'
   msgDisplay.drawText(0, 0, `${spinner.next()} ${fps()} ${getLogTimes()} P:${playerPos}`)
 }
 

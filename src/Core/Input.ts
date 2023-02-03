@@ -58,11 +58,12 @@ export function handle(event: KeyboardEvent): ActionTypes | undefined {
   }
   if (shift && dev[code]) return dev[code]
 
-  const display: KeyMap = {
+  const dev2: KeyMap = {
     Minus: MetaUI('decreaseMainDisplay'),
     Equal: MetaUI('increaseMainDisplay'),
+    Backquote: MetaUI('debugMode'),
   }
-  if (display[code]) return display[code]
+  if (dev2[code]) return dev2[code]
 
   console.log(`'${code}' ??`)
   logger('input').msg(`Key '${code}' not recognised`)
