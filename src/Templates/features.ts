@@ -9,6 +9,7 @@ export type FeatureKey =
   | 'tombstone'
   | 'deadTree'
   | 'cactus'
+  | 'deadShrub'
 
 export const features: EntityTemplate[] = [
   {
@@ -49,7 +50,7 @@ export const features: EntityTemplate[] = [
   },
   { label: 'cactus', name: ['cactus'], form: ['cactus', '#0f840f'], tag: ['terrain'] },
   {
-    label: 'shrubD',
+    label: 'deadShrub',
     name: ['shrub'],
     form: ['shrub', '#6c2a14'],
     tag: ['memorable', 'feature'],

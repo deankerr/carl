@@ -16,7 +16,7 @@ import {
 } from '../System'
 import * as Action from './Action'
 
-import { ActionTypes, Engine, Region } from './'
+import { ActionTypes, Engine, Entity, Region } from './'
 
 export class System {
   turnProcess = [
@@ -39,23 +39,20 @@ export class System {
     const log = logger('sys', 'runTurns')
     const { local } = engine
 
-    let playerTurnTaken = false
-    let maxLoops = 100
+    let e = local.player() as Entity
 
+    let maxLoops = 500
     while (maxLoops-- > 0) {
-      const e = this.next(local)
-
-      if (e.playerControlled) {
-        if (playerTurnTaken) return log.end('Sys: Player Input Required')
-        else playerTurnTaken = true
-      }
-
       const action = e.playerControlled ? playerAction : Action.__randomMove()
 
       log.msg('Start turn:', e.label)
       local.entity(e).modify('acting', action)
       this.turnProcess.forEach(sys => sys(engine, e.playerControlled == true))
       local.entity(local.get('acting')[0]).remove('acting')
+
+      e = this.next(local)
+
+      if (e.playerControlled) return log.end('Sys: Player Input Required')
     }
 
     if (maxLoops < 1) throw new Error('Sys loop maximum exceeded')
