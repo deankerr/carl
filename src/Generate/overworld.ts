@@ -17,6 +17,8 @@ export function overworld(width = CONFIG.generateWidth, height = CONFIG.generate
   console.log('seed state:', ROT.RNG.getState())
 
   const O = new Overseer(width, height, window.game.pool)
+  O.current.voidColor = '#090909'
+  O.current.voidColorUnrevealed = '#000000'
 
   // const center = Pt(half(width), half(height))
 

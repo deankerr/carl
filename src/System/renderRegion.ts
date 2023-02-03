@@ -44,9 +44,16 @@ export function renderRegion(engine: Engine) {
   // * ========== Rendering ========== *
 
   // replace any void terrain with this locally colored one
-  const voidLocal = { char: 'void', color: local.voidColor, bgColor: local.voidColor }
+  const voidLocal = { char: 'v', color: local.voidColor, bgColor: local.voidColor }
+
+  const recalledColor = transformHSL(local.voidColor, {
+    sat: { by: 0.9, min: 0 },
+    lum: { by: 0.95, min: 0 },
+  })
+  const voidRecalled = { ...voidLocal, color: recalledColor, bgColor: recalledColor }
+
   const voidLocalUnrevealed = {
-    char: 'void',
+    char: 'v',
     color: local.voidColorUnrevealed,
     bgColor: local.voidColorUnrevealed,
   }
@@ -55,9 +62,10 @@ export function renderRegion(engine: Engine) {
 
   // Iterate through the visible set of points the size of the main display
   pointRect(-offsetX, -offsetY, width - offsetX, height - offsetY, gridPt => {
+    // const voidTile =
     local.renderAt(gridPt, (entities, visible, recalled, lighting) => {
       const stack = [
-        visible || recalled ? voidLocal : voidLocalUnrevealed,
+        visible ? voidLocal : recalled ? voidRecalled : voidLocalUnrevealed,
         ...entities
           // 1. remove void terrain
           .filter(e => e.label !== 'void')
@@ -87,10 +95,6 @@ export function renderRegion(engine: Engine) {
               if (lighting && !e.emitLight?.enabled) form.color = addLight(form.color, lighting)
             } else if (recalled) {
               form.color = transformHSL(form.color, recalledFade)
-              if (form.bgColor !== 'transparent') {
-                form.bgColor = transformHSL(form.bgColor, recalledFade)
-                console.log(e.label, e.form.bgColor, form.bgColor)
-              }
             }
             return form
           }), // ? sort
@@ -98,7 +102,7 @@ export function renderRegion(engine: Engine) {
 
       // abort if we somehow ended up with nothing or ROT.JS will error
       if (stack.length === 0) return
-
+      // if (gridPt.x + offsetX === 0 && gridPt.y + offsetY === 0) console.log(recalled, stack)
       // draw
       mainDisplay.draw(
         gridPt.x + offsetX,

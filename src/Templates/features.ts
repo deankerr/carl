@@ -48,7 +48,13 @@ export const features: EntityTemplate[] = [
     tag: ['memorable', 'feature', 'blocksLight'],
     trodOn: ['You smile as you continue to outlive this ancient tree.'],
   },
-  { label: 'cactus', name: ['cactus'], form: ['cactus', '#0f840f'], tag: ['terrain'] },
+  {
+    label: 'cactus',
+    name: ['cactus'],
+    form: ['cactus', '#0f840f'],
+    tag: ['terrain'],
+    trodOn: ['You collect some cactus spines with your skin.'],
+  },
   {
     label: 'deadShrub',
     name: ['shrub'],
