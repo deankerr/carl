@@ -1,13 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Entity, EntityKey, EntityPool, Region } from '../Core'
+import { EntityKey, EntityPool, Region } from '../Core'
+import { Visualizer } from '../Core/Visualizer'
 import { Point } from '../Model/Point'
-import { BeingKey, FeatureKey, TerrainKey } from '../Templates'
+import { BeingKey, FeatureKey } from '../Templates'
 
 export class Overseer2 {
   region: Region
   pool: EntityPool
 
-  mutations: Mutation[] = []
+  mutations: GenHistory[] = []
   current = mutation()
 
   // stores the latest features/beings, are added to the region at the end
@@ -53,17 +53,19 @@ export class Overseer2 {
     this.final.beings.forEach((b, k) => {
       this.region.createEntity(b, k)
     })
+
+    this.region.history = new Visualizer(this.region, this.mutations)
   }
 }
 
-type Mutation = {
+export type GenHistory = {
   terrain: Map<Point, EntityKey>
   features: Map<Point, EntityKey>
   beings: Map<Point, EntityKey>
   message: string
 }
 
-function mutation(): Mutation {
+function mutation(): GenHistory {
   return {
     terrain: new Map<Point, EntityKey>(),
     features: new Map<Point, EntityKey>(),

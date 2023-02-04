@@ -85,7 +85,6 @@ export class EntityPool {
   entity(localState: Entity[], entity: Entity) {
     const index = localState.findIndex(e => e === entity)
     if (index < 0) throw new Error(`Unable to locate entity to modify ${entity.label}`)
-
     let store = entity
 
     const modify = <T extends FoundryKey>(cName: T, ...p: FoundryParam[T]) => {

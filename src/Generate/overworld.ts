@@ -3,14 +3,14 @@ import { Point, point } from '../Model/Point'
 import { half, pick, range, loop, rnd, rndO } from '../lib/util'
 import { Overseer, Mutator } from './Overseer'
 import { Rect } from '../Model/Rectangle'
-import { CONFIG } from '../config'
+// import { CONFIG } from '../config'
 import { Structure } from './structures/Structure'
 import { EntityKey } from '../Core/Entity'
 import { FeatureKey, TerrainKey } from '../Templates'
 
 const flames: FeatureKey[] = ['flames', 'greenFlames', 'blueFlames', 'magentaFlames']
 // stairs/connectors?
-export function overworld(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
+export function overworld(width = 120, height = 120) {
   const t = Date.now()
 
   console.groupCollapsed('Generate Overworld')

@@ -4,6 +4,7 @@ import { Queue } from '../lib/util'
 import { Point, point, pointRect } from '../Model/Point'
 import { Entity, EntityPool, EntityKey, EntityWith } from './Entity'
 import { transformHSL } from '../lib/color'
+import { Visualizer } from './Visualizer'
 
 export class Region {
   name = 'Somewhere'
@@ -22,7 +23,16 @@ export class Region {
 
   hasChanged = true
 
-  constructor(readonly width: number, readonly height: number, readonly pool: EntityPool) {}
+  history: Visualizer | undefined
+
+  constructor(
+    readonly width: number,
+    readonly height: number,
+    readonly pool: EntityPool,
+    player?: Entity
+  ) {
+    this.createPlayer(player)
+  }
 
   renderAll(
     callback: (pt: Point, entities: Entity[], visible: boolean, recalled: boolean) => unknown
@@ -57,11 +67,14 @@ export class Region {
   createEntity(key: EntityKey, pt: Point) {
     const entity = this.pool.spawn(key, pt)
     this.entities.push(entity)
+    this.hasChanged = true
+    return entity
   }
 
   createTerrain(key: EntityKey, pt: Point) {
     const terrain = this.pool.symbolic(key)
     this.terrainMap.set(pt, terrain)
+    this.hasChanged = true
   }
 
   entity(entity: Entity) {
@@ -119,13 +132,19 @@ export class Region {
   }
 
   player() {
-    const player =
-      this.entities.filter(e => e.playerControlled)[0] ??
-      this.createEntity('player', point(this.width >> 1, this.height >> 1))
-    return player as EntityWith<Entity, 'fieldOfView' | 'position'>
+    return this.get('playerControlled')[0] as EntityWith<Entity, 'position' | 'fieldOfView'>
   }
 
   // * Utility
+
+  createPlayer(ePlayer?: Entity) {
+    console.log('createPlayer')
+    const player = ePlayer ?? this.pool.spawn('player', point(this.width >> 1, this.height >> 1))
+    this.entities.push(player)
+    this.turnQueue.add(player.eID, true)
+    return player
+  }
+
   inBounds(pt: Point) {
     return pt.x >= 0 && pt.x < this.width && pt.y >= 0 && pt.y < this.height
   }

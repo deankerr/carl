@@ -3,7 +3,17 @@ import { CONFIG } from '../config'
 
 import { createGameDisplay } from '../lib/display'
 import { logger } from '../lib/logger'
-import { ComponentFoundry, EntityPool, UI, handle, listen, System, Atlas, Entity } from './'
+import {
+  ComponentFoundry,
+  EntityPool,
+  UI,
+  handle,
+  listen,
+  System,
+  Atlas,
+  Entity,
+  ActionTypes,
+} from './'
 
 export type Message = { turn: number; text: string; highlight: string; color: string }
 
@@ -19,6 +29,8 @@ export class Engine {
   local = this.atlas.local()
 
   messageLog: Message[] = []
+  uiMessageLog: Message[] = []
+
   playerTurns = 0
 
   options = {
@@ -43,6 +55,9 @@ export class Engine {
   update(event: KeyboardEvent) {
     const action = handle(event)
     if (!action) return
+    // console.log('action:', action)
+
+    this.visualizer(action)
 
     if ('ui' in action) return UI(this, action.ui)
 
@@ -76,6 +91,11 @@ export class Engine {
 
   uiMessage(newMsg: string) {
     logger('engine', 'uiMessage').msg(newMsg)
-    this.messageLog.push({ turn: this.playerTurns, text: newMsg, highlight: '', color: '' })
+    this.uiMessageLog.push({ turn: this.playerTurns, text: newMsg, highlight: '', color: '' })
+  }
+
+  visualizer(vis: ActionTypes) {
+    if (!this.local.history) return
+    this.local.history.run(vis)
   }
 }

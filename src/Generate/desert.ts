@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */ // !!!!! dev
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
-import { EntityKey, Region } from '../Core'
+import { Entity, EntityKey, Region } from '../Core'
 import { logger } from '../lib/logger'
 import { half, pick, loop, rnd, repeat } from '../lib/util'
 import { point, Point, neighbours4 } from '../Model/Point'
+import { BeingKey } from '../Templates'
 import { walk, hop } from './modules/drunkards'
 import { Overseer2 } from './Overseer2'
 // ? #bb6244 desert sunset
@@ -21,46 +22,27 @@ export function desert(width = CONFIG.generateWidth, height = CONFIG.generateHei
   region.name = 'Arid ZoneA'
   // region.voidColor = '#000'
 
+  const terrain = (type: EntityKey) => (pt: Point) => O2.terrain(pt, type)
+  const being = (type: BeingKey) => (pt: Point) => O2.being(pt, type)
+  const snap = (msg: string) => () => O2.snapshot(msg)
+
   const center = point(half(width), half(height))
 
-  repeat(6, () => {
-    // dead grass
-    const deadGrass = (pt: Point) => O2.terrain(pt, 'deadGrass')
-    walk(24, 200, rndPt, deadGrass)
-
-    // grass
-    const grass = (pt: Point) => O2.terrain(pt, 'grass')
-    hop(10, 10, 5, rndPt, grass)
-
-    // shrub
-    const shrub = (pt: Point) => O2.terrain(pt, 'shrub')
-    hop(6, 4, 12, rndPt, shrub)
-
-    // mound
-    const mound = (pt: Point) => O2.terrain(pt, 'mound')
-    hop(8, 8, 8, rndPt, mound)
-
-    // dead Tree
-    const deadTree = (pt: Point) => O2.terrain(pt, 'deadTree')
-    hop(6, 4, 12, rndPt, deadTree)
-
-    // cactus
-    const cactus = (pt: Point) => O2.terrain(pt, 'cactus')
-    hop(8, 10, 8, rndPt, cactus)
+  repeat(2, () => {
+    walk(24, 200, rndPt, terrain('deadGrass'), snap('dead grass'))
+    hop(10, 10, 5, rndPt, terrain('grass'), snap('grass'))
+    hop(6, 4, 12, rndPt, terrain('shrub'), snap('shrubs'))
+    hop(8, 8, 8, rndPt, terrain('mound'), snap('mounds'))
+    hop(6, 4, 12, rndPt, terrain('deadTree'), snap('dead trees'))
+    hop(8, 10, 8, rndPt, terrain('cactus'), snap('cacti'))
   })
 
   repeat(1, () => {
-    const snakes = (pt: Point) => O2.being(pt, 'snake')
-    const gulls = (pt: Point) => O2.being(pt, 'bloodGull')
-    const spiders = (pt: Point) => O2.being(pt, 'spider')
-    const tick = (pt: Point) => O2.being(pt, 'warboy')
-    const scorpion = (pt: Point) => O2.being(pt, 'scorpion')
-
-    hop(8, 4, 4, rndPt, snakes)
-    hop(8, 4, 4, rndPt, gulls)
-    hop(8, 4, 4, rndPt, spiders)
-    hop(8, 4, 4, rndPt, tick)
-    hop(8, 4, 4, rndPt, scorpion)
+    hop(8, 4, 4, rndPt, being('snake'), snap('snakes'))
+    hop(8, 4, 4, rndPt, being('bloodGull'), snap('gulls'))
+    hop(8, 4, 4, rndPt, being('spider'), snap('spiders'))
+    hop(8, 4, 4, rndPt, being('warboy'), snap('warboys'))
+    hop(8, 4, 4, rndPt, being('scorpion'), snap('scorpions'))
   })
 
   O2.finalize()

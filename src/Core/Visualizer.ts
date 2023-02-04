@@ -1,19 +1,78 @@
-// /* eslint-disable @typescript-eslint/no-unused-vars */ // !!!!!!!!! dev
+/* eslint-disable @typescript-eslint/no-unused-vars */ // !!!!!!!!! dev
 // import * as ROT from 'rot-js'
-// import { Mutator, Overseer } from '../Generate/Overseer'
-// import { Keys } from '../lib/Keys'
-// import { Game } from '../../dev-assets/graveyard/ECS/Template/Game'
-// import { World } from '../../dev-assets/graveyard/ECS/Template/World'
-// import { renderLevel, renderMessages } from './Render'
-// import { Level } from '../Model/Level'
-// import { Entity, hydrate } from '../../dev-assets/graveyard/ECS/Template/Entity'
-// import { Beings, Features, Terrain, TerrainTemplate } from '../Templates'
-// import { Pt, strToPt } from '../Model/Point'
-// import { CONFIG } from '../config'
-// import { Grid } from '../Model/Grid'
-// import { Color } from 'rot-js/lib/color'
-// import { half, range } from '../lib/util'
-// import { hexToHSL, transformHSL } from '../lib/color'
+
+import { ActionTypes, Engine, Entity, Region } from '.'
+import { GenHistory } from '../Generate/Overseer2'
+import { point } from '../Model/Point'
+
+export class Visualizer {
+  engine = window.game
+  mirror: Region
+  player: Entity
+  active = false
+
+  index = 0
+  playing = false
+
+  constructor(targetRegion: Region, readonly history: GenHistory[]) {
+    const { width, height, voidColor, voidColorUnrevealed } = targetRegion
+
+    const player = this.engine.pool.spawn('player', point(0, 0))
+    player.form = { char: '%', color: 'red', bgColor: 'transparent' }
+
+    const r = new Region(width, height, this.engine.pool, player)
+    r.revealAll = true
+    r.voidColor = voidColor
+    r.voidColorUnrevealed = voidColorUnrevealed
+    r.name = 'mirror world'
+
+    this.player = player
+    this.mirror = r
+    console.log('visualzer created')
+  }
+
+  run(action: ActionTypes) {
+    if ('visualize' in action && !this.active) {
+      console.log('vis init')
+      this.engine.local = this.mirror
+      this.active = true
+      this.playing = true
+      this.play()
+    }
+  }
+
+  play() {
+    if (!this.playing) {
+      this.mirror.name = 'Complete'
+      this.mirror.hasChanged = true
+      return
+    }
+    this.next()
+    setTimeout(this.play.bind(this), 250)
+  }
+
+  next() {
+    this.index++
+    if (this.index >= this.history.length) {
+      this.playing = false
+      return
+    }
+    const { terrain, features, beings, message } = this.history[this.index]
+    this.mirror.name = message
+    let loc = point(0, 0)
+    for (const [pt, key] of terrain) {
+      this.mirror.createTerrain(key, pt)
+      loc = pt
+    }
+
+    for (const [pt, key] of beings) {
+      this.mirror.createTerrain(key, pt)
+      loc = pt
+    }
+
+    this.player.position = loc
+  }
+}
 
 // export class Visualizer {
 //   overseer: Overseer

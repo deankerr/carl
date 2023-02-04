@@ -1,11 +1,10 @@
 import { Engine } from '../Core'
 import { Queue } from '../lib/util'
-import { point } from '../Model/Point'
 
 export function processRegionInitialization(engine: Engine) {
   // (re)initialize turn queue, with the player first
   const { local } = engine
-  if (!local.player()) local.createEntity('player', point(0, 0))
+
   const player = local.player()
   const actors = local.get('actor').filter(a => !a.playerControlled)
 

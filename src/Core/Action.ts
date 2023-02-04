@@ -10,6 +10,7 @@ export type ActionTypes =
   | Tread
   | ChangeRegion
   | ChangeDomain
+  | Visualize
   | None
 
 export type Bump = { bump: Point }
@@ -71,6 +72,11 @@ export const Tread = (pt: Point): Tread => {
 export type MetaUI = { ui: string }
 export const MetaUI = (doThing: string) => {
   return { ui: doThing }
+}
+
+export type Visualize = { visualize: string }
+export const Visualize = (visualize: string) => {
+  return { visualize }
 }
 
 export function __randomMove(): ActionTypes {

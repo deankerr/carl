@@ -1,7 +1,7 @@
 // * Translate key code into Action
 
 import { logger } from '../lib/logger'
-import { ActionTypes, Move, MetaUI, ChangeRegion, ChangeDomain } from './Action'
+import { ActionTypes, Move, MetaUI, ChangeRegion, ChangeDomain, Visualize } from './Action'
 
 type KeyMap = Record<string, ActionTypes>
 
@@ -46,6 +46,11 @@ export function handle(event: KeyboardEvent): ActionTypes | undefined {
     '.': ChangeRegion('down'),
   }
   if (game[key]) return game[key]
+
+  const vis: KeyMap = {
+    v: Visualize('init'),
+  }
+  if (vis[key]) return vis[key]
 
   // * Dev SHIFT +
   const dev: KeyMap = {
