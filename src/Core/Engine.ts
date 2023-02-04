@@ -55,10 +55,10 @@ export class Engine {
   update(event: KeyboardEvent) {
     const action = handle(event)
     if (!action) return
-    // console.log('action:', action)
 
-    this.visualizer(action)
+    if (this.visualizer(action)) return
 
+    // console.log('eng action:', action)
     if ('ui' in action) return UI(this, action.ui)
 
     if ('changeRegion' in action || 'changeDomain' in action) {
@@ -95,7 +95,8 @@ export class Engine {
   }
 
   visualizer(vis: ActionTypes) {
-    if (!this.local.history) return
-    this.local.history.run(vis)
+    if (this.atlas.local().visualizer === undefined) return false
+    const result = this.atlas.local()?.visualizer?.run(vis)
+    return result
   }
 }

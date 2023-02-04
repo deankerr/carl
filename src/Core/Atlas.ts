@@ -6,6 +6,7 @@ export class Atlas {
   domains: Domain[] = [
     { label: 'desert', generator: Generate.desert, regions: [], regionIndex: 0 },
     { label: 'graveyard', generator: Generate.overworld, regions: [], regionIndex: 0 },
+    { label: 'cave', generator: Generate.cave, regions: [], regionIndex: 0 },
     { label: 'dungeon', generator: Generate.dungeon, regions: [], regionIndex: 0 },
   ]
 

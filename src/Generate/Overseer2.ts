@@ -8,20 +8,23 @@ export class Overseer2 {
   pool: EntityPool
 
   mutations: GenHistory[] = []
-  current = mutation()
+  current = genHistory()
 
   // stores the latest features/beings, are added to the region at the end
-  final = mutation()
+  final = genHistory()
 
+  time: number
   constructor(region: Region) {
+    this.time = Date.now()
     this.region = region
     this.pool = region.pool
+    this.snapshot('init')
   }
 
   snapshot(msg: string) {
     this.current.message = msg
     this.mutations.push(this.current)
-    this.current = mutation()
+    this.current = genHistory()
   }
 
   terrain(pt: Point, terrain: EntityKey) {
@@ -54,8 +57,29 @@ export class Overseer2 {
       this.region.createEntity(b, k)
     })
 
-    this.region.history = new Visualizer(this.region, this.mutations)
+    this.region.visualizer = new Visualizer(this.region, this.mutations)
+    console.log(`O2 ${Date.now() - this.time}ms`, this)
   }
+
+  module(): O2Module {
+    const terrain = (type: EntityKey) => (pt: Point) => this.terrain(pt, type)
+    const being = (type: BeingKey) => (pt: Point) => this.being(pt, type)
+    const snap = (msg: string) => () => this.snapshot(msg)
+
+    return {
+      region: this.region,
+      terrain: terrain.bind(this),
+      being: being.bind(this),
+      snap: snap.bind(this),
+    }
+  }
+}
+
+export type O2Module = {
+  region: Region
+  terrain: (type: EntityKey) => (pt: Point) => void
+  being: (type: BeingKey) => (pt: Point) => void
+  snap: (msg: string) => () => void
 }
 
 export type GenHistory = {
@@ -65,7 +89,7 @@ export type GenHistory = {
   message: string
 }
 
-function mutation(): GenHistory {
+export function genHistory(): GenHistory {
   return {
     terrain: new Map<Point, EntityKey>(),
     features: new Map<Point, EntityKey>(),

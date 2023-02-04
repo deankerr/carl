@@ -17,13 +17,13 @@ export class Region {
   recallAll = CONFIG.recallAll
   revealAll = CONFIG.revealAll
 
-  voidColor = '' || CONFIG.mainBackgroundColor
-  voidColorUnrevealed = '' || CONFIG.mainBackgroundColor
+  voidColor = CONFIG.mainBackgroundColor
+  voidColorUnrevealed = CONFIG.mainBackgroundColor
   lighting = new Map<Point, Color>()
 
   hasChanged = true
 
-  history: Visualizer | undefined
+  visualizer: Visualizer | undefined
 
   constructor(
     readonly width: number,
