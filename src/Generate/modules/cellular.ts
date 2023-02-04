@@ -1,50 +1,77 @@
-import { rnd } from '../../lib/util'
-import { Point, pointRect } from '../../Model/Point'
+import { repeat, rnd } from '../../lib/util'
+import { point } from '../../Model/Point'
 import { O2Module } from '../Overseer2'
 
-export function cellularInit(O2: O2Module, probability = 45) {
-  const { region, terrain } = O2
-
-  const wall = terrain('wall')
-  const snap = O2.snap('Cellular init')
-
-  const isEdge = (pt: Point) =>
-    pt.x === 0 || pt.x === region.width - 1 || pt.y === 0 || pt.y === region.height - 1
-  pointRect(0, 0, region.width, region.height, pt => {
-    if (isEdge(pt) || rnd(100) < probability) wall(pt)
-  })
-
-  snap()
-}
-
-export function cellularLife(O2: O2Module, cycle?: number) {
-  const { region, terrain } = O2
+export function cellularGrid(width: number, height: number, times: number, O2: O2Module) {
+  const { terrain } = O2
 
   const wall = terrain('wall')
   const voidT = terrain('void')
-  // const snap = O2.snap('Cellular life step')
+  const snap = O2.snap('cell')
 
-  const isWall = (pt: Point) => 'blocksMovement' in region.terrainAt(pt)
+  let grid1 = new BGrid(width, height, 45)
 
-  pointRect(0, 0, region.width, region.height, pt => {
-    const subject = isWall(pt)
-    if (subject) {
-      // subject is a wall, 4+ wall neighbours to stay wall
-      let count = 0
-      for (const neighbour of pt.neighbours8()) {
-        if (isWall(neighbour)) count++
+  grid1.each((x, y, v) => (v ? wall(point(x, y)) : voidT(point(x, y))))
+  snap()
+
+  let grid2 = new BGrid(width, height)
+  repeat(times, () => {
+    grid2 = new BGrid(width, height, 0)
+    grid1.each((x, y, v) => {
+      if (v) {
+        // wall, 4 neighbours to survive
+        let count = 0
+        point(x, y)
+          .neighbours8()
+          .forEach(pt => {
+            if (grid1.get(pt.x, pt.y)) count++
+          })
+        grid2.set(x, y, count >= 4)
+      } else {
+        // open, 5 neighbours to become wall
+        let count = 0
+        point(x, y)
+          .neighbours8()
+          .forEach(pt => {
+            if (grid1.get(pt.x, pt.y)) count++
+          })
+        grid2.set(x, y, count >= 5)
       }
-      if (count < 4) {
-        voidT(pt)
-      }
-    } else {
-      // subject is void, 5+ wall neighbours to become wall
-      let count = 0
-      for (const neighbour of pt.neighbours8()) {
-        if (isWall(neighbour)) count++
-      }
-      if (count >= 5) wall(pt)
-    }
+    })
+
+    grid2.each((x, y, v) => (v ? wall(point(x, y)) : voidT(point(x, y))))
+    snap()
+    grid1 = grid2
   })
-  O2.snap('Cellular life step' + cycle)()
+  return grid2
+}
+
+class BGrid {
+  g: boolean[][]
+  constructor(readonly width: number, readonly height: number, p?: number) {
+    this.g = [...new Array(height)].map(() => new Array(width))
+    if (p) {
+      this.each((x, y) => {
+        this.set(x, y, rnd(100) < p)
+      })
+    }
+  }
+
+  // return out of bounds + 1 layer on the edge as a wall
+  get(x: number, y: number) {
+    if (x < 1 || x >= this.width - 1 || y < 1 || y >= this.height - 1) return true
+    return this.g[y][x]
+  }
+
+  set(x: number, y: number, v: boolean) {
+    this.g[y][x] = v
+  }
+
+  each(callback: (x: number, y: number, v: boolean) => unknown) {
+    for (let yi = 0; yi < this.height; yi++) {
+      for (let xi = 0; xi < this.width; xi++) {
+        callback(xi, yi, this.get(xi, yi))
+      }
+    }
+  }
 }

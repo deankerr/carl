@@ -1,3 +1,4 @@
+import { CONFIG } from '../config'
 import { Engine } from '../Core'
 import { Queue } from '../lib/util'
 
@@ -15,4 +16,7 @@ export function processRegionInitialization(engine: Engine) {
   local.turnQueue = queue
 
   local.entity(player).modify('tag', 'signalUpdatePlayerFOV')
+
+  if (CONFIG.setMainToMapSize)
+    engine.mainDisplay.setOptions({ width: local.width, height: local.height })
 }

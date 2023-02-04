@@ -1,6 +1,6 @@
 import { Color } from 'rot-js/lib/color'
 import { CONFIG } from '../config'
-import { Queue } from '../lib/util'
+import { Queue, rnd } from '../lib/util'
 import { Point, point, pointRect } from '../Model/Point'
 import { Entity, EntityPool, EntityKey, EntityWith } from './Entity'
 import { transformHSL } from '../lib/color'
@@ -180,5 +180,17 @@ export class Region {
     const recalled = this.seenByPlayer.has(pt)
 
     return visible ? tiles.visible : recalled ? tiles.recalled : tiles.unrevealed
+  }
+
+  rndWalkable() {
+    let pt = point(rnd(0, this.width - 1), rnd(0, this.height - 1))
+    let t = this.terrainAt(pt)
+    let max = 1000
+    while (t.blocksMovement && max-- > 0) {
+      pt = point(rnd(0, this.width - 1), rnd(0, this.height - 1))
+      t = this.terrainAt(pt)
+    }
+    if (max == 0) throw new Error('Could not get random walkable.')
+    return pt
   }
 }

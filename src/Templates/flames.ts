@@ -33,3 +33,4 @@ const magentaFlames: EntityTemplate = {
 }
 
 export const flameVariants: EntityTemplate[] = [flames, blueFlames, greenFlames, magentaFlames]
+export const flameKeys: FlameKey[] = ['flames', 'blueFlames', 'greenFlames', 'magentaFlames']

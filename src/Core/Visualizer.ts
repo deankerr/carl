@@ -31,7 +31,7 @@ export class Visualizer {
 
     this.player = player
     this.mirror = r
-    console.log('visualzer created')
+    console.log('visualizer created')
   }
 
   run(action: ActionTypes) {
@@ -81,13 +81,10 @@ export class Visualizer {
   }
 
   next() {
-    console.log('this.index:', this.index)
-
     const { terrain, features, beings, message } = this.built[this.index]
     this.mirror.name = `(${this.index}) ${message}`
 
     pointRect(0, 0, this.mirror.width, this.mirror.height, pt => {
-      // this.mirror.createTerrain('void', pt)
       const t = terrain.get(pt)
       if (t) this.mirror.createTerrain(t, pt)
     })

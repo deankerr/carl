@@ -1,3 +1,4 @@
+import { CONFIG } from '../config'
 import { Engine } from './Engine'
 
 export function UI(engine: Engine, ui: string) {
@@ -27,6 +28,9 @@ export function UI(engine: Engine, ui: string) {
     case 'decreaseMainDisplay':
       msg = main(engine, -1)
       break
+    case 'resetMainDisplay':
+      msg = main(engine, 0)
+      break
     case 'debugMode':
       options.debugMode = !options.debugMode
       msg = options.debugMode ? 'Welcome to Debug' : 'Bugs crushed'
@@ -39,12 +43,15 @@ export function UI(engine: Engine, ui: string) {
 
 function main(engine: Engine, n: number) {
   const { mainDisplay } = engine
-  const { width } = mainDisplay.getOptions()
-  const newWidth = width + 10 * n
-  const newHeight = Math.floor(newWidth / 2.02)
-  engine.mainDisplay.setOptions({ width: newWidth, height: newHeight })
+  const size = { width: CONFIG.mainDisplayWidth, height: CONFIG.mainDisplayHeight }
 
-  return `${newWidth} x ${newHeight}`
+  if (n < 0 || n > 0) {
+    size.width = mainDisplay.getOptions().width + 10 * n
+    size.height = Math.floor(size.width / 2.02)
+  }
+
+  engine.mainDisplay.setOptions({ width: size.width, height: size.height })
+  return `${size.width} x ${size.height}`
 }
 
 // if (ui === 'bgCycle') {

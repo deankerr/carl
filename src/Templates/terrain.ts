@@ -14,6 +14,11 @@ export type TerrainKey =
   | 'endlessVoid'
   | 'peak'
   | 'deadGrassD'
+  | 'solidGreyPurple'
+  | 'solidGreyPink'
+  | 'wall2'
+  | 'brick'
+
 export const terrain: EntityTemplate[] = [
   {
     label: 'path',
@@ -24,7 +29,19 @@ export const terrain: EntityTemplate[] = [
   {
     label: 'wall',
     name: ['wall'],
-    form: ['wall', '#4f4f4f'],
+    form: ['wall', '#4f4f4f', '#312c34'],
+    tag: ['blocksMovement', 'blocksLight', 'terrain'],
+  },
+  {
+    label: 'wall2',
+    name: ['wall'],
+    form: ['wall2', '#221e24', '#6c373c'],
+    tag: ['blocksMovement', 'terrain'],
+  },
+  {
+    label: 'brick',
+    name: ['bricks'],
+    form: ['brick', '#312c34', '#6c373c'],
     tag: ['blocksMovement', 'blocksLight', 'terrain'],
   },
   {
@@ -60,6 +77,18 @@ export const terrain: EntityTemplate[] = [
   { label: 'peak', name: ['peak'], form: ['peak', '#004027'], tag: ['blocksLight', 'terrain'] },
   { label: 'deadGrassD', name: ['dead grass'], form: ['deadGrass', '#553930'], tag: ['terrain'] },
   {
+    label: 'solidGreyPurple',
+    name: ['solid rock'],
+    form: ['solid', '#312c34'],
+    tag: ['terrain', 'blocksMovement', 'blocksLight'],
+  },
+  {
+    label: 'solidGreyPink',
+    name: ['solid rock'],
+    form: ['solid', '#6c373c'],
+    tag: ['terrain', 'blocksMovement', 'blocksLight'],
+  },
+  {
     label: 'void',
     name: ['void'],
     form: ['void', '#FF00FF'],
@@ -70,5 +99,5 @@ export const terrain: EntityTemplate[] = [
     name: ['endless void'],
     form: ['v', '#FF00FF'],
     tag: ['blocksLight', 'blocksMovement', 'terrain'],
-  },
+  }, //warfestus
 ]

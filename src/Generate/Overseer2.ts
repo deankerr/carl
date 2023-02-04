@@ -63,12 +63,14 @@ export class Overseer2 {
 
   module(): O2Module {
     const terrain = (type: EntityKey) => (pt: Point) => this.terrain(pt, type)
+    const feature = (type: FeatureKey) => (pt: Point) => this.feature(pt, type)
     const being = (type: BeingKey) => (pt: Point) => this.being(pt, type)
     const snap = (msg: string) => () => this.snapshot(msg)
 
     return {
       region: this.region,
       terrain: terrain.bind(this),
+      feature: feature.bind(this),
       being: being.bind(this),
       snap: snap.bind(this),
     }
@@ -78,6 +80,7 @@ export class Overseer2 {
 export type O2Module = {
   region: Region
   terrain: (type: EntityKey) => (pt: Point) => void
+  feature: (type: FeatureKey) => (pt: Point) => void
   being: (type: BeingKey) => (pt: Point) => void
   snap: (msg: string) => () => void
 }
