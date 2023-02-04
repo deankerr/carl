@@ -16,6 +16,7 @@ export function handle(event: KeyboardEvent): ActionTypes | undefined {
     Numpad8: Move('N'),
     Numpad9: Move('NE'),
     Numpad4: Move('W'),
+    KeyW: Move('WAIT'),
     Numpad5: Move('WAIT'),
     Numpad6: Move('E'),
     Numpad1: Move('SW'),

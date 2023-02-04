@@ -29,7 +29,7 @@ export const terrain: EntityTemplate[] = [
   {
     label: 'wall',
     name: ['wall'],
-    form: ['wall', '#4f4f4f', '#312c34'],
+    form: ['wall', '#4f4f4f'],
     tag: ['blocksMovement', 'blocksLight', 'terrain'],
   },
   {

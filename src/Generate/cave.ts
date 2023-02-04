@@ -8,7 +8,7 @@ import { cellularGrid } from './modules/cellular'
 import { hop } from './modules/drunkards'
 import { Overseer2 } from './Overseer2'
 // width = CONFIG.mainDisplayWidth * 2, height = CONFIG.mainDisplayHeight * 2
-export function cave(width = 79, height = 49) {
+export function cave(width = 200, height = 100) {
   const region = new Region(width, height, window.game.pool)
   const O2 = new Overseer2(region)
 
