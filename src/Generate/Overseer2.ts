@@ -77,6 +77,7 @@ export class Overseer2 {
       feature: feature.bind(this),
       being: being.bind(this),
       snap: snap.bind(this),
+      snapshot: this.snapshot.bind(this),
     }
   }
 }
@@ -87,6 +88,7 @@ export type O2Module = {
   feature: (type: FeatureKey) => (pt: Point) => void
   being: (type: BeingKey) => (pt: Point) => void
   snap: (msg: string) => () => void
+  snapshot: Overseer2['snapshot']
 }
 
 export type GenHistory = {

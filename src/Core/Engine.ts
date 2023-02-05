@@ -48,6 +48,7 @@ export class Engine {
     this.system.init()
     listen(this.update.bind(this))
     console.log(this)
+    if (CONFIG.autoStartVisualizer) this.visualizer(true)
   }
 
   update(event: KeyboardEvent) {
@@ -76,7 +77,7 @@ export class Engine {
     else requestAnimationFrame(this.render.bind(this))
   }
 
-  visualizer(vis: ActionTypes) {
+  visualizer(vis: ActionTypes | true) {
     if (this.atlas.local().visualizer === undefined) return false
     const result = this.atlas.local()?.visualizer?.run(vis)
     return result

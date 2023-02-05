@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CONFIG } from '../config'
 import { Region } from '../Core'
-import { loop, pick, repeat } from '../lib/util'
+import { floor, loop, pick, repeat } from '../lib/util'
 import { Point, point } from '../Model/Point'
 import { Rect } from '../Model/Rectangle'
 import { flameKeys, flameVariants } from '../Templates/flames'
 import { cellularGrid } from './modules/cellular'
-import { hop } from './modules/drunkards'
+import { lake, flood } from './modules/flood'
+import { hop } from './modules/walk'
 import { Overseer2 } from './Overseer2'
 
 // palette = {
@@ -15,21 +16,34 @@ import { Overseer2 } from './Overseer2'
 //  unknown: '#1d191f'
 // }
 
-export function cave(width = CONFIG.mainDisplayWidth * 2, height = CONFIG.mainDisplayHeight * 2) {
+export function cave(
+  width = floor(CONFIG.mainDisplayWidth * 1.5),
+  height = floor(CONFIG.mainDisplayHeight * 1.5)
+) {
   const region = new Region(width, height, window.game.pool)
   const O2 = new Overseer2(region)
 
   region.name = 'cave'
-  // region.voidColor = '#251316'
-  // region.voidColorUnrevealed = '#1d191f'
   region.palette.ground = '#251316'
   region.palette.unknown = '#1d191f'
   region.palette.solid = '#342f37'
 
+  const rect = Rect.at(point(0, 0), width, height)
+
   // cellular automata cave generation
   const grid = cellularGrid(width, height, 5, O2.module())
 
-  const rect = Rect.at(point(0, 0), width, height)
+  const { being, feature, snap } = O2.module()
+
+  const lakeSeed = new Set<Point>()
+
+  const seed1 = flood(region.rndWalkable(), 7, O2.module())
+  const seed2 = flood(region.rndWalkable(), 7, O2.module())
+  const seed3 = flood(region.rndWalkable(), 9, O2.module())
+  const seed4 = flood(region.rndWalkable(), 11, O2.module())
+
+  lake(new Set([...seed1, ...seed2, ...seed3, ...seed4]), O2.module())
+
   rect.traverse(pt => {
     if (region.terrainAt(pt).blocksMovement) {
       if (region.terrainAt(pt.add(0, 1)).blocksMovement) O2.terrain(pt, 'solid')
@@ -38,22 +52,31 @@ export function cave(width = CONFIG.mainDisplayWidth * 2, height = CONFIG.mainDi
   })
   O2.snapshot('Style!')
 
-  const { being, feature, snap } = O2.module()
+  // O2.terrain(rect.center(), 'cactus')
+  const snapC = snap('Friendly critters')
 
-  hop(8, 4, 4, region.rndWalkable.bind(region), being('snake'), snap('snakes'))
-  hop(8, 4, 4, region.rndWalkable.bind(region), being('bloodGull'), snap('gulls'))
-  hop(8, 4, 4, region.rndWalkable.bind(region), being('spider'), snap('spiders'))
-  hop(8, 4, 4, region.rndWalkable.bind(region), being('warboy'), snap('warboys'))
-  hop(8, 4, 4, region.rndWalkable.bind(region), being('scorpion'), snap('scorpions'))
+  hop(4, 4, 4, region.rndWalkable.bind(region), being('snake'))
+  snapC()
+  hop(4, 4, 4, region.rndWalkable.bind(region), being('bloodGull'))
+  snapC()
+  hop(4, 4, 4, region.rndWalkable.bind(region), being('spider'))
+  snapC()
+  hop(4, 4, 4, region.rndWalkable.bind(region), being('warboy'))
+  snapC()
+  hop(4, 4, 4, region.rndWalkable.bind(region), being('scorpion'))
+  snapC()
+  hop(4, 5, 4, rect.center(), being('mozzie'))
+  snapC()
 
+  const snapF = snap('Start fires')
   repeat(10, () => {
     feature(pick(flameKeys))(region.rndWalkable())
-    feature('cactus')(region.rndWalkable())
+    snapF()
   })
-  snap('fire')
-  feature('shrub')
 
-  hop(1, 5, 4, rect.center(), being('mozzie'))
+  feature('cactus')(region.rndWalkable())
+  O2.snapshot('one cactus')
+  // feature('shrub')
 
   O2.finalize()
   return region

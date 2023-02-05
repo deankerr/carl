@@ -6,7 +6,7 @@ import { logger } from '../lib/logger'
 import { half, pick, loop, rnd, repeat } from '../lib/util'
 import { point, Point, neighbours4 } from '../Model/Point'
 import { BeingKey } from '../Templates'
-import { walk, hop } from './modules/drunkards'
+import { walk, hop } from './modules/walk'
 import { Overseer2 } from './Overseer2'
 // ? #bb6244 desert sunset
 

@@ -7,7 +7,7 @@ export function cellularGrid(width: number, height: number, times: number, O2: O
 
   const wall = terrain('wall')
   const ground = terrain('ground')
-  const snap = O2.snap('cell')
+  const snap = O2.snap('Cellular Automata')
 
   let grid1 = new BGrid(width, height, 45)
 
@@ -46,7 +46,7 @@ export function cellularGrid(width: number, height: number, times: number, O2: O
   return grid2
 }
 
-class BGrid {
+export class BGrid {
   g: boolean[][]
   constructor(readonly width: number, readonly height: number, p?: number) {
     this.g = [...new Array(height)].map(() => new Array(width))

@@ -13,7 +13,7 @@ export class Visualizer {
   player: Entity
   active = false
 
-  speed = 750
+  speed = 250
   index = 0
   playing = false
 
@@ -33,8 +33,8 @@ export class Visualizer {
     console.log('visualizer created')
   }
 
-  run(action: ActionTypes) {
-    if ('visualize' in action && !this.active) {
+  run(action: ActionTypes | true) {
+    if (action === true || ('visualize' in action && !this.active)) {
       console.log('vis init')
       this.engine.local = this.mirror
       this.engine.mainDisplay.setOptions({ width: this.mirror.width, height: this.mirror.height })
