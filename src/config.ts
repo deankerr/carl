@@ -32,7 +32,7 @@ const playerLight = false
 
 const initialDomain = parseInt(localStorage.getItem('initialDomain') ?? '2')
 
-const autoStartVisualizer = true
+const autoStartVisualizer = false
 const visualizerAutoClose = true
 // const visualizerAutoplay = true
 

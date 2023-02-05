@@ -76,7 +76,6 @@ export function cave(
 
   feature('cactus')(region.rndWalkable())
   O2.snapshot('one cactus')
-  // feature('shrub')
 
   O2.finalize()
   return region

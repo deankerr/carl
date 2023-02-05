@@ -3,7 +3,7 @@ import { Engine } from '../Core/Engine'
 import { logger } from '../lib/logger'
 
 // , isPlayerTurn: boolean
-export const handleMovement = (engine: Engine) => {
+export const handleMovement = (engine: Engine, isPlayerTurn: boolean) => {
   const log = logger('sys', 'handleMovement')
   const { local } = engine
   const [currentEntity] = local.get('acting', 'position')
@@ -25,10 +25,10 @@ export const handleMovement = (engine: Engine) => {
   const newPt = currentEntity.position.add(action.move.x, action.move.y)
 
   // debug no clip
-  // if (world.options.debugMode && currentIsPlayer) {
-  //   world.modify(currentEntity).change(position(newPt))
-  //   return
-  // }
+  if (engine.options.debugMode && isPlayerTurn) {
+    local.entity(currentEntity).modify('acting', Action.Tread(newPt)).modify('position', newPt)
+    return
+  }
 
   const entitiesHere = local.at(newPt)
 
@@ -42,7 +42,6 @@ export const handleMovement = (engine: Engine) => {
   // valid move, create tread action and update position
   log.msg('handleMovement: new action - Tread')
   local.entity(currentEntity).modify('acting', Action.Tread(newPt)).modify('position', newPt)
-  // .modify('tag', 'signalLightPathUpdated')
 
   log.end()
 }

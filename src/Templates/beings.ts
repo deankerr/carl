@@ -71,7 +71,7 @@ export const beings: EntityTemplate[] = [
   },
   {
     label: 'warboy',
-    name: ['warboy'],
+    name: ['warfestus'],
     form: ['tick1', '#9e0052'],
     tag: ['actor', 'blocksMovement', 'being'],
     formSet: [['tick1', '', '', 'tick2', '', '']],

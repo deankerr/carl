@@ -34,7 +34,7 @@ export function flood(startPt: Point, maxSize: number, O2: O2Module) {
       queue.queue = [...neighbours]
       neighbours.clear()
       size++
-      O2.snapshot('A flood is in progress')
+      if (size % 3 === 0) O2.snapshot('A flood is in progress')
     }
   }
   // O2.snap('lake')()
@@ -42,7 +42,6 @@ export function flood(startPt: Point, maxSize: number, O2: O2Module) {
 }
 
 export function lake(pts: Set<Point>, O2: O2Module) {
-  const cactus = O2.terrain('cactus')
   const water = O2.terrain('water')
   const ground = O2.terrain('ground')
 

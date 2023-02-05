@@ -1,6 +1,6 @@
 import { Color } from 'rot-js/lib/color'
 import { CONFIG } from '../config'
-import { Queue, rnd } from '../lib/util'
+import { loop, Queue, rnd } from '../lib/util'
 import { Point, point, pointRect } from '../Model/Point'
 import { Entity, EntityPool, EntityKey, EntityWith } from './Entity'
 import { Visualizer } from './Visualizer'
@@ -47,7 +47,7 @@ export class Region {
     readonly pool: EntityPool,
     player?: Entity
   ) {
-    this.createPlayer(player)
+    // this.createPlayer(player)
   }
 
   //  * Entity Management
@@ -100,7 +100,7 @@ export class Region {
   // terrain entity at this position
   terrainAt(pt: Point) {
     return this.inBounds(pt)
-      ? this.terrainMap.get(pt) ?? this.pool.symbolic('ground')
+      ? this.terrainMap.get(pt) ?? { ...this.pool.symbolic('ground'), fake: true }
       : this.pool.symbolic('endlessVoid')
   }
 
@@ -119,14 +119,15 @@ export class Region {
   }
 
   player() {
-    return this.get('playerControlled')[0] as EntityWith<Entity, 'position' | 'fieldOfView'>
+    const player = this.get('playerControlled')[0] as EntityWith<Entity, 'position' | 'fieldOfView'>
+    return player ?? this.createPlayer()
   }
 
   // * Utility
 
   createPlayer(ePlayer?: Entity) {
     console.log('createPlayer')
-    const player = ePlayer ?? this.pool.spawn('player', point(this.width >> 1, this.height >> 1))
+    const player = ePlayer ?? this.pool.spawn('player', this.rndWalkable())
     this.entities.push(player)
     this.turnQueue.add(player.eID, true)
     return player
@@ -148,14 +149,14 @@ export class Region {
   }
 
   rndWalkable() {
-    let pt = point(rnd(0, this.width - 1), rnd(0, this.height - 1))
-    let t = this.terrainAt(pt)
     let max = 1000
-    while (t.blocksMovement && max-- > 0) {
-      pt = point(rnd(0, this.width - 1), rnd(0, this.height - 1))
-      t = this.terrainAt(pt)
+    while (max-- > 0) {
+      const pt = point(rnd(0, this.width - 1), rnd(0, this.height - 1))
+      console.log('this.terrainAt(pt).blocksMovement:', this.terrainAt(pt).blocksMovement)
+      if (this.terrainAt(pt).blocksMovement) continue
+      return pt
     }
-    if (max == 0) throw new Error('Could not get random walkable.')
-    return pt
+    console.error('Failed to get random point')
+    return point(rnd(0, this.width - 1), rnd(0, this.height - 1))
   }
 }
