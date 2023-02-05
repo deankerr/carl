@@ -106,7 +106,7 @@ export class Visualizer {
     const initial = genHistory()
 
     pointRect(0, 0, this.mirror.width, this.mirror.height, pt => {
-      initial.terrain.set(pt, 'void')
+      initial.terrain.set(pt, 'ground')
     })
     initial.message = 'initial'
 

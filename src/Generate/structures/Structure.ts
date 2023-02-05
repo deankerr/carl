@@ -183,7 +183,7 @@ export class Structure {
     // todo different connection themes, eg crumbled wall gap
     const doorsMut = this.O.mutate()
     for (const [pt] of this.innerRoomConnections) {
-      doorsMut.setT(pt, 'void')
+      doorsMut.setT(pt, 'ground')
       doorsMut.setE(pt, 'door')
     }
   }
@@ -260,11 +260,11 @@ export class Structure {
         const pt = pts.pop()
         if (!pt) continue
 
-        // avoid building a door next to an internal wall
+        // aground building a door next to an internal wall
         const walkable = pt.neighbours4().filter(nPt => !mut.query(nPt).blocksMovement)
         if (walkable.length < 2) continue
 
-        mut.setT(pt, 'void')
+        mut.setT(pt, 'ground')
         mut.setE(pt, 'door')
         break
       }
@@ -284,17 +284,17 @@ export class Structure {
       const pt = validEdgePts.pop()
       if (!pt) return
 
-      // avoid building a door next to an internal wall
+      // aground building a door next to an internal wall
       const walkable = pt.neighbours4().filter(nPt => !mut.query(nPt).blocksMovement)
       if (walkable.length < 2) continue
 
-      // avoid building a door to an annex
+      // aground building a door to an annex
       const isAnnex = walkable.some(pt => this.sub.some(annex => annex.rect.intersectsPt(pt)))
       if (isAnnex) continue
 
       // if no inner walls, or the point isn't adjacent to an inner wall
 
-      mut.setT(pt, 'void')
+      mut.setT(pt, 'ground')
       mut.setE(pt, 'door')
       connections++
     }

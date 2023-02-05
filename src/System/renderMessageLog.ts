@@ -61,11 +61,14 @@ export function renderMessageLog(engine: Engine) {
 function debugInfo(engine: Engine) {
   const { msgDisplay, local } = engine
 
-  const playerPos = local.player().position.s ?? '?'
-  msgDisplay.drawText(2, 0, `${fps()}`)
-  msgDisplay.drawText(0, 1, `${getLogTimes()} P:${playerPos}`)
-  msgDisplay.drawText(0, 2, `E:${engine.local.entities.length}`)
-  msgDisplay.drawText(0, 3, `Gen: ${local.visualizer?.history[0].message}ms`)
+  const playerPos = local.player().position ?? '?'
+  const t = local.terrainAt(playerPos)
+
+  msgDisplay.drawText(2, 0, `${fps()} ${getLogTimes()}`)
+  msgDisplay.drawText(0, 1, `E:${engine.local.entities.length}`)
+  msgDisplay.drawText(0, 2, `Gen: ${local.visualizer?.history[0].message}ms`)
+  msgDisplay.drawText(0, 3, `P:${playerPos.s}`)
+  msgDisplay.drawText(0, 4, `${t.label} ${t.form.color} ${t.form.bgColor}`)
 }
 
 // ROT.JS text color code format

@@ -6,12 +6,12 @@ export function cellularGrid(width: number, height: number, times: number, O2: O
   const { terrain } = O2
 
   const wall = terrain('wall')
-  const voidT = terrain('void')
+  const ground = terrain('ground')
   const snap = O2.snap('cell')
 
   let grid1 = new BGrid(width, height, 45)
 
-  grid1.each((x, y, v) => (v ? wall(point(x, y)) : voidT(point(x, y))))
+  grid1.each((x, y, v) => (v ? wall(point(x, y)) : ground(point(x, y))))
   snap()
 
   let grid2 = new BGrid(width, height)
@@ -39,7 +39,7 @@ export function cellularGrid(width: number, height: number, times: number, O2: O
       }
     })
 
-    grid2.each((x, y, v) => (v ? wall(point(x, y)) : voidT(point(x, y))))
+    grid2.each((x, y, v) => (v ? wall(point(x, y)) : ground(point(x, y))))
     snap()
     grid1 = grid2
   })

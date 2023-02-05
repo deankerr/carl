@@ -61,41 +61,47 @@ export function renderRegion(engine: Engine) {
   viewportRect.traverse(viewPt => {
     // const voidTile =
     local.renderAt(viewPt.add(-offsetX, -offsetY), (entities, visible, recalled, lighting) => {
-      const stack = [
-        visible ? ground : recalled ? groundRecalled : unknown,
-        ...entities
-          // 1. remove void terrain
-          .filter(e => e.label !== 'void')
-          // 2. determine which beings are to be rendered
-          .filter(e => {
-            if (visible) {
-              const beingPresent = entities.some(e => e.being)
-              // if player can see the area, render beings + renderUnderBeings flagged
-              if (e.being) return true
-              else if (beingPresent) {
-                return e.renderUnderBeing
-              } else return true
-            } else if (recalled) {
-              // if area remembered, render just terrain + memorable features
-              return e.terrain || e.memorable
-            }
-            // if not visible or recalled, render nothing
-            return false
-          })
-          // 3. sort beings on top, then features, terrain
-          .sort((a, b) => zLevel(a) - zLevel(b))
-          // 4. extract relevant display data, applying lighting or fade effects
-          .map(e => {
-            const form = { char: e.form.char, color: e.form.color, bgColor: e.form.bgColor }
-            if (visible) {
-              // don't add light to something that is emitting light, which can look bad
-              if (lighting && !e.emitLight?.enabled) form.color = addLight(form.color, lighting)
-            } else if (recalled) {
-              form.color = transformHSL(form.color, recalledFade)
-            }
-            return form
-          }), // ? sort
-      ]
+      const stack =
+        visible || recalled
+          ? [
+              visible ? ground : recalled ? ground : unknown,
+              ...entities
+                // 1. remove void terrain
+                .filter(e => e.label !== 'void')
+                // 2. determine which beings are to be rendered
+                .filter(e => {
+                  if (visible) {
+                    const beingPresent = entities.some(e => e.being)
+                    // if player can see the area, render beings + renderUnderBeings flagged
+                    if (e.being) return true
+                    else if (beingPresent) {
+                      return e.renderUnderBeing
+                    } else return true
+                  } else if (recalled) {
+                    // if area remembered, render just terrain + memorable features
+                    return e.terrain || e.memorable
+                  }
+                  // if not visible or recalled, render nothing
+                  return false
+                })
+                // 3. sort beings on top, then features, terrain
+                .sort((a, b) => zLevel(a) - zLevel(b))
+                // 4. extract relevant display data, applying lighting or fade effects
+                .map(e => {
+                  const form = { char: e.form.char, color: e.form.color, bgColor: e.form.bgColor }
+                  if (visible) {
+                    // don't add light to something that is emitting light, which can look bad
+                    if (lighting && !e.emitLight?.enabled)
+                      form.color = addLight(form.color, lighting)
+                  } else if (recalled) {
+                    form.color = transformHSL(form.color, recalledFade)
+                    if (form.bgColor !== 'transparent')
+                      form.bgColor = transformHSL(form.bgColor, recalledFade)
+                  }
+                  return form
+                }), // ? sort
+            ]
+          : [unknown]
 
       // abort if we somehow ended up with nothing or ROT.JS will error
       if (stack.length === 0) return

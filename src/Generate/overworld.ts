@@ -17,8 +17,8 @@ export function overworld(width = 120, height = 120) {
   console.log('seed state:', ROT.RNG.getState())
 
   const O = new Overseer(width, height, window.game.pool)
-  // O.current.voidColor = '#090909'
-  // O.current.voidColorUnrevealed = '#000000'
+  // O.current.groundColor = '#090909'
+  // O.current.groundColorUnrevealed = '#000000'
   O.current.name = `Pippin's Fortress`
 
   // const center = Pt(half(width), half(height))
@@ -64,8 +64,8 @@ export function overworld(width = 120, height = 120) {
 
   // scattered shrubs
   // const shrubMut = O.mutate()
-  loop(5, () => sparseWalk(inner.rndEdgePt(), 'shrub', 5, O.mutate(), 'void'))
-  loop(5, () => sparseWalk(inner.rndEdgePt(), 'deadTree', 5, O.mutate(), 'void'))
+  loop(5, () => sparseWalk(inner.rndEdgePt(), 'shrub', 5, O.mutate(), 'ground'))
+  loop(5, () => sparseWalk(inner.rndEdgePt(), 'deadTree', 5, O.mutate(), 'ground'))
 
   // smaller southern lake
   // const southLakePt = Pt(center.x + rnd(-4, -4), outskirtsRect.y2)
@@ -82,10 +82,10 @@ export function overworld(width = 120, height = 120) {
   graveyard.degradedFloor('path', 1, 10)
   // graveyard.floor('path')
 
-  graveyard.feature('tombstone', rnd(8, 12), 'void')
-  graveyard.feature('statue', 2, 'void')
+  graveyard.feature('tombstone', rnd(8, 12), 'ground')
+  graveyard.feature('statue', 2, 'ground')
 
-  featureArea.feature('deadTree', 22, 'void')
+  featureArea.feature('deadTree', 22, 'ground')
 
   // ruin
   const ruin = ruinsArea.center(rndO(13, 15), rndO(11, 13))
@@ -93,7 +93,7 @@ export function overworld(width = 120, height = 120) {
   ruin.bisectRooms(rnd(2, 4))
   ruin.buildInnerWalls()
   ruin.connectInnerRooms()
-  ruin.degradedFloor('void', 1)
+  ruin.degradedFloor('ground', 1)
 
   // add features to rooms
   const ruinRooms = ROT.RNG.shuffle([...ruin.innerRooms])
@@ -124,7 +124,7 @@ export function overworld(width = 120, height = 120) {
     annex.bisectRooms(rnd(1))
     annex.buildInnerWalls()
     annex.connectInnerRooms()
-    annex.degradedFloor('void')
+    annex.degradedFloor('ground')
 
     if (i === 0) {
       const waterRoom = pick(annex.innerRooms)
