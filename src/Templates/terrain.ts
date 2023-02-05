@@ -16,7 +16,6 @@ export type TerrainKey =
   | 'deadGrassD'
   | 'solidGreyPurple'
   | 'solidGreyPink'
-  | 'wall2'
   | 'brick'
 
 export const terrain: EntityTemplate[] = [
@@ -32,18 +31,7 @@ export const terrain: EntityTemplate[] = [
     form: ['wall', '#4f4f4f'],
     tag: ['blocksMovement', 'blocksLight', 'terrain'],
   },
-  {
-    label: 'wall2',
-    name: ['wall'],
-    form: ['wall2', '#221e24', '#6c373c'],
-    tag: ['blocksMovement', 'terrain'],
-  },
-  {
-    label: 'brick',
-    name: ['bricks'],
-    form: ['brick', '#312c34', '#6c373c'],
-    tag: ['blocksMovement', 'blocksLight', 'terrain'],
-  },
+
   {
     label: 'water',
     name: ['water'],
@@ -77,9 +65,15 @@ export const terrain: EntityTemplate[] = [
   { label: 'peak', name: ['peak'], form: ['peak', '#004027'], tag: ['blocksLight', 'terrain'] },
   { label: 'deadGrassD', name: ['dead grass'], form: ['deadGrass', '#553930'], tag: ['terrain'] },
   {
+    label: 'brick',
+    name: ['bricks'],
+    form: ['brick', '#6c373c', '#221e24'],
+    tag: ['blocksMovement', 'terrain'],
+  },
+  {
     label: 'solidGreyPurple',
     name: ['solid rock'],
-    form: ['solid', '#312c34'],
+    form: ['solid', '#342f37'],
     tag: ['terrain', 'blocksMovement', 'blocksLight'],
   },
   {
@@ -87,6 +81,19 @@ export const terrain: EntityTemplate[] = [
     name: ['solid rock'],
     form: ['solid', '#6c373c'],
     tag: ['terrain', 'blocksMovement', 'blocksLight'],
+  },
+
+  {
+    label: 'solid',
+    name: ['solid rock'],
+    form: ['solid', '#333'],
+    tag: ['terrain', 'blocksMovement', 'blocksLight'],
+  },
+  {
+    label: 'floor',
+    name: ['floor'],
+    form: ['solid', '#000'],
+    tag: ['terrain'],
   },
   {
     label: 'void',

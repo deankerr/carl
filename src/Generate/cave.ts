@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { CONFIG } from '../config'
 import { Region } from '../Core'
 import { loop, pick, repeat } from '../lib/util'
 import { Point, point } from '../Model/Point'
@@ -7,13 +8,14 @@ import { flameKeys, flameVariants } from '../Templates/flames'
 import { cellularGrid } from './modules/cellular'
 import { hop } from './modules/drunkards'
 import { Overseer2 } from './Overseer2'
-// width = CONFIG.mainDisplayWidth * 2, height = CONFIG.mainDisplayHeight * 2
-export function cave(width = 200, height = 100) {
+
+export function cave(width = CONFIG.mainDisplayWidth * 2, height = CONFIG.mainDisplayHeight * 2) {
   const region = new Region(width, height, window.game.pool)
   const O2 = new Overseer2(region)
 
   region.name = 'cave'
   region.voidColor = '#251316'
+  region.voidColorUnrevealed = '#1d191f'
 
   // cellular automata cave generation
   const grid = cellularGrid(width, height, 5, O2.module())
@@ -22,7 +24,7 @@ export function cave(width = 200, height = 100) {
   rect.traverse(pt => {
     if (region.terrainAt(pt).blocksMovement) {
       if (region.terrainAt(pt.add(0, 1)).blocksMovement) O2.terrain(pt, 'solidGreyPurple')
-      else O2.terrain(pt, 'wall2')
+      else O2.terrain(pt, 'brick')
     }
   })
   O2.snapshot('Style!')

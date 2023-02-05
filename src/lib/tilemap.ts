@@ -80,7 +80,6 @@ export const tileMapOryxMain = {
   tree: mapChar(5, 0, t),
   void: mapChar(13, 0, t),
   wall: mapChar(0, 2, t),
-  wall2: mapChar(25, 8, t),
   brick: mapChar(26, 8, t),
   gull1: mapChar(23, 3, t),
   gull2: mapChar(24, 3, t),
