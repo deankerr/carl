@@ -15,8 +15,6 @@ import {
   ActionTypes,
 } from './'
 
-export type Message = { turn: number; text: string; highlight: string; color: string }
-
 export class Engine {
   mainDisplay: ROT.Display
   msgDisplay: ROT.Display
@@ -78,25 +76,32 @@ export class Engine {
     else requestAnimationFrame(this.render.bind(this))
   }
 
-  message(newMsg: string, entity: Entity) {
-    logger('engine', 'message').msg(newMsg)
-    if (this.local.player().acting)
-      this.messageLog.push({
-        turn: this.playerTurns,
-        text: newMsg,
-        highlight: entity?.name ?? '',
-        color: entity?.form.color ?? '',
-      })
-  }
-
-  uiMessage(newMsg: string) {
-    logger('engine', 'uiMessage').msg(newMsg)
-    this.uiMessageLog.push({ turn: this.playerTurns, text: newMsg, highlight: '', color: '' })
-  }
-
   visualizer(vis: ActionTypes) {
     if (this.atlas.local().visualizer === undefined) return false
     const result = this.atlas.local()?.visualizer?.run(vis)
     return result
   }
+
+  // TODO message handler
+  message(text: string, entity: Entity) {
+    logger('engine', 'message').msg(text)
+    if (this.local.player().acting) this.messageLog.push(this.createMessage(text, entity))
+  }
+
+  uiMessage(text: string) {
+    logger('engine', 'uiMessage').msg(text)
+    this.uiMessageLog.push(this.createMessage(text))
+  }
+
+  private createMessage(text: string, entity?: Entity): Message {
+    return {
+      text,
+      turn: this.playerTurns,
+      time: Date.now(),
+      highlight: entity?.name ?? '',
+      color: entity?.form.color ?? '',
+    }
+  }
 }
+
+export type Message = { text: string; turn: number; time: number; highlight: string; color: string }

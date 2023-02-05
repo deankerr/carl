@@ -23,7 +23,7 @@ export function renderMessageLog(engine: Engine) {
   const name = local.name
   msgDisplay.drawText(center.x - half(name.length), 0, name)
 
-  // message buffer
+  // game message buffer
   const msgStack = messageLog.slice(-messageBufferDisplaySize).reverse()
   const msgBufferY = height - messageBufferDisplaySize
 
@@ -39,6 +39,14 @@ export function renderMessageLog(engine: Engine) {
   })
   local.hasChanged = false
 
+  // ui messages
+  const timeOnScreen = 2 * 1000
+  const { uiMessageLog: uiLog } = engine
+  const uiI = engine.uiMessageLog.length - 1
+  if (uiLog[uiI] && Date.now() - uiLog[uiI].time < timeOnScreen) {
+    msgDisplay.drawText(center.x - half(uiLog[uiI].text.length), height - 6, uiLog[uiI].text)
+  }
+
   // render spinner
   msgDisplay.drawText(0, 0, `${spinner.next()}`)
 
@@ -49,7 +57,10 @@ function debugInfo(engine: Engine) {
   const { msgDisplay, local } = engine
 
   const playerPos = local.player().position.s ?? '?'
-  msgDisplay.drawText(0, 0, `${spinner.next()} ${fps()} ${getLogTimes()} P:${playerPos}`)
+  msgDisplay.drawText(2, 0, `${fps()}`)
+  msgDisplay.drawText(0, 1, `${getLogTimes()} P:${playerPos}`)
+  msgDisplay.drawText(0, 2, `E:${engine.local.entities.length}`)
+  msgDisplay.drawText(0, 3, `Gen: ${local.visualizer?.history[0].message}ms`)
 }
 
 // ROT.JS text color code format

@@ -13,9 +13,11 @@ export class Overseer2 {
   // stores the latest features/beings, are added to the region at the end
   final = genHistory()
 
-  time: number
+  timeStarted: number
+  timeEnded = 0
+
   constructor(region: Region) {
-    this.time = Date.now()
+    this.timeStarted = Date.now()
     this.region = region
     this.pool = region.pool
     this.snapshot('init')
@@ -58,7 +60,9 @@ export class Overseer2 {
     })
 
     this.region.visualizer = new Visualizer(this.region, this.mutations)
-    console.log(`O2 ${Date.now() - this.time}ms`, this)
+    const timeTaken = Date.now() - this.timeStarted
+    this.mutations[0].message = timeTaken.toString()
+    console.log(`O2 ${timeTaken}ms`, this)
   }
 
   module(): O2Module {
