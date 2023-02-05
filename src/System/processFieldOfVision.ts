@@ -35,7 +35,6 @@ export const processFieldOfVision = (engine: Engine) => {
     if (entity.playerControlled) {
       // update level memory
       local.areaVisible.clear()
-      console.log('local:', local)
       for (const pt of visible) {
         local.areaKnown.set(pt, true)
         local.areaVisible.set(pt, true)

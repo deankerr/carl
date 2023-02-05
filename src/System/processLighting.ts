@@ -28,9 +28,7 @@ export const processLighting = (engine: Engine) => {
 
   // set up infrastructure for ROT.JS lighting
   const fov = new ROT.FOV.PreciseShadowcasting(local.ROTisTransparent.bind(local))
-  const lighting = new ROT.Lighting((x: number, y: number) =>
-    local.terrainAt(point(x, y)) ? 0.3 : 0
-  )
+  const lighting = new ROT.Lighting((x: number, y: number) => 0)
   lighting.setFOV(fov)
 
   // set the light points and colors for each emitter

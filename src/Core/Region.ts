@@ -24,6 +24,8 @@ export class Region {
   areaVisible = new Map<Point, boolean>()
   areaKnown = new Map<Point, boolean>()
 
+  areaTransparentCache = new Map<Point, boolean>()
+
   recallAll = CONFIG.recallAll
   revealAll = CONFIG.revealAll
 
@@ -136,8 +138,13 @@ export class Region {
 
   // callback for ROT.JS fov/light functions
   ROTisTransparent(x: number, y: number) {
-    const entities = this.at(point(x, y))
-    return !entities.some(e => e.blocksLight)
+    const pt = point(x, y)
+    const cached = this.areaTransparentCache.get(pt)
+    if (cached) return cached
+    const entities = this.at(pt)
+    const transparent = !entities.some(e => e.blocksLight)
+    this.areaTransparentCache.set(pt, transparent)
+    return transparent
   }
 
   rndWalkable() {

@@ -8,7 +8,7 @@ export function processFormUpdate(engine: Engine) {
 
   // iterate through each entity with triggers, if a matching tag is found, update the entity's
   // form to the relevant set
-  const setTriggers = local.get('formSet', 'formSetTriggers', 'signalModified')
+  const setTriggers = local.get('formSet', 'formSetTriggers')
   for (const entity of setTriggers) {
     const { form, formSet, formSetTriggers } = entity
     formSetTriggers.forEach((tag, tagIndex) => {
@@ -21,10 +21,7 @@ export function processFormUpdate(engine: Engine) {
           formSet[i + 2] === '' ? form.bgColor : formSet[i + 2],
         ] as [string, string, string]
 
-        local
-          .entity(entity)
-          .modify('form', ...newForm)
-          .remove('signalModified')
+        local.entity(entity).modify('form', ...newForm)
       }
     })
   }

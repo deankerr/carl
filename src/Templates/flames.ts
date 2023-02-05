@@ -7,7 +7,7 @@ const flames: EntityTemplate = {
   name: ['flames'],
   form: ['flames1', '#FF8000'],
   tag: ['feature', 'renderUnderBeing'],
-  trodOn: ['You crackle and pop as you wade through the flames.'],
+  trodOn: ['A sense of urgency washes over you.'],
   formSet: [['flames1', '', '', 'flames2', '', '']],
   formSetAutoCycle: [120],
   emitLight: ['auto'],
