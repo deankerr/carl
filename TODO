@@ -1,5 +1,12 @@
 # TODO
 
+# Region/Overseer
+
+- Quick access to !!visibility!!, walkability (solid/floor?)
+- Default floor (/solid?)
+- ? Quick access to entity positions?
+- Cell dirty flag? - render info
+
 ## Soon
 
 - Refactor Game - extract meta action processing (UI etc), clarify system loop

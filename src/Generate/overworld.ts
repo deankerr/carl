@@ -17,8 +17,8 @@ export function overworld(width = 120, height = 120) {
   console.log('seed state:', ROT.RNG.getState())
 
   const O = new Overseer(width, height, window.game.pool)
-  O.current.voidColor = '#090909'
-  O.current.voidColorUnrevealed = '#000000'
+  // O.current.voidColor = '#090909'
+  // O.current.voidColorUnrevealed = '#000000'
   O.current.name = `Pippin's Fortress`
 
   // const center = Pt(half(width), half(height))

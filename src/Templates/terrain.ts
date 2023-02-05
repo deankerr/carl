@@ -17,6 +17,9 @@ export type TerrainKey =
   | 'solidGreyPurple'
   | 'solidGreyPink'
   | 'brick'
+  | 'ground'
+  | 'solid'
+  | 'unknown'
 
 export const terrain: EntityTemplate[] = [
   {
@@ -71,28 +74,21 @@ export const terrain: EntityTemplate[] = [
     tag: ['blocksMovement', 'terrain'],
   },
   {
-    label: 'solidGreyPurple',
-    name: ['solid rock'],
-    form: ['solid', '#342f37'],
-    tag: ['terrain', 'blocksMovement', 'blocksLight'],
-  },
-  {
-    label: 'solidGreyPink',
-    name: ['solid rock'],
-    form: ['solid', '#6c373c'],
-    tag: ['terrain', 'blocksMovement', 'blocksLight'],
-  },
-
-  {
     label: 'solid',
     name: ['solid rock'],
     form: ['solid', '#333'],
     tag: ['terrain', 'blocksMovement', 'blocksLight'],
   },
   {
-    label: 'floor',
-    name: ['floor'],
+    label: 'ground',
+    name: ['ground'],
     form: ['solid', '#000'],
+    tag: ['terrain'],
+  },
+  {
+    label: 'unknown',
+    name: ['unknown'],
+    form: ['solid', '#F0F'],
     tag: ['terrain'],
   },
   {
@@ -108,3 +104,22 @@ export const terrain: EntityTemplate[] = [
     tag: ['blocksLight', 'blocksMovement', 'terrain'],
   }, //warfestus
 ]
+
+/*
+  moved to dynamic palette
+
+  {
+    label: 'solidGreyPurple',
+    name: ['solid rock'],
+    form: ['solid', '#342f37'],
+    tag: ['terrain', 'blocksMovement', 'blocksLight'],
+  },
+  {
+    label: 'solidGreyPink',
+    name: ['solid rock'],
+    form: ['solid', '#6c373c'],
+    tag: ['terrain', 'blocksMovement', 'blocksLight'],
+  },
+
+
+*/

@@ -59,7 +59,7 @@ export const createHTMLWrapper = () => {
   wrapper.style.flexDirection = 'column'
   wrapper.style.justifyContent = 'center'
   wrapper.style.alignItems = 'center'
-  wrapper.style.backgroundColor = '#440000'
+  // wrapper.style.backgroundColor = '#008888'
 
   return wrapper
 }

@@ -3,8 +3,15 @@ import { CONFIG } from '../config'
 import { Queue, rnd } from '../lib/util'
 import { Point, point, pointRect } from '../Model/Point'
 import { Entity, EntityPool, EntityKey, EntityWith } from './Entity'
-import { transformHSL } from '../lib/color'
 import { Visualizer } from './Visualizer'
+
+/*
+
+  areaVisible = new Map<Point, boolean>()
+  areaKnown = new Map<Point, boolean>()
+  areaTransparent = new Map<Point, boolean>()
+
+*/
 
 export class Region {
   name = 'Somewhere'
@@ -17,8 +24,6 @@ export class Region {
   recallAll = CONFIG.recallAll
   revealAll = CONFIG.revealAll
 
-  voidColor = CONFIG.mainBackgroundColor
-  voidColorUnrevealed = CONFIG.mainBackgroundColor
   lighting = new Map<Point, Color>()
 
   hasChanged = true
@@ -26,8 +31,9 @@ export class Region {
   visualizer: Visualizer | undefined
 
   palette = {
-    solid: '#342f37',
-    floor: '#251316',
+    solid: '#006666',
+    ground: '#090909',
+    unknown: '#000000',
   }
 
   constructor(
@@ -118,7 +124,7 @@ export class Region {
   // terrain entity at this position
   terrainAt(pt: Point) {
     return this.inBounds(pt)
-      ? this.terrainMap.get(pt) ?? this.pool.symbolic('void')
+      ? this.terrainMap.get(pt) ?? this.pool.symbolic('ground')
       : this.pool.symbolic('endlessVoid')
   }
 
@@ -160,32 +166,32 @@ export class Region {
     return !entities.some(e => e.blocksLight)
   }
 
-  voidTiles() {
-    const visible = { char: 'v', color: this.voidColor, bgColor: this.voidColor }
+  // voidTiles() {
+  //   const visible = { char: 'v', color: this.voidColor, bgColor: this.voidColor }
 
-    const recalledColor = transformHSL(this.voidColor, {
-      sat: { by: 0.9, min: 0 },
-      lum: { by: 0.95, min: 0 },
-    })
-    const recalled = { ...visible, color: recalledColor, bgColor: recalledColor }
+  //   const recalledColor = transformHSL(this.voidColor, {
+  //     sat: { by: 0.9, min: 0 },
+  //     lum: { by: 0.95, min: 0 },
+  //   })
+  //   const recalled = { ...visible, color: recalledColor, bgColor: recalledColor }
 
-    const unrevealed = {
-      char: 'v',
-      color: this.voidColorUnrevealed,
-      bgColor: this.voidColorUnrevealed,
-    }
+  //   const unrevealed = {
+  //     char: 'v',
+  //     color: this.voidColorUnrevealed,
+  //     bgColor: this.voidColorUnrevealed,
+  //   }
 
-    return { visible, recalled, unrevealed }
-  }
+  //   return { visible, recalled, unrevealed }
+  // }
 
-  voidAt(pt: Point) {
-    const tiles = this.voidTiles()
+  // voidAt(pt: Point) {
+  //   const tiles = this.voidTiles()
 
-    const visible = this.player().fieldOfView.visible.has(pt)
-    const recalled = this.seenByPlayer.has(pt)
+  //   const visible = this.player().fieldOfView.visible.has(pt)
+  //   const recalled = this.seenByPlayer.has(pt)
 
-    return visible ? tiles.visible : recalled ? tiles.recalled : tiles.unrevealed
-  }
+  //   return visible ? tiles.visible : recalled ? tiles.recalled : tiles.unrevealed
+  // }
 
   rndWalkable() {
     let pt = point(rnd(0, this.width - 1), rnd(0, this.height - 1))

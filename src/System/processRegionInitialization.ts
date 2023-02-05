@@ -19,4 +19,8 @@ export function processRegionInitialization(engine: Engine) {
 
   if (CONFIG.setMainToMapSize)
     engine.mainDisplay.setOptions({ width: local.width, height: local.height })
+
+  local.pool.symbolic('ground').form.color = local.palette.ground
+  local.pool.symbolic('solid').form.color = local.palette.solid
+  local.pool.symbolic('unknown').form.color = local.palette.unknown
 }

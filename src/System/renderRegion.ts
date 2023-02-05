@@ -45,7 +45,15 @@ export function renderRegion(engine: Engine) {
   // * ========== Rendering ========== *
 
   // replace any void terrain with these locally colored ones
-  const voidTerrain = local.voidTiles()
+  // const voidTerrain = local.voidTiles()
+
+  const ground = local.pool.symbolic('ground').form
+  const grc = transformHSL(ground.color, {
+    sat: { by: 0.9, min: 0 },
+    lum: { by: 0.95, min: 0 },
+  })
+  const groundRecalled = { ...ground, color: grc, bgColor: grc }
+  const unknown = local.pool.symbolic('unknown').form
 
   mainDisplay.clear()
 
@@ -54,7 +62,7 @@ export function renderRegion(engine: Engine) {
     // const voidTile =
     local.renderAt(viewPt.add(-offsetX, -offsetY), (entities, visible, recalled, lighting) => {
       const stack = [
-        visible ? voidTerrain.visible : recalled ? voidTerrain.recalled : voidTerrain.unrevealed,
+        visible ? ground : recalled ? groundRecalled : unknown,
         ...entities
           // 1. remove void terrain
           .filter(e => e.label !== 'void')
@@ -104,7 +112,7 @@ export function renderRegion(engine: Engine) {
   })
 }
 
-const recalledFade = { sat: { by: 0.8 }, lum: { by: 0.8, min: 0.12 } }
+const recalledFade = { sat: { by: 0.8 }, lum: { by: 0.8 } }
 
 const zLevel = (e: Entity) => {
   return 'being' in e ? 2 : 'feature' in e ? 1 : 0

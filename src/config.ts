@@ -20,7 +20,7 @@ const generateHeight = 120
 const setMainToMapSize = false
 
 // '#111a0e'
-const mainBackgroundColor = '#000000'
+const mainBackgroundColor = '#0000FF'
 const messageColor = '#FFF'
 const messageBackgroundColor = 'transparent'
 const htmlBackgroundColor = '#000000'

@@ -17,8 +17,6 @@ export function renderMessageLog(engine: Engine) {
 
   msgDisplay.clear()
 
-  // const v = local.voidTiles()
-
   // region name
   const name = local.name
   msgDisplay.drawText(center.x - half(name.length), 0, name)
@@ -31,12 +29,19 @@ export function renderMessageLog(engine: Engine) {
     const msg = msgStack[i]
     if (msg && playerTurns - msg.turn < 10) {
       const x = center.x - half(msg.text.length)
+      const y = msgBufferY + i
 
       textToTile(msg, (xi, char, color) => {
-        mainDisplay.drawOver(x + xi, msgBufferY + i, char, color, null)
+        mainDisplay.draw(x + xi, y, char, color, local.palette.unknown)
       })
+
+      // padding
+      mainDisplay.draw(x - 1, y, 'solid', local.palette.unknown, null) // left
+      mainDisplay.draw(x + msg.text.length, y, 'solid', local.palette.unknown, null) // right
     }
   })
+
+  // * this important flag should probably be handled better
   local.hasChanged = false
 
   // ui messages

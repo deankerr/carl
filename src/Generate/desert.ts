@@ -10,6 +10,9 @@ import { walk, hop } from './modules/drunkards'
 import { Overseer2 } from './Overseer2'
 // ? #bb6244 desert sunset
 
+// ground '#e6ce80'
+// unknown '#31261b'
+
 export function desert(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
   const log = logger('generate', 'desert')
 
@@ -17,10 +20,12 @@ export function desert(width = CONFIG.generateWidth, height = CONFIG.generateHei
   const O2 = new Overseer2(region)
   // region.voidColor = '#bfa640'
   // region.voidColor = '#bb6244'
-  region.voidColor = '#e6ce80'
-  region.voidColorUnrevealed = '#31261b'
+  // region.voidColor = '#e6ce80'
+  // region.voidColorUnrevealed = '#31261b'
   region.name = 'Arid ZoneA'
   // region.voidColor = '#000'
+  region.palette.ground = '#e6ce80'
+  region.palette.unknown = '#31261b'
 
   const terrain = (type: EntityKey) => (pt: Point) => O2.terrain(pt, type)
   const being = (type: BeingKey) => (pt: Point) => O2.being(pt, type)

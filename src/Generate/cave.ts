@@ -9,13 +9,22 @@ import { cellularGrid } from './modules/cellular'
 import { hop } from './modules/drunkards'
 import { Overseer2 } from './Overseer2'
 
+// palette = {
+//   solid: '#342f37',
+//   ground: '#251316',
+//  unknown: '#1d191f'
+// }
+
 export function cave(width = CONFIG.mainDisplayWidth * 2, height = CONFIG.mainDisplayHeight * 2) {
   const region = new Region(width, height, window.game.pool)
   const O2 = new Overseer2(region)
 
   region.name = 'cave'
-  region.voidColor = '#251316'
-  region.voidColorUnrevealed = '#1d191f'
+  // region.voidColor = '#251316'
+  // region.voidColorUnrevealed = '#1d191f'
+  region.palette.ground = '#251316'
+  region.palette.unknown = '#1d191f'
+  region.palette.solid = '#342f37'
 
   // cellular automata cave generation
   const grid = cellularGrid(width, height, 5, O2.module())
@@ -23,7 +32,7 @@ export function cave(width = CONFIG.mainDisplayWidth * 2, height = CONFIG.mainDi
   const rect = Rect.at(point(0, 0), width, height)
   rect.traverse(pt => {
     if (region.terrainAt(pt).blocksMovement) {
-      if (region.terrainAt(pt.add(0, 1)).blocksMovement) O2.terrain(pt, 'solidGreyPurple')
+      if (region.terrainAt(pt.add(0, 1)).blocksMovement) O2.terrain(pt, 'solid')
       else O2.terrain(pt, 'brick')
     }
   })

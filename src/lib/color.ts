@@ -31,7 +31,6 @@ export function transformHSL(from: string, opts: Partial<tHSLOpts>) {
     if (opts.lum.to) hsl[2] = min(cmin, opts.lum.to)
     if (opts.lum.by) hsl[2] = min(cmin, hsl[2] * opts.lum.by)
   }
-
   return HSLToHex(hsl)
 }
 
