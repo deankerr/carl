@@ -50,7 +50,7 @@ export function lake(pts: Set<Point>, O2: O2Module) {
   // dish.never = never
   dish.initialize(pts, 'alive')
 
-  dish.randomize(85)
+  dish.randomize(80)
   dish.inspect((pt, cell) => (cell === 'alive' ? water(pt) : ground(pt)))
   O2.snapshot('Randomize')
 
@@ -59,7 +59,7 @@ export function lake(pts: Set<Point>, O2: O2Module) {
     return 'dead'
   }
 
-  dish.generation(5, 8)
+  dish.generation(6, 8)
   dish.inspect((pt, cell) => (cell === 'alive' ? water(pt) : ground(pt)))
   O2.snapshot('Cell Gen 1')
 
@@ -85,7 +85,6 @@ class CellDish {
 
   initialize(points: Set<Point>, to: Cell) {
     points.forEach(pt => this.current.set(pt, to))
-    console.log('cell init')
   }
 
   randomize(p: number) {

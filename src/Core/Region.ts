@@ -152,7 +152,6 @@ export class Region {
     let max = 1000
     while (max-- > 0) {
       const pt = point(rnd(0, this.width - 1), rnd(0, this.height - 1))
-      console.log('this.terrainAt(pt).blocksMovement:', this.terrainAt(pt).blocksMovement)
       if (this.terrainAt(pt).blocksMovement) continue
       return pt
     }

@@ -13,6 +13,7 @@ import {
   Atlas,
   Entity,
   ActionTypes,
+  Visualize,
 } from './'
 
 export class Engine {
@@ -48,7 +49,7 @@ export class Engine {
     this.system.init()
     listen(this.update.bind(this))
     console.log(this)
-    if (CONFIG.autoStartVisualizer) this.visualizer(true)
+    if (CONFIG.autoStartVisualizer) this.visualizer(Visualize('init'))
   }
 
   update(event: KeyboardEvent) {
@@ -77,7 +78,7 @@ export class Engine {
     else requestAnimationFrame(this.render.bind(this))
   }
 
-  visualizer(vis: ActionTypes | true) {
+  visualizer(vis: ActionTypes) {
     if (this.atlas.local().visualizer === undefined) return false
     const result = this.atlas.local()?.visualizer?.run(vis)
     return result

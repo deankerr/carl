@@ -1,6 +1,6 @@
 import { EntityTemplate } from '../Core'
 
-export type FlameKey = 'flames' | 'blueFlames' | 'greenFlames' | 'magentaFlames'
+export type FlameKey = 'flames' | 'blueFlames' | 'greenFlames' | 'magentaFlames' | 'redFlames'
 
 const flames: EntityTemplate = {
   label: 'flames',
@@ -32,5 +32,23 @@ const magentaFlames: EntityTemplate = {
   form: ['flames1', '#FF00FF'],
 }
 
-export const flameVariants: EntityTemplate[] = [flames, blueFlames, greenFlames, magentaFlames]
-export const flameKeys: FlameKey[] = ['flames', 'blueFlames', 'greenFlames', 'magentaFlames']
+const redFlames: EntityTemplate = {
+  ...flames,
+  label: 'redFlames',
+  form: ['flames1', '#FF0000'],
+}
+
+export const flameVariants: EntityTemplate[] = [
+  flames,
+  blueFlames,
+  greenFlames,
+  magentaFlames,
+  redFlames,
+]
+export const flameKeys: FlameKey[] = [
+  'flames',
+  'blueFlames',
+  'greenFlames',
+  'magentaFlames',
+  'redFlames',
+]

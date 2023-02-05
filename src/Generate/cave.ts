@@ -10,12 +10,6 @@ import { lake, flood } from './modules/flood'
 import { hop } from './modules/walk'
 import { Overseer2 } from './Overseer2'
 
-// palette = {
-//   solid: '#342f37',
-//   ground: '#251316',
-//  unknown: '#1d191f'
-// }
-
 export function cave(
   width = floor(CONFIG.mainDisplayWidth * 1.5),
   height = floor(CONFIG.mainDisplayHeight * 1.5)
@@ -35,10 +29,8 @@ export function cave(
 
   const { being, feature, snap } = O2.module()
 
-  const lakeSeed = new Set<Point>()
-
-  const seed1 = flood(region.rndWalkable(), 7, O2.module())
-  const seed2 = flood(region.rndWalkable(), 7, O2.module())
+  const seed1 = flood(region.rndWalkable(), 11, O2.module())
+  const seed2 = flood(region.rndWalkable(), 9, O2.module())
   const seed3 = flood(region.rndWalkable(), 9, O2.module())
   const seed4 = flood(region.rndWalkable(), 11, O2.module())
 
@@ -65,12 +57,12 @@ export function cave(
   snapC()
   hop(4, 4, 4, region.rndWalkable.bind(region), being('scorpion'))
   snapC()
-  hop(4, 5, 4, rect.center(), being('mozzie'))
+  hop(4, 5, 4, region.rndWalkable.bind(region), being('mozzie'))
   snapC()
 
   const snapF = snap('Start fires')
-  repeat(10, () => {
-    feature(pick(flameKeys))(region.rndWalkable())
+  repeat(2, () => {
+    flameKeys.forEach(k => feature(k)(region.rndWalkable()))
     snapF()
   })
 

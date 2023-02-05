@@ -33,8 +33,8 @@ export class Visualizer {
     console.log('visualizer created')
   }
 
-  run(action: ActionTypes | true) {
-    if (action === true || ('visualize' in action && !this.active)) {
+  run(action: ActionTypes) {
+    if ('visualize' in action && !this.active) {
       console.log('vis init')
       this.engine.local = this.mirror
       this.engine.mainDisplay.setOptions({ width: this.mirror.width, height: this.mirror.height })
@@ -64,7 +64,7 @@ export class Visualizer {
     if (!this.playing || this.index + 1 >= this.history.length) {
       this.mirror.name = 'Complete'
       this.mirror.hasChanged = true
-      if (CONFIG.visualizerAutoClose) this.exit()
+      if (CONFIG.visualizerAutoClose) setTimeout(this.exit.bind(this), 4000)
       return
     }
     this.index++
@@ -126,7 +126,7 @@ export class Visualizer {
 
       this.built.push(h)
     }
-    console.log('this.built:', this.built)
+    // console.log('this.built:', this.built)
   }
 
   exit() {
