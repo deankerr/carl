@@ -20,7 +20,10 @@ export class Region {
   entities: Entity[] = []
   turnQueue = new Queue<number>()
 
-  seenByPlayer = new Set<Point>()
+  // player info
+  areaVisible = new Map<Point, boolean>()
+  areaKnown = new Map<Point, boolean>()
+
   recallAll = CONFIG.recallAll
   revealAll = CONFIG.revealAll
 
@@ -43,35 +46,6 @@ export class Region {
     player?: Entity
   ) {
     this.createPlayer(player)
-  }
-
-  renderAll(
-    callback: (pt: Point, entities: Entity[], visible: boolean, recalled: boolean) => unknown
-  ) {
-    const player = this.player().fieldOfView
-    pointRect(0, 0, this.width, this.height, pt => {
-      const entities = this.at(pt)
-      const visible = player.visible.has(pt)
-      const recalled = this.seenByPlayer.has(pt)
-      callback(pt, entities, this.revealAll || visible, this.recallAll || recalled)
-    })
-  }
-
-  renderAt(
-    pt: Point,
-    callback: (
-      entities: Entity[],
-      visible: boolean,
-      recalled: boolean,
-      lighting: Color | undefined
-    ) => unknown
-  ) {
-    const entities = this.at(pt)
-    const visible = this.player().fieldOfView.visible.has(pt)
-    const recalled = this.seenByPlayer.has(pt)
-    const lighting = this.lighting.get(pt)
-
-    callback(entities, this.revealAll || visible, this.recallAll || recalled, lighting)
   }
 
   //  * Entity Management
@@ -165,33 +139,6 @@ export class Region {
     const entities = this.at(point(x, y))
     return !entities.some(e => e.blocksLight)
   }
-
-  // voidTiles() {
-  //   const visible = { char: 'v', color: this.voidColor, bgColor: this.voidColor }
-
-  //   const recalledColor = transformHSL(this.voidColor, {
-  //     sat: { by: 0.9, min: 0 },
-  //     lum: { by: 0.95, min: 0 },
-  //   })
-  //   const recalled = { ...visible, color: recalledColor, bgColor: recalledColor }
-
-  //   const unrevealed = {
-  //     char: 'v',
-  //     color: this.voidColorUnrevealed,
-  //     bgColor: this.voidColorUnrevealed,
-  //   }
-
-  //   return { visible, recalled, unrevealed }
-  // }
-
-  // voidAt(pt: Point) {
-  //   const tiles = this.voidTiles()
-
-  //   const visible = this.player().fieldOfView.visible.has(pt)
-  //   const recalled = this.seenByPlayer.has(pt)
-
-  //   return visible ? tiles.visible : recalled ? tiles.recalled : tiles.unrevealed
-  // }
 
   rndWalkable() {
     let pt = point(rnd(0, this.width - 1), rnd(0, this.height - 1))

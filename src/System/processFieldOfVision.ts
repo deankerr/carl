@@ -6,7 +6,6 @@ import { point, Point } from '../Model/Point'
 
 export const processFieldOfVision = (engine: Engine) => {
   const log = logger('sys', 'turn', 'processFieldOfVision')
-  // *** currently updating all entities' fov each turn ***
   const { local } = engine
 
   const entities = local
@@ -35,8 +34,12 @@ export const processFieldOfVision = (engine: Engine) => {
     // player specific
     if (entity.playerControlled) {
       // update level memory
-      const revealed = new Set<Point>([...local.seenByPlayer, ...visible])
-      local.seenByPlayer = revealed
+      local.areaVisible.clear()
+      console.log('local:', local)
+      for (const pt of visible) {
+        local.areaKnown.set(pt, true)
+        local.areaVisible.set(pt, true)
+      }
     }
   }
 

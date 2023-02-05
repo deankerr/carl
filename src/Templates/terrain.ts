@@ -82,7 +82,7 @@ export const terrain: EntityTemplate[] = [
     label: 'ground',
     name: ['ground'],
     form: ['solid', '#000'],
-    tag: ['terrain'],
+    tag: ['terrain', 'renderUnderBeing'],
   },
   {
     label: 'unknown',

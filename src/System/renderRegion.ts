@@ -47,74 +47,76 @@ export function renderRegion(engine: Engine) {
   // replace any void terrain with these locally colored ones
   // const voidTerrain = local.voidTiles()
 
-  const ground = local.pool.symbolic('ground').form
-  const grc = transformHSL(ground.color, {
-    sat: { by: 0.9, min: 0 },
-    lum: { by: 0.95, min: 0 },
-  })
-  const groundRecalled = { ...ground, color: grc, bgColor: grc }
-  const unknown = local.pool.symbolic('unknown').form
+  const ground = local.pool.symbolic('ground')
+  const unknown = local.pool.symbolic('unknown')
+
+  const { areaKnown, areaVisible, lighting } = local
+  const entities = local.get('position')
 
   mainDisplay.clear()
 
   // Iterate through the visible set of points the size of the main display
   viewportRect.traverse(viewPt => {
-    // const voidTile =
-    local.renderAt(viewPt.add(-offsetX, -offsetY), (entities, visible, recalled, lighting) => {
-      const stack =
-        visible || recalled
-          ? [
-              visible ? ground : recalled ? ground : unknown,
-              ...entities
-                // 1. remove void terrain
-                .filter(e => e.label !== 'void')
-                // 2. determine which beings are to be rendered
-                .filter(e => {
-                  if (visible) {
-                    const beingPresent = entities.some(e => e.being)
-                    // if player can see the area, render beings + renderUnderBeings flagged
-                    if (e.being) return true
-                    else if (beingPresent) {
-                      return e.renderUnderBeing
-                    } else return true
-                  } else if (recalled) {
-                    // if area remembered, render just terrain + memorable features
-                    return e.terrain || e.memorable
-                  }
-                  // if not visible or recalled, render nothing
-                  return false
-                })
-                // 3. sort beings on top, then features, terrain
-                .sort((a, b) => zLevel(a) - zLevel(b))
-                // 4. extract relevant display data, applying lighting or fade effects
-                .map(e => {
-                  const form = { char: e.form.char, color: e.form.color, bgColor: e.form.bgColor }
-                  if (visible) {
-                    // don't add light to something that is emitting light, which can look bad
-                    if (lighting && !e.emitLight?.enabled)
-                      form.color = addLight(form.color, lighting)
-                  } else if (recalled) {
-                    form.color = transformHSL(form.color, recalledFade)
-                    if (form.bgColor !== 'transparent')
-                      form.bgColor = transformHSL(form.bgColor, recalledFade)
-                  }
-                  return form
-                }), // ? sort
-            ]
-          : [unknown]
+    // the region location to render here
+    const pt = viewPt.add(-offsetX, -offsetY)
 
-      // abort if we somehow ended up with nothing or ROT.JS will error
-      if (stack.length === 0) return
+    const known = local.revealAll || local.recallAll || (areaKnown.get(pt) ?? false)
+    const visible = local.revealAll || (areaVisible.get(pt) ?? false)
+
+    if (!known) {
+      // unrevealed area
+      mainDisplay.draw(viewPt.x, viewPt.y, unknown.form.char, unknown.form.color, null)
+    } else {
+      // currently visible
+      const stack: Entity[] = [ground]
+      const here = entities.filter(e => e.position === pt)
+
+      const terrain = local.terrainMap.get(pt)
+      const features = here.filter(e => e.feature)
+
+      if (visible) {
+        // only render beings if area visible
+        const beings = here.filter(e => e.being)
+
+        if (beings.length > 0) {
+          // only render tagged terrain/features under beings
+          if (terrain && terrain.renderUnderBeing) stack.push(terrain)
+          if (features.length > 0) stack.push(...features.filter(f => f.renderUnderBeing))
+          stack.push(...beings)
+        } else {
+          // no beings, render everything
+          if (terrain) stack.push(terrain)
+          if (features.length > 0) stack.push(...features)
+        }
+      } else {
+        // area previously seen, render terrain and memorable features
+        if (terrain) stack.push(terrain)
+        stack.push(...features.filter(f => f.memorable))
+      }
+
+      // sort z-levels
+      stack.sort((a, b) => zLevel(a) - zLevel(b))
+
+      // extract form data, applying lighting/fade if applicable
+      const formStack = stack.map(e => {
+        const form = { ...e.form }
+        if (visible && lighting.has(pt)) {
+          form.color = addLight(form.color, lighting.get(pt) ?? [0, 0, 0])
+        } else if (known && !visible) {
+          form.color = transformHSL(form.color, recalledFade)
+        }
+        return form
+      })
 
       // draw
       mainDisplay.draw(
         viewPt.x,
         viewPt.y,
-        stack.map(s => s.char),
-        stack.map(s => s.color),
-        stack.map(s => s.bgColor)
+        formStack.map(s => s.char),
+        formStack.map(s => s.color),
+        formStack.map(s => s.bgColor)
       )
-    })
+    }
   })
 }
 
