@@ -1,8 +1,8 @@
 // const PROD = import.meta.env.PROD
 
 const appInitial = 'game'
-const seed = 1235
-// const seed = null
+// const seed = 1235
+const seed = null
 
 // 59 x 29 | 69 x 35 | 79 x 39 ?
 const mainDisplayWidth = 69
@@ -33,6 +33,7 @@ const playerLight = false
 const initialDomain = parseInt(localStorage.getItem('initialDomain') ?? '2')
 
 const autoStartVisualizer = true
+const visualizerAutoClose = true
 // const visualizerAutoplay = true
 
 const CONFIG = {
@@ -56,6 +57,7 @@ const CONFIG = {
   playerLight,
   initialDomain,
   autoStartVisualizer,
+  visualizerAutoClose,
   // visualizerAutoplay,
 }
 

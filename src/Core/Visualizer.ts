@@ -13,7 +13,7 @@ export class Visualizer {
   player: Entity
   active = false
 
-  speed = 250
+  speed = 550
   index = 0
   playing = false
 
@@ -54,14 +54,7 @@ export class Visualizer {
         if (dir === 'E') this.forward()
         return true
       }
-      console.log('vis exit')
-      this.engine.mainDisplay.setOptions({
-        width: CONFIG.mainDisplayWidth,
-        height: CONFIG.mainDisplayHeight,
-      })
-      this.active = false
-      this.engine.local = this.engine.atlas.local()
-      this.engine.local.hasChanged = true
+      this.exit()
     }
 
     return false
@@ -71,6 +64,7 @@ export class Visualizer {
     if (!this.playing || this.index + 1 >= this.history.length) {
       this.mirror.name = 'Complete'
       this.mirror.hasChanged = true
+      if (CONFIG.visualizerAutoClose) this.exit()
       return
     }
     this.index++
@@ -87,6 +81,14 @@ export class Visualizer {
       const t = terrain.get(pt)
       if (t) this.mirror.createTerrain(t, pt)
     })
+
+    for (const [pt, f] of features) {
+      this.mirror.createTerrain(f, pt)
+    }
+
+    for (const [pt, b] of beings) {
+      this.mirror.createTerrain(b, pt)
+    }
   }
 
   back() {
@@ -126,13 +128,15 @@ export class Visualizer {
     }
     console.log('this.built:', this.built)
   }
-}
 
-// function clone(g: GenHistory) {
-//   return {
-//     terrain: new Map([...g.terrain]),
-//     features: new Map([...g.features]),
-//     beings: new Map([...g.beings]),
-//     message: g.message,
-//   }
-// }
+  exit() {
+    console.log('vis exit')
+    this.engine.mainDisplay.setOptions({
+      width: CONFIG.mainDisplayWidth,
+      height: CONFIG.mainDisplayHeight,
+    })
+    this.active = false
+    this.engine.local = this.engine.atlas.local()
+    this.engine.local.hasChanged = true
+  }
+}
