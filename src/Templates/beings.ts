@@ -12,6 +12,7 @@ export type BeingKey =
   | 'bloodGull'
   | 'warboy'
   | 'scorpion'
+  | 'mozzie'
 
 export const beings: EntityTemplate[] = [
   {
@@ -83,5 +84,13 @@ export const beings: EntityTemplate[] = [
     tag: ['actor', 'blocksMovement', 'being'],
     formSet: [['scorpion1', '', '', 'scorpion2', '', '']],
     formSetAutoCycle: [1000],
+  },
+  {
+    label: 'mozzie',
+    name: ['mozzies'],
+    form: ['mozzie1', '#CC0000'],
+    tag: ['actor', 'blocksMovement', 'being'],
+    formSet: [['mozzie1', '', '', 'mozzie2', '', '']],
+    formSetAutoCycle: [60],
   },
 ]

@@ -89,4 +89,6 @@ export const tileMapOryxMain = {
   tick2: mapChar(26, 3, t),
   scorpion1: mapChar(0, 8, t),
   scorpion2: mapChar(1, 8, t),
+  mozzie1: mapChar(2, 8, t),
+  mozzie2: mapChar(3, 8, t),
 } satisfies { [key: string]: [number, number] }

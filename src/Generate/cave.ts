@@ -40,8 +40,10 @@ export function cave(width = 200, height = 100) {
     feature('cactus')(region.rndWalkable())
   })
   snap('fire')
-
   feature('shrub')
+
+  hop(1, 5, 4, rect.center(), being('mozzie'))
+
   O2.finalize()
   return region
 }
