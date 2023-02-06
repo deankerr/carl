@@ -91,4 +91,5 @@ export const tileMapOryxMain = {
   void: mapChar(13, 0, t),
   wall: mapChar(0, 2, t),
   water: mapChar(0, 1, t),
+  web: mapChar(24, 8, t),
 } satisfies { [key: string]: [number, number] }

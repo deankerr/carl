@@ -20,6 +20,7 @@ export type TerrainKey =
   | 'solid'
   | 'unknown'
   | 'caveWall'
+  | 'web'
 
 export const terrain: EntityTemplate[] = [
   {
@@ -78,6 +79,12 @@ export const terrain: EntityTemplate[] = [
     name: ['wall'],
     form: ['caveWall', '#6c373c', '#221e24'],
     tag: ['blocksMovement', 'terrain'],
+  },
+  {
+    label: 'web',
+    name: ['web'],
+    form: ['web', '#EEE'],
+    tag: ['terrain'],
   },
   {
     label: 'solid',

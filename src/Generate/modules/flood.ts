@@ -1,12 +1,57 @@
-import { Region } from '../../Core'
-import { Queue, rnd } from '../../lib/util'
+import { Entity, EntityKey, Region } from '../../Core'
+import { loop, Queue, rnd } from '../../lib/util'
 import { point, Point, pointRect } from '../../Model/Point'
 import { Rect } from '../../Model/Rectangle'
 import { O2Module } from '../Overseer2'
 
-export function flood(startPt: Point, maxSize: number, O2: O2Module) {
+export function* floodWalkable(startPt: Point, O2: O2Module) {
+  const { region } = O2
+  const queue = new Queue<Point>(startPt)
+  const checked = new Set<Point>()
+  const nextRing = new Set<Point>()
+
+  while (queue.queue.length > 0) {
+    const pt = queue.next()
+    if (!pt) return startPt
+
+    checked.add(pt)
+
+    if (!region.terrainAt(pt).blocksMovement) {
+      yield pt
+
+      pt.neighbours8().forEach(npt => {
+        if (!checked.has(npt) && !queue.queue.includes(npt)) {
+          nextRing.add(npt)
+        }
+      })
+    }
+
+    if (queue.queue.length < 1) {
+      queue.queue = [...nextRing]
+      nextRing.clear()
+    }
+  }
+  return startPt
+}
+
+export function rndCluster(amount: number, O2: O2Module) {
+  const flood = floodWalkable(O2.region.rndWalkable(), O2)
+  const results: Point[] = []
+  loop(amount, () => {
+    results.push(flood.next().value)
+  })
+  return results
+}
+
+export function flood(
+  startPt: Point,
+  maxSize: number,
+  O2: O2Module,
+  key: EntityKey,
+  avoid?: string
+) {
   const region = O2.region
-  const water = O2.terrain('water')
+  const water = O2.terrain(key)
 
   const queue = new Queue<Point>()
   const checked = new Set<Point>()
@@ -21,12 +66,13 @@ export function flood(startPt: Point, maxSize: number, O2: O2Module) {
     if (!pt) break
 
     checked.add(pt)
-    if (!O2.region.terrainAt(pt).blocksMovement) {
+    const tHere = region.terrainAt(pt)
+    if (!tHere.blocksMovement && tHere.label !== avoid) {
       water(pt)
       success.add(pt)
 
       pt.neighbours8().forEach(npt => {
-        if (!checked.has(npt)) neighbours.add(npt)
+        if (!checked.has(npt) && !queue.queue.includes(npt)) neighbours.add(npt)
       })
     }
 
@@ -41,8 +87,8 @@ export function flood(startPt: Point, maxSize: number, O2: O2Module) {
   return success
 }
 
-export function lake(pts: Set<Point>, O2: O2Module) {
-  const water = O2.terrain('water')
+export function lake(pts: Set<Point>, O2: O2Module, key: EntityKey) {
+  const water = O2.terrain(key)
   const ground = O2.terrain('ground')
 
   const dish = new CellDish()

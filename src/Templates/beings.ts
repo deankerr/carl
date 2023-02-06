@@ -25,7 +25,7 @@ export const beings: EntityTemplate[] = [
   {
     label: 'spider',
     name: ['spider'],
-    form: ['spider', '#29adff'],
+    form: ['spider', '#91ff00'],
     tag: ['actor', 'blocksMovement', 'being'],
   },
   {

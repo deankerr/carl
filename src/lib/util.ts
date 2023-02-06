@@ -78,7 +78,7 @@ export const repeat = (times: number, callback: (i: number) => unknown) => {
 
 // same as above with shorter name and zero times does nothing
 export const loop = (times: number, callback: (i: number) => unknown) => {
-  for (let i = 0; i <= times; i++) {
+  for (let i = 0; i < times; i++) {
     if (callback(i)) break
   }
 }
@@ -95,6 +95,10 @@ export function* range(n: number, max?: number, step = 1) {
 export class Queue<T> {
   queue: T[] = []
   repeat: T[] = []
+
+  constructor(...init: T[]) {
+    if (init.length > 0) this.queue = init
+  }
 
   add(item: T, repeat = false) {
     this.queue.push(item)

@@ -51,7 +51,7 @@ function main(engine: Engine, n: number) {
 
   if (n === 99) {
     size.width = engine.local.width
-    size.height = floor(size.width / 2.02)
+    size.height = engine.local.height
   } else if (n < 0 || n > 0) {
     size.width = mainDisplay.getOptions().width + 10 * n
     size.height = floor(size.width / 2.02)

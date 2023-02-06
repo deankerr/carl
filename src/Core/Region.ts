@@ -39,7 +39,7 @@ export class Region {
     readonly pool: EntityPool,
     player?: Entity
   ) {
-    // this.createPlayer(player)
+    if (player) this.createPlayer(player)
   }
 
   //  * Entity Management
