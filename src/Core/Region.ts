@@ -5,14 +5,6 @@ import { Point, point, pointRect } from '../Model/Point'
 import { Entity, EntityPool, EntityKey, EntityWith } from './Entity'
 import { Visualizer } from './Visualizer'
 
-/*
-
-  areaVisible = new Map<Point, boolean>()
-  areaKnown = new Map<Point, boolean>()
-  areaTransparent = new Map<Point, boolean>()
-
-*/
-
 export class Region {
   name = 'Somewhere'
 

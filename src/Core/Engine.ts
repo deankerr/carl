@@ -58,7 +58,6 @@ export class Engine {
 
     if (this.visualizer(action)) return
 
-    // console.log('eng action:', action)
     if ('ui' in action) return UI(this, action.ui)
 
     if ('changeRegion' in action || 'changeDomain' in action) {

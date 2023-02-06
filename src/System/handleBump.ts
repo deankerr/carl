@@ -1,4 +1,3 @@
-// import { tagMeleeAttackTarget, acting, tagWalkable, tagDoorOpen, tagLightPathUpdated } from '../Component'
 import * as Action from '../Core/Action'
 import { Engine } from '../Core/Engine'
 import { logger } from '../lib/logger'

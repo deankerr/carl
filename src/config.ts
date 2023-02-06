@@ -4,7 +4,6 @@ const appInitial = 'game'
 // const seed = 1235
 const seed = null
 
-// 59 x 29 | 69 x 35 | 79 x 39 ?
 const mainDisplayWidth = 69
 const mainDisplayHeight = 35
 
@@ -12,10 +11,8 @@ const messageDisplayWidth = 69
 const messageDisplayHeight = 35
 const messageBufferDisplaySize = 5
 
-// const generateWidth = mainDisplayWidth
-// const generateHeight = mainDisplayHeight
-const generateWidth = 120
-const generateHeight = 120
+const generateWidth = 103 // approx 1.5 times graphical display size
+const generateHeight = 53
 
 const setMainToMapSize = false
 
@@ -28,13 +25,11 @@ const htmlBackgroundColor = '#000000'
 const frameLimit = 0
 const recallAll = false
 const revealAll = localStorage.getItem('revealAll') === 'true'
-const playerLight = false
 
 const initialDomain = parseInt(localStorage.getItem('initialDomain') ?? '2')
 
 const autoStartVisualizer = true
 const visualizerAutoClose = true
-// const visualizerAutoplay = true
 
 const CONFIG = {
   appInitial,
@@ -54,11 +49,9 @@ const CONFIG = {
   frameLimit,
   recallAll,
   revealAll,
-  playerLight,
   initialDomain,
   autoStartVisualizer,
   visualizerAutoClose,
-  // visualizerAutoplay,
 }
 
 export { CONFIG }

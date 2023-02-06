@@ -18,12 +18,7 @@ export function desert(width = CONFIG.generateWidth, height = CONFIG.generateHei
 
   const region = new Region(width, height, window.game.pool)
   const O2 = new Overseer2(region)
-  // region.voidColor = '#bfa640'
-  // region.voidColor = '#bb6244'
-  // region.voidColor = '#e6ce80'
-  // region.voidColorUnrevealed = '#31261b'
   region.name = 'Arid ZoneA'
-  // region.voidColor = '#000'
   region.palette.ground = '#e6ce80'
   region.palette.unknown = '#31261b'
 
@@ -33,7 +28,7 @@ export function desert(width = CONFIG.generateWidth, height = CONFIG.generateHei
 
   const center = point(half(width), half(height))
 
-  repeat(2, () => {
+  repeat(1, () => {
     walk(24, 200, rndPt, terrain('deadGrass'), snap('dead grass'))
     hop(10, 10, 5, rndPt, terrain('grass'), snap('grass'))
     hop(6, 4, 12, rndPt, terrain('shrub'), snap('shrubs'))
@@ -43,11 +38,11 @@ export function desert(width = CONFIG.generateWidth, height = CONFIG.generateHei
   })
 
   repeat(1, () => {
-    hop(8, 4, 4, rndPt, being('snake'), snap('snakes'))
-    hop(8, 4, 4, rndPt, being('bloodGull'), snap('gulls'))
-    hop(8, 4, 4, rndPt, being('spider'), snap('spiders'))
-    hop(8, 4, 4, rndPt, being('warboy'), snap('warboys'))
-    hop(8, 4, 4, rndPt, being('scorpion'), snap('scorpions'))
+    hop(2, 4, 3, rndPt, being('snake'), snap('snakes'))
+    hop(2, 4, 3, rndPt, being('bigMozzie'), snap('mozzies'))
+    hop(2, 4, 3, rndPt, being('spider'), snap('spiders'))
+    hop(2, 4, 3, rndPt, being('warboy'), snap('warboys'))
+    hop(2, 4, 3, rndPt, being('scorpion'), snap('scorpions'))
   })
 
   O2.finalize()

@@ -9,9 +9,9 @@ export type BeingKey =
   | 'crab'
   | 'crab2'
   | 'snake'
-  | 'bloodGull'
   | 'warboy'
   | 'scorpion'
+  | 'bigMozzie'
   | 'mozzie'
 
 export const beings: EntityTemplate[] = [
@@ -21,9 +21,6 @@ export const beings: EntityTemplate[] = [
     form: ['@', '#EE82EE'],
     tag: ['playerControlled', 'actor', 'blocksMovement', 'being', 'signalUpdatePlayerFOV'],
     fieldOfView: [16],
-    // emitLight: ['auto', CONFIG.playerLight],
-    // lightFlicker: [120],
-    // lightHueRotate: [0.02],
   },
   {
     label: 'spider',
@@ -61,17 +58,10 @@ export const beings: EntityTemplate[] = [
     form: ['snake', '#32cd32'],
     tag: ['actor', 'blocksMovement', 'being'],
   },
-  {
-    label: 'bloodGull',
-    name: ['blood gull'],
-    form: ['gull1', '#CC0000'],
-    tag: ['actor', 'blocksMovement', 'being'],
-    formSet: [['gull1', '', '', 'gull2', '', '']],
-    formSetAutoCycle: [150],
-  },
+
   {
     label: 'warboy',
-    name: ['warfestus'],
+    name: ['warboy'],
     form: ['tick1', '#9e0052'],
     tag: ['actor', 'blocksMovement', 'being'],
     formSet: [['tick1', '', '', 'tick2', '', '']],
@@ -84,6 +74,14 @@ export const beings: EntityTemplate[] = [
     tag: ['actor', 'blocksMovement', 'being'],
     formSet: [['scorpion1', '', '', 'scorpion2', '', '']],
     formSetAutoCycle: [1000],
+  },
+  {
+    label: 'bigMozzie',
+    name: ['mozzie queen'],
+    form: ['bigMozzie1', '#CC0000'],
+    tag: ['actor', 'blocksMovement', 'being'],
+    formSet: [['bigMozzie1', '', '', 'bigMozzie2', '', '']],
+    formSetAutoCycle: [150],
   },
   {
     label: 'mozzie',

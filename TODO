@@ -1,15 +1,7 @@
 # TODO
 
-# Region/Overseer
-
-- Quick access to !!visibility!!, walkability (solid/floor?)
-- Default floor (/solid?)
-- ? Quick access to entity positions?
-- Cell dirty flag? - render info
-
 ## Soon
 
-- Refactor Game - extract meta action processing (UI etc), clarify system loop
 - stairs to Prefab ruin1 above outdoor, render outdoor "below"
 - Domains: generate levels with "set piece" connectors, or auto depth stairs. Component on connector describes where it leads
 - Refactor Level, generators to properly support domain switching/implement domain connection schema
@@ -23,18 +15,13 @@
 - Add more decoration terrain/items/void decor - reeds
 - Create logger, Exception handling
 - render: move to key + lookup table, allow easier pallette switching.
-- Async update loop
 - (W)alk/autoexplore
 - ??? Patch ROT.JS to handle drawOver tiles? ???
 - light bleeds slightly into void?
 - Unify function declaration style
 - Refactor Generate to improvement corridor placement, flexibility, visualizer integration into Game, entity generation
-- ?xxx Refactor world.here() result from tuple to object for better clarity
-- Clean up CONFIG
 - Viewport doesn't move until you are closer to the side
 - Dev/Prod Configs
-- ?tagCurrentTurn/acting components redundant
-- enemy: chuckler, beetle, horsefly
 - level: voronoi map - bee hive/crystal cavern
 - Standard colors (standard sat/lum?)
 - vignette/player position effects luminance level wide
@@ -43,7 +30,4 @@
 
 # Known Bugs
 
-- Levels don't start on player turn after gen/level change
-- Apostrophe missing in msg charset
-- Message entity colors rematches names that are substrings of other names
-- Message entity colors don't fade away completely like normal text
+- mozzies
