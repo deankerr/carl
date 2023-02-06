@@ -1,3 +1,4 @@
+import { Entity, EntityWith } from '../Core'
 import { Engine } from '../Core/Engine'
 // import { logger } from '../lib/logger'
 
@@ -5,7 +6,7 @@ export function processFormUpdate(engine: Engine) {
   // const log = logger()
   const { local, options } = engine
   if (!options.formUpdate) return
-
+  let changed = false
   // iterate through each entity with triggers, if a matching tag is found, update the entity's
   // form to the relevant set
   const setTriggers = local.get('formSet', 'formSetTriggers')
@@ -23,6 +24,7 @@ export function processFormUpdate(engine: Engine) {
 
         local.entity(entity).modify('form', ...newForm)
       }
+      changed = true
     })
   }
 
@@ -44,6 +46,28 @@ export function processFormUpdate(engine: Engine) {
         .entity(entity)
         .modify('form', ...newForm)
         .modify('formSetAutoCycle', cycle.frequency, i, Date.now())
+      changed = true
     }
   }
+
+  // quick hack to animate water
+  const water = local.pool.symbolic('water') as EntityWith<Entity, 'formSet' | 'formSetAutoCycle'>
+  const { form, formSet, formSetAutoCycle: cycle } = water
+  if (Date.now() - cycle.lastUpdate > cycle.frequency) {
+    const nextI = cycle.current + 3
+    const i = nextI >= formSet.length ? 0 : nextI
+
+    const newForm = [
+      formSet[i] === '' ? form.char : formSet[i],
+      formSet[i + 1] === '' ? form.color : formSet[i + 1],
+      formSet[i + 2] === '' ? form.bgColor : formSet[i + 2],
+    ] as [string, string, string]
+
+    water.form.char = formSet[i]
+    water.formSetAutoCycle.current = i
+    water.formSetAutoCycle.lastUpdate = Date.now()
+    changed = true
+  }
+
+  if (changed) local.hasChanged = true
 }

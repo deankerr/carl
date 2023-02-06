@@ -48,7 +48,7 @@ export function flood(
   maxSize: number,
   O2: O2Module,
   key: EntityKey,
-  avoid?: string
+  avoid?: string[]
 ) {
   const region = O2.region
   const water = O2.terrain(key)
@@ -67,7 +67,7 @@ export function flood(
 
     checked.add(pt)
     const tHere = region.terrainAt(pt)
-    if (!tHere.blocksMovement && tHere.label !== avoid) {
+    if (!tHere.blocksMovement && !avoid?.includes(tHere.label)) {
       water(pt)
       success.add(pt)
 

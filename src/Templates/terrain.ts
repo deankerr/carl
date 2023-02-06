@@ -21,6 +21,7 @@ export type TerrainKey =
   | 'unknown'
   | 'caveWall'
   | 'web'
+  | 'sand'
 
 export const terrain: EntityTemplate[] = [
   {
@@ -39,8 +40,10 @@ export const terrain: EntityTemplate[] = [
   {
     label: 'water',
     name: ['water'],
-    form: ['water', '#40a3e5'], //  bg '#070f31'
+    form: ['water1', '#40a3e5', '#020927'], //  bg '#070f31'
     tag: ['terrain'],
+    formSet: [['water1', '', '', 'water2', '', '']],
+    formSetAutoCycle: [1000],
     // trodOn: ['You tread water.'],
   },
   {
@@ -67,7 +70,7 @@ export const terrain: EntityTemplate[] = [
   { label: 'deadGrass', name: ['dead grass'], form: ['deadGrass', '#664f47'], tag: ['terrain'] },
   { label: 'mound', name: ['mound'], form: ['mound', '#4d372a'], tag: ['blocksLight', 'terrain'] },
   { label: 'peak', name: ['peak'], form: ['peak', '#004027'], tag: ['blocksLight', 'terrain'] },
-  { label: 'deadGrassD', name: ['dead grass'], form: ['deadGrass', '#553930'], tag: ['terrain'] },
+  { label: 'sand', name: ['sand'], form: ['sand', '#7b600a'], tag: ['terrain'] }, // b99009
   {
     label: 'brick',
     name: ['bricks'],
@@ -84,6 +87,12 @@ export const terrain: EntityTemplate[] = [
     label: 'web',
     name: ['web'],
     form: ['web', '#EEE'],
+    tag: ['terrain'],
+  },
+  {
+    label: 'nest',
+    name: ['nest'],
+    form: ['nest', '#732b55'],
     tag: ['terrain'],
   },
   {
@@ -109,9 +118,8 @@ export const terrain: EntityTemplate[] = [
     name: ['endless void'],
     form: ['v', '#FF00FF'],
     tag: ['blocksLight', 'blocksMovement', 'terrain'],
-  }, //warfestus
+  },
 ]
-
 /*
   moved to dynamic palette
 

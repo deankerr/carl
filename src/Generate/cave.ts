@@ -11,8 +11,10 @@ import { hop } from './modules/walk'
 import { Overseer2 } from './Overseer2'
 
 export function cave(
-  width = floor(CONFIG.mainDisplayWidth * 1.5),
-  height = floor(CONFIG.mainDisplayHeight * 1.5)
+  // width = floor(CONFIG.mainDisplayWidth * 1.5),
+  // height = floor(CONFIG.mainDisplayHeight * 1.5)
+  width = CONFIG.mainDisplayWidth,
+  height = CONFIG.mainDisplayHeight
 ) {
   const region = new Region(width, height, window.game.pool)
   const O2 = new Overseer2(region)
@@ -27,22 +29,25 @@ export function cave(
   // cellular automata cave generation
   const grid = cellularGrid(width, height, 5, O2.module())
 
-  const { being, feature, terrain, snap } = O2.module()
-
-  const seed1 = flood(region.rndWalkable(), 11, O2.module(), 'water')
-  const seed2 = flood(region.rndWalkable(), 9, O2.module(), 'water')
-  const seed3 = flood(region.rndWalkable(), 9, O2.module(), 'water')
-  const seed4 = flood(region.rndWalkable(), 11, O2.module(), 'water')
-
-  lake(new Set([...seed1, ...seed2, ...seed3, ...seed4]), O2.module(), 'water')
-
   rect.traverse(pt => {
     if (region.terrainAt(pt).blocksMovement) {
       if (region.terrainAt(pt.add(0, 1)).blocksMovement) O2.terrain(pt, 'solid')
       else O2.terrain(pt, 'brick')
     }
   })
-  O2.snapshot('Style!')
+  O2.snapshot('Decorate')
+
+  const { being, feature, terrain, snap } = O2.module()
+
+  // const seed1 = flood(region.rndWalkable(), 11, O2.module(), 'water')
+  // const seed2 = flood(region.rndWalkable(), 9, O2.module(), 'water')
+  // const seed3 = flood(region.rndWalkable(), 9, O2.module(), 'water')
+  // const seed4 = flood(region.rndWalkable(), 11, O2.module(), 'water')
+  // lake(new Set([...seed1, ...seed2, ...seed3, ...seed4]), O2.module(), 'water')
+
+  const seed1 = flood(region.rndWalkable(), 12, O2.module(), 'water')
+  const seed2 = flood(region.rndWalkable(), 12, O2.module(), 'water')
+  lake(new Set([...seed1, ...seed2]), O2.module(), 'water')
 
   // O2.terrain(rect.center(), 'cactus')
   const snapC = snap('Friendly critters')
@@ -68,8 +73,8 @@ export function cave(
   //   })
   // })
 
-  const webArea = flood(region.rndWalkable(), 12, O2.module(), 'web', 'water')
-  const webArea2 = flood(region.rndWalkable(), 12, O2.module(), 'web', 'water')
+  const webArea = flood(region.rndWalkable(), 12, O2.module(), 'web', ['water'])
+  const webArea2 = flood(region.rndWalkable(), 12, O2.module(), 'web', ['water'])
   lake(new Set([...webArea, ...webArea2]), O2.module(), 'web')
 
   const pWebArea = shuffle([...webArea])
@@ -85,14 +90,24 @@ export function cave(
     if (pt) O2.being(pt, 'spider')
   })
   snapC()
-  // rndCluster(4, O2.module()).forEach(pt => O2.terrain(pt, 'web'))
 
-  // hop(2, 4, 3, region.rndWalkable.bind(region), being('spider'))
-  // snapC()
-  // hop(2, 4, 3, region.rndWalkable.bind(region), being('warboy'))
-  // snapC()
-  // hop(2, 4, 3, region.rndWalkable.bind(region), being('scorpion'))
-  // snapC()
+  const scorpF = flood(region.rndWalkable(), 12, O2.module(), 'sand', ['water', 'web'])
+  lake(scorpF, O2.module(), 'sand')
+  const sandArea = shuffle([...scorpF])
+  loop(9, () => {
+    const pt = sandArea.pop()
+    if (pt) O2.feature(pt, 'cactus')
+  })
+  loop(7, () => {
+    const pt = sandArea.pop()
+    if (pt) O2.being(pt, 'scorpion')
+  })
+  loop(1, () => {
+    const pt = sandArea.pop()
+    if (pt) O2.feature(pt, 'flames')
+  })
+  snapC()
+
   // hop(2, 4, 3, region.rndWalkable.bind(region), being('bigMozzie'))
   // hop(4, 5, 4, region.rndWalkable.bind(region), being('mozzie'))
   // snapC()

@@ -40,7 +40,7 @@ export function cellularGrid(width: number, height: number, times: number, O2: O
     })
 
     grid2.each((x, y, v) => (v ? wall(point(x, y)) : ground(point(x, y))))
-    // snap() //!
+    snap()
     grid1 = grid2
   })
   return grid2

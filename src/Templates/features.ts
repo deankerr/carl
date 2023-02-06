@@ -51,8 +51,8 @@ export const features: EntityTemplate[] = [
   {
     label: 'cactus',
     name: ['cactus'],
-    form: ['cactus', '#0f840f'],
-    tag: ['terrain'],
+    form: ['cactus', '#18d818'], //0f840f
+    tag: ['feature', 'memorable'],
     trodOn: ['You collect some cactus spines in your legs and arms.'],
   },
   {
