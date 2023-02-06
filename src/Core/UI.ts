@@ -1,4 +1,5 @@
 import { CONFIG } from '../config'
+import { floor } from '../lib/util'
 import { Engine } from './Engine'
 
 export function UI(engine: Engine, ui: string) {
@@ -22,14 +23,17 @@ export function UI(engine: Engine, ui: string) {
       options.lightingUpdate = !options.lightingUpdate
       msg = `animation: ${options.formUpdate}`
       break
-    case 'increaseMainDisplay':
+    case 'displayZoomIn':
       msg = main(engine, 1)
       break
-    case 'decreaseMainDisplay':
+    case 'displayZoomOut':
       msg = main(engine, -1)
       break
-    case 'resetMainDisplay':
+    case 'displayDefault':
       msg = main(engine, 0)
+      break
+    case 'displayRegion':
+      msg = main(engine, 99)
       break
     case 'debugMode':
       options.debugMode = !options.debugMode
@@ -45,9 +49,12 @@ function main(engine: Engine, n: number) {
   const { mainDisplay } = engine
   const size = { width: CONFIG.mainDisplayWidth, height: CONFIG.mainDisplayHeight }
 
-  if (n < 0 || n > 0) {
+  if (n === 99) {
+    size.width = engine.local.width
+    size.height = floor(size.width / 2.02)
+  } else if (n < 0 || n > 0) {
     size.width = mainDisplay.getOptions().width + 10 * n
-    size.height = Math.floor(size.width / 2.02)
+    size.height = floor(size.width / 2.02)
   }
 
   engine.mainDisplay.setOptions({ width: size.width, height: size.height })

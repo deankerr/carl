@@ -23,7 +23,7 @@ const messageBackgroundColor = 'transparent'
 const htmlBackgroundColor = '#000000'
 
 const frameLimit = 0
-const lightFlickerFreq = 180
+const lightFlickerFreq = 120
 const recallAll = false
 const revealAll = localStorage.getItem('revealAll') === 'true'
 

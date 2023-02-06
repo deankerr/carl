@@ -65,9 +65,10 @@ export function handle(event: KeyboardEvent): ActionTypes | undefined {
   if (shift && dev[code]) return dev[code]
 
   const dev2: KeyMap = {
-    Digit0: MetaUI('resetMainDisplay'),
-    Minus: MetaUI('decreaseMainDisplay'),
-    Equal: MetaUI('increaseMainDisplay'),
+    Digit9: MetaUI('displayRegion'),
+    Digit0: MetaUI('displayDefault'),
+    Minus: MetaUI('displayZoomOut'),
+    Equal: MetaUI('displayZoomIn'),
     Backquote: MetaUI('debugMode'),
   }
   if (dev2[code]) return dev2[code]

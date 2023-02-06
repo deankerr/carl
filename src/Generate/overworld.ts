@@ -7,10 +7,11 @@ import { Rect } from '../Model/Rectangle'
 import { Structure } from './structures/Structure'
 import { EntityKey } from '../Core/Entity'
 import { FeatureKey, TerrainKey } from '../Templates'
+import { CONFIG } from '../config'
 
 const flames: FeatureKey[] = ['flames', 'greenFlames', 'blueFlames', 'magentaFlames']
 // stairs/connectors?
-export function overworld(width = 120, height = 120) {
+export function overworld(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
   const t = Date.now()
 
   console.groupCollapsed('Generate Overworld')
