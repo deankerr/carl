@@ -78,9 +78,10 @@ export function cave(
   lake(new Set([...webArea, ...webArea2]), O2.module(), 'web')
 
   const pWebArea = shuffle([...webArea])
-  loop(5, () => {
+  loop(6, i => {
     const pt = pWebArea.pop()
-    if (pt) O2.being(pt, 'spider')
+    if (pt && i === 0) O2.feature(pt, 'greenFlames')
+    else if (pt) O2.being(pt, 'spider')
   })
   snapC()
 
@@ -102,7 +103,7 @@ export function cave(
     const pt = sandArea.pop()
     if (pt) O2.being(pt, 'scorpion')
   })
-  loop(1, () => {
+  loop(2, () => {
     const pt = sandArea.pop()
     if (pt) O2.feature(pt, 'flames')
   })
@@ -118,8 +119,6 @@ export function cave(
   //   snapF()
   // })
   // feature('flames')(rect.center())
-  feature('cactus')(region.rndWalkable())
-  O2.snapshot('one cactus')
 
   O2.finalize()
   return region

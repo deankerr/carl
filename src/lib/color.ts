@@ -56,7 +56,7 @@ export function HSLToHex(color: Color) {
 
 export function addLight(color: string, light: Color, dim: boolean) {
   const rgb = ROT.Color.fromString(color)
-  if (dim) rgb.forEach((c, i) => (rgb[i] = floor(c * 0.9)))
+  if (dim) rgb.forEach((c, i) => (rgb[i] = floor(c * 0.95)))
   const c = ROT.Color.add(rgb, light)
   return ROT.Color.toHex(c)
 }

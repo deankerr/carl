@@ -42,7 +42,7 @@ export class EntityPool {
       if (t.emitLight) {
         const color =
           t.emitLight[0] === 'auto'
-            ? transformHSL(e.form.color, { lum: { to: 0.25 } })
+            ? transformHSL(e.form.color, { lum: { to: 0.1 } })
             : t.emitLight[0]
         e = this.attach(e, 'emitLight', color, t.emitLight[1])
         e = this.attach(e, 'tag', 'signalLightPathUpdated')
