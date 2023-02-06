@@ -6,7 +6,7 @@ import { ActionTypes, Move, MetaUI, ChangeRegion, ChangeDomain, Visualize } from
 type KeyMap = Record<string, ActionTypes>
 
 export function handle(event: KeyboardEvent): ActionTypes | undefined {
-  const { key, code, ctrlKey: ctrl, shiftKey: shift } = event
+  const { key, code, ctrlKey: ctrl, metaKey: meta, shiftKey: shift } = event
   // console.log('event:', event)
   // console.log(key, code, ctrl ? 'ctrl' : '', shift ? 'shift' : '')
 
@@ -28,11 +28,11 @@ export function handle(event: KeyboardEvent): ActionTypes | undefined {
   // * Arrow key movement
   switch (code) {
     case 'ArrowLeft':
-      if (ctrl) return Move('SW')
+      if (ctrl || meta) return Move('SW')
       if (shift) return Move('NW')
       return Move('W')
     case 'ArrowRight':
-      if (ctrl) return Move('SE')
+      if (ctrl || meta) return Move('SE')
       if (shift) return Move('NE')
       return Move('E')
     case 'ArrowDown':
