@@ -11,7 +11,6 @@ const flames: EntityTemplate = {
   formSet: [['flames1', '', '', 'flames2', '', '']],
   formSetAutoCycle: [120],
   emitLight: ['auto'],
-  lightFlicker: [120],
 }
 
 const blueFlames: EntityTemplate = {

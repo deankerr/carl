@@ -1,9 +1,14 @@
+import { CONFIG } from '../config'
 import { Entity } from '../Core'
 import { Engine } from '../Core/Engine'
 import { addLight, transformHSL } from '../lib/color'
 import { clamp, floor, half } from '../lib/util'
 import { point } from '../Model/Point'
 import { Rect } from '../Model/Rectangle'
+
+// record the time and type of the last light flicker update
+let lastLightFlicker = 0
+let flickerDimmed = false
 
 export function renderRegion(engine: Engine) {
   const { mainDisplay, local } = engine
@@ -101,7 +106,12 @@ export function renderRegion(engine: Engine) {
       const formStack = stack.map(e => {
         const form = { ...e.form }
         if (visible && lighting.has(pt)) {
-          form.color = addLight(form.color, lighting.get(pt) ?? [0, 0, 0])
+          const light = lighting.get(pt) ?? [0, 0, 0]
+          if (Date.now() - lastLightFlicker > CONFIG.lightFlickerFreq) {
+            flickerDimmed = !flickerDimmed
+            lastLightFlicker = Date.now()
+          }
+          form.color = addLight(form.color, light, flickerDimmed)
         } else if (known && !visible) {
           form.color = transformHSL(form.color, recalledFade)
         }

@@ -7,7 +7,7 @@ export const ComponentFoundry = {
   },
 
   emitLight: (color: string, enabled = true) => {
-    return { emitLight: { color, enabled } }
+    return { emitLight: { color, enabled } } // todo add flicker option
   },
 
   fieldOfView: (radius: number, visible = new Set<Point>()) => {
@@ -28,10 +28,6 @@ export const ComponentFoundry = {
 
   formSetTriggers: (...tags: Tag[]) => {
     return { formSetTriggers: tags }
-  },
-
-  lightFlicker: (frequency: number, current = false, lastUpdate = 0) => {
-    return { lightFlicker: { frequency, current, lastUpdate } }
   },
 
   lightHueRotate: (addHue: number) => {

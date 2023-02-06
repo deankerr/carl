@@ -81,7 +81,7 @@ export const beings: EntityTemplate[] = [
     form: ['bigMozzie1', '#CC0000'],
     tag: ['actor', 'blocksMovement', 'being'],
     formSet: [['bigMozzie1', '', '', 'bigMozzie2', '', '']],
-    formSetAutoCycle: [150],
+    formSetAutoCycle: [180],
   },
   {
     label: 'mozzie',
@@ -89,6 +89,6 @@ export const beings: EntityTemplate[] = [
     form: ['mozzie1', '#CC0000'],
     tag: ['actor', 'blocksMovement', 'being'],
     formSet: [['mozzie1', '', '', 'mozzie2', '', '']],
-    formSetAutoCycle: [60],
+    formSetAutoCycle: [120],
   },
 ]

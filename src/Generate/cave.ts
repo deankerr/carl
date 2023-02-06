@@ -59,12 +59,12 @@ export function cave(
   hop(4, 5, 4, region.rndWalkable.bind(region), being('mozzie'))
   snapC()
 
-  // const snapF = snap('Start fires')
-  // repeat(1, () => {
-  //   flameKeys.forEach(k => feature(k)(region.rndWalkable()))
-  //   snapF()
-  // })
-
+  const snapF = snap('Start fires')
+  repeat(1, () => {
+    flameKeys.forEach(k => feature(k)(region.rndWalkable()))
+    snapF()
+  })
+  // feature('flames')(rect.center())
   feature('cactus')(region.rndWalkable())
   O2.snapshot('one cactus')
 

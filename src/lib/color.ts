@@ -1,6 +1,6 @@
 import * as ROT from 'rot-js'
 import { Color } from 'rot-js/lib/color'
-import { min } from './util'
+import { floor, min } from './util'
 
 // ? #bb6244 desert sunset
 
@@ -54,8 +54,9 @@ export function HSLToHex(color: Color) {
   return ROT.Color.toHex(ROT.Color.hsl2rgb(color))
 }
 
-export function addLight(color: string, light: Color) {
+export function addLight(color: string, light: Color, dim: boolean) {
   const rgb = ROT.Color.fromString(color)
+  if (dim) rgb.forEach((c, i) => (rgb[i] = floor(c * 0.9)))
   const c = ROT.Color.add(rgb, light)
   return ROT.Color.toHex(c)
 }

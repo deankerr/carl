@@ -12,16 +12,16 @@ export class Region {
   entities: Entity[] = []
   turnQueue = new Queue<number>()
 
-  // player info
+  // rendering relevant data
   areaVisible = new Map<Point, boolean>()
   areaKnown = new Map<Point, boolean>()
-
   areaTransparentCache = new Map<Point, boolean>()
 
   recallAll = CONFIG.recallAll
   revealAll = CONFIG.revealAll
 
   lighting = new Map<Point, Color>()
+  emitters = new Set<Entity>()
 
   hasChanged = true
 

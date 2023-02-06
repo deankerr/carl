@@ -45,9 +45,9 @@ export class EntityPool {
             ? transformHSL(e.form.color, { lum: { to: 0.25 } })
             : t.emitLight[0]
         e = this.attach(e, 'emitLight', color, t.emitLight[1])
+        e = this.attach(e, 'tag', 'signalLightPathUpdated')
       }
 
-      if (t.lightFlicker) e = this.attach(e, 'lightFlicker', ...t.lightFlicker)
       if (t.lightHueRotate) e = this.attach(e, 'lightHueRotate', ...t.lightHueRotate)
 
       this.pool.set(t.label, e)

@@ -23,12 +23,13 @@ const messageBackgroundColor = 'transparent'
 const htmlBackgroundColor = '#000000'
 
 const frameLimit = 0
+const lightFlickerFreq = 180
 const recallAll = false
 const revealAll = localStorage.getItem('revealAll') === 'true'
 
 const initialDomain = parseInt(localStorage.getItem('initialDomain') ?? '2')
 
-const autoStartVisualizer = true
+const autoStartVisualizer = false
 const visualizerAutoClose = true
 
 const CONFIG = {
@@ -47,6 +48,7 @@ const CONFIG = {
   messageBackgroundColor,
   htmlBackgroundColor,
   frameLimit,
+  lightFlickerFreq,
   recallAll,
   revealAll,
   initialDomain,
