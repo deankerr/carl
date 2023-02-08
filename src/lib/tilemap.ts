@@ -132,4 +132,7 @@ export const tileMapTiny = {
   caveFloorSB: mapChar(2, 19, t3),
   '@': mapChar(13, 17, t3),
   solid: mapChar(0, 6, t3),
+  water1: mapChar(4, 8, t3),
+  water2: mapChar(5, 8, t3),
+  web: mapChar(4, 13, t3),
 }

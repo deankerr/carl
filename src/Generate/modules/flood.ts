@@ -89,7 +89,7 @@ export function flood(
 
 export function lake(pts: Set<Point>, O2: O2Module, key: EntityKey) {
   const water = O2.terrain(key)
-  const ground = O2.terrain('ground')
+  const ground = O2.terrain('T2caveFloor1')
 
   const dish = new CellDish()
 

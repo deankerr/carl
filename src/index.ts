@@ -24,15 +24,6 @@ tileSet32.onload = () => {
   init()
 }
 
-let tileSetT2Loaded = false
-const tileSetT2 = new Image()
-tileSetT2.src = tileSetT2URL
-tileSetT2.onload = () => {
-  window.tileSetT2 = tileSetT2
-  tileSetT2Loaded = true
-  init()
-}
-
 let tileSetTinyLoaded = false
 const tileSetTiny = new Image()
 tileSetTiny.src = tileSetTinyURL
@@ -48,14 +39,13 @@ function init() {
     return
   }
 
-  if (tileSet24Loaded && tileSet32Loaded && tileSetT2Loaded && tileSetTinyLoaded) App()
+  if (tileSet24Loaded && tileSet32Loaded && tileSetTinyLoaded) App()
 }
 
 declare global {
   interface Window {
     tileSet24: HTMLImageElement
     tileSet32: HTMLImageElement
-    tileSetT2: HTMLImageElement
     tileSetTiny: HTMLImageElement
   }
 }
