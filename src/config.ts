@@ -30,7 +30,6 @@ const revealAll = localStorage.getItem('revealAll') === 'true'
 const initialDomain = parseInt(localStorage.getItem('initialDomain') ?? '2')
 
 const autoStartVisualizer = false
-const visualizerAutoClose = true
 
 const CONFIG = {
   appInitial,
@@ -53,7 +52,6 @@ const CONFIG = {
   revealAll,
   initialDomain,
   autoStartVisualizer,
-  visualizerAutoClose,
 }
 
 export { CONFIG }

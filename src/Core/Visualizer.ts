@@ -4,18 +4,19 @@
 import { ActionTypes, Engine, Entity, EntityKey, Region } from '.'
 import { CONFIG } from '../config'
 import { genHistory, GenHistory } from '../Generate/Overseer2'
-import { range, repeat } from '../lib/util'
+import { half, range, repeat } from '../lib/util'
 import { Point, point, pointRect } from '../Model/Point'
 
 export class Visualizer {
   engine = window.game
   mirror: Region
   player: Entity
-  active = false
+  built: GenHistory[] = []
 
   speed = 550
   index = 0
   playing = false
+  timeout = 0
 
   constructor(targetRegion: Region, readonly history: GenHistory[]) {
     const { width, height, palette } = targetRegion
@@ -33,44 +34,45 @@ export class Visualizer {
     console.log('visualizer created')
   }
 
-  run(action: ActionTypes) {
-    if ('visualize' in action && !this.active) {
-      console.log('vis init')
-      this.engine.local = this.mirror
-      this.engine.mainDisplay.setOptions({ width: this.mirror.width, height: this.mirror.height })
-      this.build()
-      this.active = true
-      this.playing = true
-      this.play()
-      return true
+  init() {
+    this.engine.context = 'visualizer'
+    this.engine.attached = this
+    this.engine.local = this.mirror
+    this.engine.mainDisplay.setOptions({ width: this.mirror.width, height: this.mirror.height })
+    this.build()
+    this.play()
+  }
+
+  update(action: ActionTypes) {
+    if ('move' in action) {
+      const { dir } = action.move
+      if (dir === 'W') this.back()
+      if (dir === 'E') this.forward()
     }
 
-    if (!this.active) return false
-
-    if (this.active) {
-      if ('move' in action) {
-        const { dir } = action.move
-        if (dir === 'W') this.back()
-        if (dir === 'E') this.forward()
-        return true
-      }
-      this.exit()
+    if ('visualize' in action) {
+      const { visualize } = action
+      if (visualize === 'exit') this.exit()
+      if (visualize === 'start') this.start()
+      if (visualize === 'middle') this.middle()
+      if (visualize === 'end') this.end()
+      if (visualize === 'pause' && this.playing) this.stop()
+      else if (visualize === 'pause' && !this.playing) this.play()
     }
-
-    return false
   }
 
   play() {
-    if (!this.playing || this.index + 1 >= this.history.length) {
+    if (this.index + 1 >= this.history.length) {
+      this.stop()
       this.mirror.name = 'Complete'
       this.mirror.hasChanged = true
-      if (CONFIG.visualizerAutoClose) setTimeout(this.exit.bind(this), 4000)
       return
     }
+    this.playing = true
     this.index++
     this.next()
 
-    setTimeout(this.play.bind(this), this.speed)
+    this.timeout = setTimeout(this.play.bind(this), this.speed)
   }
 
   next() {
@@ -91,20 +93,46 @@ export class Visualizer {
     }
   }
 
+  stop() {
+    clearTimeout(this.timeout)
+    this.playing = false
+  }
+
+  start() {
+    this.stop()
+    this.index = 0
+    this.next()
+  }
+
+  middle() {
+    this.stop()
+    this.index = half(this.built.length)
+    this.next()
+  }
+
+  end() {
+    this.stop()
+    this.index = this.built.length - 1
+    this.next()
+  }
+
   back() {
+    this.stop()
     if (this.index <= 0) return
     this.index--
     this.next()
   }
 
   forward() {
+    this.stop()
     if (this.index >= this.history.length - 1) return
     this.index++
     this.next()
   }
 
-  built: GenHistory[] = []
   build() {
+    if (this.built.length > 0) return
+
     const initial = genHistory()
 
     pointRect(0, 0, this.mirror.width, this.mirror.height, pt => {
@@ -131,11 +159,13 @@ export class Visualizer {
 
   exit() {
     console.log('vis exit')
+    this.stop()
     this.engine.mainDisplay.setOptions({
       width: CONFIG.mainDisplayWidth,
       height: CONFIG.mainDisplayHeight,
     })
-    this.active = false
+    this.engine.context = 'game'
+    this.engine.attached = undefined
     this.engine.local = this.engine.atlas.local()
     this.engine.local.hasChanged = true
   }

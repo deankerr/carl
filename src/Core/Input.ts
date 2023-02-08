@@ -1,16 +1,17 @@
 // * Translate key code into Action
 
+import { GameContext } from '.'
 import { logger } from '../lib/logger'
 import { ActionTypes, Move, MetaUI, ChangeRegion, ChangeDomain, Visualize } from './Action'
 
 type KeyMap = Record<string, ActionTypes>
 
-export function handle(event: KeyboardEvent): ActionTypes | undefined {
+export function handle(event: KeyboardEvent, context: GameContext): ActionTypes | undefined {
   const { code, ctrlKey: ctrl, metaKey: meta, shiftKey: shift } = event
   // console.log('event:', event)
   const k = `${ctrl || meta ? 'ctrl ' : ''}${shift ? 'shift ' : ''}${code}`
 
-  // * Numpad movement
+  // movement
   const move: KeyMap = {
     Numpad7: Move('NW'),
     Numpad8: Move('N'),
@@ -33,10 +34,10 @@ export function handle(event: KeyboardEvent): ActionTypes | undefined {
   }
   if (move[k]) return move[k]
 
-  const keyMap: KeyMap = {
+  const gameKeys: KeyMap = {
     Comma: ChangeRegion('up'),
     Period: ChangeRegion('down'),
-    'shift KeyV': Visualize('init'),
+    KeyV: Visualize('init'),
     // debug
     'shift Digit1': ChangeDomain(0),
     'shift Digit2': ChangeDomain(1),
@@ -50,7 +51,17 @@ export function handle(event: KeyboardEvent): ActionTypes | undefined {
     Equal: MetaUI('displayZoomIn'),
     Backquote: MetaUI('debugMode'),
   }
-  if (keyMap[k]) return keyMap[k]
+  if (context === 'game' && gameKeys[k]) return gameKeys[k]
+
+  const visKeys: KeyMap = {
+    Escape: Visualize('exit'),
+    KeyV: Visualize('exit'),
+    Digit1: Visualize('start'),
+    Digit2: Visualize('middle'),
+    Digit3: Visualize('end'),
+    Space: Visualize('pause'),
+  }
+  if (context === 'visualizer' && visKeys[k]) return visKeys[k]
 
   console.log(`'${code}' ??`)
   logger('input').msg(`Key '${code}' not recognised`)

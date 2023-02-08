@@ -15,10 +15,14 @@ import {
   ActionTypes,
   Visualize,
 } from './'
+import { Visualizer } from './Visualizer'
 
 export class Engine {
   mainDisplay: ROT.Display
   msgDisplay: ROT.Display
+
+  context: GameContext = 'game'
+  attached: Visualizer | undefined
 
   component = ComponentFoundry
   pool = new EntityPool(this.component)
@@ -53,10 +57,10 @@ export class Engine {
   }
 
   update(event: KeyboardEvent) {
-    const action = handle(event)
+    const action = handle(event, this.context)
     if (!action) return
 
-    if (this.visualizer(action)) return
+    if ('visualize' in action || this.context === 'visualizer') return this.visualizer(action)
 
     if ('ui' in action) return UI(this, action.ui)
 
@@ -77,10 +81,14 @@ export class Engine {
     else requestAnimationFrame(this.render.bind(this))
   }
 
-  visualizer(vis: ActionTypes) {
-    if (this.atlas.local().visualizer === undefined) return false
-    const result = this.atlas.local()?.visualizer?.run(vis)
-    return result
+  visualizer(action: ActionTypes) {
+    if (this.context === 'visualizer' && this.attached) {
+      this.attached.update(action)
+    } else if (this.local.visualizer) {
+      if (this.context === 'game') {
+        this.local.visualizer.init()
+      }
+    }
   }
 
   // TODO message handler
@@ -106,3 +114,4 @@ export class Engine {
 }
 
 export type Message = { text: string; turn: number; time: number; highlight: string; color: string }
+export type GameContext = 'game' | 'visualizer'
