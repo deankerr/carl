@@ -70,8 +70,7 @@ export function cave(
   // lake(new Set([...seed1, ...seed2, ...seed3, ...seed4]), O2.module(), 'water')
 
   const seed1 = flood(region.rndWalkable(), 9, O2.module(), 'water')
-  const seed2 = flood(region.rndWalkable(), 9, O2.module(), 'water')
-  lake(new Set([...seed1, ...seed2]), O2.module(), 'water')
+  lake(new Set(seed1), O2.module(), 'water')
 
   // O2.terrain(rect.center(), 'cactus')
   // const snapC = snap('Friendly critters')
@@ -97,9 +96,8 @@ export function cave(
   //   })
   // })
 
-  const webArea = flood(region.rndWalkable(), 12, O2.module(), 'web', ['water'])
-  const webArea2 = flood(region.rndWalkable(), 12, O2.module(), 'web', ['water'])
-  lake(new Set([...webArea, ...webArea2]), O2.module(), 'web')
+  const webArea = flood(region.rndWalkable(), 9, O2.module(), 'web', ['water'])
+  lake(new Set(webArea), O2.module(), 'web')
 
   // const pWebArea = shuffle([...webArea])
   // loop(6, i => {

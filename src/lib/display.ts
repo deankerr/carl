@@ -2,7 +2,7 @@ import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
 import { tileMapOryxMessages, tileMapOryxMain, tileMapTiny } from './tilemap'
 
-const mainTile2Size = 48
+const mainTile2Size = 32
 export const createTile2Display = (
   width = CONFIG.mainDisplayWidth,
   height = CONFIG.mainDisplayHeight

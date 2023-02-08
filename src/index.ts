@@ -1,7 +1,6 @@
 import tileSet24URL from '../assets/oryx24.png'
 import tileSet32URL from '../assets/oryx32.png'
-import tileSetT2URL from '../assets/oryx_16bit_fantasy_world.png'
-import tileSetTinyURL from '../assets/tiny_world.png'
+import tileSetTinyURL from '../assets/tiny_world2.png'
 import { App } from './App'
 
 console.log('it begins')

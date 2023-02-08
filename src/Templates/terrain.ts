@@ -132,13 +132,19 @@ export const terrain: EntityTemplate[] = [
     label: 'unknown',
     name: ['unknown'],
     form: ['solid', '#F0F'],
-    tag: ['terrain', 'blocksMovement'],
+    tag: ['terrain'],
   },
   {
     label: 'endlessVoid',
     name: ['endless void'],
     form: ['v', '#FF00FF'],
     tag: ['blocksLight', 'blocksMovement', 'terrain'],
+  },
+  {
+    label: 'T2caveSolid',
+    name: ['solid rock'],
+    form: ['caveSolid1', '#333'],
+    tag: ['terrain', 'blocksMovement', 'blocksLight', 'renderUnderBeing'],
   },
   {
     label: 'T2caveSolid1',
@@ -259,26 +265,6 @@ export const terrain: EntityTemplate[] = [
     label: 'T2caveFloor6',
     name: ['solid rock'],
     form: ['caveFloor6', '#333'],
-    tag: ['terrain', 'renderUnderBeing'],
-  },
-
-  {
-    label: 'T2caveFloorSL',
-    name: ['solid rock'],
-    form: ['caveFloorSL', '#333'],
-    tag: ['terrain', 'renderUnderBeing'],
-  },
-
-  {
-    label: 'T2caveFloorSR',
-    name: ['solid rock'],
-    form: ['caveFloorSR', '#333'],
-    tag: ['terrain', 'renderUnderBeing'],
-  },
-  {
-    label: 'T2caveFloorSB',
-    name: ['solid rock'],
-    form: ['caveFloorSB', '#333'],
     tag: ['terrain', 'renderUnderBeing'],
   },
 ]

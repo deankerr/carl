@@ -107,7 +107,7 @@ export const tileMapT2 = {
   solid: mapChar(4, 1, t2),
 }
 
-const t3 = 48
+const t3 = 32
 export const tileMapTiny = {
   caveSolid1: mapChar(6, 1, t3),
   caveSolid2: mapChar(7, 1, t3),
@@ -127,9 +127,6 @@ export const tileMapTiny = {
   caveFloor4: mapChar(3, 5, t3),
   caveFloor5: mapChar(4, 5, t3),
   caveFloor6: mapChar(5, 5, t3),
-  caveFloorSL: mapChar(0, 19, t3),
-  caveFloorSR: mapChar(1, 19, t3),
-  caveFloorSB: mapChar(2, 19, t3),
   '@': mapChar(13, 17, t3),
   solid: mapChar(0, 6, t3),
   water1: mapChar(4, 8, t3),
