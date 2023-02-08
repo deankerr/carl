@@ -96,3 +96,40 @@ export const tileMapOryxMain = {
   water2: mapChar(1, 1, t),
   web: mapChar(24, 8, t),
 } satisfies { [key: string]: [number, number] }
+
+const t2 = 24
+export const tileMapT2 = {
+  caveSolid1: mapChar(30, 22, t2),
+  caveSolid2: mapChar(30, 22, t2),
+  caveWall1: mapChar(12, 14, t2),
+  caveFloor1: mapChar(4, 14, t2),
+  '@': mapChar(37, 8, t2),
+  solid: mapChar(4, 1, t2),
+}
+
+const t3 = 48
+export const tileMapTiny = {
+  caveSolid1: mapChar(6, 1, t3),
+  caveSolid2: mapChar(7, 1, t3),
+  caveSolid3: mapChar(8, 1, t3),
+  caveSolid4: mapChar(9, 1, t3),
+  caveSolid5: mapChar(10, 1, t3),
+  caveSolid6: mapChar(11, 1, t3),
+  caveWall1: mapChar(0, 1, t3),
+  caveWall2: mapChar(1, 1, t3),
+  caveWall3: mapChar(2, 1, t3),
+  caveWall4: mapChar(3, 1, t3),
+  caveWall5: mapChar(4, 1, t3),
+  caveWall6: mapChar(5, 1, t3),
+  caveFloor1: mapChar(0, 5, t3),
+  caveFloor2: mapChar(1, 5, t3),
+  caveFloor3: mapChar(2, 5, t3),
+  caveFloor4: mapChar(3, 5, t3),
+  caveFloor5: mapChar(4, 5, t3),
+  caveFloor6: mapChar(5, 5, t3),
+  caveFloorSL: mapChar(0, 19, t3),
+  caveFloorSR: mapChar(1, 19, t3),
+  caveFloorSB: mapChar(2, 19, t3),
+  '@': mapChar(13, 17, t3),
+  solid: mapChar(0, 6, t3),
+}

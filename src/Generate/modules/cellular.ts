@@ -5,8 +5,8 @@ import { O2Module } from '../Overseer2'
 export function cellularGrid(width: number, height: number, times: number, O2: O2Module) {
   const { terrain } = O2
 
-  const wall = terrain('wall')
-  const ground = terrain('ground')
+  const wall = terrain('T2caveSolid1')
+  const ground = terrain('T2caveFloor2')
   const snap = O2.snap('Cellular Automata')
 
   let grid1 = new BGrid(width, height, 45)

@@ -52,7 +52,7 @@ export function renderRegion(engine: Engine) {
   // replace any void terrain with these locally colored ones
   // const voidTerrain = local.voidTiles()
 
-  const ground = local.pool.symbolic('ground')
+  const ground = local.pool.symbolic('T2caveFloor1')
   const unknown = local.pool.symbolic('unknown')
 
   const { areaKnown, areaVisible, lighting } = local

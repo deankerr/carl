@@ -1,6 +1,26 @@
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
-import { tileMapOryxMessages, tileMapOryxMain } from './tilemap'
+import { tileMapOryxMessages, tileMapOryxMain, tileMapTiny } from './tilemap'
+
+const mainTile2Size = 48
+export const createTile2Display = (
+  width = CONFIG.mainDisplayWidth,
+  height = CONFIG.mainDisplayHeight
+) => {
+  const display = new ROT.Display({
+    layout: 'tile-gl',
+    width,
+    height,
+    fg: CONFIG.messageColor,
+    bg: CONFIG.mainBackgroundColor,
+    tileWidth: mainTile2Size,
+    tileHeight: mainTile2Size,
+    tileSet: window.tileSetTiny,
+    tileMap: tileMapTiny,
+  })
+
+  return display
+}
 
 const mainTileSize = 32
 export const createTileDisplay = (
@@ -83,8 +103,33 @@ export const createGameDisplay = () => {
 
   main.style.maxWidth = '99vw'
   main.style.maxHeight = '99vh'
-  // main.style.minWidth = '98vw'
-  // main.style.minHeight = '100%'
+
+  wrapper.appendChild(msg)
+  wrapper.appendChild(main)
+
+  document.body.appendChild(wrapper)
+  return [msgDisplay, mainDisplay]
+}
+
+export const createT2GameDisplay = () => {
+  const wrapper = createHTMLWrapper()
+
+  // message display canvas
+  const msgDisplay = createMessageDisplay()
+  const msg = msgDisplay.getContainer()
+  if (!msg) throw new Error('Unable to get msgDisplay container')
+
+  msg.style.maxWidth = '99vw'
+  msg.style.maxHeight = '99vh'
+  msg.style.position = 'absolute'
+
+  // main game display canvas
+  const mainDisplay = createTile2Display()
+  const main = mainDisplay.getContainer()
+  if (!main) throw new Error('Unable to get mainDisplay container')
+
+  main.style.maxWidth = '99vw'
+  main.style.maxHeight = '99vh'
 
   wrapper.appendChild(msg)
   wrapper.appendChild(main)

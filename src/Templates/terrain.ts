@@ -22,6 +22,27 @@ export type TerrainKey =
   | 'caveWall'
   | 'web'
   | 'sand'
+  | 'T2caveSolid1'
+  | 'T2caveSolid2'
+  | 'T2caveSolid3'
+  | 'T2caveSolid4'
+  | 'T2caveSolid5'
+  | 'T2caveSolid6'
+  | 'T2caveWall1'
+  | 'T2caveWall2'
+  | 'T2caveWall3'
+  | 'T2caveWall4'
+  | 'T2caveWall5'
+  | 'T2caveWall6'
+  | 'T2caveFloor1'
+  | 'T2caveFloor2'
+  | 'T2caveFloor3'
+  | 'T2caveFloor4'
+  | 'T2caveFloor5'
+  | 'T2caveFloor6'
+  | 'T2caveFloorSL'
+  | 'T2caveFloorSR'
+  | 'T2caveFloorSB'
 
 export const terrain: EntityTemplate[] = [
   {
@@ -111,13 +132,154 @@ export const terrain: EntityTemplate[] = [
     label: 'unknown',
     name: ['unknown'],
     form: ['solid', '#F0F'],
-    tag: ['terrain'],
+    tag: ['terrain', 'blocksMovement'],
   },
   {
     label: 'endlessVoid',
     name: ['endless void'],
     form: ['v', '#FF00FF'],
     tag: ['blocksLight', 'blocksMovement', 'terrain'],
+  },
+  {
+    label: 'T2caveSolid1',
+    name: ['solid rock'],
+    form: ['caveSolid1', '#333'],
+    tag: ['terrain', 'blocksMovement', 'blocksLight', 'renderUnderBeing'],
+  },
+  {
+    label: 'T2caveSolid2',
+    name: ['solid rock'],
+    form: ['caveSolid2', '#333'],
+    tag: ['terrain', 'blocksMovement', 'blocksLight', 'renderUnderBeing'],
+  },
+
+  {
+    label: 'T2caveSolid3',
+    name: ['solid rock'],
+    form: ['caveSolid3', '#333'],
+    tag: ['terrain', 'blocksMovement', 'blocksLight', 'renderUnderBeing'],
+  },
+
+  {
+    label: 'T2caveSolid4',
+    name: ['solid rock'],
+    form: ['caveSolid4', '#333'],
+    tag: ['terrain', 'blocksMovement', 'blocksLight', 'renderUnderBeing'],
+  },
+
+  {
+    label: 'T2caveSolid5',
+    name: ['solid rock'],
+    form: ['caveSolid5', '#333'],
+    tag: ['terrain', 'blocksMovement', 'blocksLight', 'renderUnderBeing'],
+  },
+
+  {
+    label: 'T2caveSolid6',
+    name: ['solid rock'],
+    form: ['caveSolid6', '#333'],
+    tag: ['terrain', 'blocksMovement', 'blocksLight', 'renderUnderBeing'],
+  },
+  {
+    label: 'T2caveWall1',
+    name: ['solid rock'],
+    form: ['caveWall1', '#333'],
+    tag: ['terrain', 'blocksMovement', 'blocksLight', 'renderUnderBeing'],
+  },
+
+  {
+    label: 'T2caveWall2',
+    name: ['solid rock'],
+    form: ['caveWall2', '#333'],
+    tag: ['terrain', 'blocksMovement', 'blocksLight', 'renderUnderBeing'],
+  },
+
+  {
+    label: 'T2caveWall3',
+    name: ['solid rock'],
+    form: ['caveWall3', '#333'],
+    tag: ['terrain', 'blocksMovement', 'blocksLight', 'renderUnderBeing'],
+  },
+
+  {
+    label: 'T2caveWall4',
+    name: ['solid rock'],
+    form: ['caveWall4', '#333'],
+    tag: ['terrain', 'blocksMovement', 'blocksLight', 'renderUnderBeing'],
+  },
+
+  {
+    label: 'T2caveWall5',
+    name: ['solid rock'],
+    form: ['caveWall5', '#333'],
+    tag: ['terrain', 'blocksMovement', 'blocksLight', 'renderUnderBeing'],
+  },
+  {
+    label: 'T2caveWall6',
+    name: ['solid rock'],
+    form: ['caveWall6', '#333'],
+    tag: ['terrain', 'blocksMovement', 'blocksLight', 'renderUnderBeing'],
+  },
+  {
+    label: 'T2caveFloor1',
+    name: ['solid rock'],
+    form: ['caveFloor1', '#333'],
+    tag: ['terrain', 'renderUnderBeing'],
+  },
+
+  {
+    label: 'T2caveFloor2',
+    name: ['solid rock'],
+    form: ['caveFloor2', '#333'],
+    tag: ['terrain', 'renderUnderBeing'],
+  },
+
+  {
+    label: 'T2caveFloor3',
+    name: ['solid rock'],
+    form: ['caveFloor3', '#333'],
+    tag: ['terrain', 'renderUnderBeing'],
+  },
+
+  {
+    label: 'T2caveFloor4',
+    name: ['solid rock'],
+    form: ['caveFloor4', '#333'],
+    tag: ['terrain', 'renderUnderBeing'],
+  },
+
+  {
+    label: 'T2caveFloor5',
+    name: ['solid rock'],
+    form: ['caveFloor5', '#333'],
+    tag: ['terrain', 'renderUnderBeing'],
+  },
+
+  {
+    label: 'T2caveFloor6',
+    name: ['solid rock'],
+    form: ['caveFloor6', '#333'],
+    tag: ['terrain', 'renderUnderBeing'],
+  },
+
+  {
+    label: 'T2caveFloorSL',
+    name: ['solid rock'],
+    form: ['caveFloorSL', '#333'],
+    tag: ['terrain', 'renderUnderBeing'],
+  },
+
+  {
+    label: 'T2caveFloorSR',
+    name: ['solid rock'],
+    form: ['caveFloorSR', '#333'],
+    tag: ['terrain', 'renderUnderBeing'],
+  },
+  {
+    label: 'T2caveFloorSB',
+    name: ['solid rock'],
+    form: ['caveFloorSB', '#333'],
+    tag: ['terrain', 'renderUnderBeing'],
   },
 ]
 /*

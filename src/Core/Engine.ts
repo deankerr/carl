@@ -1,7 +1,7 @@
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
 
-import { createGameDisplay } from '../lib/display'
+import { createGameDisplay, createT2GameDisplay } from '../lib/display'
 import { logger } from '../lib/logger'
 import {
   ComponentFoundry,
@@ -40,7 +40,7 @@ export class Engine {
   }
 
   constructor() {
-    const [msg, main] = createGameDisplay()
+    const [msg, main] = createT2GameDisplay()
     this.mainDisplay = main
     this.msgDisplay = msg
   }

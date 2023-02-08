@@ -22,24 +22,24 @@ export function renderMessageLog(engine: Engine) {
   msgDisplay.drawText(center.x - half(name.length), 0, name)
 
   // game message buffer
-  const msgStack = messageLog.slice(-messageBufferDisplaySize).reverse()
-  const msgBufferY = height - messageBufferDisplaySize
+  // const msgStack = messageLog.slice(-messageBufferDisplaySize).reverse()
+  // const msgBufferY = height - messageBufferDisplaySize
 
-  loop(messageDisplayHeight, i => {
-    const msg = msgStack[i]
-    if (msg && playerTurns - msg.turn < 10) {
-      const x = center.x - half(msg.text.length)
-      const y = msgBufferY + i
+  // loop(messageDisplayHeight, i => {
+  //   const msg = msgStack[i]
+  //   if (msg && playerTurns - msg.turn < 10) {
+  //     const x = center.x - half(msg.text.length)
+  //     const y = msgBufferY + i
 
-      textToTile(msg, (xi, char, color) => {
-        mainDisplay.draw(x + xi, y, char, color, local.palette.unknown)
-      })
+  //     textToTile(msg, (xi, char, color) => {
+  //       mainDisplay.draw(x + xi, y, char, color, local.palette.unknown)
+  //     })
 
-      // padding
-      mainDisplay.draw(x - 1, y, 'solid', local.palette.unknown, null) // left
-      mainDisplay.draw(x + msg.text.length, y, 'solid', local.palette.unknown, null) // right
-    }
-  })
+  //     // padding
+  //     mainDisplay.draw(x - 1, y, 'solid', local.palette.unknown, null) // left
+  //     mainDisplay.draw(x + msg.text.length, y, 'solid', local.palette.unknown, null) // right
+  //   }
+  // })
 
   // * this important flag should probably be handled better
   local.hasChanged = false

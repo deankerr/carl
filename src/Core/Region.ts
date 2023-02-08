@@ -92,7 +92,7 @@ export class Region {
   // terrain entity at this position
   terrainAt(pt: Point) {
     return this.inBounds(pt)
-      ? this.terrainMap.get(pt) ?? { ...this.pool.symbolic('ground'), fake: true }
+      ? this.terrainMap.get(pt) ?? { ...this.pool.symbolic('T2caveFloor1'), fake: true }
       : this.pool.symbolic('endlessVoid')
   }
 
