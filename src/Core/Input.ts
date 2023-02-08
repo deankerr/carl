@@ -6,9 +6,9 @@ import { ActionTypes, Move, MetaUI, ChangeRegion, ChangeDomain, Visualize } from
 type KeyMap = Record<string, ActionTypes>
 
 export function handle(event: KeyboardEvent): ActionTypes | undefined {
-  const { key, code, ctrlKey: ctrl, metaKey: meta, shiftKey: shift } = event
+  const { code, ctrlKey: ctrl, metaKey: meta, shiftKey: shift } = event
   // console.log('event:', event)
-  // console.log(key, code, ctrl ? 'ctrl' : '', shift ? 'shift' : '')
+  const k = `${ctrl || meta ? 'ctrl ' : ''}${shift ? 'shift ' : ''}${code}`
 
   // * Numpad movement
   const move: KeyMap = {
@@ -22,56 +22,35 @@ export function handle(event: KeyboardEvent): ActionTypes | undefined {
     Numpad1: Move('SW'),
     Numpad2: Move('S'),
     Numpad3: Move('SE'),
+    'ctrl ArrowLeft': Move('SW'),
+    ArrowLeft: Move('W'),
+    'shift ArrowLeft': Move('NW'),
+    'ctrl ArrowRight': Move('SE'),
+    ArrowRight: Move('E'),
+    'shift ArrowRight': Move('NE'),
+    ArrowDown: Move('S'),
+    ArrowUp: Move('N'),
   }
-  if (move[code]) return move[code]
+  if (move[k]) return move[k]
 
-  // * Arrow key movement
-  switch (code) {
-    case 'ArrowLeft':
-      if (ctrl || meta) return Move('SW')
-      if (shift) return Move('NW')
-      return Move('W')
-    case 'ArrowRight':
-      if (ctrl || meta) return Move('SE')
-      if (shift) return Move('NE')
-      return Move('E')
-    case 'ArrowDown':
-      return Move('S')
-    case 'ArrowUp':
-      return Move('N')
-  }
-
-  // * Gameplay
-  const game: KeyMap = {
-    ',': ChangeRegion('up'),
-    '.': ChangeRegion('down'),
-  }
-  if (game[key]) return game[key]
-
-  const vis: KeyMap = {
-    v: Visualize('init'),
-  }
-  if (vis[key]) return vis[key]
-
-  // * Dev SHIFT +
-  const dev: KeyMap = {
-    Digit1: ChangeDomain(0),
-    Digit2: ChangeDomain(1),
-    Digit3: ChangeDomain(2),
-    KeyR: MetaUI('revealAll'),
-    KeyL: MetaUI('animation'),
-    KeyQ: MetaUI('logWorld'),
-  }
-  if (shift && dev[code]) return dev[code]
-
-  const dev2: KeyMap = {
+  const keyMap: KeyMap = {
+    Comma: ChangeRegion('up'),
+    Period: ChangeRegion('down'),
+    'shift KeyV': Visualize('init'),
+    // debug
+    'shift Digit1': ChangeDomain(0),
+    'shift Digit2': ChangeDomain(1),
+    'shift Digit3': ChangeDomain(2),
+    'shift KeyR': MetaUI('revealAll'),
+    'shift KeyL': MetaUI('animation'),
+    'shift KeyQ': MetaUI('logWorld'),
     Digit9: MetaUI('displayRegion'),
     Digit0: MetaUI('displayDefault'),
     Minus: MetaUI('displayZoomOut'),
     Equal: MetaUI('displayZoomIn'),
     Backquote: MetaUI('debugMode'),
   }
-  if (dev2[code]) return dev2[code]
+  if (keyMap[k]) return keyMap[k]
 
   console.log(`'${code}' ??`)
   logger('input').msg(`Key '${code}' not recognised`)
