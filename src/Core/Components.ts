@@ -70,6 +70,7 @@ export type Tag =
   | 'signalModified'
   | 'signalUpdatePlayerFOV'
   | 'terrain'
+  | 'face'
 
 export type FoundryKey = keyof typeof ComponentFoundry
 export type FoundryParam = { [K in FoundryKey]: Parameters<typeof ComponentFoundry[K]> }

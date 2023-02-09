@@ -50,7 +50,8 @@ export class Rect {
   }
 
   intersects(rect: Rect) {
-    if (this === rect) console.warn('Did you mean to check if a rect intersects itself?', this, rect)
+    if (this === rect)
+      console.warn('Did you mean to check if a rect intersects itself?', this, rect)
 
     // Quick test if rects intersect
     if (this.x2 < rect.x || this.y2 < rect.y || this.x > rect.x2 || this.y > rect.y2) return []
@@ -94,7 +95,7 @@ export class Rect {
     return result
   }
 
-  toPtsEdge(): Point[] {
+  edgePoints(): Point[] {
     const result: Point[] = []
     this.traverse((pt, edge) => {
       if (edge) result.push(pt)
@@ -116,7 +117,12 @@ export class Rect {
   }
 
   cornerPts() {
-    return [point(this.x, this.y), point(this.x2, this.y), point(this.x, this.y2), point(this.x2, this.y2)]
+    return [
+      point(this.x, this.y),
+      point(this.x2, this.y),
+      point(this.x, this.y2),
+      point(this.x2, this.y2),
+    ]
   }
 
   isEdgePt(pt: Point) {

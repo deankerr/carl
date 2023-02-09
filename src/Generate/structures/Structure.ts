@@ -277,7 +277,7 @@ export class Structure {
 
     // list of all edge points excluding corners
     const cor = this.rect.cornerPts()
-    const edgePts = [...this.rect.toPtsEdge()].filter(pt => cor.includes(pt))
+    const edgePts = [...this.rect.edgePoints()].filter(pt => cor.includes(pt))
     const validEdgePts = shuffle(edgePts)
 
     while (connections < n) {

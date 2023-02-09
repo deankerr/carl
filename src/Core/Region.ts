@@ -2,11 +2,13 @@ import { Color } from 'rot-js/lib/color'
 import { CONFIG } from '../config'
 import { loop, Queue, rnd } from '../lib/util'
 import { Point, point, pointRect } from '../Model/Point'
+import { Rect } from '../Model/Rectangle'
 import { Entity, EntityPool, EntityKey, EntityWith } from './Entity'
 import { Visualizer } from './Visualizer'
 
 export class Region {
   name = 'Somewhere'
+  rect: Rect
 
   terrainMap = new Map<Point, Entity>()
   entities: Entity[] = []
@@ -39,6 +41,7 @@ export class Region {
     readonly pool: EntityPool,
     player?: Entity
   ) {
+    this.rect = Rect.at(point(0, 0), this.width, this.height)
     if (player) this.createPlayer(player)
   }
 

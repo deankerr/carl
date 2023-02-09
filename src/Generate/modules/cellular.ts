@@ -1,77 +1,159 @@
-import { repeat, rnd } from '../../lib/util'
-import { point } from '../../Model/Point'
-import { O2Module } from '../Overseer2'
+import { rnd } from '../../lib/util'
+import { Point } from '../../Model/Point'
+import { Rect } from '../../Model/Rectangle'
 
-export function cellularGrid(width: number, height: number, times: number, O2: O2Module) {
-  const { terrain } = O2
+type StatusFn = (pt: Point, alive: boolean) => unknown
 
-  const wall = terrain('caveSolid')
-  const ground = terrain('dirtFloor')
-  const snap = O2.snap('Cellular Automata')
+// false = dead, true = alive
+export class CellDish {
+  cellsPrev = new Map<Point, boolean>()
+  cellsCurrent = new Map<Point, boolean>()
 
-  let grid1 = new BGrid(width, height, 45)
+  alwaysCells = new Set<Point>()
+  neverCells = new Set<Point>()
 
-  grid1.each((x, y, v) => (v ? wall(point(x, y)) : ground(point(x, y))))
-  snap()
+  edge = true
 
-  let grid2 = new BGrid(width, height)
-  repeat(times, () => {
-    grid2 = new BGrid(width, height, 0)
-    grid1.each((x, y, v) => {
-      if (v) {
-        // wall, 4 neighbours to survive
-        let count = 0
-        point(x, y)
-          .neighbours8()
-          .forEach(pt => {
-            if (grid1.get(pt.x, pt.y)) count++
-          })
-        grid2.set(x, y, count >= 4)
-      } else {
-        // open, 5 neighbours to become wall
-        let count = 0
-        point(x, y)
-          .neighbours8()
-          .forEach(pt => {
-            if (grid1.get(pt.x, pt.y)) count++
-          })
-        grid2.set(x, y, count >= 5)
-      }
+  constructor(readonly rect: Rect) {
+    rect.traverse(pt => {
+      this.cellsPrev.set(pt, false)
+      this.cellsCurrent.set(pt, false)
+    })
+    console.log('*** Dish created ***')
+    this.debug('init')
+  }
+
+  // * status of each prev/current cell *
+  prev(callback: StatusFn) {
+    this.rect.traverse(pt => {
+      if (!this.neverCells.has(pt)) callback(pt, this.inspectPrev(pt))
+    })
+  }
+
+  inspectPrev(pt: Point) {
+    if (this.alwaysCells.has(pt)) return true
+    if (this.neverCells.has(pt)) return false
+    return this.cellsPrev.get(pt) ?? this.edge
+  }
+
+  current(callback: StatusFn) {
+    this.rect.traverse(pt => {
+      if (!this.neverCells.has(pt)) callback(pt, this.inspectCurrent(pt))
+    })
+  }
+
+  inspectCurrent(pt: Point) {
+    if (this.alwaysCells.has(pt)) return true
+    if (this.neverCells.has(pt)) return false
+    return this.cellsCurrent.get(pt) ?? this.edge
+  }
+
+  // only alive cells
+  alive(callback: StatusFn) {
+    this.current((pt, status) => {
+      if (status) callback(pt, status)
+    })
+  }
+
+  // only changes, returned after each action
+  changes(callback: StatusFn) {
+    this.current((pt, alive) => {
+      const p = this.inspectPrev(pt)
+      if (p !== undefined && p !== alive) callback(pt, alive)
+    })
+  }
+
+  // setter for current gen
+  next(pt: Point, status: boolean) {
+    this.cellsCurrent.set(pt, status)
+  }
+
+  // * Actions *
+
+  addAlways(points: Point[]) {
+    points.forEach(pt => {
+      this.alwaysCells.add(pt)
+      this.next(pt, true)
+    })
+    return this
+  }
+
+  // n = chance to become alive
+  randomize(n: number) {
+    this.swap()
+    this.current(pt => {
+      this.next(pt, rnd(100) < n)
     })
 
-    grid2.each((x, y, v) => (v ? wall(point(x, y)) : ground(point(x, y))))
-    snap()
-    grid1 = grid2
-  })
-  return grid2
-}
-
-export class BGrid {
-  g: boolean[][]
-  constructor(readonly width: number, readonly height: number, p?: number) {
-    this.g = [...new Array(height)].map(() => new Array(width))
-    if (p) {
-      this.each((x, y) => {
-        this.set(x, y, rnd(100) < p)
-      })
-    }
+    this.debug('rand')
+    return this
   }
 
-  // return out of bounds + 1 layer on the edge as a wall
-  get(x: number, y: number) {
-    if (x < 1 || x >= this.width - 1 || y < 1 || y >= this.height - 1) return true
-    return this.g[y][x]
+  // for living cells, n = chance to die
+  cull(n: number) {
+    this.swap()
+    this.prev((pt, alive) => {
+      if (alive) this.next(pt, rnd(100) > n)
+      else this.next(pt, alive)
+    })
+
+    this.debug('cull')
+    return this.changes.bind(this)
   }
 
-  set(x: number, y: number, v: boolean) {
-    this.g[y][x] = v
+  // apply survival/birth rules to each cell
+  generation(survive: number, birth: number) {
+    this.swap()
+    this.prev((pt, alive) => {
+      if (this.countNeighbours(pt, alive ? survive : birth)) this.next(pt, true)
+      else this.next(pt, false)
+    })
+
+    this.debug('gen')
+    return this.changes.bind(this)
   }
 
-  each(callback: (x: number, y: number, v: boolean) => unknown) {
-    for (let yi = 0; yi < this.height; yi++) {
-      for (let xi = 0; xi < this.width; xi++) {
-        callback(xi, yi, this.get(xi, yi))
+  // * Utility *
+  countNeighbours(pt: Point, required: number) {
+    let count = 0
+    for (const npt of pt.neighbours8()) {
+      if (this.inspectPrev(npt)) {
+        count++
+        if (count >= required) return true
       }
     }
+    return false
+  }
+
+  swap() {
+    this.cellsPrev = this.cellsCurrent
+    this.cellsCurrent = new Map<Point, boolean>()
+  }
+
+  debug(t?: string) {
+    console.group('* Dish status * ' + (t ?? ''))
+    let row = 0
+    let line = ''
+    this.rect.traverse(pt => {
+      if (pt.y !== row) {
+        console.log(row, line)
+        row = pt.y
+        line = ''
+      }
+      if (this.alwaysCells.has(pt)) line += 'O'
+      else if (this.neverCells.has(pt)) line += '='
+      else line += this.cellsCurrent.get(pt) ? 'o' : '-'
+    })
+    console.log(row, line)
+
+    let c = ''
+    this.changes((pt, alive) => (c += pt.s + ' ' + alive + '|'))
+    console.groupCollapsed('changes')
+    console.log(c)
+    console.groupEnd()
+
+    console.log('prevCells:', this.cellsPrev)
+    console.log('currnetCells:', this.cellsCurrent)
+    console.groupEnd()
   }
 }

@@ -2,6 +2,7 @@ import { EntityTemplate } from '../Core/Entity'
 
 export type TerrainKey =
   | 'water'
+  | 'waterFace'
   | 'endlessVoid'
   | 'unknown'
   | 'caveWall'
@@ -35,6 +36,14 @@ export const terrain: EntityTemplate[] = [
     form: ['water1', '#40a3e5', '#020927'],
     tag: ['terrain'],
     formSet: [['water1', '', '', 'water2', '', '']],
+    formSetAutoCycle: [1000],
+  },
+  {
+    label: 'waterFace',
+    name: ['water'],
+    form: ['waterFace1', '#40a3e5', '#020927'],
+    tag: ['terrain', 'face'],
+    formSet: [['waterFace1', '', '', 'waterFace2', '', '']],
     formSetAutoCycle: [1000],
   },
   {
@@ -101,43 +110,43 @@ export const terrain: EntityTemplate[] = [
     label: 'caveWall',
     name: ['wall'],
     form: ['caveWall', '', ''],
-    tag: ['terrain', 'blocksMovement'],
+    tag: ['terrain', 'blocksMovement', 'face'],
   },
   {
     label: 'caveWall1',
     name: ['wall'],
     form: ['caveWall1', '', ''],
-    tag: ['terrain', 'blocksMovement'],
+    tag: ['terrain', 'blocksMovement', 'face'],
   },
   {
     label: 'caveWall2',
     name: ['wall'],
     form: ['caveWall2', '', ''],
-    tag: ['terrain', 'blocksMovement'],
+    tag: ['terrain', 'blocksMovement', 'face'],
   },
   {
     label: 'caveWall3',
     name: ['wall'],
     form: ['caveWall3', '', ''],
-    tag: ['terrain', 'blocksMovement'],
+    tag: ['terrain', 'blocksMovement', 'face'],
   },
   {
     label: 'caveWall4',
     name: ['wall'],
     form: ['caveWall4', '', ''],
-    tag: ['terrain', 'blocksMovement'],
+    tag: ['terrain', 'blocksMovement', 'face'],
   },
   {
     label: 'caveWall5',
     name: ['wall'],
     form: ['caveWall5', '', ''],
-    tag: ['terrain', 'blocksMovement'],
+    tag: ['terrain', 'blocksMovement', 'face'],
   },
   {
     label: 'caveWall6',
     name: ['wall'],
     form: ['caveWall6', '', ''],
-    tag: ['terrain', 'blocksMovement'],
+    tag: ['terrain', 'blocksMovement', 'face'],
   },
   {
     label: 'dirtFloor',
