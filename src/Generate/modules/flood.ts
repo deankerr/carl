@@ -42,3 +42,33 @@ export function rndCluster(amount: number, O2: O2Module) {
   })
   return results
 }
+
+export function floodFindRegions(rect: Rect, predicate: (pt: Point) => boolean) {
+  let count = 0
+  const region = new Map<Point, number>()
+  rect.traverse(pt => {
+    if (predicate(pt)) {
+      region.set(pt, count)
+
+      const set = new Set<Point>()
+    } else region.set(pt, -1)
+  })
+
+  logPointMap(rect, region)
+  return region
+}
+
+function logPointMap(rect: Rect, map: Map<Point, number>) {
+  let row = 0
+  let line = ''
+  rect.traverse(pt => {
+    if (pt.y !== row) {
+      console.log(row < 10 ? ' ' + row : '' + row, line)
+      row = pt.y
+      line = ''
+    }
+    const n = `${map.get(pt) ?? '?'}`
+    line += n === '-1' ? 'x' : n
+  })
+  console.log('' + row, line)
+}

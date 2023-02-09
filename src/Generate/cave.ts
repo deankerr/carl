@@ -6,7 +6,7 @@ import { Point, point } from '../Model/Point'
 import { Rect } from '../Model/Rectangle'
 import { flameKeys, flameVariants } from '../Templates/flames'
 import { CellDish } from './modules/cellular'
-import { rndCluster, floodWalkable } from './modules/flood'
+import { rndCluster, floodWalkable, floodFindRegions } from './modules/flood'
 import { hop } from './modules/walk'
 import { Overseer2 } from './Overseer2'
 
@@ -156,6 +156,8 @@ export function cave(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDispla
     if (pt) O2.feature(pt, 'cactus')
   })
   O2.snapshot('scorpions')
+
+  floodFindRegions(region.rect, (pt: Point) => !region.terrainAt(pt).blocksMovement)
 
   O2.finalize()
   return region

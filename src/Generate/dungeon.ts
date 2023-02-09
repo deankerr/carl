@@ -1,6 +1,9 @@
 import { CONFIG } from '../config'
 import { Region } from '../Core'
 import { Overseer2 } from './Overseer2'
+import { floodFindRegions } from './modules/flood'
+import { Point } from '../Model/Point'
+import { Rect } from '../Model/Rectangle'
 
 export function dungeon(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDisplayHeight) {
   const region = new Region(width, height, window.game.pool)
@@ -11,6 +14,8 @@ export function dungeon(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDis
   const wall = 'dungeonSolid'
 
   region.rect.edgePoints().forEach(pt => O2.terrain(pt, wall))
+
+  const reg = floodFindRegions(region.rect, (pt: Point) => !region.terrainAt(pt).blocksMovement)
 
   O2.finalize()
   return region
