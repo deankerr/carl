@@ -44,12 +44,14 @@ export class Atlas {
 
   setDomain(index: number) {
     logger('atlas').msg('atlas setDomain')
-    this.domainIndex = index
-    this.domain = this.domains[index]
-    if (this.domain) localStorage.setItem('initialDomain', String(index))
+    console.log('set domain', index)
+    const next = this.domains[index] ? index : 0
+    this.domainIndex = next
+    this.domain = this.domains[next]
+    localStorage.setItem('initialDomain', String(index))
 
     const i = this.domain.regionIndex
-    this.region = this.domains[index].regions[i]
+    this.region = this.domains[next].regions[i]
 
     if (!this.region) this.generate(i)
   }

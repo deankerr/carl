@@ -27,7 +27,7 @@ export const terrain: EntityTemplate[] = [
   {
     label: 'unknown',
     name: ['unknown'],
-    form: ['spider', '#F0F'],
+    form: ['unknown', '#F0F'],
     tag: ['terrain'],
   },
   {

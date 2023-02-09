@@ -44,14 +44,19 @@ export function rndCluster(amount: number, O2: O2Module) {
 }
 
 export function floodFindRegions(rect: Rect, predicate: (pt: Point) => boolean) {
+  const evaluate = (pt: Point, isStart: boolean) => {
+    if (region.has(pt)) return
+    if (predicate(pt)) {
+      if (isStart) count++
+      region.set(pt, count)
+      pt.neighbours8().forEach(pt => evaluate(pt, false))
+    } else region.set(pt, -1)
+  }
+
   let count = 0
   const region = new Map<Point, number>()
   rect.traverse(pt => {
-    if (predicate(pt)) {
-      region.set(pt, count)
-
-      const set = new Set<Point>()
-    } else region.set(pt, -1)
+    evaluate(pt, true)
   })
 
   logPointMap(rect, region)

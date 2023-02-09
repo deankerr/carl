@@ -11,7 +11,7 @@ import { hop } from './modules/walk'
 import { Overseer2 } from './Overseer2'
 
 export function cave(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDisplayHeight) {
-  const region = new Region(width, height, window.game.pool)
+  const region = new Region(100, 50, window.game.pool)
   const O2 = new Overseer2(region)
 
   region.name = 'cave'
@@ -157,7 +157,7 @@ export function cave(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDispla
   })
   O2.snapshot('scorpions')
 
-  floodFindRegions(region.rect, (pt: Point) => !region.terrainAt(pt).blocksMovement)
+  // floodFindRegions(region.rect, (pt: Point) => !region.terrainAt(pt).blocksMovement)
 
   O2.finalize()
   return region
