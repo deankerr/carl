@@ -1,12 +1,17 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */ // !!!!! dev
 import { CONFIG } from '../config'
 import { Region } from '../Core'
-import { logger } from '../lib/logger'
+import { Overseer2 } from './Overseer2'
 
-export function dungeon(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
-  const log = logger('generate', 'dungeon')
-  console.log('dungeon', width, height)
-
+export function dungeon(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDisplayHeight) {
   const region = new Region(width, height, window.game.pool)
+  const O2 = new Overseer2(region)
+
+  region.name = 'dungeon'
+
+  const wall = 'dungeonSolid'
+
+  region.rect.edgePoints().forEach(pt => O2.terrain(pt, wall))
+
+  O2.finalize()
   return region
 }

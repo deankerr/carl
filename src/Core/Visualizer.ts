@@ -19,14 +19,13 @@ export class Visualizer {
   timeout = 0
 
   constructor(targetRegion: Region, readonly history: GenHistory[]) {
-    const { width, height, palette } = targetRegion
+    const { width, height } = targetRegion
 
     const player = this.engine.pool.spawn('player', point(0, 0))
     player.form = { char: '@', color: 'grey', bgColor: 'transparent' }
 
     const r = new Region(width, height, this.engine.pool, player)
     r.revealAll = true
-    r.palette = palette
     r.name = 'mirror world'
 
     this.player = player

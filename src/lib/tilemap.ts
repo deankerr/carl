@@ -212,6 +212,12 @@ export function oryxTinyMap(size: number) {
 }
 
 export function tileVariant(k: EntityKey): EntityKey {
+  if (k === 'dungeonSolid') {
+    return rnd(16)
+      ? pick(['dungeonSolid1', 'dungeonSolid2', 'dungeonSolid3', 'dungeonSolid4'])
+      : pick(['dungeonSolid5', 'dungeonSolid6'])
+  }
+
   if (k === 'caveSolid') {
     return rnd(16)
       ? pick(['caveSolid1', 'caveSolid2', 'caveSolid3', 'caveSolid4'])

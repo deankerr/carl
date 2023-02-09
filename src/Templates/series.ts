@@ -28,7 +28,7 @@ export function series(type: keyof typeof seriesTemplate, name: string, n: numbe
     const base = { ...seriesTemplate[type] } as EntityTemplate
     const key = i ? `${name}${base.label}${i}` : `${name}${base.label}`
     base.label = key
-    base.form = [key, '', '']
+    base.form = i ? [key, '', ''] : [key + '1', '', '']
     result.push(base)
     i++
   }

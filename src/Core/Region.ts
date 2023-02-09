@@ -29,12 +29,6 @@ export class Region {
 
   visualizer: Visualizer | undefined
 
-  palette = {
-    solid: '#006666',
-    ground: '#090909',
-    unknown: '#000000',
-  }
-
   constructor(
     readonly width: number,
     readonly height: number,

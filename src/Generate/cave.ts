@@ -10,21 +10,11 @@ import { rndCluster, floodWalkable } from './modules/flood'
 import { hop } from './modules/walk'
 import { Overseer2 } from './Overseer2'
 
-export function cave(
-  // width = floor(CONFIG.mainDisplayWidth * 1.5),
-  // height = floor(CONFIG.mainDisplayHeight * 1.5)
-  width = CONFIG.mainDisplayWidth,
-  height = CONFIG.mainDisplayHeight
-  // width = CONFIG.generateWidth,
-  // height = CONFIG.generateHeight
-) {
+export function cave(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDisplayHeight) {
   const region = new Region(width, height, window.game.pool)
   const O2 = new Overseer2(region)
 
   region.name = 'cave'
-  region.palette.ground = '#251316'
-  region.palette.unknown = '#1d191f'
-  region.palette.solid = '#342f37'
 
   //* cave generation
   const wall = 'caveSolid'

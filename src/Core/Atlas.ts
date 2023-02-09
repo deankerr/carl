@@ -3,7 +3,10 @@ import { logger } from '../lib/logger'
 import { Region } from './'
 
 export class Atlas {
-  domains: Domain[] = [{ label: 'cave', generator: Generate.cave, regions: [], regionIndex: 0 }]
+  domains: Domain[] = [
+    { label: 'cave', generator: Generate.cave, regions: [], regionIndex: 0 },
+    { label: 'dungeon', generator: Generate.dungeon, regions: [], regionIndex: 0 },
+  ]
 
   domain = this.domains[0]
   domainIndex = 0

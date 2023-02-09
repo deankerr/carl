@@ -1,37 +1,6 @@
 import { EntityTemplate } from '../Core/Entity'
 import { series } from './series'
 
-export type TerrainKey =
-  | 'nothing'
-  | 'water'
-  | 'waterFace'
-  | 'endlessVoid'
-  | 'unknown'
-  | 'caveWall'
-  | 'caveSolid'
-  | 'caveSolid1'
-  | 'caveSolid2'
-  | 'caveSolid3'
-  | 'caveSolid4'
-  | 'caveSolid5'
-  | 'caveSolid6'
-  | 'caveWall'
-  | 'caveWall1'
-  | 'caveWall2'
-  | 'caveWall3'
-  | 'caveWall4'
-  | 'caveWall5'
-  | 'caveWall6'
-  | 'dirtFloor'
-  | 'dirtFloor1'
-  | 'dirtFloor2'
-  | 'dirtFloor3'
-  | 'dirtFloor4'
-  | 'dirtFloor5'
-  | 'dirtFloor6'
-  | 'sand'
-  | 'sandFace'
-
 export const terrain: EntityTemplate[] = [
   {
     label: 'water',
@@ -58,7 +27,7 @@ export const terrain: EntityTemplate[] = [
   {
     label: 'unknown',
     name: ['unknown'],
-    form: ['unknown', '#F0F'],
+    form: ['spider', '#F0F'],
     tag: ['terrain'],
   },
   {
@@ -76,7 +45,6 @@ export const terrain: EntityTemplate[] = [
   ...series('solid', 'pit', 6),
   ...series('face', 'pit', 6),
   ...series('floor', 'dirt', 6),
-
   {
     label: 'sand',
     name: ['sand'],
@@ -89,8 +57,51 @@ export const terrain: EntityTemplate[] = [
     form: ['sandFace', '', ''],
     tag: ['terrain', 'renderUnderBeing'],
   },
-  ...series('solid', 'dungeon', 6),
 ]
+
+export type TerrainKey =
+  | 'nothing'
+  | 'water'
+  | 'waterFace'
+  | 'endlessVoid'
+  | 'unknown'
+  | 'dungeonSolid'
+  | 'dungeonSolid1'
+  | 'dungeonSolid2'
+  | 'dungeonSolid3'
+  | 'dungeonSolid4'
+  | 'dungeonSolid5'
+  | 'dungeonSolid6'
+  | 'dungeonWall'
+  | 'dungeonWall1'
+  | 'dungeonWall2'
+  | 'dungeonWall3'
+  | 'dungeonWall4'
+  | 'dungeonWall5'
+  | 'dungeonWall6'
+  | 'caveSolid'
+  | 'caveSolid1'
+  | 'caveSolid2'
+  | 'caveSolid3'
+  | 'caveSolid4'
+  | 'caveSolid5'
+  | 'caveSolid6'
+  | 'caveWall'
+  | 'caveWall1'
+  | 'caveWall2'
+  | 'caveWall3'
+  | 'caveWall4'
+  | 'caveWall5'
+  | 'caveWall6'
+  | 'dirtFloor'
+  | 'dirtFloor1'
+  | 'dirtFloor2'
+  | 'dirtFloor3'
+  | 'dirtFloor4'
+  | 'dirtFloor5'
+  | 'dirtFloor6'
+  | 'sand'
+  | 'sandFace'
 
 /*
 
