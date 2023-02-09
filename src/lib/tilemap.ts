@@ -1,3 +1,6 @@
+import { EntityKey } from '../Core'
+import { pick, rnd } from './util'
+
 const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 const punctuation = '!@#$%^&*()-=+.,:;"<>?\\/|-:'
 const numbers = '1234567890'
@@ -121,7 +124,7 @@ export function oryxTinyMap(size: number) {
     ['stoneFloor1'],
     ['dirtFloor1', 'dirtFloor2', 'dirtFloor3', 'dirtFloor4', 'dirtFloor5', 'dirtFloor6'],
     ['unknown'],
-    [],
+    ['nothing'],
     [],
     [],
     [],
@@ -148,4 +151,26 @@ export function oryxTinyMap(size: number) {
 
     return { ...acc, ...row }
   }, {} as Record<string, [number, number]>)
+}
+
+export function tileVariant(k: EntityKey): EntityKey {
+  if (k === 'caveSolid') {
+    return rnd(16)
+      ? pick(['caveSolid1', 'caveSolid2', 'caveSolid3', 'caveSolid4'])
+      : pick(['caveSolid5', 'caveSolid6'])
+  }
+
+  if (k === 'caveWall') {
+    return rnd(3)
+      ? 'caveWall1'
+      : pick(['caveWall1', 'caveWall2', 'caveWall3', 'caveWall4', 'caveWall5', 'caveWall6'])
+  }
+
+  if (k === 'dirtFloor') {
+    return rnd(3)
+      ? 'dirtFloor1'
+      : pick(['dirtFloor1', 'dirtFloor2', 'dirtFloor3', 'dirtFloor4', 'dirtFloor5', 'dirtFloor6'])
+  }
+
+  return k
 }

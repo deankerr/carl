@@ -1,5 +1,7 @@
 import { EntityKey, EntityPool, Region } from '../Core'
 import { Visualizer } from '../Core/Visualizer'
+import { tileVariant } from '../lib/tilemap'
+import { pick, rnd } from '../lib/util'
 import { Point } from '../Model/Point'
 import { BeingKey, FeatureKey } from '../Templates'
 
@@ -31,9 +33,11 @@ export class Overseer2 {
 
   terrain(pt: Point, terrain: EntityKey) {
     if (!this.region.inBounds(pt)) return
-    const t = this.pool.symbolic(terrain)
+    const variant = tileVariant(terrain)
+
+    const t = this.pool.symbolic(variant)
     this.region.terrainMap.set(pt, t)
-    this.current.terrain.set(pt, terrain)
+    this.current.terrain.set(pt, variant)
   }
 
   feature(pt: Point, feature: FeatureKey) {

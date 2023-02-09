@@ -31,8 +31,8 @@ export function cave(
 
   rect.traverse(pt => {
     if (region.terrainAt(pt).blocksMovement) {
-      if (region.terrainAt(pt.add(0, 1)).blocksMovement) O2.terrain(pt, 'caveSolid1')
-      else O2.terrain(pt, 'caveWall1')
+      if (region.terrainAt(pt.add(0, 1)).blocksMovement) O2.terrain(pt, 'caveSolid')
+      else O2.terrain(pt, 'caveWall')
     }
   })
   O2.snapshot('Decorate')

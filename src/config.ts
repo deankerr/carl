@@ -4,8 +4,8 @@ const appInitial = 'game'
 // const seed = 1235
 const seed = null
 
-const mainDisplayWidth = 69
-const mainDisplayHeight = 35
+const mainDisplayWidth = 39
+const mainDisplayHeight = 19
 
 const messageDisplayWidth = 69
 const messageDisplayHeight = 35
@@ -27,7 +27,7 @@ const lightFlickerFreq = 120
 const recallAll = false
 const revealAll = localStorage.getItem('revealAll') === 'true'
 
-const initialDomain = parseInt(localStorage.getItem('initialDomain') ?? '2')
+const initialDomain = parseInt(localStorage.getItem('initialDomain') ?? '0')
 
 const autoStartVisualizer = false
 
