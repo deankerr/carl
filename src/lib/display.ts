@@ -1,6 +1,27 @@
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
-import { tileMapOryxMain } from './tilemap'
+import { tileMapOryxMain, oryxTinyMap } from './tilemap'
+
+const tinySize = 16
+export const createTile2Display = (
+  width = CONFIG.mainDisplayWidth,
+  height = CONFIG.mainDisplayHeight
+) => {
+  const display = new ROT.Display({
+    layout: 'tile-gl',
+    width,
+    height,
+    fg: CONFIG.messageColor,
+    bg: CONFIG.mainBackgroundColor,
+    tileWidth: tinySize,
+    tileHeight: tinySize,
+    tileSet: window.oryxTiny,
+    // tileColorize: true,
+    tileMap: oryxTinyMap(tinySize),
+  })
+
+  return display
+}
 
 const mainTileSize = 32
 export const createTileDisplay = (
@@ -77,7 +98,7 @@ export const createGameDisplay = () => {
   msg.style.position = 'absolute'
 
   // main game display canvas
-  const mainDisplay = createTileDisplay()
+  const mainDisplay = createTile2Display()
   const main = mainDisplay.getContainer()
   if (!main) throw new Error('Unable to get mainDisplay container')
 

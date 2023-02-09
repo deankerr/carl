@@ -13,7 +13,7 @@ tileSet32.onload = () => {
   init()
 }
 
-let orxyTinyLoaded = false
+let oryxTinyLoaded = false
 const oryxTiny = new Image()
 oryxTiny.src = oryxTinyURL
 oryxTiny.onload = () => {
@@ -28,11 +28,12 @@ function init() {
     return
   }
 
-  if (tileSet32Loaded) App()
+  if (tileSet32Loaded && oryxTinyLoaded) App()
 }
 
 declare global {
   interface Window {
     tileSet32: HTMLImageElement
+    oryxTiny: HTMLImageElement
   }
 }

@@ -22,6 +22,9 @@ export type TerrainKey =
   | 'caveWall'
   | 'web'
   | 'sand'
+  | 'caveSolid1'
+  | 'caveWall1'
+  | 'dirtFloor1'
 
 export const terrain: EntityTemplate[] = [
   {
@@ -104,13 +107,13 @@ export const terrain: EntityTemplate[] = [
   {
     label: 'ground',
     name: ['ground'],
-    form: ['solid', '#000'],
+    form: ['dirtFloor2', '#000'],
     tag: ['terrain', 'renderUnderBeing'],
   },
   {
     label: 'unknown',
     name: ['unknown'],
-    form: ['solid', '#F0F'],
+    form: ['unknown', '#F0F'],
     tag: ['terrain'],
   },
   {
@@ -118,6 +121,24 @@ export const terrain: EntityTemplate[] = [
     name: ['endless void'],
     form: ['v', '#FF00FF'],
     tag: ['blocksLight', 'blocksMovement', 'terrain'],
+  },
+  {
+    label: 'caveSolid1',
+    name: ['wall'],
+    form: ['caveSolid1', '', ''],
+    tag: ['terrain', 'blocksMovement', 'blocksLight'],
+  },
+  {
+    label: 'caveWall1',
+    name: ['wall'],
+    form: ['caveWall1', '', ''],
+    tag: ['terrain', 'blocksMovement'],
+  },
+  {
+    label: 'dirtFloor1',
+    name: ['wall'],
+    form: ['dirtFloor1', '', ''],
+    tag: ['terrain', 'renderUnderBeing'],
   },
 ]
 /*

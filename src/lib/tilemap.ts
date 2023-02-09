@@ -85,3 +85,67 @@ export const tileMapOryxMain = {
   water2: mapChar(1, 1, t),
   web: mapChar(24, 8, t),
 } satisfies { [key: string]: [number, number] }
+
+export function oryxTinyMap(size: number) {
+  const tiles = [
+    [
+      'dungeonWall1',
+      'dungeonWall2',
+      'dungeonWall3',
+      'dungeonWall4',
+      'dungeonWall5',
+      'dungeonWall6',
+      'dungeonSolid1',
+      'dungeonSolid2',
+      'dungeonSolid3',
+      'dungeonSolid4',
+      'dungeonSolid5',
+      'dungeonSolid6',
+    ],
+    [
+      'caveWall1',
+      'caveWall2',
+      'caveWall3',
+      'caveWall4',
+      'caveWall5',
+      'caveWall6',
+      'caveSolid1',
+      'caveSolid2',
+      'caveSolid3',
+      'caveSolid4',
+      'caveSolid5',
+      'caveSolid6',
+    ],
+    ['tombWall'],
+    ['pitWall1'],
+    ['stoneFloor1'],
+    ['dirtFloor1', 'dirtFloor2', 'dirtFloor3', 'dirtFloor4', 'dirtFloor5', 'dirtFloor6'],
+    ['unknown'],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    ['@'],
+  ]
+
+  return tiles.reduce((acc, curr, y) => {
+    const row = curr.reduce((rAcc, rCurr, x) => {
+      const tile = { [rCurr]: [x * size, y * size] } as Record<string, [number, number]>
+      return { ...rAcc, ...tile }
+    }, {} as Record<string, [number, number]>)
+
+    return { ...acc, ...row }
+  }, {} as Record<string, [number, number]>)
+}
