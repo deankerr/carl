@@ -10,8 +10,8 @@ import { rndCluster, floodWalkable, floodFindRegions } from './modules/flood'
 import { hop } from './modules/walk'
 import { Overseer2 } from './Overseer2'
 
-export function cave(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDisplayHeight) {
-  const region = new Region(100, 50, window.game.pool)
+export function cave(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
+  const region = new Region(width, height, window.game.pool)
   const O2 = new Overseer2(region)
 
   region.name = 'cave'
@@ -27,7 +27,7 @@ export function cave(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDispla
 
   const caveDish = new CellDish(region.rect)
   caveDish.addAlways(region.rect.edgePoints())
-  caveDish.randomize(45).alive(pt => O2.terrain(pt, 'caveSolid'))
+  caveDish.randomize(45).current((pt, alive) => O2.terrain(pt, alive ? wall : floor))
   O2.snapshot('cell init')
 
   caveDish.generation(4, 5)((pt, alive) => O2.terrain(pt, alive ? wall : floor))
@@ -157,7 +157,7 @@ export function cave(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDispla
   })
   O2.snapshot('scorpions')
 
-  // floodFindRegions(region.rect, (pt: Point) => !region.terrainAt(pt).blocksMovement)
+  floodFindRegions(region.rect, (pt: Point) => !region.terrainAt(pt).blocksMovement)
 
   O2.finalize()
   return region

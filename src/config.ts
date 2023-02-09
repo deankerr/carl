@@ -11,8 +11,8 @@ const messageDisplayWidth = 69
 const messageDisplayHeight = 35
 const messageBufferDisplaySize = 5
 
-const generateWidth = 103 // approx 1.5 times graphical display size
-const generateHeight = 53
+const generateWidth = 39 // approx 1.5 times graphical display size
+const generateHeight = 19
 
 const setMainToMapSize = false
 

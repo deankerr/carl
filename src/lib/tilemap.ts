@@ -120,8 +120,21 @@ export function oryxTinyMap(size: number) {
       'caveSolid6',
     ],
     ['tombWall'],
-    ['pitWall1'],
-    ['stoneFloor1'],
+    [
+      'pitWall1',
+      'pitWall2',
+      'pitWall3',
+      'pitWall4',
+      'pitWall5',
+      'pitWall6',
+      'pitSolid1',
+      'pitSolid2',
+      'pitSolid3',
+      'pitSolid4',
+      'pitSolid5',
+      'pitSolid6',
+    ],
+    ['stoneFloor1', 'stoneFloor2', 'stoneFloor3', 'stoneFloor4', 'stoneFloor5', 'stoneFloor6'],
     ['dirtFloor1', 'dirtFloor2', 'dirtFloor3', 'dirtFloor4', 'dirtFloor5', 'dirtFloor6'],
     ['unknown'],
     ['nothing'],
@@ -230,10 +243,29 @@ export function tileVariant(k: EntityKey): EntityKey {
       : pick(['caveSolid5', 'caveSolid6'])
   }
 
+  if (k === 'pitSolid') {
+    return rnd(16)
+      ? pick(['pitSolid1', 'pitSolid2', 'pitSolid3', 'pitSolid4'])
+      : pick(['pitSolid5', 'pitSolid6'])
+  }
+
   if (k === 'caveWall') {
     return rnd(3)
       ? 'caveWall1'
       : pick(['caveWall1', 'caveWall2', 'caveWall3', 'caveWall4', 'caveWall5', 'caveWall6'])
+  }
+
+  if (k === 'stoneFloor') {
+    return rnd(3)
+      ? 'stoneFloor1'
+      : pick([
+          'stoneFloor1',
+          'stoneFloor2',
+          'stoneFloor3',
+          'stoneFloor4',
+          'stoneFloor5',
+          'stoneFloor6',
+        ])
   }
 
   if (k === 'dirtFloor') {

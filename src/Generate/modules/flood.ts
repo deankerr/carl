@@ -44,23 +44,45 @@ export function rndCluster(amount: number, O2: O2Module) {
 }
 
 export function floodFindRegions(rect: Rect, predicate: (pt: Point) => boolean) {
-  const evaluate = (pt: Point, isStart: boolean) => {
-    if (region.has(pt)) return
-    if (predicate(pt)) {
-      if (isStart) count++
-      region.set(pt, count)
-      pt.neighbours8().forEach(pt => evaluate(pt, false))
-    } else region.set(pt, -1)
-  }
-
   let count = 0
-  const region = new Map<Point, number>()
+  const regions = new Map<Point, number>()
+  let neighbours: Point[] = []
   rect.traverse(pt => {
-    evaluate(pt, true)
+    if (!regions.has(pt)) {
+      if (predicate(pt)) {
+        count++
+        regions.set(pt, count)
+        neighbours = []
+
+        pt.neighbours8().forEach(npt => {
+          if (!regions.has(npt)) neighbours.push(npt)
+        })
+
+        while (neighbours.length > 0) {
+          const npt = neighbours.pop()
+          if (!npt) return
+          if (predicate(npt)) {
+            regions.set(npt, count)
+            npt.neighbours8().forEach(nnpt => {
+              if (!regions.has(nnpt)) neighbours.push(nnpt)
+            })
+          } else regions.set(npt, -1)
+        }
+      } else regions.set(pt, -1)
+    }
   })
 
-  logPointMap(rect, region)
-  return region
+  logPointMap(rect, regions)
+  const rCount: Record<number, number> = {}
+  for (const [pt, v] of regions) {
+    if (v === -1) continue
+    if (rCount[v] !== undefined) rCount[v]++
+    else rCount[v] = 1
+  }
+  console.log('rCount:', rCount)
+
+  console.log('count:', count)
+  return regions
 }
 
 function logPointMap(rect: Rect, map: Map<Point, number>) {

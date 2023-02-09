@@ -31,9 +31,14 @@ export class Overseer2 {
 
     // add faces
     Rect.at(point(0, 0), this.region.width, this.region.height).traverse(pt => {
-      if (this.region.terrainAt(pt).blocksMovement) {
+      if (this.region.terrainAt(pt).label.startsWith('cave')) {
         if (!this.region.terrainAt(pt.add(0, 1)).blocksMovement) this.terrain(pt, 'caveWall')
         else this.terrain(pt, 'caveSolid')
+      }
+
+      if (this.region.terrainAt(pt).label.startsWith('pit')) {
+        if (!this.region.terrainAt(pt.add(0, 1)).blocksMovement) this.terrain(pt, 'pitWall')
+        else this.terrain(pt, 'pitSolid')
       }
 
       if (this.region.terrainAt(pt).label.startsWith('water')) {

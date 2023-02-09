@@ -44,6 +44,7 @@ export const terrain: EntityTemplate[] = [
   ...series('face', 'tomb', 6),
   ...series('solid', 'pit', 6),
   ...series('face', 'pit', 6),
+  ...series('floor', 'stone', 6),
   ...series('floor', 'dirt', 6),
   {
     label: 'sand',
@@ -93,6 +94,27 @@ export type TerrainKey =
   | 'caveWall4'
   | 'caveWall5'
   | 'caveWall6'
+  | 'pitSolid'
+  | 'pitSolid1'
+  | 'pitSolid2'
+  | 'pitSolid3'
+  | 'pitSolid4'
+  | 'pitSolid5'
+  | 'pitSolid6'
+  | 'pitWall'
+  | 'pitWall1'
+  | 'pitWall2'
+  | 'pitWall3'
+  | 'pitWall4'
+  | 'pitWall5'
+  | 'pitWall6'
+  | 'stoneFloor'
+  | 'stoneFloor1'
+  | 'stoneFloor2'
+  | 'stoneFloor3'
+  | 'stoneFloor4'
+  | 'stoneFloor5'
+  | 'stoneFloor6'
   | 'dirtFloor'
   | 'dirtFloor1'
   | 'dirtFloor2'
