@@ -81,15 +81,21 @@ export class Visualizer {
 
     pointRect(0, 0, this.mirror.width, this.mirror.height, pt => {
       const t = terrain.get(pt)
-      if (t) this.mirror.createTerrain(t, pt)
+      if (t) this.mirror.createTerrain(pt, t)
     })
 
+    this.mirror.entities = [this.player]
     for (const [pt, f] of features) {
-      this.mirror.createTerrain(f, pt)
+      if (f === '[clear]') {
+        const features = this.mirror.get('position').filter(e => e.position === pt)
+        features.forEach(f => this.mirror.destroyEntity(f))
+      } else {
+        this.mirror.createEntity(pt, f)
+      }
     }
 
     for (const [pt, b] of beings) {
-      this.mirror.createTerrain(b, pt)
+      this.mirror.createEntity(pt, b)
     }
   }
 

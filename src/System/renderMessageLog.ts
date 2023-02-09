@@ -25,19 +25,30 @@ export function renderMessageLog(engine: Engine) {
   const msgStack = messageLog.slice(-messageBufferDisplaySize).reverse()
   const msgBufferY = height - messageBufferDisplaySize
 
+  // * draw on main display
+  // loop(messageDisplayHeight, i => {
+  //   const msg = msgStack[i]
+  //   if (msg && playerTurns - msg.turn < 10) {
+  //     const x = center.x - half(msg.text.length)
+  //     const y = msgBufferY + i
+
+  //     textToTile(msg, (xi, char, color) => {
+  //       mainDisplay.draw(x + xi, y, char, color, local.palette.unknown)
+  //     })
+
+  //     // padding
+  //     mainDisplay.draw(x - 1, y, 'solid', local.palette.unknown, null) // left
+  //     mainDisplay.draw(x + msg.text.length, y, 'solid', local.palette.unknown, null) // right
+  //   }
+  // })
+
   loop(messageDisplayHeight, i => {
     const msg = msgStack[i]
     if (msg && playerTurns - msg.turn < 10) {
       const x = center.x - half(msg.text.length)
       const y = msgBufferY + i
 
-      textToTile(msg, (xi, char, color) => {
-        mainDisplay.draw(x + xi, y, char, color, local.palette.unknown)
-      })
-
-      // padding
-      mainDisplay.draw(x - 1, y, 'solid', local.palette.unknown, null) // left
-      mainDisplay.draw(x + msg.text.length, y, 'solid', local.palette.unknown, null) // right
+      msgDisplay.drawText(x, y, msg.text)
     }
   })
 

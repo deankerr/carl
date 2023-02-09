@@ -1,6 +1,7 @@
 import { EntityTemplate } from '../Core/Entity'
 
 export type TerrainKey =
+  | 'nothing'
   | 'water'
   | 'waterFace'
   | 'endlessVoid'
@@ -27,7 +28,7 @@ export type TerrainKey =
   | 'dirtFloor4'
   | 'dirtFloor5'
   | 'dirtFloor6'
-  | 'nothing'
+  | 'sand'
 
 export const terrain: EntityTemplate[] = [
   {
@@ -188,6 +189,12 @@ export const terrain: EntityTemplate[] = [
     label: 'dirtFloor6',
     name: ['wall'],
     form: ['dirtFloor6', '', ''],
+    tag: ['terrain', 'renderUnderBeing'],
+  },
+  {
+    label: 'sand',
+    name: ['sand'],
+    form: ['sand', '', ''],
     tag: ['terrain', 'renderUnderBeing'],
   },
 ]

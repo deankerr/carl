@@ -12,7 +12,7 @@ export const processDeath = (engine: Engine) => {
   log.msg('processDeath: reaping')
   for (const entity of currentEntities) {
     log.msg('processDeath: removing', entity.label)
-    local.destroy(entity)
+    local.destroyEntity(entity)
     log.msg('processDeath: removed', entity.label)
   }
 

@@ -46,14 +46,14 @@ export class Region {
   }
 
   //  * Entity Management
-  createEntity(key: EntityKey, pt: Point) {
+  createEntity(pt: Point, key: EntityKey) {
     const entity = this.pool.spawn(key, pt)
     this.entities.push(entity)
     this.hasChanged = true
     return entity
   }
 
-  createTerrain(key: EntityKey, pt: Point) {
+  createTerrain(pt: Point, key: EntityKey) {
     const terrain = this.pool.symbolic(key)
     this.terrainMap.set(pt, terrain)
     this.hasChanged = true
@@ -64,7 +64,7 @@ export class Region {
     return this.pool.entity(this.entities, entity)
   }
 
-  destroy(entity: Entity) {
+  destroyEntity(entity: Entity) {
     console.log('destroy entity', entity.label)
     this.entities = this.entities.filter(e => e.eID !== entity.eID)
 

@@ -29,11 +29,17 @@ export class Overseer2 {
   snapshot(msg: string) {
     this.current.message = msg
 
-    // add wall faces
+    // add faces
     Rect.at(point(0, 0), this.region.width, this.region.height).traverse(pt => {
       if (this.region.terrainAt(pt).blocksMovement) {
         if (!this.region.terrainAt(pt.add(0, 1)).blocksMovement) this.terrain(pt, 'caveWall')
         else this.terrain(pt, 'caveSolid')
+      }
+
+      if (this.region.terrainAt(pt).label.startsWith('water')) {
+        if (!this.region.terrainAt(pt.add(0, -1)).label.startsWith('water'))
+          this.terrain(pt, 'waterFace')
+        else this.terrain(pt, 'water')
       }
     })
 
@@ -66,11 +72,16 @@ export class Overseer2 {
 
   // realify actual entities
   finalize() {
-    this.final.features.forEach((f, k) => {
-      this.region.createEntity(f, k)
+    this.final.features.forEach((key, pt) => {
+      if (key === '[clear]') {
+        const features = this.region.get('position').filter(e => e.position === pt)
+        features.forEach(f => this.region.destroyEntity(f))
+      } else {
+        this.region.createEntity(pt, key)
+      }
     })
-    this.final.beings.forEach((b, k) => {
-      this.region.createEntity(b, k)
+    this.final.beings.forEach((key, pt) => {
+      this.region.createEntity(pt, key)
     })
 
     this.region.visualizer = new Visualizer(this.region, this.mutations)

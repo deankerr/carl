@@ -130,7 +130,15 @@ export class CellDish {
     this.cellsCurrent = new Map<Point, boolean>()
   }
 
+  alivePoints() {
+    const results: Point[] = []
+    this.alive(pt => results.push(pt))
+    return results
+  }
+
+  showDebug = false
   debug(t?: string) {
+    if (!this.showDebug) return
     console.group('* Dish status * ' + (t ?? ''))
     let row = 0
     let line = ''
