@@ -87,9 +87,9 @@ export function flood(
   return success
 }
 
-export function lake(pts: Set<Point>, O2: O2Module, key: EntityKey) {
-  const water = O2.terrain(key)
-  const ground = O2.terrain('ground')
+export function lake(pts: Set<Point>, O2: O2Module, aliveKey: EntityKey, deadKey: EntityKey) {
+  const water = O2.terrain(aliveKey)
+  const ground = O2.terrain(deadKey)
 
   const dish = new CellDish()
 

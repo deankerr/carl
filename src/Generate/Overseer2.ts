@@ -2,7 +2,8 @@ import { EntityKey, EntityPool, Region } from '../Core'
 import { Visualizer } from '../Core/Visualizer'
 import { tileVariant } from '../lib/tilemap'
 import { pick, rnd } from '../lib/util'
-import { Point } from '../Model/Point'
+import { point, Point } from '../Model/Point'
+import { Rect } from '../Model/Rectangle'
 import { BeingKey, FeatureKey } from '../Templates'
 
 export class Overseer2 {
@@ -27,6 +28,14 @@ export class Overseer2 {
 
   snapshot(msg: string) {
     this.current.message = msg
+
+    // add wall faces hack
+    Rect.at(point(0, 0), this.region.width, this.region.height).traverse(pt => {
+      if (this.region.terrainAt(pt).blocksMovement) {
+        if (!this.region.terrainAt(pt.add(0, 1)).blocksMovement) this.terrain(pt, 'caveWall')
+      }
+    })
+
     this.mutations.push(this.current)
     this.current = genHistory()
   }

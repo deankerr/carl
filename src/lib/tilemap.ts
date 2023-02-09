@@ -125,7 +125,7 @@ export function oryxTinyMap(size: number) {
     ['dirtFloor1', 'dirtFloor2', 'dirtFloor3', 'dirtFloor4', 'dirtFloor5', 'dirtFloor6'],
     ['unknown'],
     ['nothing'],
-    [],
+    ['waterFaceClear', 'waterClear', 'waterFace1', 'waterFace2', 'water1', 'water2'],
     [],
     [],
     [],

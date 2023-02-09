@@ -29,14 +29,6 @@ export function cave(
   // cellular automata cave generation
   const grid = cellularGrid(width, height, 5, O2.module())
 
-  rect.traverse(pt => {
-    if (region.terrainAt(pt).blocksMovement) {
-      if (region.terrainAt(pt.add(0, 1)).blocksMovement) O2.terrain(pt, 'caveSolid')
-      else O2.terrain(pt, 'caveWall')
-    }
-  })
-  O2.snapshot('Decorate')
-
   const { being, feature, terrain, snap } = O2.module()
 
   // const seed1 = flood(region.rndWalkable(), 11, O2.module(), 'water')
@@ -45,9 +37,9 @@ export function cave(
   // const seed4 = flood(region.rndWalkable(), 11, O2.module(), 'water')
   // lake(new Set([...seed1, ...seed2, ...seed3, ...seed4]), O2.module(), 'water')
 
-  // const seed1 = flood(region.rndWalkable(), 12, O2.module(), 'water')
-  // const seed2 = flood(region.rndWalkable(), 12, O2.module(), 'water')
-  // lake(new Set([...seed1, ...seed2]), O2.module(), 'water')
+  const seed1 = flood(region.rndWalkable(), 12, O2.module(), 'water')
+  const seed2 = flood(region.rndWalkable(), 12, O2.module(), 'water')
+  lake(new Set([...seed1, ...seed2]), O2.module(), 'water', 'dirtFloor')
 
   // O2.terrain(rect.center(), 'cactus')
   // const snapC = snap('Friendly critters')

@@ -182,21 +182,20 @@ export const terrain: EntityTemplate[] = [
     tag: ['terrain', 'renderUnderBeing'],
   },
 ]
+
 /*
-  moved to dynamic palette
 
-  {
-    label: 'solidGreyPurple',
-    name: ['solid rock'],
-    form: ['solid', '#342f37'],
-    tag: ['terrain', 'blocksMovement', 'blocksLight'],
+const tcave = {
+  cave: {
+    wall: {
+      tile: ['caveSolid1', 'caveSolid2', 'caveSolid3', 'caveSolid4', 'caveSolid5', 'caveSolid6'],
+      chance: [10, 5, 5, 5, 1, 1],
+    },
+    face: {
+      tile: ['caveWall1', 'caveWall2', 'caveWall3', 'caveWall4', 'caveWall5', 'caveWall6'],
+      chance: [20, 5, 5, 5, 5, 5, 5],
+    },
   },
-  {
-    label: 'solidGreyPink',
-    name: ['solid rock'],
-    form: ['solid', '#6c373c'],
-    tag: ['terrain', 'blocksMovement', 'blocksLight'],
-  },
-
+}
 
 */
