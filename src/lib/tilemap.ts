@@ -18,17 +18,6 @@ const mapChar = (x: number, y: number, tileSize: number): [number, number] => {
 }
 
 const t = 32 // main tileset size
-const s = 32 // msg tileset size
-
-export const tileMapOryxMessages = {
-  ...mapRange(letters, 6, s),
-  ...mapRange(letters.toLowerCase(), 6, s),
-  ...mapRange(numbers, 7, s),
-  ...mapRange(punctuation, 5, s),
-  "'": mapChar(27, 3, s),
-  ' ': mapChar(27, 0, s),
-}
-
 export const tileMapOryxMain = {
   ...mapRange(letters, 6, t),
   ...mapRange(letters.toLocaleLowerCase(), 6, t),

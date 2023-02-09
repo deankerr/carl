@@ -1,6 +1,6 @@
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
-import { tileMapOryxMessages, tileMapOryxMain } from './tilemap'
+import { tileMapOryxMain } from './tilemap'
 
 const mainTileSize = 32
 export const createTileDisplay = (
@@ -35,7 +35,7 @@ export const createMessageDisplay = () => {
     tileHeight: msgTileSize,
     tileSet: window.tileSet32,
     tileColorize: true,
-    tileMap: tileMapOryxMessages,
+    tileMap: tileMapOryxMain,
   })
 
   return display
