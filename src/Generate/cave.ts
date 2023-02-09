@@ -24,8 +24,6 @@ export function cave(
   region.palette.unknown = '#1d191f'
   region.palette.solid = '#342f37'
 
-  const rect = region.rect
-
   //* cave generation
   const wall = 'caveSolid'
   const floor = 'dirtFloor'
@@ -145,10 +143,28 @@ export function cave(
   const lakePts = shuffle(lakeDish.alivePoints())
   loop(6, () => {
     const pt = lakePts.pop()
-    if (pt) O2.feature(pt, 'lilypad1')
+    if (pt) O2.feature(pt, pick(['lilypad1', 'lilypad2', 'lilypad3', 'lilypad4']))
   })
-
   O2.snapshot('lilypads')
+
+  const webPts = shuffle(webDish.alivePoints())
+  loop(6, () => {
+    const pt = webPts.pop()
+    if (pt) O2.being(pt, pick(['spiderRed', 'spiderBlack']))
+  })
+  O2.snapshot('spiders')
+
+  const sandPts = shuffle(sandDish.alivePoints())
+  loop(4, () => {
+    const pt = sandPts.pop()
+    if (pt) O2.being(pt, pick(['scorpionRed', 'scorpionBlack']))
+  })
+  loop(4, () => {
+    const pt = sandPts.pop()
+    if (pt) O2.feature(pt, 'cactus')
+  })
+  O2.snapshot('scorpions')
+
   O2.finalize()
   return region
 }

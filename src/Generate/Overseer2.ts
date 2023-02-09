@@ -41,6 +41,12 @@ export class Overseer2 {
           this.terrain(pt, 'waterFace')
         else this.terrain(pt, 'water')
       }
+
+      if (this.region.terrainAt(pt).label.startsWith('sand')) {
+        if (!this.region.terrainAt(pt.add(0, -1)).label.startsWith('sand'))
+          this.terrain(pt, 'sandFace')
+        else this.terrain(pt, 'sand')
+      }
     })
 
     this.mutations.push(this.current)

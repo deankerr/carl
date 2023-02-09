@@ -29,13 +29,14 @@ export type TerrainKey =
   | 'dirtFloor5'
   | 'dirtFloor6'
   | 'sand'
+  | 'sandFace'
 
 export const terrain: EntityTemplate[] = [
   {
     label: 'water',
     name: ['water'],
     form: ['water1', '#40a3e5', '#020927'],
-    tag: ['terrain'],
+    tag: ['terrain', 'renderUnderBeing'],
     formSet: [['water1', '', '', 'water2', '', '']],
     formSetAutoCycle: [1000],
   },
@@ -43,7 +44,7 @@ export const terrain: EntityTemplate[] = [
     label: 'waterFace',
     name: ['water'],
     form: ['waterFace1', '#40a3e5', '#020927'],
-    tag: ['terrain', 'face'],
+    tag: ['terrain', 'face', 'renderUnderBeing'],
     formSet: [['waterFace1', '', '', 'waterFace2', '', '']],
     formSetAutoCycle: [1000],
   },
@@ -195,6 +196,12 @@ export const terrain: EntityTemplate[] = [
     label: 'sand',
     name: ['sand'],
     form: ['sand', '', ''],
+    tag: ['terrain', 'renderUnderBeing'],
+  },
+  {
+    label: 'sandFace',
+    name: ['sand'],
+    form: ['sandFace', '', ''],
     tag: ['terrain', 'renderUnderBeing'],
   },
 ]

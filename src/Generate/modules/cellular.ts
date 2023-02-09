@@ -117,7 +117,8 @@ export class CellDish {
   countNeighbours(pt: Point, required: number) {
     let count = 0
     for (const npt of pt.neighbours8()) {
-      if (this.inspectPrev(npt)) {
+      // never = true attracts cells to walls
+      if (this.neverCells.has(pt) || this.inspectPrev(npt)) {
         count++
         if (count >= required) return true
       }
