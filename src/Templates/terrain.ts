@@ -1,4 +1,5 @@
 import { EntityTemplate } from '../Core/Entity'
+import { series } from './series'
 
 export type TerrainKey =
   | 'nothing'
@@ -66,132 +67,16 @@ export const terrain: EntityTemplate[] = [
     form: ['unknown', '#FF00FF'],
     tag: ['blocksLight', 'blocksMovement', 'terrain'],
   },
-  {
-    label: 'caveSolid',
-    name: ['wall'],
-    form: ['caveSolid1', '', ''],
-    tag: ['terrain', 'blocksMovement', 'blocksLight'],
-  },
-  {
-    label: 'caveSolid1',
-    name: ['wall'],
-    form: ['caveSolid1', '', ''],
-    tag: ['terrain', 'blocksMovement', 'blocksLight'],
-  },
-  {
-    label: 'caveSolid2',
-    name: ['wall'],
-    form: ['caveSolid2', '', ''],
-    tag: ['terrain', 'blocksMovement', 'blocksLight'],
-  },
-  {
-    label: 'caveSolid3',
-    name: ['wall'],
-    form: ['caveSolid3', '', ''],
-    tag: ['terrain', 'blocksMovement', 'blocksLight'],
-  },
-  {
-    label: 'caveSolid4',
-    name: ['wall'],
-    form: ['caveSolid4', '', ''],
-    tag: ['terrain', 'blocksMovement', 'blocksLight'],
-  },
-  {
-    label: 'caveSolid5',
-    name: ['wall'],
-    form: ['caveSolid5', '', ''],
-    tag: ['terrain', 'blocksMovement', 'blocksLight'],
-  },
-  {
-    label: 'caveSolid6',
-    name: ['wall'],
-    form: ['caveSolid6', '', ''],
-    tag: ['terrain', 'blocksMovement', 'blocksLight'],
-  },
-  {
-    label: 'caveWall',
-    name: ['wall'],
-    form: ['caveWall', '', ''],
-    tag: ['terrain', 'blocksMovement', 'face'],
-  },
-  {
-    label: 'caveWall1',
-    name: ['wall'],
-    form: ['caveWall1', '', ''],
-    tag: ['terrain', 'blocksMovement', 'face'],
-  },
-  {
-    label: 'caveWall2',
-    name: ['wall'],
-    form: ['caveWall2', '', ''],
-    tag: ['terrain', 'blocksMovement', 'face'],
-  },
-  {
-    label: 'caveWall3',
-    name: ['wall'],
-    form: ['caveWall3', '', ''],
-    tag: ['terrain', 'blocksMovement', 'face'],
-  },
-  {
-    label: 'caveWall4',
-    name: ['wall'],
-    form: ['caveWall4', '', ''],
-    tag: ['terrain', 'blocksMovement', 'face'],
-  },
-  {
-    label: 'caveWall5',
-    name: ['wall'],
-    form: ['caveWall5', '', ''],
-    tag: ['terrain', 'blocksMovement', 'face'],
-  },
-  {
-    label: 'caveWall6',
-    name: ['wall'],
-    form: ['caveWall6', '', ''],
-    tag: ['terrain', 'blocksMovement', 'face'],
-  },
-  {
-    label: 'dirtFloor',
-    name: ['wall'],
-    form: ['dirtFloor1', '', ''],
-    tag: ['terrain', 'renderUnderBeing'],
-  },
-  {
-    label: 'dirtFloor1',
-    name: ['wall'],
-    form: ['dirtFloor1', '', ''],
-    tag: ['terrain', 'renderUnderBeing'],
-  },
-  {
-    label: 'dirtFloor2',
-    name: ['wall'],
-    form: ['dirtFloor2', '', ''],
-    tag: ['terrain', 'renderUnderBeing'],
-  },
-  {
-    label: 'dirtFloor3',
-    name: ['wall'],
-    form: ['dirtFloor3', '', ''],
-    tag: ['terrain', 'renderUnderBeing'],
-  },
-  {
-    label: 'dirtFloor4',
-    name: ['wall'],
-    form: ['dirtFloor4', '', ''],
-    tag: ['terrain', 'renderUnderBeing'],
-  },
-  {
-    label: 'dirtFloor5',
-    name: ['wall'],
-    form: ['dirtFloor5', '', ''],
-    tag: ['terrain', 'renderUnderBeing'],
-  },
-  {
-    label: 'dirtFloor6',
-    name: ['wall'],
-    form: ['dirtFloor6', '', ''],
-    tag: ['terrain', 'renderUnderBeing'],
-  },
+  ...series('solid', 'dungeon', 6),
+  ...series('face', 'dungeon', 6),
+  ...series('solid', 'cave', 6),
+  ...series('face', 'cave', 6),
+  ...series('solid', 'tomb', 6),
+  ...series('face', 'tomb', 6),
+  ...series('solid', 'pit', 6),
+  ...series('face', 'pit', 6),
+  ...series('floor', 'dirt', 6),
+
   {
     label: 'sand',
     name: ['sand'],
@@ -204,6 +89,7 @@ export const terrain: EntityTemplate[] = [
     form: ['sandFace', '', ''],
     tag: ['terrain', 'renderUnderBeing'],
   },
+  ...series('solid', 'dungeon', 6),
 ]
 
 /*
