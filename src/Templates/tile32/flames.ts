@@ -9,7 +9,7 @@ const flames = {
   tag: ['feature'],
   trodOn: ['A sense of urgency washes over you.'],
   formSet: [['flames1', '', '', 'flames2', '', '']],
-  formSetAutoCycle: [120],
+  tilesAutoCycle: [120],
   emitLight: ['auto'],
 }
 

@@ -23,7 +23,7 @@ export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
     const [bumpedEntity] = bumped
     if (isPlayerTurn) {
       // * handle door
-      const door = local.has(bumpedEntity, 'isClosed', 'formSet', 'formSetTriggers')
+      const door = local.has(bumpedEntity, 'isClosed', 'tiles', 'tileTriggers')
       if (door) {
         local
           .entity(door)

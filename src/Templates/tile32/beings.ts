@@ -65,7 +65,7 @@ export const beings = [
     form: ['tick1', '#9e0052'],
     tag: ['actor', 'blocksMovement', 'being'],
     formSet: [['tick1', '', '', 'tick2', '', '']],
-    formSetAutoCycle: [1000],
+    tilesAutoCycle: [1000],
   },
   {
     label: 'scorpion',
@@ -73,7 +73,7 @@ export const beings = [
     form: ['scorpion1', '#ff8000'],
     tag: ['actor', 'blocksMovement', 'being'],
     formSet: [['scorpion1', '', '', 'scorpion2', '', '']],
-    formSetAutoCycle: [1000],
+    tilesAutoCycle: [1000],
   },
   {
     label: 'bigMozzie',
@@ -81,7 +81,7 @@ export const beings = [
     form: ['bigMozzie1', '#CC0000'],
     tag: ['actor', 'blocksMovement', 'being'],
     formSet: [['bigMozzie1', '', '', 'bigMozzie2', '', '']],
-    formSetAutoCycle: [180],
+    tilesAutoCycle: [180],
   },
   {
     label: 'mozzie',
@@ -89,6 +89,6 @@ export const beings = [
     form: ['mozzie1', '#CC0000'],
     tag: ['actor', 'blocksMovement', 'being'],
     formSet: [['mozzie1', '', '', 'mozzie2', '', '']],
-    formSetAutoCycle: [120],
+    tilesAutoCycle: [120],
   },
 ]

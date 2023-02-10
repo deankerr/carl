@@ -4,19 +4,19 @@ const seriesTemplate = {
   solid: {
     label: 'Solid',
     name: ['wall'],
-    tile: ['Solid', '', ''],
+    tiles: ['Solid'],
     tag: ['terrain', 'blocksMovement', 'blocksLight'],
   },
   face: {
     label: 'Wall',
     name: ['wall'],
-    tile: ['Wall', '', ''],
+    tiles: ['Wall'],
     tag: ['terrain', 'blocksMovement', 'blocksLight', 'face'],
   },
   floor: {
     label: 'Floor',
     name: ['floor'],
-    tile: ['Floor', '', ''],
+    tiles: ['Floor'],
     tag: ['terrain'],
   },
 }
@@ -28,7 +28,7 @@ export function series(type: keyof typeof seriesTemplate, name: string, n: numbe
     const base = { ...seriesTemplate[type] } as EntityTemplate
     const key = i ? `${name}${base.label}${i}` : `${name}${base.label}`
     base.label = key
-    base.tile = i ? [key, '', ''] : [key + '1', '', '']
+    base.tiles = i ? [key] : [key + '1']
     result.push(base)
     i++
   }

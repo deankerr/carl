@@ -52,7 +52,7 @@ export const terrain = [
     form: ['water1', '#40a3e5', '#020927'], //  bg '#070f31'
     tag: ['terrain'],
     formSet: [['water1', '', '', 'water2', '', '']],
-    formSetAutoCycle: [1000],
+    tilesAutoCycle: [1000],
     // trodOn: ['You tread water.'],
   },
   {

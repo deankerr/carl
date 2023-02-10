@@ -15,24 +15,20 @@ export const ComponentFoundry = {
     return { fieldOfView: { radius, visible } }
   },
 
-  tile: (char: string, color: string, bgColor = 'transparent') => {
-    return { tile: { char, color, bgColor } }
+  render: (char: string, color = 'transparent', bgColor = 'transparent') => {
+    return { render: { char, color, bgColor } }
   },
 
-  formSet: (formSet: string[]) => {
-    return { formSet }
+  tiles: (...tiles: string[]) => {
+    return { tiles }
   },
 
-  formSetAutoCycle: (frequency: number, current = 0, lastUpdate = 0) => {
-    return { formSetAutoCycle: { frequency, current, lastUpdate } }
+  tilesAutoCycle: (frequency: number, current = 0, lastUpdate = 0) => {
+    return { tilesAutoCycle: { frequency, current, lastUpdate } }
   },
 
-  formSetTriggers: (...tags: Tag[]) => {
-    return { formSetTriggers: tags }
-  },
-
-  lightHueRotate: (addHue: number) => {
-    return { lightHueRotate: addHue }
+  tileTriggers: (...tags: Tag[]) => {
+    return { tileTriggers: tags }
   },
 
   name: (name: string) => {

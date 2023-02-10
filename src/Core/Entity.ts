@@ -5,14 +5,13 @@ import { BeingKey, beings, FeatureKey, features, TerrainKey, terrain } from '../
 import { FoundryKey, Component, ComponentFoundry, FoundryParam, Components } from './Components'
 
 export type eID = { eID: number; label: string }
-export type Entity = eID & Component<'name'> & Component<'tile'> & Partial<Components>
+export type Entity = eID & Component<'name'> & Partial<Components>
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 export type EntityKey = BeingKey | FeatureKey | TerrainKey
 
 export type EntityTemplate = {
   label: string
   name: FoundryParam['name']
-  tile: FoundryParam['tile']
 } & Partial<FoundryParam>
 
 const templates = [...beings, ...features, ...terrain]
@@ -29,26 +28,31 @@ export class EntityPool {
         eID: 0,
         label: t.label,
         ...components.name(...t.name),
-        ...components.tile(...t.tile),
+        ...components.render('unknown'),
+      }
+
+      if (t.tiles) {
+        e.render.char = t.tiles[0]
+        e = { ...e, ...this.components.tiles(...t.tiles) }
       }
 
       if (t.tag) e = this.attach(e, 'tag', ...t.tag)
       if (t.trodOn) e = this.attach(e, 'trodOn', ...t.trodOn)
       if (t.fieldOfView) e = this.attach(e, 'fieldOfView', ...t.fieldOfView)
-      if (t.formSet) e = this.attach(e, 'formSet', ...t.formSet)
-      if (t.formSetTriggers) e = this.attach(e, 'formSetTriggers', ...t.formSetTriggers)
-      if (t.formSetAutoCycle) e = this.attach(e, 'formSetAutoCycle', ...t.formSetAutoCycle)
 
-      if (t.emitLight) {
-        const color =
-          t.emitLight[0] === 'auto'
-            ? transformHSL(e.tile.color, { lum: { to: 0.1 } })
-            : t.emitLight[0]
-        e = this.attach(e, 'emitLight', color, t.emitLight[1])
-        e = this.attach(e, 'tag', 'signalLightPathUpdated')
-      }
+      if (t.tileTriggers) e = this.attach(e, 'tileTriggers', ...t.tileTriggers)
+      if (t.tilesAutoCycle) e = this.attach(e, 'tilesAutoCycle', ...t.tilesAutoCycle)
 
-      if (t.lightHueRotate) e = this.attach(e, 'lightHueRotate', ...t.lightHueRotate)
+      // if (t.emitLight) {
+      //   const color =
+      //     t.emitLight[0] === 'auto'
+      //       ? transformHSL(e.render.color, { lum: { to: 0.1 } })
+      //       : t.emitLight[0]
+      //   e = this.attach(e, 'emitLight', color, t.emitLight[1])
+      //   e = this.attach(e, 'tag', 'signalLightPathUpdated')
+      // }
+
+      // if (t.lightHueRotate) e = this.attach(e, 'lightHueRotate', ...t.lightHueRotate)
 
       if (t.tileVariant) e = this.attach(e, 'tileVariant', ...t.tileVariant)
 

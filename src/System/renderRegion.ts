@@ -1,5 +1,5 @@
 import { CONFIG } from '../config'
-import { Entity } from '../Core'
+import { Entity, EntityWith } from '../Core'
 import { Engine } from '../Core/Engine'
 import { addLight, transformHSL } from '../lib/color'
 import { clamp, floor, half } from '../lib/util'
@@ -7,8 +7,8 @@ import { point } from '../Model/Point'
 import { Rect } from '../Model/Rectangle'
 
 // record the time and type of the last light flicker update
-let lastLightFlicker = 0
-let flickerDimmed = false
+// let lastLightFlicker = 0
+// let flickerDimmed = false
 
 export function renderRegion(engine: Engine) {
   const { mainDisplay, local } = engine
@@ -52,8 +52,9 @@ export function renderRegion(engine: Engine) {
   // replace any void terrain with these locally colored ones
   // const voidTerrain = local.voidTiles()
 
-  const ground = local.pool.symbolic('dirtFloor1')
-  const unknown = local.pool.symbolic('unknown')
+  const ground = local.pool.symbolic('dirtFloor1') as EntityWith<Entity, 'render'>
+  const unknown = local.pool.symbolic('unknown') as EntityWith<Entity, 'render'>
+  const nothing = local.pool.symbolic('nothing') as EntityWith<Entity, 'render'>
 
   const { areaKnown, areaVisible, lighting } = local
   const entities = local.get('position')
@@ -70,7 +71,7 @@ export function renderRegion(engine: Engine) {
 
     if (!known) {
       // unrevealed area
-      mainDisplay.draw(viewPt.x, viewPt.y, unknown.tile.char, unknown.tile.color, null)
+      mainDisplay.draw(viewPt.x, viewPt.y, unknown.render.char, 'transparent', 'transparent')
     } else {
       // currently visible
       const stack: Entity[] = [ground]
@@ -94,28 +95,28 @@ export function renderRegion(engine: Engine) {
       stack.sort((a, b) => zLevel(a) - zLevel(b))
 
       // extract form data, applying lighting/fade if applicable
-      const formStack = stack.map(e => {
-        const form = { ...e.tile }
-        if (visible && lighting.has(pt)) {
-          const light = lighting.get(pt) ?? [0, 0, 0]
-          if (Date.now() - lastLightFlicker > CONFIG.lightFlickerFreq) {
-            flickerDimmed = !flickerDimmed
-            lastLightFlicker = Date.now()
-          }
-          form.color = addLight(form.color, light, flickerDimmed)
-        } else if (known && !visible) {
-          form.color = transformHSL(form.color, recalledFade)
-        }
-        return form
+      const renderStack = stack.map(e => {
+        const render = { ...nothing.render, ...e.render }
+        // if (visible && lighting.has(pt)) {
+        //   const light = lighting.get(pt) ?? [0, 0, 0]
+        //   if (Date.now() - lastLightFlicker > CONFIG.lightFlickerFreq) {
+        //     flickerDimmed = !flickerDimmed
+        //     lastLightFlicker = Date.now()
+        //   }
+        //   render.color = addLight(render.color, light, flickerDimmed)
+        // } else if (known && !visible) {
+        //   render.color = transformHSL(render.color, recalledFade)
+        // }
+        return render
       })
 
       // draw
       mainDisplay.draw(
         viewPt.x,
         viewPt.y,
-        formStack.map(s => s.char),
-        formStack.map(s => (s.color === '' ? 'transparent' : s.color)),
-        formStack.map(s => (s.bgColor === '' ? 'transparent' : s.bgColor))
+        renderStack.map(s => s.char),
+        renderStack.map(s => (s.color === '' ? 'transparent' : s.color)),
+        renderStack.map(s => (s.bgColor === '' ? 'transparent' : s.bgColor))
       )
     }
   })

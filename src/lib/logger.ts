@@ -1,7 +1,7 @@
 const suppress = [
   'entity.attach.lightFlicker',
   'entity.attach.form',
-  'entity.attach.formSetAutoCycle',
+  'entity.attach.tilesAutoCycle',
   'entity.attach.emitLight',
 ]
 
