@@ -4,7 +4,7 @@ import { pick, shuffle } from '../lib/util'
 import { Point } from '../Model/Point'
 import { Rect } from '../Model/Rectangle'
 import { FeatureKey } from '../Templates'
-import { BSP, Sector } from './modules'
+import { BSP } from './modules'
 import { CellDish } from './modules/cellular'
 import { floodFindRegions } from './modules/flood'
 import { Overseer2 } from './Overseer2'
@@ -19,8 +19,8 @@ export function pit(width = CONFIG.generateWidth, height = CONFIG.generateHeight
   const wall = 'pitSolid'
   const floor = 'stoneFloor'
 
-  const drawRoom = (sector: Sector) => {
-    sector.rect.scale(1).traverse((pt, edge) => O2.terrain(pt, edge ? wall : floor))
+  const drawRoom = (rect: Rect) => {
+    rect.scale(1).traverse((pt, edge) => O2.terrain(pt, edge ? wall : floor))
   }
 
   const bsp = new BSP(region.rect.scale(-1))
@@ -40,7 +40,7 @@ export function pit(width = CONFIG.generateWidth, height = CONFIG.generateHeight
   }
   const rooms: Room[] = []
 
-  bsp.leaves(s => rooms.push(new Room(s.rect)))
+  bsp.leafRects(rect => rooms.push(new Room(rect)))
   console.log('rooms:', rooms)
   // mark
   rooms.forEach(r => {

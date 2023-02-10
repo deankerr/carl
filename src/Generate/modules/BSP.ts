@@ -2,9 +2,9 @@ import { half, pick, range, rnd } from '../../lib/util'
 import { point } from '../../Model/Point'
 import { Rect } from '../../Model/Rectangle'
 
-export class Sector {
-  child1: Sector | undefined
-  child2: Sector | undefined
+class BinaryRect {
+  leaf1: BinaryRect | undefined
+  leaf2: BinaryRect | undefined
 
   constructor(readonly rect: Rect, readonly minWidth: number, readonly minHeight: number) {
     const r = this.rect
@@ -17,9 +17,9 @@ export class Sector {
     const r1 = Rect.atxy2(point(r.x, r.y), point(split - 1, r.y2))
     const r2 = Rect.atxy2(point(split + 1, r.y), point(r.x2, r.y2))
 
-    this.child1 = new Sector(r1, this.minWidth, this.minHeight)
-    this.child2 = new Sector(r2, this.minWidth, this.minHeight)
-    return [this.child1, this.child2] as [Sector, Sector]
+    this.leaf1 = new BinaryRect(r1, this.minWidth, this.minHeight)
+    this.leaf2 = new BinaryRect(r2, this.minWidth, this.minHeight)
+    return [this.leaf1, this.leaf2] as [BinaryRect, BinaryRect]
   }
 
   splitHorizontal(at: number) {
@@ -29,19 +29,21 @@ export class Sector {
     const r1 = Rect.atxy2(point(r.x, r.y), point(r.x2, split - 1))
     const r2 = Rect.atxy2(point(r.x, split + 1), point(r.x2, r.y2))
 
-    this.child1 = new Sector(r1, this.minWidth, this.minHeight)
-    this.child2 = new Sector(r2, this.minWidth, this.minHeight)
-    return [this.child1, this.child2] as [Sector, Sector]
+    this.leaf1 = new BinaryRect(r1, this.minWidth, this.minHeight)
+    this.leaf2 = new BinaryRect(r2, this.minWidth, this.minHeight)
+    return [this.leaf1, this.leaf2] as [BinaryRect, BinaryRect]
   }
 }
 
 export class BSP {
   minWidth = 6
   minHeight = 4
-  root: Sector
-  queue: Sector[] = []
+  maxRatio = 2
+
+  root: BinaryRect
+  queue: BinaryRect[] = []
   constructor(readonly initialRect: Rect) {
-    this.root = new Sector(initialRect, this.minWidth, this.minHeight)
+    this.root = new BinaryRect(initialRect, this.minWidth, this.minHeight)
     this.queue.push(this.root)
   }
 
@@ -57,7 +59,12 @@ export class BSP {
     for (const i of range(1, r.width - 1)) {
       const ratio1 = r.height / i
       const ratio2 = r.height / (r.width - i)
-      if (ratio1 <= 2 && ratio2 <= 2 && i >= this.minWidth && r.width - i >= this.minWidth)
+      if (
+        ratio1 <= this.maxRatio &&
+        ratio2 <= this.maxRatio &&
+        i >= this.minWidth &&
+        r.width - i >= this.minWidth
+      )
         vAvail.push(i)
     }
 
@@ -66,14 +73,19 @@ export class BSP {
     for (const i of range(1, r.height - 1)) {
       const ratio1 = r.width / i
       const ratio2 = r.width / (r.height - i)
-      if (ratio1 <= 2 && ratio2 <= 2 && i >= this.minHeight && r.height - i >= this.minHeight)
+      if (
+        ratio1 <= this.maxRatio &&
+        ratio2 <= this.maxRatio &&
+        i >= this.minHeight &&
+        r.height - i >= this.minHeight
+      )
         hAvail.push(i)
     }
 
     const v = vAvail.length > 0 ? pick(vAvail) : 0
     const h = hAvail.length > 0 ? pick(hAvail) : 0
 
-    let result: [Sector, Sector] | undefined
+    let result: [BinaryRect, BinaryRect] | undefined
     if (v && h) {
       rnd(1) ? (result = next.splitVertical(v)) : (result = next.splitHorizontal(h))
     } else if (v) result = next.splitVertical(v)
@@ -92,18 +104,18 @@ export class BSP {
     let i = 0
     while (i++ <= iterations) {
       this.split()
-      this.leaves(then)
+      this.leafRects(then)
       after(i)
     }
   }
 
-  leaves(callback: LeafFn) {
-    function climb(s: Sector) {
-      if (s.child1 && s.child2) {
-        climb(s.child1)
-        climb(s.child2)
+  leafRects(callback: LeafFn) {
+    function climb(s: BinaryRect) {
+      if (s.leaf1 && s.leaf2) {
+        climb(s.leaf1)
+        climb(s.leaf2)
       } else {
-        callback(s)
+        callback(s.rect)
       }
     }
 
@@ -111,4 +123,4 @@ export class BSP {
   }
 }
 
-type LeafFn = (sector: Sector) => unknown
+type LeafFn = (rect: Rect) => unknown
