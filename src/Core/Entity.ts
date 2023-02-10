@@ -50,6 +50,8 @@ export class EntityPool {
 
       if (t.lightHueRotate) e = this.attach(e, 'lightHueRotate', ...t.lightHueRotate)
 
+      if (t.tileVariant) e = this.attach(e, 'tileVariant', ...t.tileVariant)
+
       this.pool.set(t.label, e)
     }
     log.end()

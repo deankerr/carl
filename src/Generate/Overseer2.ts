@@ -71,14 +71,12 @@ export class Overseer2 {
     if (!this.region.inBounds(pt)) return
     this.current.features.set(pt, feature)
     this.final.features.set(pt, feature)
-    // this.terrain(pt, 'ground') // clear terrain
   }
 
   being(pt: Point, being: BeingKey) {
     if (!this.region.inBounds(pt)) return
     this.current.beings.set(pt, being)
     this.final.beings.set(pt, being)
-    // this.terrain(pt, 'ground') // clear terrain
   }
 
   // realify actual entities

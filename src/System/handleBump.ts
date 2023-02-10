@@ -33,6 +33,19 @@ export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
           .modify('tag', 'isOpen')
           .modify('tag', 'signalLightPathUpdated')
 
+        if (door.hasDoorNorth) {
+          console.log('has door North')
+          const [doorNorth] = local.at(action.bump.add(0, -1)).filter(e => e.door)
+          console.log('doorNorth:', doorNorth)
+          local
+            .entity(doorNorth)
+            .remove('isClosed')
+            .remove('blocksLight')
+            .remove('blocksMovement')
+            .modify('tag', 'isOpen')
+            .modify('tag', 'signalLightPathUpdated')
+        }
+
         engine.message('Knock knock!!!', door)
         return log.end()
       }

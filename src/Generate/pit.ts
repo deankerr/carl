@@ -86,23 +86,11 @@ export function pit(width = CONFIG.generateWidth, height = CONFIG.generateHeight
       if (pts.length > 0) {
         origin.adjacencies.set(target, pts)
         origin.adjacent.add(target)
-
-        // if (!target.connected.has(origin)) {
-        //   const pt = pick(pts)
-        //   if (!pt) continue
-        //   O2.terrain(pt, floor)
-        //   O2.feature(pt, 'woodenDoor')
-
-        //   origin.connected.add(target)
-        //   target.connected.add(origin)
-        // }
       }
     }
   })
 
   const start = pick(rooms)
-  const unconnected = rooms.filter(r => r !== start)
-  const connected = new Set([start])
 
   function connectRooms(origin: Room) {
     const adjacent = shuffle([...origin.adjacent])
@@ -117,7 +105,7 @@ export function pit(width = CONFIG.generateWidth, height = CONFIG.generateHeight
       // door check here
 
       O2.terrain(pt, floor)
-      O2.feature(pt, 'woodenDoor')
+      O2.feature(pt, pick(['woodenDoor', 'stoneDoor']))
       O2.snapshot('connect')
       origin.connected.add(target)
       target.connected.add(origin)

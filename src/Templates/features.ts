@@ -5,6 +5,11 @@ export type FeatureKey =
   | DebugKeys
   | '[clear]'
   | 'woodenDoor'
+  | 'woodenDoorV'
+  | 'woodenDoorVNorth'
+  | 'stoneDoor'
+  | 'stoneDoorV'
+  | 'stoneDoorVNorth'
   | 'web'
   | 'lilypad1'
   | 'lilypad2'
@@ -17,18 +22,74 @@ export const features: EntityTemplate[] = [
     label: 'woodenDoor',
     name: ['door'],
     form: ['woodenDoorClosed', ''],
-    tag: ['memorable', 'feature', 'blocksLight', 'blocksMovement', 'isClosed'],
+    tag: ['memorable', 'feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door'],
     trodOn: ['You carefully backflip through the door.'],
     formSet: [['woodenDoorClosed', '', '', 'woodenDoorOpen', '', '']],
+    formSetTriggers: ['isClosed', 'isOpen'],
+    tileVariant: ['woodenDoorV', 'woodenDoorVNorth'],
+  },
+  {
+    label: 'woodenDoorV',
+    name: ['door'],
+    form: ['woodenDoorVClosed', ''],
+    tag: [
+      'memorable',
+      'feature',
+      'blocksLight',
+      'blocksMovement',
+      'isClosed',
+      'door',
+      'hasDoorNorth',
+      'renderAbove',
+    ],
+    trodOn: ['You carefully backflip through the door.'],
+    formSet: [['woodenDoorVClosed', '', '', 'woodenDoorVOpen', '', '']],
+    formSetTriggers: ['isClosed', 'isOpen'],
+  },
+  {
+    label: 'woodenDoorVNorth',
+    name: ['door'],
+    form: ['woodenDoorVClosedNorth', ''],
+    tag: ['memorable', 'feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door'],
+    trodOn: ['You carefully backflip through the door.'],
+    formSet: [['woodenDoorVClosedNorth', '', '', 'woodenDoorVOpenNorth', '', '']],
     formSetTriggers: ['isClosed', 'isOpen'],
   },
   {
     label: 'stoneDoor',
     name: ['door'],
     form: ['stoneDoorClosed', ''],
-    tag: ['memorable', 'feature', 'blocksLight', 'blocksMovement', 'isClosed'],
+    tag: ['memorable', 'feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door'],
     trodOn: ['You carefully backflip through the door.'],
     formSet: [['stoneDoorClosed', '', '', 'stoneDoorOpen', '', '']],
+    formSetTriggers: ['isClosed', 'isOpen'],
+    tileVariant: ['stoneDoorV', 'stoneDoorVNorth'],
+  },
+  {
+    label: 'stoneDoorV',
+    name: ['door'],
+    form: ['stoneDoorVClosed', ''],
+    tag: [
+      'memorable',
+      'feature',
+      'blocksLight',
+      'blocksMovement',
+      'isClosed',
+      'door',
+      'hasDoorNorth',
+      'renderAbove',
+    ],
+    trodOn: ['You carefully backflip through the door.'],
+    formSet: [['stoneDoorVClosed', '', '', 'stoneDoorVOpen', '', '']],
+    formSetTriggers: ['isClosed', 'isOpen'],
+  },
+  {
+    label: 'stoneDoorVNorth',
+    name: ['door'],
+    form: ['stoneDoorVClosedNorth', ''],
+    tag: ['memorable', 'feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door'],
+    trodOn: ['You carefully backflip through the door.'],
+    formSet: [['stoneDoorVClosedNorth', '', '', 'stoneDoorVOpenNorth', '', '']],
     formSetTriggers: ['isClosed', 'isOpen'],
   },
   {

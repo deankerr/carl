@@ -1,5 +1,6 @@
 import { ActionTypes } from './Action'
 import { Point } from '../Model/Point'
+import { EntityKey } from './Entity'
 
 export const ComponentFoundry = {
   acting: (action: ActionTypes) => {
@@ -51,6 +52,10 @@ export const ComponentFoundry = {
   trodOn: (msg: string) => {
     return { trodOn: { msg } }
   },
+
+  tileVariant: (...keys: EntityKey[]) => {
+    return { tileVariant: keys }
+  },
 }
 
 export type Tag =
@@ -70,6 +75,9 @@ export type Tag =
   | 'signalUpdatePlayerFOV'
   | 'terrain'
   | 'face'
+  | 'door'
+  | 'hasDoorNorth'
+  | 'renderAbove'
 
 export type FoundryKey = keyof typeof ComponentFoundry
 export type FoundryParam = { [K in FoundryKey]: Parameters<typeof ComponentFoundry[K]> }

@@ -1,5 +1,6 @@
 import { Color } from 'rot-js/lib/color'
 import { CONFIG } from '../config'
+import { tileVariant } from '../lib/tilemap'
 import { loop, Queue, rnd } from '../lib/util'
 import { Point, point, pointRect } from '../Model/Point'
 import { Rect } from '../Model/Rectangle'
@@ -42,6 +43,7 @@ export class Region {
   //  * Entity Management
   createEntity(pt: Point, key: EntityKey) {
     const entity = this.pool.spawn(key, pt)
+    if (entity.door) return this.createDoor(pt, key)
     this.entities.push(entity)
     this.hasChanged = true
     return entity
@@ -146,5 +148,33 @@ export class Region {
     }
     console.error('Failed to get random point')
     return point(rnd(0, this.width - 1), rnd(0, this.height - 1))
+  }
+
+  variant(pt: Point, key: EntityKey): EntityKey {
+    const e = this.pool.symbolic(key)
+    if (e.door && e.tileVariant) {
+      console.log('door var', this.terrainAt(pt.add(0, -1)).blocksMovement)
+      if (this.terrainAt(pt.add(0, -1)).blocksMovement) return e.tileVariant[0] as EntityKey
+    }
+
+    return key
+  }
+
+  createDoor(pt: Point, key: EntityKey) {
+    // switch to vertical door if needed, which has two pieces
+    const useVariant = this.terrainAt(pt.add(0, -1)).blocksMovement
+    const sym = this.pool.symbolic(key)
+
+    if (useVariant && sym.tileVariant) {
+      const doorNorth = this.pool.spawn(sym.tileVariant[1], pt.add(0, -1))
+      const door = this.pool.spawn(sym.tileVariant[0], pt)
+      this.entities.push(door, doorNorth)
+      return door
+    }
+
+    const entity = this.pool.spawn(key, pt)
+    this.entities.push(entity)
+    this.hasChanged = true
+    return entity
   }
 }

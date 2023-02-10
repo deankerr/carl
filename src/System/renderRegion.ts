@@ -124,7 +124,10 @@ export function renderRegion(engine: Engine) {
 const recalledFade = { sat: { by: 0.8 }, lum: { by: 0.8 } }
 
 const zLevel = (e: Entity) => {
-  return 'being' in e ? 2 : 'feature' in e ? 1 : 0
+  if (e.renderAbove) return 4
+  if (e.being) return 2
+  if (e.feature) return 1
+  return 0
 }
 
 // background color cycle
