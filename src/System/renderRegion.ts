@@ -114,8 +114,8 @@ export function renderRegion(engine: Engine) {
         viewPt.x,
         viewPt.y,
         formStack.map(s => s.char),
-        formStack.map(s => s.color),
-        formStack.map(s => s.bgColor)
+        formStack.map(s => (s.color === '' ? 'transparent' : s.color)),
+        formStack.map(s => (s.bgColor === '' ? 'transparent' : s.bgColor))
       )
     }
   })

@@ -78,6 +78,8 @@ export type Tag =
   | 'door'
   | 'hasDoorNorth'
   | 'renderAbove'
+  | 'wall'
+  | 'floor'
 
 export type FoundryKey = keyof typeof ComponentFoundry
 export type FoundryParam = { [K in FoundryKey]: Parameters<typeof ComponentFoundry[K]> }

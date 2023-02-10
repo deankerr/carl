@@ -1,13 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CONFIG } from '../config'
 import { Region } from '../Core'
-import { floor, loop, pick, repeat, rnd, shuffle } from '../lib/util'
-import { Point, point } from '../Model/Point'
-import { Rect } from '../Model/Rectangle'
-import { flameKeys, flameVariants } from '../Templates/flames'
+import { loop, pick, shuffle } from '../lib/util'
+import { Point } from '../Model/Point'
 import { CellDish } from './modules/cellular'
-import { rndCluster, floodWalkable, floodFindRegions } from './modules/flood'
-import { hop } from './modules/walk'
+import { rndCluster, floodFindRegions } from './modules/flood'
 import { Overseer2 } from './Overseer2'
 
 export function cave(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {

@@ -16,7 +16,7 @@ export const createTile2Display = (
     tileWidth: tinySize,
     tileHeight: tinySize,
     tileSet: window.oryxTiny,
-    // tileColorize: true,
+    tileColorize: true,
     tileMap: oryxTinyMap(tinySize),
   })
 
