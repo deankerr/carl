@@ -192,9 +192,10 @@ export class Region {
       }
 
       // walls
-      if (tHere.wall) {
+      if (tHere.wall && tHere.wallVariant && tHere.faceVariant) {
         console.log(tHere.wallVariant)
-        // if (tHere.isFace && tBelow.wall) this.createTerrain(pt, tHere.wa)
+        if (tHere.isFace && tBelow.wall) this.createTerrain(pt, tHere.wallVariant[0])
+        else if (!tHere.isFace && !tBelow.wall) this.createTerrain(pt, tHere.faceVariant[0])
       }
     })
 

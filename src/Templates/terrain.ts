@@ -1,3 +1,5 @@
+import { caveFace, caveFaceBase, caveWall, caveWallBase } from './walls'
+
 const tWall = ['terrain', 'blocksLight', 'blocksMovement', 'wall']
 
 export const terrain = {
@@ -35,20 +37,8 @@ export const terrain = {
     tiles: ['sand'],
     tag: ['terrain'],
   },
-  caveWall: {
-    name: 'wall',
-    tiles: ['caveWall1'],
-    tag: [...tWall],
-    wallVariant: ['caveWall1', 'caveWall2'],
-    faceVariant: ['caveFace1', 'caveFace2', 'caveFace3', 'caveFace4', 'caveFace5', 'caveFace6'],
-  },
-  caveFace: {
-    name: 'wall',
-    tiles: ['caveWallFace1'],
-    tag: [...tWall, 'isFace'],
-    wallVariant: ['caveWall1', 'caveWall2'],
-    faceVariant: ['caveFace1', 'caveFace2', 'caveFace3', 'caveFace4', 'caveFace5', 'caveFace6'],
-  },
+  caveWall: caveWallBase,
+  caveFace: caveFaceBase,
   caveWall1: caveWall(1),
   caveWall2: caveWall(2),
   caveWall3: caveWall(3),
@@ -82,24 +72,6 @@ export const terrain = {
     tag: ['terrain'],
   },
 } as const
-
-function caveWall(n: number) {
-  return {
-    name: 'caveWall' + n,
-    tiles: ['caveWall' + n],
-    tag: [...tWall],
-    baseVariant: 'caveWall',
-  } as const
-}
-
-function caveFace(n: number) {
-  return {
-    name: 'caveFace' + n,
-    tiles: ['caveFace' + n],
-    tag: [...tWall, 'isWallFace'],
-    baseVariant: 'caveWall',
-  } as const
-}
 
 /*
 

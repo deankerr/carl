@@ -61,7 +61,7 @@ export const ComponentFoundry = {
     return { ledgeVariant: key }
   },
 
-  wallVariant: (...wallVariant: EntityKey[]) => {
+  wallVariant: (...wallVariant: string[]): { wallVariant: EntityKey[] } => {
     return { wallVariant }
   },
 
