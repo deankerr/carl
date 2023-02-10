@@ -14,7 +14,7 @@ export function cave(width = CONFIG.generateWidth, height = CONFIG.generateHeigh
   region.name = 'cave'
 
   //* cave generation
-  const wall = 'caveSolid'
+  const wall = 'caveWall'
   const floor = 'dirtFloor'
   const water = 'water'
   const sand = 'sand'
@@ -72,8 +72,8 @@ export function cave(width = CONFIG.generateWidth, height = CONFIG.generateHeigh
   O2.snapshot('lake 6')
 
   //* web
-  const webSeed = rndCluster(5, O2.module())
-  const webSeed2 = rndCluster(5, O2.module())
+  const webSeed = rndCluster(1, O2.module())
+  const webSeed2 = rndCluster(1, O2.module())
   const webDish = new CellDish(region.rect)
 
   region.rect.traverse(pt => {
@@ -91,7 +91,7 @@ export function cave(width = CONFIG.generateWidth, height = CONFIG.generateHeigh
   O2.snapshot('lake 3')
 
   // cell gen
-  webDish.cull(30)((pt, alive) => O2.feature(pt, alive ? web : clear))
+  webDish.cull(90)((pt, alive) => O2.feature(pt, alive ? web : clear))
   O2.snapshot('cull')
   webDish.generation(4, 5)((pt, alive) => O2.feature(pt, alive ? web : clear))
   O2.snapshot('lake 4')
@@ -154,7 +154,7 @@ export function cave(width = CONFIG.generateWidth, height = CONFIG.generateHeigh
   })
   O2.snapshot('scorpions')
 
-  floodFindRegions(region.rect, (pt: Point) => !region.terrainAt(pt).blocksMovement)
+  // floodFindRegions(region.rect, (pt: Point) => !region.terrainAt(pt).blocksMovement)
 
   O2.finalize()
   return region

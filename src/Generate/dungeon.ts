@@ -11,7 +11,7 @@ export function dungeon(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDis
 
   region.name = 'dungeon'
 
-  const wall = 'dungeonSolid'
+  const wall = 'dungeonWall'
 
   region.rect.edgePoints().forEach(pt => O2.terrain(pt, wall))
 

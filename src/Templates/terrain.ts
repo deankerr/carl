@@ -1,127 +1,105 @@
-import { EntityTemplate } from '../Core/Entity'
-import { series } from './series'
+const tWall = ['terrain', 'blocksLight', 'blocksMovement', 'wall']
 
-export const terrain: EntityTemplate[] = [
-  {
-    label: 'water',
-    name: ['water'],
+export const terrain = {
+  water: {
+    name: 'water',
     tiles: ['water1', 'water2'],
-    tag: ['terrain'],
-    tilesAutoCycle: [1000],
+    tag: ['terrain', 'isBase'],
+    tilesAutoCycle: 1000,
+    ledgeVariant: 'waterLedge',
   },
-  {
-    label: 'waterFace',
-    name: ['water'],
-    tiles: ['waterFace1', 'waterFace2'],
-    tag: ['terrain', 'face'],
-    tilesAutoCycle: [1000],
+  waterLedge: {
+    name: 'water',
+    tiles: ['waterLedge1', 'waterLedge2'],
+    tag: ['terrain', 'isLedge'],
+    tilesAutoCycle: 1000,
+    baseVariant: 'water',
   },
-  {
-    label: 'nothing',
-    name: ['nothing'],
+  nothing: {
+    name: 'nothing',
     tiles: ['nothing'],
     tag: ['terrain'],
   },
-  {
-    label: 'unknown',
-    name: ['unknown'],
+  unknown: {
+    name: 'unknown',
     tiles: ['unknown'],
     tag: ['terrain'],
   },
-  {
-    label: 'endlessVoid',
-    name: ['endless void'],
+  endlessVoid: {
+    name: 'endless void',
     tiles: ['unknown'],
     tag: ['blocksLight', 'blocksMovement', 'terrain'],
   },
-  ...series('solid', 'dungeon', 6),
-  ...series('face', 'dungeon', 6),
-  ...series('solid', 'cave', 6),
-  ...series('face', 'cave', 6),
-  ...series('solid', 'tomb', 6),
-  ...series('face', 'tomb', 6),
-  ...series('solid', 'pit', 6),
-  ...series('face', 'pit', 6),
-  ...series('floor', 'stone', 6),
-  ...series('floor', 'dirt', 6),
-  {
-    label: 'sand',
-    name: ['sand'],
+  sand: {
+    name: 'sand',
     tiles: ['sand'],
     tag: ['terrain'],
   },
-  {
-    label: 'sandFace',
-    name: ['sand'],
-    tiles: ['sandFace'],
+  caveWall: {
+    name: 'wall',
+    tiles: ['caveWall1'],
+    tag: [...tWall],
+    wallVariant: ['caveWall1', 'caveWall2'],
+    faceVariant: ['caveFace1', 'caveFace2', 'caveFace3', 'caveFace4', 'caveFace5', 'caveFace6'],
+  },
+  caveFace: {
+    name: 'wall',
+    tiles: ['caveWallFace1'],
+    tag: [...tWall, 'isFace'],
+    wallVariant: ['caveWall1', 'caveWall2'],
+    faceVariant: ['caveFace1', 'caveFace2', 'caveFace3', 'caveFace4', 'caveFace5', 'caveFace6'],
+  },
+  caveWall1: caveWall(1),
+  caveWall2: caveWall(2),
+  caveWall3: caveWall(3),
+  caveWall4: caveWall(4),
+  caveWall5: caveWall(5),
+  caveWall6: caveWall(6),
+  caveFace1: caveFace(1),
+  caveFace2: caveFace(2),
+  caveFace3: caveFace(3),
+  caveFace4: caveFace(4),
+  caveFace5: caveFace(5),
+  caveFace6: caveFace(6),
+  dungeonWall: {
+    name: 'wall',
+    tiles: ['dungeonSolid1'],
+    tag: [...tWall],
+  },
+  pitWall: {
+    name: 'wall',
+    tiles: ['pitSolid1'],
+    tag: [...tWall],
+  },
+  stoneFloor: {
+    name: 'floor',
+    tiles: ['stoneFloor1'],
     tag: ['terrain'],
   },
-]
+  dirtFloor: {
+    name: 'floor',
+    tiles: ['dirtFloor1'],
+    tag: ['terrain'],
+  },
+} as const
 
-export type TerrainKey =
-  | 'nothing'
-  | 'water'
-  | 'waterFace'
-  | 'endlessVoid'
-  | 'unknown'
-  | 'dungeonSolid'
-  | 'dungeonSolid1'
-  | 'dungeonSolid2'
-  | 'dungeonSolid3'
-  | 'dungeonSolid4'
-  | 'dungeonSolid5'
-  | 'dungeonSolid6'
-  | 'dungeonWall'
-  | 'dungeonWall1'
-  | 'dungeonWall2'
-  | 'dungeonWall3'
-  | 'dungeonWall4'
-  | 'dungeonWall5'
-  | 'dungeonWall6'
-  | 'caveSolid'
-  | 'caveSolid1'
-  | 'caveSolid2'
-  | 'caveSolid3'
-  | 'caveSolid4'
-  | 'caveSolid5'
-  | 'caveSolid6'
-  | 'caveWall'
-  | 'caveWall1'
-  | 'caveWall2'
-  | 'caveWall3'
-  | 'caveWall4'
-  | 'caveWall5'
-  | 'caveWall6'
-  | 'pitSolid'
-  | 'pitSolid1'
-  | 'pitSolid2'
-  | 'pitSolid3'
-  | 'pitSolid4'
-  | 'pitSolid5'
-  | 'pitSolid6'
-  | 'pitWall'
-  | 'pitWall1'
-  | 'pitWall2'
-  | 'pitWall3'
-  | 'pitWall4'
-  | 'pitWall5'
-  | 'pitWall6'
-  | 'stoneFloor'
-  | 'stoneFloor1'
-  | 'stoneFloor2'
-  | 'stoneFloor3'
-  | 'stoneFloor4'
-  | 'stoneFloor5'
-  | 'stoneFloor6'
-  | 'dirtFloor'
-  | 'dirtFloor1'
-  | 'dirtFloor2'
-  | 'dirtFloor3'
-  | 'dirtFloor4'
-  | 'dirtFloor5'
-  | 'dirtFloor6'
-  | 'sand'
-  | 'sandFace'
+function caveWall(n: number) {
+  return {
+    name: 'caveWall' + n,
+    tiles: ['caveWall' + n],
+    tag: [...tWall],
+    baseVariant: 'caveWall',
+  } as const
+}
+
+function caveFace(n: number) {
+  return {
+    name: 'caveFace' + n,
+    tiles: ['caveFace' + n],
+    tag: [...tWall, 'isWallFace'],
+    baseVariant: 'caveWall',
+  } as const
+}
 
 /*
 

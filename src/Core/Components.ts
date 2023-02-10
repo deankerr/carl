@@ -23,7 +23,7 @@ export const ComponentFoundry = {
     return { tiles }
   },
 
-  tilesAutoCycle: (frequency: number, current = 0, lastUpdate = 0) => {
+  tilesAutoCycle: (frequency = 0, current = 0, lastUpdate = 0) => {
     return { tilesAutoCycle: { frequency, current, lastUpdate } }
   },
 
@@ -39,7 +39,7 @@ export const ComponentFoundry = {
     return { position }
   },
 
-  tag: (...tags: Tag[]) => {
+  tag: (...tags: string[]) => {
     return tags.reduce((acc, curr) => {
       return { ...acc, [curr]: true }
     }, {} as { [K in Tag]?: true })
@@ -51,6 +51,22 @@ export const ComponentFoundry = {
 
   tileVariant: (...keys: EntityKey[]) => {
     return { tileVariant: keys }
+  },
+
+  baseVariant: (key: EntityKey) => {
+    return { baseVariant: key }
+  },
+
+  ledgeVariant: (key: EntityKey) => {
+    return { ledgeVariant: key }
+  },
+
+  wallVariant: (...wallVariant: EntityKey[]) => {
+    return { wallVariant }
+  },
+
+  faceVariant: (...faceVariant: EntityKey[]) => {
+    return { faceVariant }
   },
 }
 
@@ -75,7 +91,10 @@ export type Tag =
   | 'hasDoorNorth'
   | 'renderAbove'
   | 'wall'
+  | 'isFace'
   | 'floor'
+  | 'isBase'
+  | 'isLedge'
 
 export type FoundryKey = keyof typeof ComponentFoundry
 export type FoundryParam = { [K in FoundryKey]: Parameters<typeof ComponentFoundry[K]> }

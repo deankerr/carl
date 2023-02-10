@@ -52,7 +52,7 @@ export function renderRegion(engine: Engine) {
   // replace any void terrain with these locally colored ones
   // const voidTerrain = local.voidTiles()
 
-  const ground = local.pool.symbolic('dirtFloor1') as EntityWith<Entity, 'render'>
+  const ground = local.pool.symbolic('dirtFloor') as EntityWith<Entity, 'render'>
   const unknown = local.pool.symbolic('unknown') as EntityWith<Entity, 'render'>
   const nothing = local.pool.symbolic('nothing') as EntityWith<Entity, 'render'>
 

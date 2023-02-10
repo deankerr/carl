@@ -1,6 +1,5 @@
 import { Color } from 'rot-js/lib/color'
 import { CONFIG } from '../config'
-import { tileVariant } from '../lib/tilemap'
 import { loop, Queue, rnd } from '../lib/util'
 import { Point, point, pointRect } from '../Model/Point'
 import { Rect } from '../Model/Rectangle'
@@ -43,7 +42,7 @@ export class Region {
   //  * Entity Management
   createEntity(pt: Point, key: EntityKey) {
     const entity = this.pool.spawn(key, pt)
-    if (entity.door) return this.createDoor(pt, key)
+    // if (entity.door) return this.createDoor(pt, key)
     this.entities.push(entity)
     this.hasChanged = true
     return entity
@@ -51,6 +50,7 @@ export class Region {
 
   createTerrain(pt: Point, key: EntityKey) {
     const terrain = this.pool.symbolic(key)
+
     this.terrainMap.set(pt, terrain)
     this.hasChanged = true
   }
@@ -177,4 +177,41 @@ export class Region {
     this.hasChanged = true
     return entity
   }
+
+  evaluateTerrainVariants() {
+    this.rect.traverse(pt => {
+      const tHere = this.terrainAt(pt)
+      const tAbove = this.terrainAt(pt.add(0, -1))
+      const tBelow = this.terrainAt(pt.add(0, 1))
+
+      // ledged water/pools/etc
+      if (tHere.ledgeVariant) {
+        if (!tAbove.isLedge && !tHere.isLedge && tAbove.label !== tHere.label) {
+          this.createTerrain(pt, tHere.ledgeVariant)
+        } else if (tHere.baseVariant && !tHere.isBase) this.createTerrain(pt, tHere.baseVariant)
+      }
+
+      // walls
+      if (tHere.wall) {
+        console.log(tHere.wallVariant)
+        // if (tHere.isFace && tBelow.wall) this.createTerrain(pt, tHere.wa)
+      }
+    })
+
+    this.hasChanged = true
+  }
+
+  // terrainVariants() {
+  //   console.log('sweep')
+  //   this.rect.traverse(pt => {
+  //     const t = this.terrainAt(pt)
+  //     if ('ledgeTiles' in t && 'render' in t) {
+  //       if (!('ledgeTiles' in this.terrainAt(pt.add(0, -1)))) {
+  //         t.tiles = t.ledgeTiles
+  //         t.render.char = t.tiles[0]!
+  //         console.log('t:', t)
+  //       }
+  //     }
+  //   })
+  // }
 }

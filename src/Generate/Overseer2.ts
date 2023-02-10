@@ -1,10 +1,8 @@
-import { EntityKey, EntityPool, Region } from '../Core'
+import { BeingKey, EntityKey, EntityPool, FeatureKey, Region } from '../Core'
 import { Visualizer } from '../Core/Visualizer'
-import { tileVariant } from '../lib/tilemap'
 import { pick, rnd } from '../lib/util'
 import { point, Point } from '../Model/Point'
 import { Rect } from '../Model/Rectangle'
-import { BeingKey, FeatureKey } from '../Templates'
 
 export class Overseer2 {
   region: Region
@@ -30,29 +28,29 @@ export class Overseer2 {
     this.current.message = msg
 
     // add faces
-    Rect.at(point(0, 0), this.region.width, this.region.height).traverse(pt => {
-      if (this.region.terrainAt(pt).label.startsWith('cave')) {
-        if (!this.region.terrainAt(pt.add(0, 1)).blocksMovement) this.terrain(pt, 'caveWall')
-        else this.terrain(pt, 'caveSolid')
-      }
+    // Rect.at(point(0, 0), this.region.width, this.region.height).traverse(pt => {
+    //   if (this.region.terrainAt(pt).label.startsWith('cave')) {
+    //     if (!this.region.terrainAt(pt.add(0, 1)).blocksMovement) this.terrain(pt, 'caveWall')
+    //     else this.terrain(pt, 'caveSolid')
+    //   }
 
-      if (this.region.terrainAt(pt).label.startsWith('pit')) {
-        if (!this.region.terrainAt(pt.add(0, 1)).blocksMovement) this.terrain(pt, 'pitWall')
-        else this.terrain(pt, 'pitSolid')
-      }
+    //   if (this.region.terrainAt(pt).label.startsWith('pit')) {
+    //     if (!this.region.terrainAt(pt.add(0, 1)).blocksMovement) this.terrain(pt, 'pitWall')
+    //     else this.terrain(pt, 'pitSolid')
+    //   }
 
-      if (this.region.terrainAt(pt).label.startsWith('water')) {
-        if (!this.region.terrainAt(pt.add(0, -1)).label.startsWith('water'))
-          this.terrain(pt, 'waterFace')
-        else this.terrain(pt, 'water')
-      }
+    //   if (this.region.terrainAt(pt).label.startsWith('water')) {
+    //     if (!this.region.terrainAt(pt.add(0, -1)).label.startsWith('water'))
+    //       this.terrain(pt, 'waterFace')
+    //     else this.terrain(pt, 'water')
+    //   }
 
-      if (this.region.terrainAt(pt).label.startsWith('sand')) {
-        if (!this.region.terrainAt(pt.add(0, -1)).label.startsWith('sand'))
-          this.terrain(pt, 'sandFace')
-        else this.terrain(pt, 'sand')
-      }
-    })
+    //   if (this.region.terrainAt(pt).label.startsWith('sand')) {
+    //     if (!this.region.terrainAt(pt.add(0, -1)).label.startsWith('sand'))
+    //       this.terrain(pt, 'sandFace')
+    //     else this.terrain(pt, 'sand')
+    //   }
+    // })
 
     this.mutations.push(this.current)
     this.current = genHistory()
@@ -60,11 +58,9 @@ export class Overseer2 {
 
   terrain(pt: Point, terrain: EntityKey) {
     if (!this.region.inBounds(pt)) return
-    const variant = tileVariant(terrain)
 
-    const t = this.pool.symbolic(variant)
-    this.region.terrainMap.set(pt, t)
-    this.current.terrain.set(pt, variant)
+    this.region.createTerrain(pt, terrain)
+    this.current.terrain.set(pt, terrain)
   }
 
   feature(pt: Point, feature: FeatureKey) {
@@ -93,6 +89,7 @@ export class Overseer2 {
       this.region.createEntity(pt, key)
     })
 
+    this.region.evaluateTerrainVariants()
     this.region.visualizer = new Visualizer(this.region, this.mutations)
     const timeTaken = Date.now() - this.timeStarted
     this.mutations[0].message = timeTaken.toString()

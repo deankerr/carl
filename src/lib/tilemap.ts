@@ -106,18 +106,18 @@ export function oryxTinyMap(size: number) {
       'dungeonSolid6',
     ],
     [
+      'caveWallFace1',
+      'caveWallFace2',
+      'caveWallFace3',
+      'caveWallFace4',
+      'caveWallFace5',
+      'caveWallFace6',
       'caveWall1',
       'caveWall2',
       'caveWall3',
       'caveWall4',
       'caveWall5',
       'caveWall6',
-      'caveSolid1',
-      'caveSolid2',
-      'caveSolid3',
-      'caveSolid4',
-      'caveSolid5',
-      'caveSolid6',
     ],
     ['tombWall'],
     [
@@ -138,8 +138,8 @@ export function oryxTinyMap(size: number) {
     ['dirtFloor1', 'dirtFloor2', 'dirtFloor3', 'dirtFloor4', 'dirtFloor5', 'dirtFloor6'],
     ['unknown'],
     ['nothing'],
-    ['waterFaceClear', 'waterClear', 'waterFace1', 'waterFace2', 'water1', 'water2'],
-    ['acidFaceClear'],
+    ['waterLedgeClear', 'waterClear', 'waterLedge1', 'waterLedge2', 'water1', 'water2'],
+    ['acidLedgeClear'],
     [
       'woodenDoorClosed',
       'woodenDoorOpen',
@@ -244,49 +244,49 @@ export function oryxTinyMap(size: number) {
   }, {} as Record<string, [number, number]>)
 }
 
-export function tileVariant(k: EntityKey): EntityKey {
-  if (k === 'dungeonSolid') {
-    return rnd(16)
-      ? pick(['dungeonSolid1', 'dungeonSolid2', 'dungeonSolid3', 'dungeonSolid4'])
-      : pick(['dungeonSolid5', 'dungeonSolid6'])
-  }
+// export function tileVariant(k: EntityKey): EntityKey {
+//   if (k === 'dungeonSolid') {
+//     return rnd(16)
+//       ? pick(['dungeonSolid1', 'dungeonSolid2', 'dungeonSolid3', 'dungeonSolid4'])
+//       : pick(['dungeonSolid5', 'dungeonSolid6'])
+//   }
 
-  if (k === 'caveSolid') {
-    return rnd(16)
-      ? pick(['caveSolid1', 'caveSolid2', 'caveSolid3', 'caveSolid4'])
-      : pick(['caveSolid5', 'caveSolid6'])
-  }
+//   if (k === 'caveSolid') {
+//     return rnd(16)
+//       ? pick(['caveSolid1', 'caveSolid2', 'caveSolid3', 'caveSolid4'])
+//       : pick(['caveSolid5', 'caveSolid6'])
+//   }
 
-  if (k === 'pitSolid') {
-    return rnd(16)
-      ? pick(['pitSolid1', 'pitSolid2', 'pitSolid3', 'pitSolid4'])
-      : pick(['pitSolid5', 'pitSolid6'])
-  }
+//   if (k === 'pitSolid') {
+//     return rnd(16)
+//       ? pick(['pitSolid1', 'pitSolid2', 'pitSolid3', 'pitSolid4'])
+//       : pick(['pitSolid5', 'pitSolid6'])
+//   }
 
-  if (k === 'caveWall') {
-    return rnd(3)
-      ? 'caveWall1'
-      : pick(['caveWall1', 'caveWall2', 'caveWall3', 'caveWall4', 'caveWall5', 'caveWall6'])
-  }
+//   if (k === 'caveWall') {
+//     return rnd(3)
+//       ? 'caveWall1'
+//       : pick(['caveWall1', 'caveWall2', 'caveWall3', 'caveWall4', 'caveWall5', 'caveWall6'])
+//   }
 
-  if (k === 'stoneFloor') {
-    return rnd(3)
-      ? 'stoneFloor1'
-      : pick([
-          'stoneFloor1',
-          'stoneFloor2',
-          'stoneFloor3',
-          'stoneFloor4',
-          'stoneFloor5',
-          'stoneFloor6',
-        ])
-  }
+//   if (k === 'stoneFloor') {
+//     return rnd(3)
+//       ? 'stoneFloor1'
+//       : pick([
+//           'stoneFloor1',
+//           'stoneFloor2',
+//           'stoneFloor3',
+//           'stoneFloor4',
+//           'stoneFloor5',
+//           'stoneFloor6',
+//         ])
+//   }
 
-  if (k === 'dirtFloor') {
-    return rnd(3)
-      ? 'dirtFloor1'
-      : pick(['dirtFloor1', 'dirtFloor2', 'dirtFloor3', 'dirtFloor4', 'dirtFloor5', 'dirtFloor6'])
-  }
+//   if (k === 'dirtFloor') {
+//     return rnd(3)
+//       ? 'dirtFloor1'
+//       : pick(['dirtFloor1', 'dirtFloor2', 'dirtFloor3', 'dirtFloor4', 'dirtFloor5', 'dirtFloor6'])
+//   }
 
-  return k
-}
+//   return k
+// }

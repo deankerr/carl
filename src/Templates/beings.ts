@@ -1,42 +1,35 @@
-// import { CONFIG } from '../config'
-import { EntityTemplate } from '../Core/Entity'
-
-export type BeingKey = 'player' | 'spiderRed' | 'spiderBlack' | 'scorpionRed' | 'scorpionBlack'
-
-export const beings: EntityTemplate[] = [
-  {
-    label: 'player',
-    name: ['player'],
+export const beings = {
+  player: {
+    name: 'player',
     tiles: ['@'],
     tag: ['playerControlled', 'actor', 'blocksMovement', 'being', 'signalUpdatePlayerFOV'],
-    fieldOfView: [16],
+    fieldOfView: 16,
   },
-  {
+  spiderRed: {
     label: 'spiderRed',
-    name: ['giant spider'],
+    name: 'giant spider',
     tiles: ['spiderRed1', 'spiderRed2'],
-    tilesAutoCycle: [1000],
+    tilesAutoCycle: 1000,
     tag: ['being', 'actor', 'blocksMovement'],
   },
-  {
+  spiderBlack: {
     label: 'spiderBlack',
-    name: ['giant spider'],
+    name: 'giant spider',
     tiles: ['spiderBlack1', 'spiderBlack2'],
-    tilesAutoCycle: [1000],
+    tilesAutoCycle: 1000,
     tag: ['being', 'actor', 'blocksMovement'],
   },
-  {
-    label: 'scorpionRed',
-    name: ['giant spider'],
+  scorpionRed: {
+    name: 'giant scorpion',
     tiles: ['scorpionRed1', 'scorpionRed2'],
-    tilesAutoCycle: [1000],
+    tilesAutoCycle: 1000,
     tag: ['being', 'actor', 'blocksMovement'],
   },
-  {
+  scorpionBlack: {
     label: 'scorpionBlack',
-    name: ['giant scorpion'],
+    name: 'giant scorpion',
     tiles: ['scorpionBlack1', 'scorpionBlack2'],
-    tilesAutoCycle: [1000],
+    tilesAutoCycle: 1000,
     tag: ['being', 'actor', 'blocksMovement'],
   },
-]
+} as const

@@ -1,23 +1,61 @@
-import { EntityTemplate } from '../Core/Entity'
-import { debug, DebugKeys } from './debug'
+export const features = {
+  woodenDoor: {
+    name: 'door',
+    tiles: ['woodenDoorClosed', 'woodenDoorOpen'],
+    tag: ['memorable', 'feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door'],
+    trodOn: 'You carefully backflip through the door.',
+    tileTriggers: ['isClosed', 'isOpen'],
+    tileVariant: ['woodenDoorV', 'woodenDoorVNorth'],
+  },
+  stoneDoor: {
+    name: 'door',
+    tiles: ['stoneDoorClosed', 'stoneDoorOpen'],
+    tag: ['memorable', 'feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door'],
+    trodOn: 'You carefully backflip through the door.',
+    tileTriggers: ['isClosed', 'isOpen'],
+    tileVariant: ['stoneDoorV', 'stoneDoorVNorth'],
+  },
+  web: {
+    name: 'web',
+    tiles: ['web1'],
+    tag: ['feature'],
+  },
+  cactus: {
+    name: 'cactus',
+    tiles: ['cactus'],
+    tag: ['feature'],
+  },
+  lilypad1: {
+    name: 'lilypad',
+    tiles: ['lilypad11', 'lilypad12'],
+    tilesAutoCycle: 1000,
+    tag: ['feature'],
+    trodOn: 'You bounce off the lilypad.',
+  },
+  lilypad2: {
+    name: 'lilypad',
+    tiles: ['lilypad21', 'lilypad22'],
+    tilesAutoCycle: 1000,
+    tag: ['feature'],
+    trodOn: 'You bounce off the lilypad.',
+  },
+  lilypad3: {
+    name: 'lilypad',
+    tiles: ['lilypad31', 'lilypad32'],
+    tilesAutoCycle: 1000,
+    tag: ['feature'],
+    trodOn: 'You bounce off the lilypad.',
+  },
+  lilypad4: {
+    name: 'lilypad',
+    tiles: ['lilypad41', 'lilypad42'],
+    tilesAutoCycle: 1000,
+    tag: ['feature'],
+    trodOn: 'You bounce off the lilypad.',
+  },
+} as const
 
-export type FeatureKey =
-  | DebugKeys
-  | '[clear]'
-  | 'woodenDoor'
-  | 'woodenDoorV'
-  | 'woodenDoorVNorth'
-  | 'stoneDoor'
-  | 'stoneDoorV'
-  | 'stoneDoorVNorth'
-  | 'web'
-  | 'lilypad1'
-  | 'lilypad2'
-  | 'lilypad3'
-  | 'lilypad4'
-  | 'cactus'
-
-export const features: EntityTemplate[] = [
+export const featuresOld = [
   {
     label: 'woodenDoor',
     name: ['door'],
@@ -86,49 +124,4 @@ export const features: EntityTemplate[] = [
     trodOn: ['You carefully backflip through the door.'],
     tileTriggers: ['isClosed', 'isOpen'],
   },
-  {
-    label: 'web',
-    name: ['web'],
-    tiles: ['web1'],
-    tag: ['feature'],
-  },
-  {
-    label: 'lilypad1',
-    name: ['lilypad'],
-    tiles: ['lilypad11', 'lilypad12'],
-    tilesAutoCycle: [1000],
-    tag: ['feature'],
-    trodOn: ['You bounce off the lilypad.'],
-  },
-  {
-    label: 'lilypad2',
-    name: ['lilypad'],
-    tiles: ['lilypad21', 'lilypad22'],
-    tilesAutoCycle: [1000],
-    tag: ['feature'],
-    trodOn: ['You bounce off the lilypad.'],
-  },
-  {
-    label: 'lilypad3',
-    name: ['lilypad'],
-    tiles: ['lilypad31', 'lilypad32'],
-    tilesAutoCycle: [1000],
-    tag: ['feature'],
-    trodOn: ['You bounce off the lilypad.'],
-  },
-  {
-    label: 'lilypad4',
-    name: ['lilypad'],
-    tiles: ['lilypad41', 'lilypad42'],
-    tilesAutoCycle: [1000],
-    tag: ['feature'],
-    trodOn: ['You bounce off the lilypad.'],
-  },
-  {
-    label: 'cactus',
-    name: ['cactus'],
-    tiles: ['cactus'],
-    tag: ['feature'],
-  },
-  ...debug,
 ]

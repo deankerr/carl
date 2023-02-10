@@ -37,7 +37,7 @@ export function processTileUpdate(engine: Engine) {
   }
 
   // quick hack to animate terrain
-  const tAnimators: EntityKey[] = ['water', 'waterFace']
+  const tAnimators: EntityKey[] = ['water']
   for (const key of tAnimators) {
     const terrain = local.pool.symbolic(key) as EntityWith<Entity, 'tiles' | 'tilesAutoCycle'>
     const { render, tiles, tilesAutoCycle: cycle } = terrain

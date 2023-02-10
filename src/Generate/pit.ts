@@ -2,7 +2,6 @@ import { CONFIG } from '../config'
 import { Region } from '../Core'
 import { pick } from '../lib/util'
 import { Rect } from '../Model/Rectangle'
-import { FeatureKey } from '../Templates'
 import { BSP } from './modules'
 import { connectRooms, findAdjacent, Room } from './modules/Room'
 import { Overseer2 } from './Overseer2'
@@ -14,7 +13,7 @@ export function pit(width = CONFIG.generateWidth, height = CONFIG.generateHeight
   region.name = 'pit'
 
   //* cave generation
-  const wall = 'pitSolid'
+  const wall = 'pitWall'
   const floor = 'stoneFloor'
 
   const drawRoom = (rect: Rect) => {
@@ -33,10 +32,10 @@ export function pit(width = CONFIG.generateWidth, height = CONFIG.generateHeight
   bsp.leafRects(rect => rooms.push(new Room(rect)))
 
   // debug room markers
-  rooms.forEach(r => {
-    const k = ('debug' + r.debugid) as FeatureKey
-    O2.feature(r.rect.center(), k)
-  })
+  // rooms.forEach(r => {
+  //   const k = ('debug' + r.debugid) as FeatureKey
+  //   O2.feature(r.rect.center(), k)
+  // })
 
   // find adjacent room points
   findAdjacent(rooms, region)

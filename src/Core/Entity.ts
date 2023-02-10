@@ -1,21 +1,25 @@
-import { transformHSL } from '../lib/color'
 import { logger } from '../lib/logger'
 import { Point } from '../Model/Point'
-import { BeingKey, beings, FeatureKey, features, TerrainKey, terrain } from '../Templates'
+import { features, terrain, beings } from '../Templates'
 import { FoundryKey, Component, ComponentFoundry, FoundryParam, Components } from './Components'
 
 export type eID = { eID: number; label: string }
 export type Entity = eID & Component<'name'> & Component<'render'> & Partial<Components>
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
-export type EntityKey = BeingKey | FeatureKey | TerrainKey
+// export type EntityKey = BeingKey | FeatureKey | TerrainKey
 
-export type EntityTemplate = {
-  label: string
-  name: FoundryParam['name']
-} & Partial<FoundryParam>
+// export type EntityTemplate = {
+//   label: string
+//   name: FoundryParam['name']
+// } & Partial<FoundryParam>
 
-const templates = [...beings, ...features, ...terrain]
-
+// const templates = [...beings, ...features, ...terrain]
+const templates = { ...beings, ...features, ...terrain }
+export type TerrainKey = keyof typeof terrain
+export type FeatureKey = keyof typeof features | '[clear]'
+export type BeingKey = keyof typeof beings
+export type EntityKey = TerrainKey | FeatureKey | BeingKey
+const a: EntityKey = 'caveFace1'
 export class EntityPool {
   private count = 0
   readonly pool = new Map<string, Entity>()
@@ -23,11 +27,11 @@ export class EntityPool {
   constructor(readonly components: typeof ComponentFoundry) {
     const log = logger('entity', 'init')
 
-    for (const t of templates) {
+    for (const [key, t] of Object.entries(templates)) {
       let e = {
         eID: 0,
-        label: t.label,
-        ...components.name(...t.name),
+        label: key,
+        ...components.name(t.name),
         ...components.render('unknown'),
       }
 
@@ -37,11 +41,16 @@ export class EntityPool {
       }
 
       if (t.tag) e = this.attach(e, 'tag', ...t.tag)
-      if (t.trodOn) e = this.attach(e, 'trodOn', ...t.trodOn)
-      if (t.fieldOfView) e = this.attach(e, 'fieldOfView', ...t.fieldOfView)
+      if ('trodOn' in t) e = this.attach(e, 'trodOn', t.trodOn)
+      if ('fieldOfView' in t) e = this.attach(e, 'fieldOfView', t.fieldOfView)
 
-      if (t.tileTriggers) e = this.attach(e, 'tileTriggers', ...t.tileTriggers)
-      if (t.tilesAutoCycle) e = this.attach(e, 'tilesAutoCycle', ...t.tilesAutoCycle)
+      if ('tileTriggers' in t) e = this.attach(e, 'tileTriggers', ...t.tileTriggers)
+      if ('tilesAutoCycle' in t) e = this.attach(e, 'tilesAutoCycle', t.tilesAutoCycle)
+
+      if ('baseVariant' in t) e = { ...e, ...this.components.baseVariant(t.baseVariant) }
+      if ('ledgeVariant' in t) e = { ...e, ...this.components.ledgeVariant(t.ledgeVariant) }
+      if ('wallVariant' in t) e = { ...e, ...this.components.wallVariant(...t.wallVariant) }
+      if ('faceVariant' in t) e = { ...e, ...this.components.faceVariant(...t.faceVariant) }
 
       // if (t.emitLight) {
       //   const color =
@@ -54,9 +63,9 @@ export class EntityPool {
 
       // if (t.lightHueRotate) e = this.attach(e, 'lightHueRotate', ...t.lightHueRotate)
 
-      if (t.tileVariant) e = this.attach(e, 'tileVariant', ...t.tileVariant)
+      // if ('tileVariant' in t) e = this.attach(e, 'tileVariant', ...t.tileVariant)
 
-      this.pool.set(t.label, e)
+      this.pool.set(key, e)
     }
     log.end()
   }

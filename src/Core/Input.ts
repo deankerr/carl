@@ -50,6 +50,7 @@ export function handle(event: KeyboardEvent, context: GameContext): ActionTypes 
     Minus: MetaUI('displayZoomOut'),
     Equal: MetaUI('displayZoomIn'),
     Backquote: MetaUI('debugMode'),
+    'shift Backquote': MetaUI('logTile'),
   }
   if (context === 'game' && gameKeys[k]) return gameKeys[k]
 

@@ -39,6 +39,8 @@ export function UI(engine: Engine, ui: string) {
       options.debugMode = !options.debugMode
       msg = options.debugMode ? 'Welcome to Debug' : 'Bugs crushed'
       break
+    case 'logTile':
+      msg = logTile(engine)
   }
 
   msg ? engine.uiMessage(msg) : engine.uiMessage(`UI:${ui} unhandled`)
@@ -59,6 +61,12 @@ function main(engine: Engine, n: number) {
 
   engine.mainDisplay.setOptions({ width: size.width, height: size.height })
   return `${size.width} x ${size.height}`
+}
+
+function logTile(engine: Engine) {
+  const [p] = engine.local.get('playerControlled', 'position')
+  console.log(p.position.s, engine.local.at(p.position))
+  return `Entities at ${p.position.s}`
 }
 
 // if (ui === 'bgCycle') {

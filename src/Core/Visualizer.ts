@@ -95,6 +95,7 @@ export class Visualizer {
     for (const [pt, b] of beings) {
       this.mirror.createEntity(pt, b)
     }
+    this.mirror.evaluateTerrainVariants()
   }
 
   stop() {
