@@ -11,7 +11,7 @@ const seriesTemplate = {
     label: 'Wall',
     name: ['wall'],
     form: ['Wall', '', ''],
-    tag: ['terrain', 'blocksMovement', 'face'],
+    tag: ['terrain', 'blocksMovement', 'blocksLight', 'face'],
   },
   floor: {
     label: 'Floor',

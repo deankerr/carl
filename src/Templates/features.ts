@@ -1,8 +1,11 @@
 import { EntityTemplate } from '../Core/Entity'
 import { flameVariants, FlameKey } from './flames'
+import { debug, DebugKeys } from './debug'
 
 export type FeatureKey =
+  | DebugKeys
   | '[clear]'
+  | 'woodenDoor'
   | 'web'
   | 'lilypad1'
   | 'lilypad2'
@@ -11,6 +14,24 @@ export type FeatureKey =
   | 'cactus'
 
 export const features: EntityTemplate[] = [
+  {
+    label: 'woodenDoor',
+    name: ['door'],
+    form: ['woodenDoorClosed', ''],
+    tag: ['memorable', 'feature', 'blocksLight', 'blocksMovement', 'isClosed'],
+    trodOn: ['You carefully backflip through the door.'],
+    formSet: [['woodenDoorClosed', '', '', 'woodenDoorOpen', '', '']],
+    formSetTriggers: ['isClosed', 'isOpen'],
+  },
+  {
+    label: 'stoneDoor',
+    name: ['door'],
+    form: ['stoneDoorClosed', ''],
+    tag: ['memorable', 'feature', 'blocksLight', 'blocksMovement', 'isClosed'],
+    trodOn: ['You carefully backflip through the door.'],
+    formSet: [['stoneDoorClosed', '', '', 'stoneDoorOpen', '', '']],
+    formSetTriggers: ['isClosed', 'isOpen'],
+  },
   {
     label: 'web',
     name: ['web'],
@@ -59,4 +80,5 @@ export const features: EntityTemplate[] = [
     form: ['cactus', '', ''],
     tag: ['feature', 'renderUnderBeing'],
   },
+  ...debug,
 ]

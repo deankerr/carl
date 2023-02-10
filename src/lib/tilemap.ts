@@ -140,7 +140,7 @@ export function oryxTinyMap(size: number) {
     ['nothing'],
     ['waterFaceClear', 'waterClear', 'waterFace1', 'waterFace2', 'water1', 'water2'],
     ['acidFaceClear'],
-    ['woodenDoorClosed'],
+    ['woodenDoorClosed', 'woodenDoorOpen'],
     ['stoneDoorClosed'],
     ['crate'],
     ['webNW', 'webNE', 'webSW', 'webSE', 'web'],

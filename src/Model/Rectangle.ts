@@ -49,7 +49,7 @@ export class Rect {
     }
   }
 
-  intersects(rect: Rect) {
+  intersectPoints(rect: Rect) {
     if (this === rect)
       console.warn('Did you mean to check if a rect intersects itself?', this, rect)
 
