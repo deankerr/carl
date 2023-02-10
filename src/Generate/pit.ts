@@ -7,6 +7,7 @@ import { FeatureKey } from '../Templates'
 import { BSP } from './modules'
 import { CellDish } from './modules/cellular'
 import { floodFindRegions } from './modules/flood'
+import { connectRooms, findAdjacent, Room } from './modules/Room'
 import { Overseer2 } from './Overseer2'
 
 export function pit(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
@@ -30,73 +31,25 @@ export function pit(width = CONFIG.generateWidth, height = CONFIG.generateHeight
     i => O2.snapshot('BSP ' + i)
   )
 
-  let rCount = 0
-  class Room {
-    id = rCount++
-    adjacencies = new Map<Room, Point[]>()
-    adjacent = new Set<Room>()
-    connected = new Set<Room>()
-    constructor(readonly rect: Rect) {}
-  }
+  // create rooms from BSP leaves
   const rooms: Room[] = []
-
   bsp.leafRects(rect => rooms.push(new Room(rect)))
-  console.log('rooms:', rooms)
-  // mark
+
+  // debug room markers
   rooms.forEach(r => {
-    const k = ('debug' + r.id) as FeatureKey
+    const k = ('debug' + r.debugid) as FeatureKey
     O2.feature(r.rect.center(), k)
   })
 
-  // find adjacency
-  rooms.forEach(origin => {
-    const wallRect = origin.rect.scale(1)
-
-    for (const target of rooms) {
-      if (origin === target) continue
-      const pts = wallRect.intersectPoints(target.rect.scale(1)).filter(pt => {
-        let wallCount = 0
-        pt.neighbours4().forEach(npt => {
-          if (region.terrainAt(npt).blocksMovement) wallCount++
-        })
-        if (wallCount > 2) return false
-        return true
-      })
-
-      if (pts.length > 0) {
-        origin.adjacencies.set(target, pts)
-        origin.adjacent.add(target)
-      }
-    }
-  })
-
-  const start = pick(rooms)
-
-  function connectRooms(origin: Room) {
-    const adjacent = shuffle([...origin.adjacent])
-    while (adjacent.length > 0) {
-      const target = adjacent.pop()
-      if (!target) return
-      if (target.connected.size > 0) continue
-
-      const pts = shuffle([...(origin.adjacencies.get(target) ?? [])])
-      const pt = pick(pts)
-
-      // door check here
-
-      O2.terrain(pt, floor)
-      O2.feature(pt, pick(['woodenDoor', 'stoneDoor']))
-      O2.snapshot('connect')
-      origin.connected.add(target)
-      target.connected.add(origin)
-      console.log('connected', origin.id, target.id)
-
-      connectRooms(target)
-    }
-  }
+  // find adjacent room points
+  findAdjacent(rooms, region)
 
   // create doors
-  connectRooms(start)
+  connectRooms(rooms, pt => {
+    O2.terrain(pt, floor)
+    O2.feature(pt, pick(['woodenDoor', 'stoneDoor']))
+    O2.snapshot('Connect Room')
+  })
 
   O2.finalize()
   return region
