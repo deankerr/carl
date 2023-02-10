@@ -1,20 +1,20 @@
 // import { CONFIG } from '../config'
-import { EntityTemplate } from '../../Core/Entity'
+// import { EntityTemplate } from '../../Core/Entity'
 
-export type BeingKey =
-  | 'player'
-  | 'spider'
-  | 'ghost'
-  | 'demon'
-  | 'crab'
-  | 'crab2'
-  | 'snake'
-  | 'warboy'
-  | 'scorpion'
-  | 'bigMozzie'
-  | 'mozzie'
+// export type BeingKey =
+//   | 'player'
+//   | 'spider'
+//   | 'ghost'
+//   | 'demon'
+//   | 'crab'
+//   | 'crab2'
+//   | 'snake'
+//   | 'warboy'
+//   | 'scorpion'
+//   | 'bigMozzie'
+//   | 'mozzie'
 
-export const beings: EntityTemplate[] = [
+export const beings = [
   {
     label: 'player',
     name: ['player'],

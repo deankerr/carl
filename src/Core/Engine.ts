@@ -108,7 +108,7 @@ export class Engine {
       turn: this.playerTurns,
       time: Date.now(),
       highlight: entity?.name ?? '',
-      color: entity?.form.color ?? '',
+      color: entity?.tile.color ?? '',
     }
   }
 }

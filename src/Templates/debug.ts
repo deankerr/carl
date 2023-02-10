@@ -21,11 +21,11 @@ function makeDebugs(s: string): EntityTemplate[] {
     const t = {
       label: 'debug' + name,
       name: ['debug'],
-      form: ['debug', '', ''],
+      tile: ['debug', '', ''],
       tag: ['feature', 'memorable'],
       trodOn: ['you touch the bugs'],
     } as EntityTemplate
-    t.form[0] = name
+    t.tile[0] = name
     ts.push(t)
   })
   return ts

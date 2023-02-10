@@ -1,8 +1,8 @@
 import { EntityTemplate } from '../../Core'
 
-export type FlameKey = 'flames' | 'blueFlames' | 'greenFlames' | 'magentaFlames' | 'redFlames'
+// export type FlameKey = 'flames' | 'blueFlames' | 'greenFlames' | 'magentaFlames' | 'redFlames'
 
-const flames: EntityTemplate = {
+const flames = {
   label: 'flames',
   name: ['flames'],
   form: ['flames1', '#FF8000'],
@@ -13,41 +13,29 @@ const flames: EntityTemplate = {
   emitLight: ['auto'],
 }
 
-const blueFlames: EntityTemplate = {
+const blueFlames = {
   ...flames,
   label: 'blueFlames',
   form: ['flames1', '#00FFFF'],
 }
 
-const greenFlames: EntityTemplate = {
+const greenFlames = {
   ...flames,
   label: 'greenFlames',
   form: ['flames1', '#00FF00'],
 }
 
-const magentaFlames: EntityTemplate = {
+const magentaFlames = {
   ...flames,
   label: 'magentaFlames',
   form: ['flames1', '#FF00FF'],
 }
 
-const redFlames: EntityTemplate = {
+const redFlames = {
   ...flames,
   label: 'redFlames',
   form: ['flames1', '#FF0000'],
 }
 
-export const flameVariants: EntityTemplate[] = [
-  flames,
-  blueFlames,
-  greenFlames,
-  magentaFlames,
-  redFlames,
-]
-export const flameKeys: FlameKey[] = [
-  'flames',
-  'blueFlames',
-  'greenFlames',
-  'magentaFlames',
-  'redFlames',
-]
+export const flameVariants = [flames, blueFlames, greenFlames, magentaFlames, redFlames]
+export const flameKeys = ['flames', 'blueFlames', 'greenFlames', 'magentaFlames', 'redFlames']

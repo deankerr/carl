@@ -15,8 +15,8 @@ export const ComponentFoundry = {
     return { fieldOfView: { radius, visible } }
   },
 
-  form: (char: string, color: string, bgColor = 'transparent') => {
-    return { form: { char, color, bgColor } }
+  tile: (char: string, color: string, bgColor = 'transparent') => {
+    return { tile: { char, color, bgColor } }
   },
 
   formSet: (formSet: string[]) => {

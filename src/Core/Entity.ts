@@ -5,14 +5,14 @@ import { BeingKey, beings, FeatureKey, features, TerrainKey, terrain } from '../
 import { FoundryKey, Component, ComponentFoundry, FoundryParam, Components } from './Components'
 
 export type eID = { eID: number; label: string }
-export type Entity = eID & Component<'name'> & Component<'form'> & Partial<Components>
+export type Entity = eID & Component<'name'> & Component<'tile'> & Partial<Components>
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 export type EntityKey = BeingKey | FeatureKey | TerrainKey
 
 export type EntityTemplate = {
   label: string
   name: FoundryParam['name']
-  form: FoundryParam['form']
+  tile: FoundryParam['tile']
 } & Partial<FoundryParam>
 
 const templates = [...beings, ...features, ...terrain]
@@ -29,7 +29,7 @@ export class EntityPool {
         eID: 0,
         label: t.label,
         ...components.name(...t.name),
-        ...components.form(...t.form),
+        ...components.tile(...t.tile),
       }
 
       if (t.tag) e = this.attach(e, 'tag', ...t.tag)
@@ -42,7 +42,7 @@ export class EntityPool {
       if (t.emitLight) {
         const color =
           t.emitLight[0] === 'auto'
-            ? transformHSL(e.form.color, { lum: { to: 0.1 } })
+            ? transformHSL(e.tile.color, { lum: { to: 0.1 } })
             : t.emitLight[0]
         e = this.attach(e, 'emitLight', color, t.emitLight[1])
         e = this.attach(e, 'tag', 'signalLightPathUpdated')

@@ -70,7 +70,7 @@ export function renderRegion(engine: Engine) {
 
     if (!known) {
       // unrevealed area
-      mainDisplay.draw(viewPt.x, viewPt.y, unknown.form.char, unknown.form.color, null)
+      mainDisplay.draw(viewPt.x, viewPt.y, unknown.tile.char, unknown.tile.color, null)
     } else {
       // currently visible
       const stack: Entity[] = [ground]
@@ -95,7 +95,7 @@ export function renderRegion(engine: Engine) {
 
       // extract form data, applying lighting/fade if applicable
       const formStack = stack.map(e => {
-        const form = { ...e.form }
+        const form = { ...e.tile }
         if (visible && lighting.has(pt)) {
           const light = lighting.get(pt) ?? [0, 0, 0]
           if (Date.now() - lastLightFlicker > CONFIG.lightFlickerFreq) {

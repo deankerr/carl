@@ -1,17 +1,17 @@
 import { EntityTemplate } from '../../Core/Entity'
-import { flameVariants, FlameKey } from './flames'
+import { flameVariants } from './flames'
 
-export type FeatureKey =
-  | FlameKey
-  | 'door'
-  | 'shrub'
-  | 'statue'
-  | 'tombstone'
-  | 'deadTree'
-  | 'cactus'
-  | 'deadShrub'
+// export type FeatureKey =
+//   | FlameKey
+//   | 'door'
+//   | 'shrub'
+//   | 'statue'
+//   | 'tombstone'
+//   | 'deadTree'
+//   | 'cactus'
+//   | 'deadShrub'
 
-export const features: EntityTemplate[] = [
+export const features = [
   {
     label: 'door',
     name: ['door'],

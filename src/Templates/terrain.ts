@@ -5,7 +5,7 @@ export const terrain: EntityTemplate[] = [
   {
     label: 'water',
     name: ['water'],
-    form: ['water1', ''],
+    tile: ['water1', ''],
     tag: ['terrain'],
     formSet: [['water1', '', '', 'water2', '', '']],
     formSetAutoCycle: [1000],
@@ -13,7 +13,7 @@ export const terrain: EntityTemplate[] = [
   {
     label: 'waterFace',
     name: ['water'],
-    form: ['waterFace1', ''],
+    tile: ['waterFace1', ''],
     tag: ['terrain', 'face'],
     formSet: [['waterFace1', '', '', 'waterFace2', '', '']],
     formSetAutoCycle: [1000],
@@ -21,19 +21,19 @@ export const terrain: EntityTemplate[] = [
   {
     label: 'nothing',
     name: ['nothing'],
-    form: ['nothing', ''],
+    tile: ['nothing', ''],
     tag: ['terrain'],
   },
   {
     label: 'unknown',
     name: ['unknown'],
-    form: ['unknown', ''],
+    tile: ['unknown', ''],
     tag: ['terrain'],
   },
   {
     label: 'endlessVoid',
     name: ['endless void'],
-    form: ['unknown', ''],
+    tile: ['unknown', ''],
     tag: ['blocksLight', 'blocksMovement', 'terrain'],
   },
   ...series('solid', 'dungeon', 6),
@@ -49,13 +49,13 @@ export const terrain: EntityTemplate[] = [
   {
     label: 'sand',
     name: ['sand'],
-    form: ['sand', '', ''],
+    tile: ['sand', '', ''],
     tag: ['terrain'],
   },
   {
     label: 'sandFace',
     name: ['sand'],
-    form: ['sandFace', '', ''],
+    tile: ['sandFace', '', ''],
     tag: ['terrain'],
   },
 ]

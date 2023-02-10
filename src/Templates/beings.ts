@@ -7,14 +7,14 @@ export const beings: EntityTemplate[] = [
   {
     label: 'player',
     name: ['player'],
-    form: ['@', ''],
+    tile: ['@', ''],
     tag: ['playerControlled', 'actor', 'blocksMovement', 'being', 'signalUpdatePlayerFOV'],
     fieldOfView: [16],
   },
   {
     label: 'spiderRed',
     name: ['giant spider'],
-    form: ['spiderRed1', ''],
+    tile: ['spiderRed1', ''],
     formSet: [['spiderRed1', '', '', 'spiderRed2', '', '']],
     formSetAutoCycle: [1000],
     tag: ['being', 'actor', 'blocksMovement'],
@@ -22,7 +22,7 @@ export const beings: EntityTemplate[] = [
   {
     label: 'spiderBlack',
     name: ['giant spider'],
-    form: ['spiderBlack1', ''],
+    tile: ['spiderBlack1', ''],
     formSet: [['spiderBlack1', '', '', 'spiderBlack2', '', '']],
     formSetAutoCycle: [1000],
     tag: ['being', 'actor', 'blocksMovement'],
@@ -31,7 +31,7 @@ export const beings: EntityTemplate[] = [
   {
     label: 'scorpionRed',
     name: ['giant spider'],
-    form: ['scorpionRed1', ''],
+    tile: ['scorpionRed1', ''],
     formSet: [['scorpionRed1', '', '', 'scorpionRed2', '', '']],
     formSetAutoCycle: [1000],
     tag: ['being', 'actor', 'blocksMovement'],
@@ -39,7 +39,7 @@ export const beings: EntityTemplate[] = [
   {
     label: 'scorpionBlack',
     name: ['giant scorpion'],
-    form: ['scorpionBlack1', ''],
+    tile: ['scorpionBlack1', ''],
     formSet: [['scorpionBlack1', '', '', 'scorpionBlack2', '', '']],
     formSetAutoCycle: [1000],
     tag: ['being', 'actor', 'blocksMovement'],

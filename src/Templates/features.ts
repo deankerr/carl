@@ -21,7 +21,7 @@ export const features: EntityTemplate[] = [
   {
     label: 'woodenDoor',
     name: ['door'],
-    form: ['woodenDoorClosed', ''],
+    tile: ['woodenDoorClosed', ''],
     tag: ['memorable', 'feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door'],
     trodOn: ['You carefully backflip through the door.'],
     formSet: [['woodenDoorClosed', '', '', 'woodenDoorOpen', '', '']],
@@ -31,7 +31,7 @@ export const features: EntityTemplate[] = [
   {
     label: 'woodenDoorV',
     name: ['door'],
-    form: ['woodenDoorVClosed', ''],
+    tile: ['woodenDoorVClosed', ''],
     tag: [
       'memorable',
       'feature',
@@ -49,7 +49,7 @@ export const features: EntityTemplate[] = [
   {
     label: 'woodenDoorVNorth',
     name: ['door'],
-    form: ['woodenDoorVClosedNorth', ''],
+    tile: ['woodenDoorVClosedNorth', ''],
     tag: ['memorable', 'feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door'],
     trodOn: ['You carefully backflip through the door.'],
     formSet: [['woodenDoorVClosedNorth', '', '', 'woodenDoorVOpenNorth', '', '']],
@@ -58,7 +58,7 @@ export const features: EntityTemplate[] = [
   {
     label: 'stoneDoor',
     name: ['door'],
-    form: ['stoneDoorClosed', ''],
+    tile: ['stoneDoorClosed', ''],
     tag: ['memorable', 'feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door'],
     trodOn: ['You carefully backflip through the door.'],
     formSet: [['stoneDoorClosed', '', '', 'stoneDoorOpen', '', '']],
@@ -68,7 +68,7 @@ export const features: EntityTemplate[] = [
   {
     label: 'stoneDoorV',
     name: ['door'],
-    form: ['stoneDoorVClosed', ''],
+    tile: ['stoneDoorVClosed', ''],
     tag: [
       'memorable',
       'feature',
@@ -86,7 +86,7 @@ export const features: EntityTemplate[] = [
   {
     label: 'stoneDoorVNorth',
     name: ['door'],
-    form: ['stoneDoorVClosedNorth', ''],
+    tile: ['stoneDoorVClosedNorth', ''],
     tag: ['memorable', 'feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door'],
     trodOn: ['You carefully backflip through the door.'],
     formSet: [['stoneDoorVClosedNorth', '', '', 'stoneDoorVOpenNorth', '', '']],
@@ -95,13 +95,13 @@ export const features: EntityTemplate[] = [
   {
     label: 'web',
     name: ['web'],
-    form: ['web1', '', ''],
+    tile: ['web1', '', ''],
     tag: ['feature'],
   },
   {
     label: 'lilypad1',
     name: ['lilypad'],
-    form: ['lilypad11', '', ''],
+    tile: ['lilypad11', '', ''],
     formSet: [['lilypad11', '', '', 'lilypad12', '', '']],
     formSetAutoCycle: [1000],
     tag: ['feature'],
@@ -110,7 +110,7 @@ export const features: EntityTemplate[] = [
   {
     label: 'lilypad2',
     name: ['lilypad'],
-    form: ['lilypad21', '', ''],
+    tile: ['lilypad21', '', ''],
     formSet: [['lilypad21', '', '', 'lilypad22', '', '']],
     formSetAutoCycle: [1000],
     tag: ['feature'],
@@ -119,7 +119,7 @@ export const features: EntityTemplate[] = [
   {
     label: 'lilypad3',
     name: ['lilypad'],
-    form: ['lilypad31', '', ''],
+    tile: ['lilypad31', '', ''],
     formSet: [['lilypad31', '', '', 'lilypad32', '', '']],
     formSetAutoCycle: [1000],
     tag: ['feature'],
@@ -128,7 +128,7 @@ export const features: EntityTemplate[] = [
   {
     label: 'lilypad4',
     name: ['lilypad'],
-    form: ['lilypad41', '', ''],
+    tile: ['lilypad41', '', ''],
     formSet: [['lilypad41', '', '', 'lilypad42', '', '']],
     formSetAutoCycle: [1000],
     tag: ['feature'],
@@ -137,7 +137,7 @@ export const features: EntityTemplate[] = [
   {
     label: 'cactus',
     name: ['cactus'],
-    form: ['cactus', '', ''],
+    tile: ['cactus', '', ''],
     tag: ['feature'],
   },
   ...debug,
