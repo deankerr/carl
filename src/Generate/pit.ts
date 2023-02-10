@@ -23,32 +23,12 @@ export function pit(width = CONFIG.generateWidth, height = CONFIG.generateHeight
     sector.rect.scale(1).traverse((pt, edge) => O2.terrain(pt, edge ? wall : floor))
   }
 
-  const { snap } = O2.module()
-  const b = snap('bsp')
   const bsp = new BSP(region.rect.scale(-1))
-  bsp.run()
-  bsp.leaves(rect => drawRoom(rect))
-  b()
-
-  bsp.run()
-  bsp.leaves(rect => drawRoom(rect))
-  b()
-
-  bsp.run()
-  bsp.leaves(rect => drawRoom(rect))
-  b()
-
-  bsp.run()
-  bsp.leaves(rect => drawRoom(rect))
-  b()
-
-  bsp.run()
-  bsp.leaves(rect => drawRoom(rect))
-  b()
-
-  bsp.run()
-  bsp.leaves(rect => drawRoom(rect))
-  b()
+  bsp.run(
+    6,
+    rect => drawRoom(rect),
+    i => O2.snapshot('BSP ' + i)
+  )
 
   let rCount = 0
   class Room {
