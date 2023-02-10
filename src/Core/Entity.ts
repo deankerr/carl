@@ -5,7 +5,7 @@ import { BeingKey, beings, FeatureKey, features, TerrainKey, terrain } from '../
 import { FoundryKey, Component, ComponentFoundry, FoundryParam, Components } from './Components'
 
 export type eID = { eID: number; label: string }
-export type Entity = eID & Component<'name'> & Partial<Components>
+export type Entity = eID & Component<'name'> & Component<'render'> & Partial<Components>
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 export type EntityKey = BeingKey | FeatureKey | TerrainKey
 

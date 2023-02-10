@@ -7,7 +7,7 @@ import {
   handleTread,
   processDeath,
   processFieldOfVision,
-  processFormUpdate,
+  processTileUpdate,
   processLighting,
   renderMessageLog,
   renderRegion,
@@ -30,7 +30,7 @@ export class System {
 
   regionChangeProcess = [handleLocationChange, processRegionInitialization, processFieldOfVision]
 
-  preRenderProcess = [processFormUpdate, processLighting]
+  preRenderProcess = [processTileUpdate, processLighting]
   renderProcess = [renderRegion, renderMessageLog]
 
   constructor(readonly engine: Engine) {}

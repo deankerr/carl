@@ -4,7 +4,7 @@ export * from './handleMovement'
 export * from './handleTread'
 export * from './processDeath'
 export * from './processFieldOfVision'
-export * from './processFormUpdate'
+export * from './processTileUpdate'
 export * from './processLighting'
 
 export * from './renderRegion'
