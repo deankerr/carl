@@ -17,7 +17,7 @@ const seriesTemplate = {
     label: 'Floor',
     name: ['floor'],
     form: ['Floor', '', ''],
-    tag: ['terrain', 'renderUnderBeing'],
+    tag: ['terrain'],
   },
 }
 

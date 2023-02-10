@@ -1,5 +1,4 @@
 import { EntityTemplate } from '../Core/Entity'
-import { flameVariants, FlameKey } from './flames'
 import { debug, DebugKeys } from './debug'
 
 export type FeatureKey =
@@ -36,7 +35,7 @@ export const features: EntityTemplate[] = [
     label: 'web',
     name: ['web'],
     form: ['web1', '', ''],
-    tag: ['feature', 'renderUnderBeing'],
+    tag: ['feature'],
   },
   {
     label: 'lilypad1',
@@ -44,7 +43,7 @@ export const features: EntityTemplate[] = [
     form: ['lilypad11', '', ''],
     formSet: [['lilypad11', '', '', 'lilypad12', '', '']],
     formSetAutoCycle: [1000],
-    tag: ['feature', 'renderUnderBeing'],
+    tag: ['feature'],
     trodOn: ['You bounce off the lilypad.'],
   },
   {
@@ -53,7 +52,7 @@ export const features: EntityTemplate[] = [
     form: ['lilypad21', '', ''],
     formSet: [['lilypad21', '', '', 'lilypad22', '', '']],
     formSetAutoCycle: [1000],
-    tag: ['feature', 'renderUnderBeing'],
+    tag: ['feature'],
     trodOn: ['You bounce off the lilypad.'],
   },
   {
@@ -62,7 +61,7 @@ export const features: EntityTemplate[] = [
     form: ['lilypad31', '', ''],
     formSet: [['lilypad31', '', '', 'lilypad32', '', '']],
     formSetAutoCycle: [1000],
-    tag: ['feature', 'renderUnderBeing'],
+    tag: ['feature'],
     trodOn: ['You bounce off the lilypad.'],
   },
   {
@@ -71,14 +70,14 @@ export const features: EntityTemplate[] = [
     form: ['lilypad41', '', ''],
     formSet: [['lilypad41', '', '', 'lilypad42', '', '']],
     formSetAutoCycle: [1000],
-    tag: ['feature', 'renderUnderBeing'],
+    tag: ['feature'],
     trodOn: ['You bounce off the lilypad.'],
   },
   {
     label: 'cactus',
     name: ['cactus'],
     form: ['cactus', '', ''],
-    tag: ['feature', 'renderUnderBeing'],
+    tag: ['feature'],
   },
   ...debug,
 ]

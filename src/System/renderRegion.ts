@@ -80,19 +80,10 @@ export function renderRegion(engine: Engine) {
       const features = here.filter(e => e.feature)
 
       if (visible) {
-        // only render beings if area visible
         const beings = here.filter(e => e.being)
-
-        if (beings.length > 0) {
-          // only render tagged terrain/features under beings
-          if (terrain && terrain.renderUnderBeing) stack.push(terrain)
-          if (features.length > 0) stack.push(...features.filter(f => f.renderUnderBeing))
-          stack.push(...beings)
-        } else {
-          // no beings, render everything
-          if (terrain) stack.push(terrain)
-          if (features.length > 0) stack.push(...features)
-        }
+        if (terrain) stack.push(terrain)
+        if (features.length > 0) stack.push(...features)
+        stack.push(...beings)
       } else {
         // area previously seen, render terrain and memorable features
         if (terrain) stack.push(terrain)

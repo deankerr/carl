@@ -6,7 +6,7 @@ export const terrain: EntityTemplate[] = [
     label: 'water',
     name: ['water'],
     form: ['water1', '#40a3e5', '#020927'],
-    tag: ['terrain', 'renderUnderBeing'],
+    tag: ['terrain'],
     formSet: [['water1', '', '', 'water2', '', '']],
     formSetAutoCycle: [1000],
   },
@@ -14,7 +14,7 @@ export const terrain: EntityTemplate[] = [
     label: 'waterFace',
     name: ['water'],
     form: ['waterFace1', '#40a3e5', '#020927'],
-    tag: ['terrain', 'face', 'renderUnderBeing'],
+    tag: ['terrain', 'face'],
     formSet: [['waterFace1', '', '', 'waterFace2', '', '']],
     formSetAutoCycle: [1000],
   },
@@ -50,13 +50,13 @@ export const terrain: EntityTemplate[] = [
     label: 'sand',
     name: ['sand'],
     form: ['sand', '', ''],
-    tag: ['terrain', 'renderUnderBeing'],
+    tag: ['terrain'],
   },
   {
     label: 'sandFace',
     name: ['sand'],
     form: ['sandFace', '', ''],
-    tag: ['terrain', 'renderUnderBeing'],
+    tag: ['terrain'],
   },
 ]
 

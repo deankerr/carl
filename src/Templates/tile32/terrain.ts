@@ -37,7 +37,7 @@ export const terrain: EntityTemplate[] = [
     label: 'path',
     name: ['path'],
     form: ['path', '#262626'],
-    tag: ['terrain', 'renderUnderBeing'],
+    tag: ['terrain'],
   },
   {
     label: 'wall',
@@ -108,13 +108,13 @@ export const terrain: EntityTemplate[] = [
     label: 'solid',
     name: ['solid rock'],
     form: ['solid', '#333'],
-    tag: ['terrain', 'blocksMovement', 'blocksLight', 'renderUnderBeing'],
+    tag: ['terrain', 'blocksMovement', 'blocksLight'],
   },
   {
     label: 'ground',
     name: ['ground'],
     form: ['dirtFloor2', '#000'],
-    tag: ['terrain', 'renderUnderBeing'],
+    tag: ['terrain'],
   },
   {
     label: 'unknown',
@@ -180,7 +180,7 @@ export const terrain: EntityTemplate[] = [
     label: 'dirtFloor1',
     name: ['wall'],
     form: ['dirtFloor1', '', ''],
-    tag: ['terrain', 'renderUnderBeing'],
+    tag: ['terrain'],
   },
 ]
 /*

@@ -65,7 +65,6 @@ export type Tag =
   | 'meleeAttackTarget'
   | 'memorable'
   | 'playerControlled'
-  | 'renderUnderBeing'
   | 'signalLightPathUpdated'
   | 'signalModified'
   | 'signalUpdatePlayerFOV'

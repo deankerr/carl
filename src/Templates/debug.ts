@@ -22,7 +22,7 @@ function makeDebugs(s: string): EntityTemplate[] {
       label: 'debug' + name,
       name: ['debug'],
       form: ['debug', '', ''],
-      tag: ['feature', 'renderUnderBeing', 'memorable'],
+      tag: ['feature', 'memorable'],
       trodOn: ['you touch the bugs'],
     } as EntityTemplate
     t.form[0] = name
