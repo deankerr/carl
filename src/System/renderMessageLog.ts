@@ -76,7 +76,7 @@ function debugInfo(engine: Engine) {
   const t = local.terrainAt(playerPos)
 
   msgDisplay.drawText(2, 0, `${fps()} ${getLogTimes()}`)
-  msgDisplay.drawText(0, 1, `E:${engine.local.entities.length}`)
+  msgDisplay.drawText(0, 1, `E:${engine.local.entityList.length}`)
   msgDisplay.drawText(0, 2, `Gen: ${local.visualizer?.history[0].message}ms`)
   msgDisplay.drawText(0, 3, `P:${playerPos.s}`)
   // msgDisplay.drawText(0, 4, `${t.label} ${t.tile.color} ${t.tile.bgColor}`)

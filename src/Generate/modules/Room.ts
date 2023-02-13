@@ -18,7 +18,7 @@ export function findAdjacent(rooms: Room[], region: Region) {
 
     for (const target of rooms) {
       if (origin === target) continue
-      const pts = wallRect.intersectPoints(target.rect.scale(1)).filter(pt => {
+      const pts = wallRect.intersectionPoints(target.rect.scale(1)).filter(pt => {
         let wallCount = 0
         pt.neighbours4().forEach(npt => {
           if (region.terrainAt(npt).blocksMovement) wallCount++

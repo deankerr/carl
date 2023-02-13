@@ -8,7 +8,7 @@ export function UI(engine: Engine, ui: string) {
   switch (ui) {
     case 'logWorld':
       console.log(engine)
-      console.log('Local entities', local.entities)
+      console.log('Local entities', local.entityList)
       console.log('Local', local)
       window.logger.info()
       msg = `The world...`

@@ -49,7 +49,7 @@ export class Rect {
     }
   }
 
-  intersectPoints(rect: Rect) {
+  intersectionPoints(rect: Rect) {
     if (this === rect)
       console.warn('Did you mean to check if a rect intersects itself?', this, rect)
 
@@ -58,14 +58,14 @@ export class Rect {
 
     const ptSet = new Set<Point>()
     rect.traverse(pt => {
-      if (this.intersectsPt(pt)) ptSet.add(pt)
+      if (this.pointIntersects(pt)) ptSet.add(pt)
     })
 
     return [...ptSet]
   }
 
   // Does a point intersect this Rect?
-  intersectsPt(pt: Point) {
+  pointIntersects(pt: Point) {
     return pt.x >= this.x && pt.y >= this.y && pt.x <= this.x2 && pt.y <= this.y2
   }
 

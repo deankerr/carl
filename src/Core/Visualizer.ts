@@ -82,7 +82,7 @@ export class Visualizer {
       if (t) this.mirror.createTerrain(pt, t)
     })
 
-    this.mirror.entities = [this.player]
+    this.mirror.entityList = [this.player]
     for (const [pt, f] of features) {
       if (f === '[clear]') {
         const features = this.mirror.get('position').filter(e => e.position === pt)

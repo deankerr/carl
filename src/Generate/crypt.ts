@@ -5,10 +5,12 @@ import { Rect } from '../Model/Rectangle'
 import { pick } from '../lib/util'
 import { BSP } from './modules'
 import { Room, findAdjacent, connectRooms } from './modules/Room'
+import { Overseer3 } from './Overseer3'
 
 export function crypt(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDisplayHeight) {
   const region = new Region(width, height)
   const O2 = new Overseer2(region)
+  const O3 = new Overseer3(region)
 
   region.name = 'crypt'
 

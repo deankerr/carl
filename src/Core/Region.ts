@@ -12,9 +12,9 @@ export class Region {
 
   pool = window.game.pool
 
-  entities: Entity[] = []
-
   terrainMap = new Map<Point, Entity>()
+  entityList: Entity[] = []
+
   entityMap = new Map<Point, Entity[]>()
 
   turnQueue = new Queue<number>()
@@ -40,11 +40,21 @@ export class Region {
   }
 
   //  * Entity Management
+  create(pt: Point, key: EntityKey) {
+    if (!this.rect.pointIntersects(pt)) return
+    const entity = this.pool.spawn(key, pt)
+
+    if (entity.terrain) this.terrainMap.set(pt, entity)
+    else this.entityList.push(entity)
+
+    this.hasChanged = true
+  }
+
   createEntity(pt: Point, key: EntityKey) {
     if (key.includes('Door')) return this.createDoor(pt, key)
 
     const entity = this.pool.spawn(key, pt)
-    this.entities.push(entity)
+    this.entityList.push(entity)
     this.entityMapCell(pt).push(entity)
 
     this.hasChanged = true
@@ -59,7 +69,7 @@ export class Region {
 
   entity(entity: Entity) {
     this.hasChanged = true
-    return this.pool.entity(this.entities, entity)
+    return this.pool.entity(this.entityList, entity)
   }
 
   destroyEntity(entity: Entity) {
@@ -71,7 +81,7 @@ export class Region {
         cell.filter(e => e.eID !== entity.eID)
       )
     }
-    this.entities = this.entities.filter(e => e.eID !== entity.eID)
+    this.entityList = this.entityList.filter(e => e.eID !== entity.eID)
 
     // turn queue
     if (entity.actor) {
@@ -90,7 +100,7 @@ export class Region {
   // * Entity Queries
   // return all local entities with these components
   get<Key extends keyof Entity>(...components: Key[]): EntityWith<Entity, Key>[] {
-    const results = this.entities.filter(e => components.every(name => name in e)) as EntityWith<
+    const results = this.entityList.filter(e => components.every(name => name in e)) as EntityWith<
       Entity,
       Key
     >[]
@@ -101,7 +111,7 @@ export class Region {
   at(pt: Point) {
     return [
       this.terrainAt(pt),
-      ...this.entities.filter(e => e.position && e.position === pt),
+      ...this.entityList.filter(e => e.position && e.position === pt),
     ] as EntityWith<Entity, 'position'>[]
   }
 
@@ -121,7 +131,7 @@ export class Region {
   }
 
   getByID(eID: number) {
-    const e = this.entities.find(e => e.eID === eID)
+    const e = this.entityList.find(e => e.eID === eID)
     if (!e) throw new Error(`Unable to find entity for id ${e}`)
     return e
   }
@@ -136,7 +146,7 @@ export class Region {
   createPlayer(ePlayer?: Entity) {
     console.log('createPlayer')
     const player = ePlayer ?? this.pool.spawn('player', this.rndWalkable())
-    this.entities.push(player)
+    this.entityList.push(player)
     this.turnQueue.add(player.eID, true)
     return player
   }
@@ -184,13 +194,13 @@ export class Region {
       const keyV = (key + 'Vertical') as EntityKey
       const doorNorth = this.pool.spawn(keyTop, pt.add(0, -1))
       const door = this.pool.spawn(keyV, pt)
-      this.entities.push(door, doorNorth)
+      this.entityList.push(door, doorNorth)
       return door
     }
 
     // spawn normally
     const entity = this.pool.spawn(key, pt)
-    this.entities.push(entity)
+    this.entityList.push(entity)
     this.hasChanged = true
     return entity
   }
