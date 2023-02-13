@@ -36,6 +36,7 @@ export function processTileUpdate(engine: Engine) {
     }
   }
 
+  // terrain animation
   for (const t of local.terrainMap.values()) {
     if (t.render && t.tiles && t.tilesAutoCycle) {
       if (Date.now() - t.tilesAutoCycle.lastUpdate > t.tilesAutoCycle.frequency) {

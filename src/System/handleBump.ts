@@ -33,10 +33,8 @@ export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
           .modify('tag', 'isOpen')
           .modify('tag', 'signalLightPathUpdated')
 
-        if (door.hasDoorNorth) {
-          console.log('has door North')
+        if (door.isVertical) {
           const [doorNorth] = local.at(action.bump.add(0, -1)).filter(e => e.door)
-          console.log('doorNorth:', doorNorth)
           local
             .entity(doorNorth)
             .remove('isClosed')

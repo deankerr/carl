@@ -41,8 +41,9 @@ export class Region {
 
   //  * Entity Management
   createEntity(pt: Point, key: EntityKey) {
+    if (key.includes('Door')) return this.createDoor(pt, key)
+
     const entity = this.pool.spawn(key, pt)
-    // if (entity.door) return this.createDoor(pt, key)
     this.entities.push(entity)
     this.hasChanged = true
     return entity
@@ -50,7 +51,6 @@ export class Region {
 
   createTerrain(pt: Point, key: EntityKey) {
     const terrain = this.pool.spawn(key, pt)
-
     this.terrainMap.set(pt, terrain)
     this.hasChanged = true
   }
@@ -162,16 +162,16 @@ export class Region {
 
   createDoor(pt: Point, key: EntityKey) {
     // switch to vertical door if needed, which has two pieces
-    const useVariant = this.terrainAt(pt.add(0, -1)).blocksMovement
-    const sym = this.pool.symbolic(key)
-
-    if (useVariant && sym.tileVariant) {
-      const doorNorth = this.pool.spawn(sym.tileVariant[1], pt.add(0, -1))
-      const door = this.pool.spawn(sym.tileVariant[0], pt)
+    if (this.terrainAt(pt.add(0, -1)).blocksMovement) {
+      const keyTop = (key + 'VerticalTop') as EntityKey
+      const keyV = (key + 'Vertical') as EntityKey
+      const doorNorth = this.pool.spawn(keyTop, pt.add(0, -1))
+      const door = this.pool.spawn(keyV, pt)
       this.entities.push(door, doorNorth)
       return door
     }
 
+    // spawn normally
     const entity = this.pool.spawn(key, pt)
     this.entities.push(entity)
     this.hasChanged = true
@@ -184,13 +184,7 @@ export class Region {
       const tAbove = this.terrainAt(pt.add(0, -1))
       const tBelow = this.terrainAt(pt.add(0, 1))
 
-      // ledged water/pools/etc
-      // if (tHere.ledgeVariant) {
-      //   if (!tAbove.isLedge && !tHere.isLedge && tAbove.label !== tHere.label) {
-      //     this.createTerrain(pt, tHere.ledgeVariant)
-      //   } else if (tHere.baseVariant && !tHere.isBase) this.createTerrain(pt, tHere.baseVariant)
-      // }
-
+      // ledge water/sand/etc
       if (tHere.tilesLedge && tHere.render) {
         if (tAbove.name !== tHere.name) {
           tHere.tiles = tHere.tilesLedge
