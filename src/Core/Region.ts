@@ -185,10 +185,21 @@ export class Region {
       const tBelow = this.terrainAt(pt.add(0, 1))
 
       // ledged water/pools/etc
-      if (tHere.ledgeVariant) {
-        if (!tAbove.isLedge && !tHere.isLedge && tAbove.label !== tHere.label) {
-          this.createTerrain(pt, tHere.ledgeVariant)
-        } else if (tHere.baseVariant && !tHere.isBase) this.createTerrain(pt, tHere.baseVariant)
+      // if (tHere.ledgeVariant) {
+      //   if (!tAbove.isLedge && !tHere.isLedge && tAbove.label !== tHere.label) {
+      //     this.createTerrain(pt, tHere.ledgeVariant)
+      //   } else if (tHere.baseVariant && !tHere.isBase) this.createTerrain(pt, tHere.baseVariant)
+      // }
+
+      if (tHere.tilesLedge && tHere.render) {
+        if (tAbove.name !== tHere.name) {
+          tHere.tiles = tHere.tilesLedge
+          tHere.render = {
+            char: tHere.tilesLedge[0],
+            color: 'transparent',
+            bgColor: 'transparent',
+          }
+        }
       }
 
       // walls vertical/horizontal

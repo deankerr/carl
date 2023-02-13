@@ -193,7 +193,7 @@ export function oryxTinyMap(size: number) {
     ['um'],
     ['bWindow'],
     ['bones'],
-    ['web1', 'web2', 'sand', 'sandFace', 'cactus'],
+    ['web1', 'web2', 'sand', 'sandLedge', 'cactus'],
     [],
     [],
     [],

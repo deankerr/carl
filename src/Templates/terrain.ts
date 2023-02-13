@@ -4,16 +4,9 @@ export const terrain = {
   water: {
     name: 'water',
     tiles: ['water1', 'water2'],
-    tag: ['terrain', 'isBase'],
+    tag: ['terrain'],
     tilesAutoCycle: 1000,
-    ledgeVariant: 'waterLedge',
-  },
-  waterLedge: {
-    name: 'water',
-    tiles: ['waterLedge1', 'waterLedge2'],
-    tag: ['terrain', 'isLedge'],
-    tilesAutoCycle: 1000,
-    baseVariant: 'water',
+    tilesLedge: ['waterLedge1', 'waterLedge2'],
   },
   nothing: {
     name: 'nothing',
@@ -34,6 +27,7 @@ export const terrain = {
     name: 'sand',
     tiles: ['sand'],
     tag: ['terrain'],
+    tilesLedge: ['sandLedge'],
   },
   dungeonWall: {
     name: 'wall',

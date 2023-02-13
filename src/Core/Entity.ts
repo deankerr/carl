@@ -40,12 +40,10 @@ export class EntityPool {
       if ('tileTriggers' in t) e = this.attach(e, 'tileTriggers', ...t.tileTriggers)
       if ('tilesAutoCycle' in t) e = this.attach(e, 'tilesAutoCycle', t.tilesAutoCycle)
 
-      if ('baseVariant' in t) e = { ...e, ...this.components.baseVariant(t.baseVariant) }
-      if ('ledgeVariant' in t) e = { ...e, ...this.components.ledgeVariant(t.ledgeVariant) }
-
       if ('tilesVertical' in t) e = { ...e, ...this.components.tilesVertical(...t.tilesVertical) }
       if ('tilesHorizontal' in t)
         e = { ...e, ...this.components.tilesHorizontal(...t.tilesHorizontal) }
+      if ('tilesLedge' in t) e = { ...e, ...this.components.tilesLedge(...t.tilesLedge) }
 
       // if (t.emitLight) {
       //   const color =

@@ -39,6 +39,10 @@ export const ComponentFoundry = {
     return { tilesHorizontal }
   },
 
+  tilesLedge: (...tilesLedge: string[]) => {
+    return { tilesLedge }
+  },
+
   name: (name: string) => {
     return { name }
   },
@@ -91,7 +95,6 @@ export type Tag =
   | 'renderAbove'
   | 'wall'
   | 'floor'
-  | 'isBase'
   | 'isLedge'
   | 'isHorizontal'
   | 'isVertical'

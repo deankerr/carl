@@ -36,19 +36,26 @@ export function processTileUpdate(engine: Engine) {
     }
   }
 
-  // quick hack to animate terrain
-  const tAnimators: EntityKey[] = ['water']
-  for (const key of tAnimators) {
-    const terrain = local.pool.symbolic(key) as EntityWith<Entity, 'tiles' | 'tilesAutoCycle'>
-    const { render, tiles, tilesAutoCycle: cycle } = terrain
-    if (Date.now() - cycle.lastUpdate > cycle.frequency) {
-      const nextI = cycle.current + 1
-      const i = nextI >= tiles.length ? 0 : nextI
+  for (const t of local.terrainMap.values()) {
+    if (t.render && t.tiles && t.tilesAutoCycle) {
+      if (Date.now() - t.tilesAutoCycle.lastUpdate > t.tilesAutoCycle.frequency) {
+        const nextI = t.tilesAutoCycle.current + 1
+        const i = nextI >= t.tiles.length ? 0 : nextI
 
-      terrain.render.char = tiles[i]
-      terrain.tilesAutoCycle.current = i
-      terrain.tilesAutoCycle.lastUpdate = Date.now()
-      changed = true
+        t.render = {
+          char: t.tiles[i],
+          color: 'transparent',
+          bgColor: 'transparent',
+        }
+
+        t.tilesAutoCycle = {
+          ...t.tilesAutoCycle,
+          current: i,
+          lastUpdate: Date.now(),
+        }
+
+        changed = true
+      }
     }
   }
 
