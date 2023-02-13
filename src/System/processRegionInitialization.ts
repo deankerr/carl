@@ -6,7 +6,8 @@ export function processRegionInitialization(engine: Engine) {
   // (re)initialize turn queue, with the player first
   const { local } = engine
 
-  const player = local.player()
+  const player = local.player() ?? local.createPlayer()
+
   const actors = local.get('actor').filter(a => !a.playerControlled)
 
   const queue = new Queue<number>()
@@ -19,8 +20,4 @@ export function processRegionInitialization(engine: Engine) {
 
   if (CONFIG.setMainToMapSize)
     engine.mainDisplay.setOptions({ width: local.width, height: local.height })
-
-  // local.pool.symbolic('ground').form.color = local.palette.ground
-  // local.pool.symbolic('solid').form.color = local.palette.solid
-  // local.pool.symbolic('unknown').form.color = local.palette.unknown
 }

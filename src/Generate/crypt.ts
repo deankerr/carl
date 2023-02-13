@@ -9,7 +9,6 @@ import { Overseer3 } from './Overseer3'
 
 export function crypt(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDisplayHeight) {
   const region = new Region(width, height)
-  const O2 = new Overseer2(region)
   const O3 = new Overseer3(region)
 
   region.name = 'crypt'
@@ -18,14 +17,14 @@ export function crypt(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDispl
   const floor = 'stoneTileFloor'
 
   const drawRoom = (rect: Rect) => {
-    rect.scale(1).traverse((pt, edge) => O2.terrain(pt, edge ? wall : floor))
+    rect.scale(1).traverse((pt, edge) => region.create(pt, edge ? wall : floor))
   }
 
   const bsp = new BSP(region.rect.scale(-1))
   bsp.run(
     6,
     rect => drawRoom(rect),
-    i => O2.snapshot('BSP ' + i)
+    i => O3.snap('BSP ' + i)
   )
 
   // create rooms from BSP leaves
@@ -37,11 +36,11 @@ export function crypt(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDispl
 
   // create doors
   connectRooms(rooms, pt => {
-    O2.terrain(pt, floor)
-    O2.feature(pt, pick(['woodenDoor', 'stoneDoor', 'jailDoor', 'redDoor']))
-    O2.snapshot('Connect Room')
+    region.create(pt, floor)
+    region.create(pt, pick(['woodenDoor', 'stoneDoor', 'jailDoor', 'redDoor']))
+    O3.snap('Connect Room')
   })
 
-  O2.finalize()
+  O3.finalize()
   return region
 }

@@ -1,8 +1,9 @@
 import { Entity, EntityKey, Region } from '../Core'
+import { Visualizer } from '../Core/Visualizer'
 import { Point } from '../Model/Point'
 import { Rect } from '../Model/Rectangle'
 
-type Snapshot = {
+export type Snapshot = {
   terrainMap: Map<Point, Entity>
   entityList: Entity[]
   message: string
@@ -13,7 +14,7 @@ function createSnapshot(
   entityList: Entity[],
   message = ''
 ): Snapshot {
-  return { terrainMap, entityList, message }
+  return { terrainMap: new Map([...terrainMap]), entityList: [...entityList], message }
 }
 
 type RegionTheme = {
@@ -44,5 +45,13 @@ export class Overseer3 {
 
   snap(message = '') {
     this.history.push(createSnapshot(this.region.terrainMap, this.region.entityList, message))
+  }
+
+  finalize() {
+    this.snap('Complete')
+
+    this.region.visualizer = new Visualizer(this.region, this.history)
+    console.log(this)
+    this.timeEnd = Date.now()
   }
 }

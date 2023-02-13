@@ -25,7 +25,7 @@ export function renderRegion(engine: Engine) {
 
   const viewportRect = Rect.atxy2(vpStart, vpEnd)
 
-  const player = local.player()
+  const playerPos = local.player()?.position ?? { x: 0, y: 0 }
   const centerX = floor(width / 2)
   const centerY = floor(height / 2)
 
@@ -33,7 +33,7 @@ export function renderRegion(engine: Engine) {
     local.width > viewportRect.width
       ? clamp(
           viewportRect.width - local.width,
-          viewportRect.x + centerX - player.position.x,
+          viewportRect.x + centerX - playerPos.x,
           viewportRect.x
         )
       : viewportRect.x + half(viewportRect.width - local.width)
@@ -42,7 +42,7 @@ export function renderRegion(engine: Engine) {
     local.height >= viewportRect.height
       ? clamp(
           viewportRect.y + viewportRect.height - local.height,
-          viewportRect.y + centerY - player.position.y,
+          viewportRect.y + centerY - playerPos.y,
           viewportRect.y
         )
       : viewportRect.y + half(viewportRect.height - local.height)

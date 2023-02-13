@@ -1,33 +1,24 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */ // !!!!!!!!! dev
-// import * as ROT from 'rot-js'
-
-import { ActionTypes, Engine, Entity, EntityKey, Region } from '.'
+import { ActionTypes, Region } from '.'
 import { CONFIG } from '../config'
-import { genHistory, GenHistory } from '../Generate/Overseer2'
-import { half, range, repeat } from '../lib/util'
-import { Point, point, pointRect } from '../Model/Point'
+import { Snapshot } from '../Generate/Overseer3'
+import { half } from '../lib/util'
 
 export class Visualizer {
   engine = window.game
   mirror: Region
-  player: Entity
-  built: GenHistory[] = []
 
   speed = 550
   index = 0
   playing = false
   timeout = 0
 
-  constructor(targetRegion: Region, readonly history: GenHistory[]) {
+  constructor(targetRegion: Region, readonly history: Snapshot[]) {
     const { width, height } = targetRegion
 
-    const player = this.engine.pool.spawn('player', point(0, 0))
-
-    const r = new Region(width, height, player)
+    const r = new Region(width, height)
     r.revealAll = true
     r.name = 'mirror world'
 
-    this.player = player
     this.mirror = r
     console.log('visualizer created')
   }
@@ -37,7 +28,6 @@ export class Visualizer {
     this.engine.attached = this
     this.engine.local = this.mirror
     this.engine.mainDisplay.setOptions({ width: this.mirror.width, height: this.mirror.height })
-    this.build()
     this.play()
   }
 
@@ -74,28 +64,11 @@ export class Visualizer {
   }
 
   next() {
-    const { terrain, features, beings, message } = this.built[this.index]
+    const { terrainMap, entityList, message } = this.history[this.index]
     this.mirror.name = `(${this.index}) ${message}`
-
-    pointRect(0, 0, this.mirror.width, this.mirror.height, pt => {
-      const t = terrain.get(pt)
-      if (t) this.mirror.createTerrain(pt, t)
-    })
-
-    this.mirror.entityList = [this.player]
-    for (const [pt, f] of features) {
-      if (f === '[clear]') {
-        const features = this.mirror.get('position').filter(e => e.position === pt)
-        features.forEach(f => this.mirror.destroyEntity(f))
-      } else {
-        this.mirror.createEntity(pt, f)
-      }
-    }
-
-    for (const [pt, b] of beings) {
-      this.mirror.createEntity(pt, b)
-    }
-    this.mirror.evaluateTerrainVariants()
+    this.mirror.terrainMap = terrainMap
+    this.mirror.entityList = entityList
+    this.mirror.hasChanged = true
   }
 
   stop() {
@@ -111,13 +84,13 @@ export class Visualizer {
 
   middle() {
     this.stop()
-    this.index = half(this.built.length)
+    this.index = half(this.history.length)
     this.next()
   }
 
   end() {
     this.stop()
-    this.index = this.built.length - 1
+    this.index = this.history.length - 1
     this.next()
   }
 
@@ -133,33 +106,6 @@ export class Visualizer {
     if (this.index >= this.history.length - 1) return
     this.index++
     this.next()
-  }
-
-  build() {
-    if (this.built.length > 0) return
-
-    const initial = genHistory()
-
-    pointRect(0, 0, this.mirror.width, this.mirror.height, pt => {
-      initial.terrain.set(pt, 'nothing')
-    })
-    initial.message = 'initial'
-
-    for (const i of range(this.history.length - 1)) {
-      const { terrain, features, beings, message } = this.history[i]
-
-      const prev = i == 0 ? initial : this.built[i - 1]
-
-      const h = {
-        terrain: new Map([...prev.terrain, ...terrain]),
-        features: new Map([...prev.features, ...features]),
-        beings: new Map([...prev.beings, ...beings]),
-        message,
-      }
-
-      this.built.push(h)
-    }
-    // console.log('this.built:', this.built)
   }
 
   exit() {

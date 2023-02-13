@@ -75,7 +75,7 @@ export class Overseer2 {
     })
 
     this.region.evaluateTerrainVariants()
-    this.region.visualizer = new Visualizer(this.region, this.mutations)
+    // this.region.visualizer = new Visualizer(this.region, this.mutations)
     const timeTaken = Date.now() - this.timeStarted
     this.mutations[0].message = timeTaken.toString()
     console.log(`O2 ${timeTaken}ms`, this)

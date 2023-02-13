@@ -34,9 +34,8 @@ export class Region {
 
   visualizer: Visualizer | undefined
 
-  constructor(readonly width: number, readonly height: number, player?: Entity) {
+  constructor(readonly width: number, readonly height: number) {
     this.rect = Rect.at(point(0, 0), this.width, this.height)
-    if (player) this.createPlayer(player)
   }
 
   //  * Entity Management
@@ -138,7 +137,7 @@ export class Region {
 
   player() {
     const player = this.get('playerControlled')[0] as EntityWith<Entity, 'position' | 'fieldOfView'>
-    return player ?? this.createPlayer()
+    return player
   }
 
   // * Utility
