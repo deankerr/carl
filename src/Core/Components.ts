@@ -27,6 +27,10 @@ export const ComponentFoundry = {
     return { tilesAutoCycle: { frequency, current, lastUpdate } }
   },
 
+  tilesAutoRandom: (frequency = 0, current = 0, lastUpdate = 0) => {
+    return { tilesAutoRandom: { frequency, current, lastUpdate } }
+  },
+
   tileTriggers: (...tags: Tag[]) => {
     return { tileTriggers: tags }
   },

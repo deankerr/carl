@@ -1,6 +1,6 @@
 import { Entity, EntityKey, EntityWith } from '../Core'
 import { Engine } from '../Core/Engine'
-import { pick } from '../lib/util'
+import { pick, rnd } from '../lib/util'
 // import { logger } from '../lib/logger'
 
 export function processTileUpdate(engine: Engine) {
@@ -56,6 +56,15 @@ export function processTileUpdate(engine: Engine) {
           lastUpdate: Date.now(),
         }
 
+        changed = true
+      }
+    }
+
+    if (t.render && t.tiles && t.tilesAutoRandom) {
+      if (Date.now() - t.tilesAutoRandom.lastUpdate > t.tilesAutoRandom.frequency) {
+        const i = rnd(t.tiles.length - 1)
+        t.render = { ...t.render, char: t.tiles[i] }
+        t.tilesAutoRandom = { ...t.tilesAutoRandom, lastUpdate: Date.now() }
         changed = true
       }
     }

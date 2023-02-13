@@ -47,30 +47,49 @@ export function pit(width = CONFIG.generateWidth, height = CONFIG.generateHeight
   })
 
   // apply CSP
-  // for (const room of rooms) {
-  //   const csp = new ConstraintSatisfactionProblemSolver(region)
-  //   csp.initializeRect(room.rect.scale(1))
+  for (const room of rooms) {
+    const csp = new ConstraintSatisfactionProblemSolver(region)
+    csp.initializeRect(room.rect.scale(1))
+    // csp.solve('smallPitPlatform')
+    switch (room.debugid % 6) {
+      case 0:
+        csp.solve('smallWaterPool')
+        break
+      case 1:
+        csp.solve('smallSlimePool')
+        break
+      case 2:
+        csp.solve('smallOilPool')
+        break
+      case 3:
+        csp.solve('smallAcidPool')
+        break
+      case 4:
+        csp.solve('smallBloodPool')
+        break
+      case 5:
+        csp.solve('smallSludgePool')
+        break
+    }
 
-  //   // csp.tryObject('grassTuft', 4)
-  //   // csp.tryObject('mushrooms', 4)
-  //   // csp.tryObject('webCorner', 3)
-  //   // csp.tryObject('sconce', 2)
-  //   csp.tryBigObject('smallHolePlatform')
+    csp.solve('grassTuft', 4)
+    csp.solve('mushrooms', 4)
+    csp.solve('webCorner', 2)
+    csp.solve('cornerCandles', 2)
+    csp.solve('sconce', 2)
 
-  //   csp.each((pt, cell) => {
-  //     cell.entities.forEach(k => O2.add(pt, k))
-  //   })
+    csp.each((pt, cell) => {
+      cell.entities.forEach(k => O2.add(pt, k))
+    })
+  }
 
-  //   csp.debugLogPointMap()
-  // }
-  // debug
-
-  const csp = new ConstraintSatisfactionProblemSolver(region)
-  csp.initializeRect(rooms[0].rect.scale(1))
-  csp.tryBigObject('smallHolePlatform')
-  csp.each((pt, cell) => {
-    cell.entities.forEach(k => O2.add(pt, k))
-  })
+  // first room only
+  // const csp = new ConstraintSatisfactionProblemSolver(region)
+  // csp.initializeRect(rooms[0].rect.scale(1))
+  // csp.solve('smallOilPool')
+  // csp.each((pt, cell) => {
+  //   cell.entities.forEach(k => O2.add(pt, k))
+  // })
 
   O2.finalize()
   return region

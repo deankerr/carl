@@ -30,9 +30,7 @@ function createCSPCell(): CSPCell {
 
 export class ConstraintSatisfactionProblemSolver {
   cellMap = new Map<Point, CSPCell>()
-  constructor(readonly region: Region) {
-    // ?
-  }
+  constructor(readonly region: Region) {}
 
   createCell(pt: Point) {
     const cell = createCSPCell()
@@ -43,7 +41,6 @@ export class ConstraintSatisfactionProblemSolver {
   getCell(pt: Point) {
     const cell = this.cellMap.get(pt)
     if (!cell) {
-      // ? return full cell if oob?
       const oobCell = createCSPCell()
       oobCell.state = 'full'
       oobCell.isOutOfBounds = true
@@ -76,80 +73,39 @@ export class ConstraintSatisfactionProblemSolver {
     console.groupEnd()
   }
 
-  tryObject(key: keyof typeof cspObjects, attempts = 1) {
+  solve(key: keyof typeof cspObjects, amount = 1) {
     const domain = shuffle([...this.cellMap.keys()])
-    const { entity, constraint } = cspObjects[key]
-    console.log('CSP:', key, entity, constraint)
-    let attempt = 0
-
-    while (attempt++ < attempts) {
-      let successPt: Point | undefined
-
-      for (const pt of domain) {
-        let satisfies = true
-
-        for (const c of constraint) {
-          const result = this.assessConstraint(c, pt)
-          console.log('constraint', c, result)
-          if (!result) {
-            satisfies = false
-            break
-          }
-        }
-        if (satisfies) {
-          successPt = pt
-          break
-        }
-      }
-
-      if (!successPt) {
-        console.error('CSP: unable to satisfy constraints')
-        return
-      }
-
-      const cell = this.getCell(successPt)
-      cell.entities.push(pick(entity))
-      cell.state = 'full'
-
-      console.log('CSP Success:', successPt, cell)
-    }
-  }
-
-  tryBigObject(key: keyof typeof cspObjects, amount = 1) {
-    const domain = shuffle([...this.cellMap.keys()])
-    const { entity, constraint, box } = cspObjects[key]
-    console.log('CSP BIG!:', key, entity, constraint, box)
+    const { entity, constraint, grid } = cspObjects[key]
     let successes = 0
 
     for (const pt of domain) {
       // assess constraints for each char in box
-      console.log('Assess pt:', pt.s, 'attempt:', successes)
       let satisfies = true
-      this.forCellGrid(pt, box, relPt => {
+      this.forCellGrid(pt, grid, relPt => {
         for (const c of constraint) {
           satisfies = this.assessConstraint(c, relPt)
-          console.log('satisfies:', satisfies)
           if (!satisfies) return false
         }
         return true
       })
 
       if (!satisfies) {
-        console.log('Failed')
         continue
       }
 
-      console.log('Success, apply entities')
       // success
-      this.forCellGrid(pt, box, (_relPt, cell, gridValue) => {
+      this.forCellGrid(pt, grid, (_relPt, cell, gridValue) => {
         if (gridValue !== 'x') {
-          const i = parseInt(gridValue)
-          if (Number.isNaN(i) || entity[i] === undefined) {
-            throw new Error(`CSP: Invalid grid value ${i} / ${entity[i]}`)
-          }
-
           cell.state = 'full'
-          cell.entities.push(entity[i])
+          if (gridValue === 'A') {
+            cell.entities.push(pick(entity))
+          } else {
+            const i = parseInt(gridValue)
+            if (Number.isNaN(i) || entity[i] === undefined) {
+              throw new Error(`CSP: Invalid grid value ${i} / ${entity[i]}`)
+            }
+            cell.entities.push(entity[i])
+          }
         }
       })
 
@@ -166,7 +122,6 @@ export class ConstraintSatisfactionProblemSolver {
     callback: (pt: Point, cell: CSPCell, gridValue: string) => unknown
   ) {
     for (let yi = 0; yi < grid.length; yi++) {
-      console.log('grid row:', grid[yi])
       for (let xi = 0; xi < grid[yi].length; xi++) {
         const relPt = pt.add(xi, yi)
         if (callback(relPt, this.getCell(relPt), grid[yi][xi]) === false) return
@@ -232,23 +187,22 @@ export type Constraint =
 type CSPObject = {
   entity: EntityKey[]
   constraint: Constraint[]
-  box: string[]
+  grid: string[]
 }
 
 /* 
+grid: 
+  'xxxxx',
+  'x0A0x',
+  'xxxxx
 
-e = cell must be empty
-O = e + cells will be filled here
-box : [
-  'eOOOOOe',
-  'eOeeeOe',
-  'eOOOOOe'
-]
-
+x = apply constraints + mark as full but place nothing
+A = any - pick random
+0-9 = place entity[n]
 */
 
-function createCSPObject(entity: EntityKey[], constraint: Constraint[], box = ['0']): CSPObject {
-  return { entity, constraint: ['cellIsEmpty', ...constraint], box }
+function createCSPObject(entity: EntityKey[], constraint: Constraint[], grid = ['A']): CSPObject {
+  return { entity, constraint: ['cellIsEmpty', ...constraint], grid }
 }
 
 const cspObjects = {
@@ -259,9 +213,24 @@ const cspObjects = {
   ),
   webCorner: createCSPObject(['webCorner'], ['isFloor', 'isCorner']),
   sconce: createCSPObject(['sconce'], ['isNorthernExposedWall']),
-  smallHolePlatform: createCSPObject(
+  smallPitPlatform: createCSPObject(
     ['dirtFloorHole'],
     ['isFloor'],
     ['xxxxxxx', 'x00000x', 'x0xxx0x', 'x00000x', 'xxxxxxx']
   ),
+  cornerCandles: createCSPObject(['candles', 'candlesNE', 'candlesSE'], ['isFloor', 'isCorner']),
+  smallWaterPool: createCSPObject(
+    ['water'],
+    ['isFloor'],
+    ['xxxxx', 'x000x', 'x000x', 'x000x', 'xxxxx']
+  ),
+  smallSlimePool: createCSPObject(['slime'], ['isFloor'], ['xxxx', 'x00x', 'x00x', 'xxxx']),
+  smallOilPool: createCSPObject(['oil'], ['isFloor'], ['xxxx', 'x00x', 'x00x', 'xxxx']),
+  smallAcidPool: createCSPObject(
+    ['acid'],
+    ['isFloor'],
+    ['xxxxx', 'x000x', 'x000x', 'x000x', 'xxxxx']
+  ),
+  smallBloodPool: createCSPObject(['blood'], ['isFloor'], ['xxxx', 'x00x', 'x00x', 'xxxx']),
+  smallSludgePool: createCSPObject(['sludge'], ['isFloor'], ['xxxx', 'x00x', 'x00x', 'xxxx']),
 }

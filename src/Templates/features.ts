@@ -143,4 +143,22 @@ export const features = {
     tilesAutoCycle: 120,
     tag: ['feature'],
   },
+  candles: {
+    name: 'candles',
+    tiles: ['candles1', 'candles2'],
+    tilesAutoCycle: 120,
+    tag: ['feature'],
+  },
+  candlesNE: {
+    name: 'candles',
+    tiles: ['candlesNE1', 'candlesNE2'],
+    tilesAutoCycle: 120,
+    tag: ['feature'],
+  },
+  candlesSE: {
+    name: 'candles',
+    tiles: ['candlesSE1', 'candlesSE2'],
+    tilesAutoCycle: 120,
+    tag: ['feature'],
+  },
 } as const

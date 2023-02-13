@@ -39,6 +39,7 @@ export class EntityPool {
 
       if ('tileTriggers' in t) e = this.attach(e, 'tileTriggers', ...t.tileTriggers)
       if ('tilesAutoCycle' in t) e = this.attach(e, 'tilesAutoCycle', t.tilesAutoCycle)
+      if ('tilesAutoRandom' in t) e = this.attach(e, 'tilesAutoRandom', t.tilesAutoRandom)
 
       if ('tilesVertical' in t) e = { ...e, ...this.components.tilesVertical(...t.tilesVertical) }
       if ('tilesHorizontal' in t)
