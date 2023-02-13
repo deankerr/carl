@@ -82,7 +82,7 @@ export const features = {
   webCorner: {
     name: 'web',
     tiles: ['webNW', 'webNE', 'webSW', 'webSE'],
-    tag: ['feature'],
+    tag: ['feature', 'pickTileCorner'],
   },
   cactus: {
     name: 'cactus',

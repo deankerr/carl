@@ -46,17 +46,21 @@ export function pit(width = CONFIG.generateWidth, height = CONFIG.generateHeight
     O2.snapshot('Connect Room')
   })
 
-  const csp = new ConstraintSatisfactionProblemSolver(region)
-  csp.initializeRect(rooms[0].rect.scale(1))
+  // apply CSP
+  for (const room of rooms) {
+    const csp = new ConstraintSatisfactionProblemSolver(region)
+    csp.initializeRect(room.rect.scale(1))
 
-  csp.tryObject('grassTuft', 6)
-  csp.tryObject('mushrooms', 6)
+    csp.tryObject('grassTuft', 4)
+    csp.tryObject('mushrooms', 4)
+    csp.tryObject('webCorner', 3)
 
-  csp.each((pt, cell) => {
-    cell.entities.forEach(k => O2.add(pt, k))
-  })
+    csp.each((pt, cell) => {
+      cell.entities.forEach(k => O2.add(pt, k))
+    })
 
-  csp.debugLogPointMap()
+    csp.debugLogPointMap()
+  }
   // debug
 
   O2.finalize()

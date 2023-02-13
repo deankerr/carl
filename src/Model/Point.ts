@@ -64,6 +64,20 @@ export class Point {
   neighbours8() {
     return neighbours8.map(n => this.add(n))
   }
+
+  north(n = 1) {
+    return this.add(0, -n)
+  }
+
+  east(n = 1) {
+    return this.add(n, 0)
+  }
+  south(n = 1) {
+    return this.add(0, n)
+  }
+  west(n = 1) {
+    return this.add(-n, 0)
+  }
 }
 
 export function strToPt(s: string | Point) {

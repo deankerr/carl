@@ -40,7 +40,12 @@ export class ConstraintSatisfactionProblemSolver {
 
   getCell(pt: Point) {
     const cell = this.cellMap.get(pt)
-    if (!cell) throw new Error('Invalid cell:' + pt.s)
+    if (!cell) {
+      // ? return full cell if oob?
+      const oobCell = createCSPCell()
+      oobCell.state = 'full'
+      return oobCell
+    }
     return cell
   }
 
@@ -109,13 +114,22 @@ export class ConstraintSatisfactionProblemSolver {
 
   assessConstraint(constraint: Constraint, pt: Point) {
     switch (constraint) {
+      case 'isFloor':
+        return this.constraintIsFloor(pt)
       case 'isDirtFloor':
         return this.constraintIsDirtFloor(pt)
       case 'cellIsEmpty':
         return this.constraintCellIsEmpty(pt)
+      case 'isCorner':
+        return this.constraintIsCorner(pt)
       default:
         throw new Error('Unknown constraint')
     }
+  }
+
+  constraintIsFloor(pt: Point) {
+    const cell = this.getCell(pt)
+    return !cell.isWall && !cell.isDoor
   }
 
   constraintCellIsEmpty(pt: Point) {
@@ -125,12 +139,19 @@ export class ConstraintSatisfactionProblemSolver {
 
   constraintIsDirtFloor(pt: Point) {
     const cell = this.getCell(pt)
-
     return cell.terrain.includes('dirtFloor') && !cell.isWall && !cell.isDoor
+  }
+
+  constraintIsCorner(pt: Point) {
+    const neighbours = pt
+      .neighbours4()
+      .map(npt => this.getCell(npt))
+      .filter(c => c.isWall)
+    return neighbours.length === 2
   }
 }
 
-export type Constraint = 'cellIsEmpty' | 'isDirtFloor'
+export type Constraint = 'cellIsEmpty' | 'isFloor' | 'isDirtFloor' | 'isCorner'
 
 type CSPObject = {
   entity: EntityKey[]
@@ -147,4 +168,5 @@ const cspObjects = {
     ['redMushrooms', 'purpleMushrooms', 'yellowMushrooms'],
     ['isDirtFloor']
   ),
+  webCorner: createCSPObject(['webCorner'], ['isFloor', 'isCorner']),
 }

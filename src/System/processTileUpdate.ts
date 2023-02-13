@@ -62,14 +62,32 @@ export function processTileUpdate(engine: Engine) {
   }
 
   // pick tiles
-  const ePick = local.get('tiles', 'pickTileEqually', 'render') as EntityWith<
-    Entity,
-    'tiles' | 'render'
-  >[]
+  const pickTileEqually = local.get('render', 'tiles', 'pickTileEqually')
+  for (const entity of pickTileEqually) {
+    local.entity(entity).modify('render', pick(entity.tiles)).remove('pickTileEqually')
+    changed = true
+  }
 
-  for (const entity of ePick) {
-    delete entity.pickTileEqually
-    entity.render = { ...entity.render, char: pick(entity.tiles) }
+  // pick appropriate corner tile based on walls around it
+  // assumed to default on "NW" corner tile
+  // tiles [NorthWest, NorthEast, SouthWest, SouthEast]
+  const pickTileCorner = local.get('render', 'tiles', 'pickTileCorner', 'position')
+  for (const entity of pickTileCorner) {
+    const pt = entity.position
+    const [north, east, south, west] = pt.neighbours4().map(npt => local.terrainAt(npt))
+
+    if (north.wall && west.wall) {
+      local.entity(entity).modify('render', entity.tiles[0]).remove('pickTileCorner')
+    } else if (north.wall && east.wall) {
+      local.entity(entity).modify('render', entity.tiles[1]).remove('pickTileCorner')
+    } else if (south.wall && west.wall) {
+      local.entity(entity).modify('render', entity.tiles[2]).remove('pickTileCorner')
+    } else if (south.wall && east.wall) {
+      local.entity(entity).modify('render', entity.tiles[3]).remove('pickTileCorner')
+    } else {
+      console.warn('pickTileCorner: Failed to determine appropriate tile', pt.s, entity)
+      local.entity(entity).remove('pickTileCorner')
+    }
   }
 
   if (changed) local.hasChanged = true
