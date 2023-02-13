@@ -103,6 +103,10 @@ export class Rect {
     return result
   }
 
+  isEdgePt(pt: Point) {
+    return pt.x === this.x || pt.x === this.x2 || pt.y === this.y || pt.y === this.y2
+  }
+
   // Return a random point with this rect
   rndPt() {
     return point(rnd(this.x, this.x2), rnd(this.y, this.y2))
@@ -125,12 +129,16 @@ export class Rect {
     ]
   }
 
-  isEdgePt(pt: Point) {
-    return pt.x === this.x || pt.x === this.x2 || pt.y === this.y || pt.y === this.y2
+  centerPoint() {
+    return point(this.cx, this.cy)
   }
 
-  center() {
-    return point(this.cx, this.cy)
+  xy1() {
+    return point(this.x, this.y)
+  }
+
+  xy2() {
+    return point(this.x2, this.y2)
   }
 
   // Construction

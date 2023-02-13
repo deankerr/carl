@@ -6,32 +6,34 @@ class BinaryRect {
   leaf1: BinaryRect | undefined
   leaf2: BinaryRect | undefined
 
-  constructor(readonly rect: Rect, readonly minWidth: number, readonly minHeight: number) {
+  constructor(readonly rect: Rect) {
     const r = this.rect
   }
 
-  splitVertical(at: number) {
+  splitVertical(at?: number, size = 1) {
     const r = this.rect
-    const split = r.x + at
+    const split = r.x + (at ?? half(r.width))
 
-    const r1 = Rect.atxy2(point(r.x, r.y), point(split - 1, r.y2))
-    const r2 = Rect.atxy2(point(split + 1, r.y), point(r.x2, r.y2))
+    const r1 = Rect.atxy2(point(r.x, r.y), point(split - size, r.y2))
+    const r2 = Rect.atxy2(point(split + size, r.y), point(r.x2, r.y2))
+    const remainder = Rect.atxy2(point(r1.x2 + 1, r.y), point(r2.x - 1, r.y2))
 
-    this.leaf1 = new BinaryRect(r1, this.minWidth, this.minHeight)
-    this.leaf2 = new BinaryRect(r2, this.minWidth, this.minHeight)
-    return [this.leaf1, this.leaf2] as [BinaryRect, BinaryRect]
+    this.leaf1 = new BinaryRect(r1)
+    this.leaf2 = new BinaryRect(r2)
+    return [this.leaf1, this.leaf2, remainder] as [BinaryRect, BinaryRect, Rect]
   }
 
-  splitHorizontal(at: number) {
+  splitHorizontal(at?: number, size = 1) {
     const r = this.rect
-    const split = r.y + at
+    const split = r.y + (at ?? half(r.height))
 
-    const r1 = Rect.atxy2(point(r.x, r.y), point(r.x2, split - 1))
-    const r2 = Rect.atxy2(point(r.x, split + 1), point(r.x2, r.y2))
+    const r1 = Rect.atxy2(point(r.x, r.y), point(r.x2, split - size))
+    const r2 = Rect.atxy2(point(r.x, split + size), point(r.x2, r.y2))
+    const remainder = Rect.atxy2(point(r.x, r1.y2 + 1), point(r.x2, r2.y - 1))
 
-    this.leaf1 = new BinaryRect(r1, this.minWidth, this.minHeight)
-    this.leaf2 = new BinaryRect(r2, this.minWidth, this.minHeight)
-    return [this.leaf1, this.leaf2] as [BinaryRect, BinaryRect]
+    this.leaf1 = new BinaryRect(r1)
+    this.leaf2 = new BinaryRect(r2)
+    return [this.leaf1, this.leaf2, remainder] as [BinaryRect, BinaryRect, Rect]
   }
 }
 
@@ -42,14 +44,16 @@ export class BSP {
 
   root: BinaryRect
   queue: BinaryRect[] = []
+  remaining: Rect[] = []
+
   constructor(readonly initialRect: Rect) {
-    this.root = new BinaryRect(initialRect, this.minWidth, this.minHeight)
+    this.root = new BinaryRect(initialRect)
     this.queue.push(this.root)
   }
 
   split() {
     const next = this.queue.shift()
-    if (!next) return
+    if (!next) return false
 
     const r = next.rect
 
@@ -85,7 +89,7 @@ export class BSP {
     const v = vAvail.length > 0 ? pick(vAvail) : 0
     const h = hAvail.length > 0 ? pick(hAvail) : 0
 
-    let result: [BinaryRect, BinaryRect] | undefined
+    let result: [BinaryRect, BinaryRect, Rect] | undefined
     if (v && h) {
       rnd(1) ? (result = next.splitVertical(v)) : (result = next.splitHorizontal(h))
     } else if (v) result = next.splitVertical(v)
@@ -93,23 +97,65 @@ export class BSP {
 
     if (!result) {
       console.warn('Failed to split', this)
-      return
+      return false
     }
 
     const [child1, child2] = result
     this.queue.push(child1, child2)
+    return true
+  }
+
+  splitNextVertical(at: number) {
+    const next = this.queue.shift()
+    if (!next) return
+
+    const [leaf1, leaf2] = next.splitVertical(half(next.rect.width) + (rnd(1) ? at : -at))
+    this.queue.push(leaf1, leaf2)
+  }
+
+  splitNextHorizontal(at: number) {
+    const next = this.queue.shift()
+    if (!next) return
+
+    const [leaf1, leaf2] = next.splitHorizontal(half(next.rect.width) + (rnd(1) ? at : -at))
+    this.queue.push(leaf1, leaf2)
+  }
+
+  trisectLargest(dir: 'vertical' | 'horizontal' | 'largest', variance: number, size: number) {
+    const [largest] = [...this.queue].sort((a, b) => b.rect.area - a.rect.area)
+    const { rect } = largest
+
+    let leaves: [BinaryRect, BinaryRect, Rect] | undefined
+    if (dir === 'vertical' || (dir === 'largest' && rect.width >= rect.height)) {
+      const at = half(rect.width) + (rnd(1) ? variance : -variance)
+      leaves = largest.splitVertical(at, size)
+    } else {
+      const at = half(rect.height) + (rnd(1) ? variance : -variance)
+      leaves = largest.splitHorizontal(at, size)
+    }
+
+    if (!leaves) throw new Error('BSP: failed to split largest')
+    this.queue = this.queue.filter(r => r !== largest)
+
+    const [leaf1, leaf2, remainder] = leaves
+    this.queue.push(leaf1, leaf2)
+    this.remaining.push(remainder)
+    return remainder
   }
 
   run(iterations: number, then: LeafFn, after: (i: number) => unknown) {
     let i = 0
-    while (i++ <= iterations) {
-      this.split()
-      this.leafRects(then)
-      after(i)
+    console.log('iterations:', iterations)
+    while (i++ < iterations) {
+      const success = this.split()
+      if (success) {
+        this.leaves(then)
+        after(i)
+      }
     }
   }
 
-  leafRects(callback: LeafFn) {
+  leaves(callback: LeafFn) {
     function climb(s: BinaryRect) {
       if (s.leaf1 && s.leaf2) {
         climb(s.leaf1)
@@ -120,6 +166,10 @@ export class BSP {
     }
 
     climb(this.root)
+  }
+
+  remainders(callback: LeafFn) {
+    this.remaining.forEach(rect => callback(rect))
   }
 }
 

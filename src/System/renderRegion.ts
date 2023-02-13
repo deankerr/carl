@@ -74,7 +74,7 @@ export function renderRegion(engine: Engine) {
       mainDisplay.draw(viewPt.x, viewPt.y, unknown.render.char, 'transparent', 'transparent')
     } else {
       // currently visible
-      const stack: Entity[] = [ground]
+      const stack: Entity[] = [nothing]
       const here = entities.filter(e => e.position === pt)
 
       const terrain = local.terrainMap.get(pt)

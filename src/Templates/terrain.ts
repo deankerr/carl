@@ -19,14 +19,14 @@ export const terrain = {
     name: 'oil',
     tiles: ['oil1', 'oil2'],
     tag: ['terrain'],
-    tilesAutoRandom: 1000,
+    tilesAutoRandom: 1500,
     tilesLedge: ['oilLedge1', 'oilLedge2'],
   },
   acid: {
     name: 'acid',
     tiles: ['acid1', 'acid2', 'acidClear'],
     tag: ['terrain'],
-    tilesAutoRandom: 1000,
+    tilesAutoRandom: 1500,
     tilesLedge: ['acidLedge1', 'acidLedge2', 'acidClearLedge'],
   },
   blood: {
@@ -40,7 +40,7 @@ export const terrain = {
     name: 'sludge',
     tiles: ['sludge1', 'sludge2'],
     tag: ['terrain'],
-    tilesAutoRandom: 1000,
+    tilesAutoRandom: 1500,
     tilesLedge: ['sludgeLedge1', 'sludgeLedge2'],
   },
   nothing: {

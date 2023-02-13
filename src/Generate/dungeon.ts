@@ -28,7 +28,7 @@ export function dungeon(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDis
 
   // create rooms from BSP leaves
   const rooms: Room[] = []
-  bsp.leafRects(rect => rooms.push(new Room(rect)))
+  bsp.leaves(rect => rooms.push(new Room(rect)))
 
   // find adjacent room points
   findAdjacent(rooms, region)

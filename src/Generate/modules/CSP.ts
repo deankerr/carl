@@ -205,7 +205,8 @@ function createCSPObject(entity: EntityKey[], constraint: Constraint[], grid = [
   return { entity, constraint: ['cellIsEmpty', ...constraint], grid }
 }
 
-const cspObjects = {
+export type CSPObjectKey = keyof typeof cspObjects
+export const cspObjects = {
   grassTuft: createCSPObject(['grassTuft'], ['isDirtFloor']),
   mushrooms: createCSPObject(
     ['redMushrooms', 'purpleMushrooms', 'yellowMushrooms'],

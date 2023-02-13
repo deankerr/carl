@@ -56,11 +56,27 @@ export class Overseer3 {
     }
   }
 
-  floor(pt: Point) {
-    if (!this.region.terrainAt(pt).floor) this.region.create(pt, this.theme.floor)
+  floor(area: Point | Rect) {
+    if (area instanceof Rect) {
+      area.traverse(pt => {
+        if (!this.region.terrainAt(pt).floor) this.region.create(pt, this.theme.floor)
+      })
+    } else {
+      if (!this.region.terrainAt(area).floor) this.region.create(area, this.theme.floor)
+    }
   }
 
   door(pt: Point) {
     if (this.region.at(pt).filter(e => e.door).length === 0) this.region.create(pt, this.theme.door)
+  }
+
+  add(area: Point | Rect, key: EntityKey) {
+    if (area instanceof Rect) {
+      area.traverse(pt => {
+        this.region.create(pt, key)
+      })
+    } else {
+      this.region.create(area, key)
+    }
   }
 }

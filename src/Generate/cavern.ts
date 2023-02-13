@@ -28,7 +28,7 @@ export function cavern(width = CONFIG.generateWidth, height = CONFIG.generateHei
 
   // create rooms from BSP leaves
   const rooms: Room[] = []
-  bsp.leafRects(rect => rooms.push(new Room(rect)))
+  bsp.leaves(rect => rooms.push(new Room(rect)))
 
   // debug room markers
   // rooms.forEach(r => {
