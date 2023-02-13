@@ -1,20 +1,18 @@
 import { CONFIG } from '../config'
 import { Region } from '../Core'
 import { Overseer2 } from './Overseer2'
-import { floodFindRegions } from './modules/flood'
-import { Point } from '../Model/Point'
 import { Rect } from '../Model/Rectangle'
 import { pick } from '../lib/util'
 import { BSP } from './modules'
 import { Room, findAdjacent, connectRooms } from './modules/Room'
 
-export function dungeon(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDisplayHeight) {
+export function crypt(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDisplayHeight) {
   const region = new Region(width, height, window.game.pool)
   const O2 = new Overseer2(region)
 
-  region.name = 'dungeon'
+  region.name = 'crypt'
 
-  const wall = 'dungeonWall'
+  const wall = 'cryptWall'
   const floor = 'stoneTileFloor'
 
   const drawRoom = (rect: Rect) => {

@@ -216,6 +216,19 @@ export class Region {
           delete tHere.isVertical
         }
       }
+
+      // pick Tiles
+      if (tHere.pickTile && tHere.tiles && tHere.render) {
+        // 66% chance to stay as the first tile, or pick random
+        delete tHere.pickTile
+        if (!rnd(2)) {
+          tHere.render = {
+            char: pick(tHere.tiles),
+            color: 'transparent',
+            bgColor: 'transparent',
+          }
+        }
+      }
     })
 
     this.hasChanged = true

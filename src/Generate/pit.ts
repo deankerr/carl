@@ -11,10 +11,8 @@ export function pit(width = CONFIG.generateWidth, height = CONFIG.generateHeight
   const O2 = new Overseer2(region)
 
   region.name = 'pit'
-
-  //* cave generation
   const wall = 'pitWall'
-  const floor = 'stoneFloor'
+  const floor = 'dirtFloor'
 
   const drawRoom = (rect: Rect) => {
     rect.scale(1).traverse((pt, edge) => O2.terrain(pt, edge ? wall : floor))

@@ -69,12 +69,34 @@ export const terrain = {
   },
   stoneFloor: {
     name: 'floor',
-    tiles: ['stoneFloor1'],
-    tag: ['terrain'],
+    tiles: [
+      'stoneFloor1',
+      'stoneFloor2',
+      'stoneFloor3',
+      'stoneFloor4',
+      'stoneFloor5',
+      'stoneFloor6',
+    ],
+    tag: ['terrain', 'pickTile'],
   },
   dirtFloor: {
     name: 'floor',
-    tiles: ['dirtFloor1'],
-    tag: ['terrain'],
+    tiles: ['dirtFloor1', 'dirtFloor2', 'dirtFloor3', 'dirtFloor4', 'dirtFloor5', 'dirtFloor6'],
+    tag: ['terrain', 'pickTile'],
+  },
+  stoneTileFloor: {
+    name: 'floor',
+    tiles: [
+      'stoneTileFloor3',
+      'stoneTileFloor1',
+      'stoneTileFloor2',
+      'stoneTileFloor4',
+      'mossTileFloor1',
+      'mossTileFloor2',
+      'mossTileFloor3',
+      'mossTileFloor4',
+      'mossTileFloor5',
+    ],
+    tag: ['terrain', 'pickTile'],
   },
 } as const

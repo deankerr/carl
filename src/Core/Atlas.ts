@@ -7,6 +7,7 @@ export class Atlas {
     { label: 'cave', generator: Generate.cave, regions: [], regionIndex: 0 },
     { label: 'dungeon', generator: Generate.dungeon, regions: [], regionIndex: 0 },
     { label: 'pit', generator: Generate.pit, regions: [], regionIndex: 0 },
+    { label: 'crypt', generator: Generate.crypt, regions: [], regionIndex: 0 },
   ]
 
   domain = this.domains[0]

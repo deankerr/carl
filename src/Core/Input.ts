@@ -42,6 +42,7 @@ export function handle(event: KeyboardEvent, context: GameContext): ActionTypes 
     'shift Digit1': ChangeDomain(0),
     'shift Digit2': ChangeDomain(1),
     'shift Digit3': ChangeDomain(2),
+    'shift Digit4': ChangeDomain(3),
     'shift KeyR': MetaUI('revealAll'),
     'shift KeyL': MetaUI('animation'),
     'shift KeyQ': MetaUI('logWorld'),

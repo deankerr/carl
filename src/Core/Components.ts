@@ -98,6 +98,8 @@ export type Tag =
   | 'isLedge'
   | 'isHorizontal'
   | 'isVertical'
+  | 'pickTile'
+  | 'pickTileDone'
 
 export type FoundryKey = keyof typeof ComponentFoundry
 export type FoundryParam = { [K in FoundryKey]: Parameters<typeof ComponentFoundry[K]> }
