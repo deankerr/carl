@@ -25,32 +25,6 @@ export class Overseer2 {
 
   snapshot(msg: string) {
     this.current.message = msg
-
-    // add faces
-    // Rect.at(point(0, 0), this.region.width, this.region.height).traverse(pt => {
-    //   if (this.region.terrainAt(pt).label.startsWith('cave')) {
-    //     if (!this.region.terrainAt(pt.add(0, 1)).blocksMovement) this.terrain(pt, 'caveWall')
-    //     else this.terrain(pt, 'caveSolid')
-    //   }
-
-    //   if (this.region.terrainAt(pt).label.startsWith('pit')) {
-    //     if (!this.region.terrainAt(pt.add(0, 1)).blocksMovement) this.terrain(pt, 'pitWall')
-    //     else this.terrain(pt, 'pitSolid')
-    //   }
-
-    //   if (this.region.terrainAt(pt).label.startsWith('water')) {
-    //     if (!this.region.terrainAt(pt.add(0, -1)).label.startsWith('water'))
-    //       this.terrain(pt, 'waterFace')
-    //     else this.terrain(pt, 'water')
-    //   }
-
-    //   if (this.region.terrainAt(pt).label.startsWith('sand')) {
-    //     if (!this.region.terrainAt(pt.add(0, -1)).label.startsWith('sand'))
-    //       this.terrain(pt, 'sandFace')
-    //     else this.terrain(pt, 'sand')
-    //   }
-    // })
-
     this.mutations.push(this.current)
     this.current = genHistory()
   }
@@ -66,7 +40,9 @@ export class Overseer2 {
     if (!this.region.inBounds(pt)) return
     this.current.features.set(pt, feature)
     this.final.features.set(pt, feature)
-    this.region.createEntity(pt, feature)
+    if (feature !== '[clear]') {
+      this.region.createEntity(pt, feature)
+    }
   }
 
   being(pt: Point, being: BeingKey) {
