@@ -14,6 +14,7 @@ type CSPCell = {
   entities: EntityKey[]
   isWall: boolean
   isDoor: boolean
+  isOutOfBounds: boolean
 }
 
 function createCSPCell(): CSPCell {
@@ -23,6 +24,7 @@ function createCSPCell(): CSPCell {
     entities: [],
     isWall: false,
     isDoor: false,
+    isOutOfBounds: false,
   }
 }
 
@@ -44,6 +46,7 @@ export class ConstraintSatisfactionProblemSolver {
       // ? return full cell if oob?
       const oobCell = createCSPCell()
       oobCell.state = 'full'
+      oobCell.isOutOfBounds = true
       return oobCell
     }
     return cell
@@ -112,6 +115,65 @@ export class ConstraintSatisfactionProblemSolver {
     }
   }
 
+  tryBigObject(key: keyof typeof cspObjects, amount = 1) {
+    const domain = shuffle([...this.cellMap.keys()])
+    const { entity, constraint, box } = cspObjects[key]
+    console.log('CSP BIG!:', key, entity, constraint, box)
+    let successes = 0
+
+    for (const pt of domain) {
+      // assess constraints for each char in box
+      console.log('Assess pt:', pt.s, 'attempt:', successes)
+      let satisfies = true
+      this.forCellGrid(pt, box, relPt => {
+        for (const c of constraint) {
+          satisfies = this.assessConstraint(c, relPt)
+          console.log('satisfies:', satisfies)
+          if (!satisfies) return false
+        }
+        return true
+      })
+
+      if (!satisfies) {
+        console.log('Failed')
+        continue
+      }
+
+      console.log('Success, apply entities')
+      // success
+      this.forCellGrid(pt, box, (_relPt, cell, gridValue) => {
+        if (gridValue !== 'x') {
+          const i = parseInt(gridValue)
+          if (Number.isNaN(i) || entity[i] === undefined) {
+            throw new Error(`CSP: Invalid grid value ${i} / ${entity[i]}`)
+          }
+
+          cell.state = 'full'
+          cell.entities.push(entity[i])
+        }
+      })
+
+      successes++
+      if (successes >= amount) break
+    }
+
+    if (successes === 0) console.error('CSP Failed to solve:', key)
+  }
+
+  forCellGrid(
+    pt: Point,
+    grid: string[],
+    callback: (pt: Point, cell: CSPCell, gridValue: string) => unknown
+  ) {
+    for (let yi = 0; yi < grid.length; yi++) {
+      console.log('grid row:', grid[yi])
+      for (let xi = 0; xi < grid[yi].length; xi++) {
+        const relPt = pt.add(xi, yi)
+        if (callback(relPt, this.getCell(relPt), grid[yi][xi]) === false) return
+      }
+    }
+  }
+
   assessConstraint(constraint: Constraint, pt: Point) {
     switch (constraint) {
       case 'isFloor':
@@ -122,9 +184,16 @@ export class ConstraintSatisfactionProblemSolver {
         return this.constraintCellIsEmpty(pt)
       case 'isCorner':
         return this.constraintIsCorner(pt)
+      case 'isNorthernExposedWall':
+        return this.constraintIsNorthernExposedWall(pt)
       default:
         throw new Error('Unknown constraint')
     }
+  }
+
+  constraintCellIsEmpty(pt: Point) {
+    const cell = this.getCell(pt)
+    return cell.state === 'empty'
   }
 
   constraintIsFloor(pt: Point) {
@@ -132,9 +201,11 @@ export class ConstraintSatisfactionProblemSolver {
     return !cell.isWall && !cell.isDoor
   }
 
-  constraintCellIsEmpty(pt: Point) {
+  constraintIsNorthernExposedWall(pt: Point) {
     const cell = this.getCell(pt)
-    return cell.state === 'empty'
+    const cellNorth = this.getCell(pt.north())
+    const cellSouth = this.getCell(pt.south())
+    return cell.isWall && cellNorth.isOutOfBounds && !cellSouth.isWall
   }
 
   constraintIsDirtFloor(pt: Point) {
@@ -151,15 +222,33 @@ export class ConstraintSatisfactionProblemSolver {
   }
 }
 
-export type Constraint = 'cellIsEmpty' | 'isFloor' | 'isDirtFloor' | 'isCorner'
+export type Constraint =
+  | 'cellIsEmpty'
+  | 'isFloor'
+  | 'isNorthernExposedWall'
+  | 'isDirtFloor'
+  | 'isCorner'
 
 type CSPObject = {
   entity: EntityKey[]
   constraint: Constraint[]
+  box: string[]
 }
 
-function createCSPObject(entity: EntityKey[], constraint: Constraint[]): CSPObject {
-  return { entity, constraint: ['cellIsEmpty', ...constraint] }
+/* 
+
+e = cell must be empty
+O = e + cells will be filled here
+box : [
+  'eOOOOOe',
+  'eOeeeOe',
+  'eOOOOOe'
+]
+
+*/
+
+function createCSPObject(entity: EntityKey[], constraint: Constraint[], box = ['0']): CSPObject {
+  return { entity, constraint: ['cellIsEmpty', ...constraint], box }
 }
 
 const cspObjects = {
@@ -169,4 +258,10 @@ const cspObjects = {
     ['isDirtFloor']
   ),
   webCorner: createCSPObject(['webCorner'], ['isFloor', 'isCorner']),
+  sconce: createCSPObject(['sconce'], ['isNorthernExposedWall']),
+  smallHolePlatform: createCSPObject(
+    ['dirtFloorHole'],
+    ['isFloor'],
+    ['xxxxxxx', 'x00000x', 'x0xxx0x', 'x00000x', 'xxxxxxx']
+  ),
 }

@@ -137,4 +137,10 @@ export const features = {
     tiles: ['yellowMushrooms'],
     tag: ['feature'],
   },
+  sconce: {
+    name: 'sconce',
+    tiles: ['sconce1', 'sconce2'],
+    tilesAutoCycle: 120,
+    tag: ['feature'],
+  },
 } as const

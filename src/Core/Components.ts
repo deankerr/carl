@@ -101,6 +101,7 @@ export type Tag =
   | 'pickTile'
   | 'pickTileEqually'
   | 'pickTileCorner'
+  | 'pickTileLedge'
 
 export type FoundryKey = keyof typeof ComponentFoundry
 export type FoundryParam = { [K in FoundryKey]: Parameters<typeof ComponentFoundry[K]> }

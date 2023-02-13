@@ -1,5 +1,5 @@
 import { CONFIG } from '../config'
-import { Region } from '../Core'
+import { FeatureKey, Region } from '../Core'
 import { pick } from '../lib/util'
 import { Rect } from '../Model/Rectangle'
 import { BSP } from './modules'
@@ -47,21 +47,30 @@ export function pit(width = CONFIG.generateWidth, height = CONFIG.generateHeight
   })
 
   // apply CSP
-  for (const room of rooms) {
-    const csp = new ConstraintSatisfactionProblemSolver(region)
-    csp.initializeRect(room.rect.scale(1))
+  // for (const room of rooms) {
+  //   const csp = new ConstraintSatisfactionProblemSolver(region)
+  //   csp.initializeRect(room.rect.scale(1))
 
-    csp.tryObject('grassTuft', 4)
-    csp.tryObject('mushrooms', 4)
-    csp.tryObject('webCorner', 3)
+  //   // csp.tryObject('grassTuft', 4)
+  //   // csp.tryObject('mushrooms', 4)
+  //   // csp.tryObject('webCorner', 3)
+  //   // csp.tryObject('sconce', 2)
+  //   csp.tryBigObject('smallHolePlatform')
 
-    csp.each((pt, cell) => {
-      cell.entities.forEach(k => O2.add(pt, k))
-    })
+  //   csp.each((pt, cell) => {
+  //     cell.entities.forEach(k => O2.add(pt, k))
+  //   })
 
-    csp.debugLogPointMap()
-  }
+  //   csp.debugLogPointMap()
+  // }
   // debug
+
+  const csp = new ConstraintSatisfactionProblemSolver(region)
+  csp.initializeRect(rooms[0].rect.scale(1))
+  csp.tryBigObject('smallHolePlatform')
+  csp.each((pt, cell) => {
+    cell.entities.forEach(k => O2.add(pt, k))
+  })
 
   O2.finalize()
   return region

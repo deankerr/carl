@@ -232,9 +232,15 @@ export class Region {
         }
 
         if (tHere.pickTileEqually) {
-          console.log('tHere:', tHere)
           delete tHere.pickTileEqually
           tHere.render = { ...tHere.render, char: pick(tHere.tiles) }
+        }
+
+        if (tHere.pickTileLedge) {
+          delete tHere.pickTileLedge
+          if (tHere.name !== tAbove.name) {
+            tHere.render = { ...tHere.render, char: tHere.tiles[1] }
+          }
         }
       }
     })

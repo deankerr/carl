@@ -84,6 +84,11 @@ export const terrain = {
     tiles: ['dirtFloor1', 'dirtFloor2', 'dirtFloor3', 'dirtFloor4', 'dirtFloor5', 'dirtFloor6'],
     tag: ['terrain', 'pickTile'],
   },
+  dirtFloorHole: {
+    name: 'hole',
+    tiles: ['unknown', 'dirtFloorHoleLedge'],
+    tag: ['terrain', 'blocksMovement', 'pickTileLedge'],
+  },
   stoneTileFloor: {
     name: 'floor',
     tiles: [
