@@ -42,7 +42,7 @@ export function pit(width = CONFIG.generateWidth, height = CONFIG.generateHeight
   // create doors
   connectRooms(rooms, pt => {
     O2.terrain(pt, floor)
-    O2.feature(pt, pick(['woodenDoor', 'stoneDoor']))
+    O2.feature(pt, pick(['woodenDoor', 'stoneDoor', 'jailDoor', 'redDoor']))
     O2.snapshot('Connect Room')
   })
 
