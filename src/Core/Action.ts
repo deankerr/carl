@@ -9,7 +9,7 @@ export type ActionTypes =
   | MeleeAttack
   | Tread
   | ChangeRegion
-  | ChangeDomain
+  | ChangeZone
   | Visualize
   | None
 
@@ -23,9 +23,9 @@ export const ChangeRegion = (going: 'down' | 'up') => {
   return { changeRegion: { going } }
 }
 
-export type ChangeDomain = { changeDomain: { to: number } }
-export const ChangeDomain = (to: number) => {
-  return { changeDomain: { to } }
+export type ChangeZone = { changeZone: { to: number } }
+export const ChangeZone = (to: number) => {
+  return { changeZone: { to } }
 }
 
 export type MeleeAttack = { meleeAttack: Point }

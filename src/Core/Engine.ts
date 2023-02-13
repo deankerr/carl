@@ -64,7 +64,7 @@ export class Engine {
 
     if ('ui' in action) return UI(this, action.ui)
 
-    if ('changeRegion' in action || 'changeDomain' in action) {
+    if ('changeRegion' in action || 'changeZone' in action) {
       this.system.change(action)
       return
     }

@@ -2,7 +2,7 @@
 
 import { GameContext } from '.'
 import { logger } from '../lib/logger'
-import { ActionTypes, Move, MetaUI, ChangeRegion, ChangeDomain, Visualize } from './Action'
+import { ActionTypes, Move, MetaUI, ChangeRegion, ChangeZone, Visualize } from './Action'
 
 type KeyMap = Record<string, ActionTypes>
 
@@ -39,10 +39,10 @@ export function handle(event: KeyboardEvent, context: GameContext): ActionTypes 
     Period: ChangeRegion('down'),
     KeyV: Visualize('init'),
     // debug
-    'shift Digit1': ChangeDomain(0),
-    'shift Digit2': ChangeDomain(1),
-    'shift Digit3': ChangeDomain(2),
-    'shift Digit4': ChangeDomain(3),
+    'shift Digit1': ChangeZone(0),
+    'shift Digit2': ChangeZone(1),
+    'shift Digit3': ChangeZone(2),
+    'shift Digit4': ChangeZone(3),
     'shift KeyR': MetaUI('revealAll'),
     'shift KeyL': MetaUI('animation'),
     'shift KeyQ': MetaUI('logWorld'),

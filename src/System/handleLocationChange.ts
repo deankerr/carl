@@ -1,9 +1,9 @@
 import { ActionTypes, Engine } from '../Core'
 
 export function handleLocationChange(engine: Engine, action: ActionTypes) {
-  if ('changeDomain' in action) {
-    const { to } = action.changeDomain
-    engine.atlas.setDomain(to)
+  if ('changeZone' in action) {
+    const { to } = action.changeZone
+    engine.atlas.setZone(to)
     engine.local = engine.atlas.local()
   }
 

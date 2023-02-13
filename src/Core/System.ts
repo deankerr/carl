@@ -72,7 +72,7 @@ export class System {
   }
 
   init() {
-    this.change(Action.ChangeDomain(CONFIG.initialDomain))
+    this.change(Action.ChangeZone(CONFIG.initialZone))
   }
 
   change(change: ActionTypes) {

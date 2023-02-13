@@ -27,7 +27,7 @@ const lightFlickerFreq = 120
 const recallAll = false
 const revealAll = localStorage.getItem('revealAll') === 'true'
 
-const initialDomain = parseInt(localStorage.getItem('initialDomain') ?? '0')
+const initialZone = parseInt(localStorage.getItem('initialZone') ?? '0')
 
 const autoStartVisualizer = false
 
@@ -50,7 +50,7 @@ const CONFIG = {
   lightFlickerFreq,
   recallAll,
   revealAll,
-  initialDomain,
+  initialZone,
   autoStartVisualizer,
 }
 
