@@ -248,4 +248,9 @@ const cspObjects = {
     ['isFloor'],
     ['202', '000', '010', '000', '202']
   ),
+  statueCarpetAltar: createCSPObject(
+    ['statueDragon', 'carpet', 'pitWall'],
+    ['isFloor'],
+    ['0110', '1221', '1221', '0110']
+  ),
 }

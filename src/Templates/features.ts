@@ -176,4 +176,19 @@ export const features = {
     tiles: ['carpetEmblem2'],
     tag: ['feature'],
   },
+  statueWarrior: {
+    name: 'warrior statue',
+    tiles: ['statueWarrior'],
+    tag: ['feature', 'blocksMovement'],
+  },
+  statueDragon: {
+    name: 'warrior statue',
+    tiles: ['statueDragon'],
+    tag: ['feature', 'blocksMovement'],
+  },
+  statueMonster: {
+    name: 'warrior statue',
+    tiles: ['statueMonster'],
+    tag: ['feature', 'blocksMovement'],
+  },
 } as const

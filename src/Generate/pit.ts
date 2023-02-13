@@ -59,7 +59,7 @@ export function pit(width = CONFIG.generateWidth, height = CONFIG.generateHeight
         csp.solve('smallSlimePool')
         break
       case 2:
-        csp.solve('smallOilPool')
+        csp.solve('statueCarpetAltar')
         break
       case 3:
         csp.solve('smallAcidPoolPlatform')
