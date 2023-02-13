@@ -1,8 +1,6 @@
 import { CONFIG } from '../config'
 import { Region } from '../Core'
 import { Overseer2 } from './Overseer2'
-import { floodFindRegions } from './modules/flood'
-import { Point } from '../Model/Point'
 import { Rect } from '../Model/Rectangle'
 import { pick } from '../lib/util'
 import { BSP } from './modules'

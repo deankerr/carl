@@ -79,6 +79,11 @@ export const features = {
     tiles: ['web1'],
     tag: ['feature'],
   },
+  webCorner: {
+    name: 'web',
+    tiles: ['webNW', 'webNE', 'webSW', 'webSE'],
+    tag: ['feature'],
+  },
   cactus: {
     name: 'cactus',
     tiles: ['cactus'],
@@ -111,5 +116,25 @@ export const features = {
     tilesAutoCycle: 1000,
     tag: ['feature'],
     trodOn: 'You bounce off the lilypad.',
+  },
+  grassTuft: {
+    name: 'tuft of grass',
+    tiles: ['grassTuft1', 'grassTuft2', 'grassTuft3', 'grassTuft4', 'grassTuft5'],
+    tag: ['feature', 'pickTileEqually'],
+  },
+  redMushrooms: {
+    name: 'red mushrooms',
+    tiles: ['redMushrooms'],
+    tag: ['feature'],
+  },
+  purpleMushrooms: {
+    name: 'purple mushrooms',
+    tiles: ['purpleMushrooms'],
+    tag: ['feature'],
+  },
+  yellowMushrooms: {
+    name: 'yellow mushrooms',
+    tiles: ['yellowMushrooms'],
+    tag: ['feature'],
   },
 } as const

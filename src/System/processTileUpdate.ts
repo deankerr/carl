@@ -1,5 +1,6 @@
 import { Entity, EntityKey, EntityWith } from '../Core'
 import { Engine } from '../Core/Engine'
+import { pick } from '../lib/util'
 // import { logger } from '../lib/logger'
 
 export function processTileUpdate(engine: Engine) {
@@ -58,6 +59,17 @@ export function processTileUpdate(engine: Engine) {
         changed = true
       }
     }
+  }
+
+  // pick tiles
+  const ePick = local.get('tiles', 'pickTileEqually', 'render') as EntityWith<
+    Entity,
+    'tiles' | 'render'
+  >[]
+
+  for (const entity of ePick) {
+    delete entity.pickTileEqually
+    entity.render = { ...entity.render, char: pick(entity.tiles) }
   }
 
   if (changed) local.hasChanged = true

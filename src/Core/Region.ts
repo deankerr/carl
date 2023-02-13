@@ -184,49 +184,57 @@ export class Region {
       const tAbove = this.terrainAt(pt.add(0, -1))
       const tBelow = this.terrainAt(pt.add(0, 1))
 
-      // ledge water/sand/etc
-      if (tHere.tilesLedge && tHere.render) {
-        if (tAbove.name !== tHere.name) {
-          tHere.tiles = tHere.tilesLedge
-          tHere.render = {
-            char: tHere.tilesLedge[0],
-            color: 'transparent',
-            bgColor: 'transparent',
+      if (tHere.tiles && tHere.render) {
+        // ledge water/sand/etc
+        if (tHere.tilesLedge && tHere.render) {
+          if (tAbove.name !== tHere.name) {
+            tHere.tiles = tHere.tilesLedge
+            tHere.render = {
+              char: tHere.tilesLedge[0],
+              color: 'transparent',
+              bgColor: 'transparent',
+            }
           }
         }
-      }
 
-      // walls vertical/horizontal
-      if (tHere.wall && tHere.tilesVertical && tHere.tilesHorizontal && tHere.render) {
-        if (tBelow.wall && !tHere.isVertical) {
-          tHere.render = {
-            char: rnd(1) ? tHere.tilesVertical[0] : pick(tHere.tilesVertical),
-            color: 'transparent',
-            bgColor: 'transparent',
+        // walls vertical/horizontal
+        if (tHere.wall && tHere.tilesVertical && tHere.tilesHorizontal && tHere.render) {
+          if (tBelow.wall && !tHere.isVertical) {
+            tHere.render = {
+              char: rnd(1) ? tHere.tilesVertical[0] : pick(tHere.tilesVertical),
+              color: 'transparent',
+              bgColor: 'transparent',
+            }
+            tHere.isVertical = true
+            delete tHere.isHorizontal
+          } else if (!tBelow.wall && !tHere.isHorizontal) {
+            tHere.render = {
+              char: rnd(1) ? tHere.tilesHorizontal[0] : pick(tHere.tilesHorizontal),
+              color: 'transparent',
+              bgColor: 'transparent',
+            }
+            tHere.isHorizontal = true
+            delete tHere.isVertical
           }
-          tHere.isVertical = true
-          delete tHere.isHorizontal
-        } else if (!tBelow.wall && !tHere.isHorizontal) {
-          tHere.render = {
-            char: rnd(1) ? tHere.tilesHorizontal[0] : pick(tHere.tilesHorizontal),
-            color: 'transparent',
-            bgColor: 'transparent',
-          }
-          tHere.isHorizontal = true
-          delete tHere.isVertical
         }
-      }
 
-      // pick Tiles
-      if (tHere.pickTile && tHere.tiles && tHere.render) {
-        // 66% chance to stay as the first tile, or pick random
-        delete tHere.pickTile
-        if (!rnd(2)) {
-          tHere.render = {
-            char: pick(tHere.tiles),
-            color: 'transparent',
-            bgColor: 'transparent',
+        // pick Tiles
+        if (tHere.pickTile) {
+          // 66% chance to stay as the first tile, or pick random
+          delete tHere.pickTile
+          if (!rnd(2)) {
+            tHere.render = {
+              char: pick(tHere.tiles),
+              color: 'transparent',
+              bgColor: 'transparent',
+            }
           }
+        }
+
+        if (tHere.pickTileEqually) {
+          console.log('tHere:', tHere)
+          delete tHere.pickTileEqually
+          tHere.render = { ...tHere.render, char: pick(tHere.tiles) }
         }
       }
     })

@@ -3,6 +3,7 @@ import { Region } from '../Core'
 import { pick } from '../lib/util'
 import { Rect } from '../Model/Rectangle'
 import { BSP } from './modules'
+import { ConstraintSatisfactionProblemSolver } from './modules/CSP'
 import { connectRooms, findAdjacent, Room } from './modules/Room'
 import { Overseer2 } from './Overseer2'
 
@@ -44,6 +45,19 @@ export function pit(width = CONFIG.generateWidth, height = CONFIG.generateHeight
     O2.feature(pt, pick(['woodenDoor', 'stoneDoor']))
     O2.snapshot('Connect Room')
   })
+
+  const csp = new ConstraintSatisfactionProblemSolver(region)
+  csp.initializeRect(rooms[0].rect.scale(1))
+
+  csp.tryObject('grassTuft', 6)
+  csp.tryObject('mushrooms', 6)
+
+  csp.each((pt, cell) => {
+    cell.entities.forEach(k => O2.add(pt, k))
+  })
+
+  csp.debugLogPointMap()
+  // debug
 
   O2.finalize()
   return region

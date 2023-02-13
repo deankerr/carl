@@ -1,8 +1,7 @@
-import { BeingKey, EntityKey, EntityPool, FeatureKey, Region } from '../Core'
+import { BeingKey, EntityKey, EntityPool, FeatureKey, Region, TerrainKey } from '../Core'
 import { Visualizer } from '../Core/Visualizer'
-import { pick, rnd } from '../lib/util'
+import * as Templates from '../Templates'
 import { point, Point } from '../Model/Point'
-import { Rect } from '../Model/Rectangle'
 
 export class Overseer2 {
   region: Region
@@ -56,7 +55,7 @@ export class Overseer2 {
     this.current = genHistory()
   }
 
-  terrain(pt: Point, terrain: EntityKey) {
+  terrain(pt: Point, terrain: TerrainKey) {
     if (!this.region.inBounds(pt)) return
 
     this.region.createTerrain(pt, terrain)
@@ -67,12 +66,22 @@ export class Overseer2 {
     if (!this.region.inBounds(pt)) return
     this.current.features.set(pt, feature)
     this.final.features.set(pt, feature)
+    this.region.createEntity(pt, feature)
   }
 
   being(pt: Point, being: BeingKey) {
     if (!this.region.inBounds(pt)) return
     this.current.beings.set(pt, being)
     this.final.beings.set(pt, being)
+    this.region.createEntity(pt, being)
+  }
+
+  add(pt: Point, key: EntityKey) {
+    if (!this.region.inBounds(pt)) return
+    const e = this.pool.symbolic(key)
+    if (e.terrain) return this.terrain(pt, key as TerrainKey)
+    if (e.feature) return this.feature(pt, key as FeatureKey)
+    if (e.being) return this.being(pt, key as BeingKey)
   }
 
   // realify actual entities
@@ -97,7 +106,7 @@ export class Overseer2 {
   }
 
   module(): O2Module {
-    const terrain = (type: EntityKey) => (pt: Point) => this.terrain(pt, type)
+    const terrain = (type: TerrainKey) => (pt: Point) => this.terrain(pt, type)
     const feature = (type: FeatureKey) => (pt: Point) => this.feature(pt, type)
     const being = (type: BeingKey) => (pt: Point) => this.being(pt, type)
     const snap = (msg: string) => () => this.snapshot(msg)
@@ -115,7 +124,7 @@ export class Overseer2 {
 
 export type O2Module = {
   region: Region
-  terrain: (type: EntityKey) => (pt: Point) => void
+  terrain: (type: TerrainKey) => (pt: Point) => void
   feature: (type: FeatureKey) => (pt: Point) => void
   being: (type: BeingKey) => (pt: Point) => void
   snap: (msg: string) => () => void
