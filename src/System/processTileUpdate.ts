@@ -9,14 +9,14 @@ export function processTileUpdate(engine: Engine) {
   let changed = false
   // iterate through each entity with triggers, if a matching tag is found, update the entity's
   // form to the relevant set
-  const setTriggers = local.get('tiles', 'tileTriggers')
+  const setTriggers = local.get('tiles', 'tileTriggers', 'render')
   for (const entity of setTriggers) {
     const { tiles, tileTriggers } = entity
     tileTriggers.forEach((tag, tagIndex) => {
-      if (tag in entity) {
+      if (tag in entity && entity.render.char !== tiles[tagIndex]) {
         local.entity(entity).modify('render', tiles[tagIndex])
+        changed = true
       }
-      changed = true
     })
   }
 
