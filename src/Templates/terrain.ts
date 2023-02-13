@@ -95,11 +95,16 @@ export const terrain = {
     ],
     tag: [...wallTags],
   },
-  pitWall: {
+  cavernWall: {
     name: 'wall',
-    tiles: ['pitVertical1'],
-    tilesVertical: ['pitVertical1', 'pitVertical2', 'pitVertical3', 'pitVertical4'],
-    tilesHorizontal: ['pitHorizontal1', 'pitHorizontal2', 'pitHorizontal3', 'pitHorizontal4'],
+    tiles: ['cavernVertical1'],
+    tilesVertical: ['cavernVertical1', 'cavernVertical2', 'cavernVertical3', 'cavernVertical4'],
+    tilesHorizontal: [
+      'cavernHorizontal1',
+      'cavernHorizontal2',
+      'cavernHorizontal3',
+      'cavernHorizontal4',
+    ],
     tag: [...wallTags],
   },
   stoneFloor: {

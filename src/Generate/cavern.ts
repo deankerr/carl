@@ -7,12 +7,12 @@ import { ConstraintSatisfactionProblemSolver } from './modules/CSP'
 import { connectRooms, findAdjacent, Room } from './modules/Room'
 import { Overseer2 } from './Overseer2'
 
-export function pit(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
+export function cavern(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
   const region = new Region(width, height)
   const O2 = new Overseer2(region)
 
-  region.name = 'pit'
-  const wall = 'pitWall'
+  region.name = 'cavern'
+  const wall = 'cavernWall'
   const floor = 'dirtFloor'
 
   const drawRoom = (rect: Rect) => {
