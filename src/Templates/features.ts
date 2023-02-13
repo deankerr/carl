@@ -161,4 +161,19 @@ export const features = {
     tilesAutoCycle: 120,
     tag: ['feature'],
   },
+  carpet: {
+    name: 'carpet',
+    tiles: ['carpet1', 'carpet2', 'carpet3'],
+    tag: ['feature', 'pickTile'],
+  },
+  carpetEmblem1: {
+    name: 'carpetEmblem1',
+    tiles: ['carpetEmblem1'],
+    tag: ['feature'],
+  },
+  carpetEmblem2: {
+    name: 'carpet',
+    tiles: ['carpetEmblem2'],
+    tag: ['feature'],
+  },
 } as const

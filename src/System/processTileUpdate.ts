@@ -71,6 +71,13 @@ export function processTileUpdate(engine: Engine) {
   }
 
   // pick tiles
+  const pickTile = local.get('render', 'tiles', 'pickTile')
+  for (const entity of pickTile) {
+    const tile = !rnd(2) ? pick(entity.tiles) : entity.tiles[0]
+    local.entity(entity).modify('render', tile).remove('pickTile')
+    changed = true
+  }
+
   const pickTileEqually = local.get('render', 'tiles', 'pickTileEqually')
   for (const entity of pickTileEqually) {
     local.entity(entity).modify('render', pick(entity.tiles)).remove('pickTileEqually')

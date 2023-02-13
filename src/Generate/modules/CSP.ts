@@ -233,4 +233,19 @@ const cspObjects = {
   ),
   smallBloodPool: createCSPObject(['blood'], ['isFloor'], ['xxxx', 'x00x', 'x00x', 'xxxx']),
   smallSludgePool: createCSPObject(['sludge'], ['isFloor'], ['xxxx', 'x00x', 'x00x', 'xxxx']),
+  smallAcidPoolPlatform: createCSPObject(
+    ['acid'],
+    ['isFloor'],
+    ['xxxxx', 'x000x', 'x0x0x', 'x000x', 'xxxxx']
+  ),
+  smallCarpet: createCSPObject(
+    ['carpet', 'carpetEmblem1', 'carpetEmblem2'],
+    ['isFloor'],
+    ['20002', '00100', '20002']
+  ),
+  smallCarpetTall: createCSPObject(
+    ['carpet', 'carpetEmblem1', 'carpetEmblem2'],
+    ['isFloor'],
+    ['202', '000', '010', '000', '202']
+  ),
 }
