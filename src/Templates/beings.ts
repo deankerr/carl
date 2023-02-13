@@ -1,7 +1,7 @@
 export const beings = {
   player: {
     name: 'player',
-    tiles: ['@'],
+    tiles: ['warrior'],
     tag: ['playerControlled', 'actor', 'blocksMovement', 'being', 'signalUpdatePlayerFOV'],
     fieldOfView: 16,
   },
