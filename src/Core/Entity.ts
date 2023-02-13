@@ -3,23 +3,16 @@ import { Point } from '../Model/Point'
 import { features, terrain, beings } from '../Templates'
 import { FoundryKey, Component, ComponentFoundry, FoundryParam, Components } from './Components'
 
+const templates = { ...beings, ...features, ...terrain }
+
 export type eID = { eID: number; label: string }
 export type Entity = eID & Component<'name'> & Component<'render'> & Partial<Components>
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
-// export type EntityKey = BeingKey | FeatureKey | TerrainKey
-
-// export type EntityTemplate = {
-//   label: string
-//   name: FoundryParam['name']
-// } & Partial<FoundryParam>
-
-// const templates = [...beings, ...features, ...terrain]
-const templates = { ...beings, ...features, ...terrain }
 export type TerrainKey = keyof typeof terrain
 export type FeatureKey = keyof typeof features | '[clear]'
 export type BeingKey = keyof typeof beings
 export type EntityKey = TerrainKey | FeatureKey | BeingKey
-const a: EntityKey = 'caveFace1'
+
 export class EntityPool {
   private count = 0
   readonly pool = new Map<string, Entity>()
@@ -49,8 +42,10 @@ export class EntityPool {
 
       if ('baseVariant' in t) e = { ...e, ...this.components.baseVariant(t.baseVariant) }
       if ('ledgeVariant' in t) e = { ...e, ...this.components.ledgeVariant(t.ledgeVariant) }
-      if ('wallVariant' in t) e = { ...e, ...this.components.wallVariant(...t.wallVariant) }
-      if ('faceVariant' in t) e = { ...e, ...this.components.faceVariant(...t.faceVariant) }
+
+      if ('tilesVertical' in t) e = { ...e, ...this.components.tilesVertical(...t.tilesVertical) }
+      if ('tilesHorizontal' in t)
+        e = { ...e, ...this.components.tilesHorizontal(...t.tilesHorizontal) }
 
       // if (t.emitLight) {
       //   const color =
@@ -60,10 +55,6 @@ export class EntityPool {
       //   e = this.attach(e, 'emitLight', color, t.emitLight[1])
       //   e = this.attach(e, 'tag', 'signalLightPathUpdated')
       // }
-
-      // if (t.lightHueRotate) e = this.attach(e, 'lightHueRotate', ...t.lightHueRotate)
-
-      // if ('tileVariant' in t) e = this.attach(e, 'tileVariant', ...t.tileVariant)
 
       this.pool.set(key, e)
     }

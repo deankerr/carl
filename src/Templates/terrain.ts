@@ -1,6 +1,4 @@
-import { caveFace, caveFaceBase, caveWall, caveWallBase } from './walls'
-
-const tWall = ['terrain', 'blocksLight', 'blocksMovement', 'wall']
+const wallTags = ['terrain', 'blocksLight', 'blocksMovement', 'wall']
 
 export const terrain = {
   water: {
@@ -37,29 +35,43 @@ export const terrain = {
     tiles: ['sand'],
     tag: ['terrain'],
   },
-  caveWall: caveWallBase,
-  caveFace: caveFaceBase,
-  caveWall1: caveWall(1),
-  caveWall2: caveWall(2),
-  caveWall3: caveWall(3),
-  caveWall4: caveWall(4),
-  caveWall5: caveWall(5),
-  caveWall6: caveWall(6),
-  caveFace1: caveFace(1),
-  caveFace2: caveFace(2),
-  caveFace3: caveFace(3),
-  caveFace4: caveFace(4),
-  caveFace5: caveFace(5),
-  caveFace6: caveFace(6),
   dungeonWall: {
     name: 'wall',
-    tiles: ['dungeonSolid1'],
-    tag: [...tWall],
+    tiles: ['dungeonVertical1'],
+    tilesVertical: ['dungeonVertical1', 'dungeonVertical2', 'dungeonVertical3', 'dungeonVertical4'],
+    tilesHorizontal: [
+      'dungeonHorizontal1',
+      'dungeonHorizontal2',
+      'dungeonHorizontal3',
+      'dungeonHorizontal4',
+    ],
+    tag: [...wallTags],
+  },
+  caveWall: {
+    name: 'wall',
+    tiles: ['caveVertical1'],
+    tilesVertical: ['caveVertical1', 'caveVertical2', 'caveVertical3', 'caveVertical4'],
+    tilesHorizontal: ['caveHorizontal1', 'caveHorizontal2', 'caveHorizontal3', 'caveHorizontal4'],
+    tag: [...wallTags],
+  },
+  cryptWall: {
+    name: 'wall',
+    tiles: ['cryptVertical1'],
+    tilesVertical: ['cryptVertical1', 'cryptVertical2', 'cryptVertical3', 'cryptVertical4'],
+    tilesHorizontal: [
+      'cryptHorizontal1',
+      'cryptHorizontal2',
+      'cryptHorizontal3',
+      'cryptHorizontal4',
+    ],
+    tag: [...wallTags],
   },
   pitWall: {
     name: 'wall',
-    tiles: ['pitSolid1'],
-    tag: [...tWall],
+    tiles: ['pitVertical1'],
+    tilesVertical: ['pitVertical1', 'pitVertical2', 'pitVertical3', 'pitVertical4'],
+    tilesHorizontal: ['pitHorizontal1', 'pitHorizontal2', 'pitHorizontal3', 'pitHorizontal4'],
+    tag: [...wallTags],
   },
   stoneFloor: {
     name: 'floor',
@@ -72,20 +84,3 @@ export const terrain = {
     tag: ['terrain'],
   },
 } as const
-
-/*
-
-const tcave = {
-  cave: {
-    wall: {
-      tile: ['caveSolid1', 'caveSolid2', 'caveSolid3', 'caveSolid4', 'caveSolid5', 'caveSolid6'],
-      chance: [10, 5, 5, 5, 1, 1],
-    },
-    face: {
-      tile: ['caveWall1', 'caveWall2', 'caveWall3', 'caveWall4', 'caveWall5', 'caveWall6'],
-      chance: [20, 5, 5, 5, 5, 5, 5],
-    },
-  },
-}
-
-*/

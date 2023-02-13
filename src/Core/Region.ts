@@ -1,6 +1,6 @@
 import { Color } from 'rot-js/lib/color'
 import { CONFIG } from '../config'
-import { loop, Queue, rnd } from '../lib/util'
+import { loop, pick, Queue, rnd } from '../lib/util'
 import { Point, point, pointRect } from '../Model/Point'
 import { Rect } from '../Model/Rectangle'
 import { Entity, EntityPool, EntityKey, EntityWith } from './Entity'
@@ -49,7 +49,7 @@ export class Region {
   }
 
   createTerrain(pt: Point, key: EntityKey) {
-    const terrain = this.pool.symbolic(key)
+    const terrain = this.pool.spawn(key, pt)
 
     this.terrainMap.set(pt, terrain)
     this.hasChanged = true
@@ -191,28 +191,28 @@ export class Region {
         } else if (tHere.baseVariant && !tHere.isBase) this.createTerrain(pt, tHere.baseVariant)
       }
 
-      // walls
-      if (tHere.wall && tHere.wallVariant && tHere.faceVariant) {
-        console.log(tHere.wallVariant)
-        if (tHere.isFace && tBelow.wall) this.createTerrain(pt, tHere.wallVariant[0])
-        else if (!tHere.isFace && !tBelow.wall) this.createTerrain(pt, tHere.faceVariant[0])
+      // walls vertical/horizontal
+      if (tHere.wall && tHere.tilesVertical && tHere.tilesHorizontal && tHere.render) {
+        if (tBelow.wall && !tHere.isVertical) {
+          tHere.render = {
+            char: rnd(1) ? tHere.tilesVertical[0] : pick(tHere.tilesVertical),
+            color: 'transparent',
+            bgColor: 'transparent',
+          }
+          tHere.isVertical = true
+          delete tHere.isHorizontal
+        } else if (!tBelow.wall && !tHere.isHorizontal) {
+          tHere.render = {
+            char: rnd(1) ? tHere.tilesHorizontal[0] : pick(tHere.tilesHorizontal),
+            color: 'transparent',
+            bgColor: 'transparent',
+          }
+          tHere.isHorizontal = true
+          delete tHere.isVertical
+        }
       }
     })
 
     this.hasChanged = true
   }
-
-  // terrainVariants() {
-  //   console.log('sweep')
-  //   this.rect.traverse(pt => {
-  //     const t = this.terrainAt(pt)
-  //     if ('ledgeTiles' in t && 'render' in t) {
-  //       if (!('ledgeTiles' in this.terrainAt(pt.add(0, -1)))) {
-  //         t.tiles = t.ledgeTiles
-  //         t.render.char = t.tiles[0]!
-  //         console.log('t:', t)
-  //       }
-  //     }
-  //   })
-  // }
 }

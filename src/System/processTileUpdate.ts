@@ -11,7 +11,7 @@ export function processTileUpdate(engine: Engine) {
   // form to the relevant set
   const setTriggers = local.get('tiles', 'tileTriggers')
   for (const entity of setTriggers) {
-    const { render, tiles, tileTriggers } = entity
+    const { tiles, tileTriggers } = entity
     tileTriggers.forEach((tag, tagIndex) => {
       if (tag in entity) {
         local.entity(entity).modify('render', tiles[tagIndex])
@@ -23,7 +23,7 @@ export function processTileUpdate(engine: Engine) {
   // find any cycle entity whose last update time has exceeded frequency, and update their form
   const autoCyclers = local.get('tiles', 'tilesAutoCycle')
   for (const entity of autoCyclers) {
-    const { render, tiles, tilesAutoCycle: cycle } = entity
+    const { tiles, tilesAutoCycle: cycle } = entity
     if (Date.now() - cycle.lastUpdate > cycle.frequency) {
       const nextI = cycle.current + 1
       const i = nextI >= tiles.length ? 0 : nextI
@@ -50,7 +50,7 @@ export function processTileUpdate(engine: Engine) {
       terrain.tilesAutoCycle.lastUpdate = Date.now()
       changed = true
     }
-
-    if (changed) local.hasChanged = true
   }
+
+  if (changed) local.hasChanged = true
 }

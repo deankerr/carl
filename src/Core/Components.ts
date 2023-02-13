@@ -31,6 +31,14 @@ export const ComponentFoundry = {
     return { tileTriggers: tags }
   },
 
+  tilesVertical: (...tilesVertical: string[]) => {
+    return { tilesVertical }
+  },
+
+  tilesHorizontal: (...tilesHorizontal: string[]) => {
+    return { tilesHorizontal }
+  },
+
   name: (name: string) => {
     return { name }
   },
@@ -60,14 +68,6 @@ export const ComponentFoundry = {
   ledgeVariant: (key: EntityKey) => {
     return { ledgeVariant: key }
   },
-
-  wallVariant: (...wallVariant: string[]): { wallVariant: EntityKey[] } => {
-    return { wallVariant }
-  },
-
-  faceVariant: (...faceVariant: EntityKey[]) => {
-    return { faceVariant }
-  },
 }
 
 export type Tag =
@@ -86,15 +86,15 @@ export type Tag =
   | 'signalModified'
   | 'signalUpdatePlayerFOV'
   | 'terrain'
-  | 'face'
   | 'door'
   | 'hasDoorNorth'
   | 'renderAbove'
   | 'wall'
-  | 'isFace'
   | 'floor'
   | 'isBase'
   | 'isLedge'
+  | 'isHorizontal'
+  | 'isVertical'
 
 export type FoundryKey = keyof typeof ComponentFoundry
 export type FoundryParam = { [K in FoundryKey]: Parameters<typeof ComponentFoundry[K]> }
