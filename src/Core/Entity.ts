@@ -5,7 +5,7 @@ import { FoundryKey, Component, ComponentFoundry, FoundryParam, Components } fro
 
 const templates = { ...beings, ...features, ...terrain }
 
-export type eID = { eID: number; label: string }
+export type eID = { eID: number; label: string; key: EntityKey }
 export type Entity = eID & Component<'name'> & Component<'render'> & Partial<Components>
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 export type TerrainKey = keyof typeof terrain
@@ -24,6 +24,7 @@ export class EntityPool {
       let e = {
         eID: 0,
         label: key,
+        key: key as EntityKey,
         ...components.name(t.name),
         ...components.render('unknown'),
       }

@@ -18,8 +18,8 @@ function createSnapshot(
 }
 
 type RegionTheme = {
-  wall: Extract<EntityKey, 'dungeonWall' | 'caveWall' | 'cryptWall' | 'pitWall'>
-  floor: Extract<EntityKey, 'dirtFloor' | 'stoneFloor'>
+  wall: Extract<EntityKey, 'dungeonWall' | 'caveWall' | 'cryptWall' | 'cavernWall'>
+  floor: Extract<EntityKey, 'dirtFloor' | 'stoneFloor' | 'stoneTileFloor'>
   door: Extract<EntityKey, 'woodenDoor' | 'stoneDoor' | 'jailDoor' | 'redDoor'>
 }
 
@@ -32,18 +32,13 @@ export class Overseer3 {
 
   history: Snapshot[] = []
 
-  theme: RegionTheme = {
-    wall: 'dungeonWall',
-    floor: 'dirtFloor',
-    door: 'woodenDoor',
-  }
-
-  constructor(readonly region: Region) {
+  constructor(readonly region: Region, readonly theme: RegionTheme) {
     this.rect = region.rect
     this.snap('Init')
   }
 
   snap(message = '') {
+    this.region.evaluateTerrainVariants()
     this.history.push(createSnapshot(this.region.terrainMap, this.region.entityList, message))
   }
 
@@ -51,7 +46,21 @@ export class Overseer3 {
     this.snap('Complete')
 
     this.region.visualizer = new Visualizer(this.region, this.history)
-    console.log(this)
     this.timeEnd = Date.now()
+    console.log(`O3: ${this.timeEnd - this.timeStart}ms`, this)
+  }
+
+  wall(pt: Point) {
+    if (!this.region.terrainAt(pt).wall) {
+      this.region.create(pt, this.theme.wall)
+    }
+  }
+
+  floor(pt: Point) {
+    if (!this.region.terrainAt(pt).floor) this.region.create(pt, this.theme.floor)
+  }
+
+  door(pt: Point) {
+    if (this.region.at(pt).filter(e => e.door).length === 0) this.region.create(pt, this.theme.door)
   }
 }

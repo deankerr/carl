@@ -41,10 +41,29 @@ export class Region {
   //  * Entity Management
   create(pt: Point, key: EntityKey) {
     if (!this.rect.pointIntersects(pt)) return
-    const entity = this.pool.spawn(key, pt)
+    if (key.includes('Door')) return this.createDoor(pt, key)
 
+    const entity = this.pool.spawn(key, pt)
     if (entity.terrain) this.terrainMap.set(pt, entity)
     else this.entityList.push(entity)
+
+    this.hasChanged = true
+  }
+
+  createDoor(pt: Point, key: EntityKey) {
+    // switch to vertical door if needed, which has two pieces
+    if (this.terrainAt(pt.add(0, -1)).blocksMovement) {
+      const keyTop = (key + 'VerticalTop') as EntityKey
+      const keyV = (key + 'Vertical') as EntityKey
+
+      const doorNorth = this.pool.spawn(keyTop, pt.add(0, -1))
+      const door = this.pool.spawn(keyV, pt)
+      this.entityList.push(door, doorNorth)
+    } else {
+      // spawn normally
+      const entity = this.pool.spawn(key, pt)
+      this.entityList.push(entity)
+    }
 
     this.hasChanged = true
   }
@@ -186,24 +205,6 @@ export class Region {
     return key
   }
 
-  createDoor(pt: Point, key: EntityKey) {
-    // switch to vertical door if needed, which has two pieces
-    if (this.terrainAt(pt.add(0, -1)).blocksMovement) {
-      const keyTop = (key + 'VerticalTop') as EntityKey
-      const keyV = (key + 'Vertical') as EntityKey
-      const doorNorth = this.pool.spawn(keyTop, pt.add(0, -1))
-      const door = this.pool.spawn(keyV, pt)
-      this.entityList.push(door, doorNorth)
-      return door
-    }
-
-    // spawn normally
-    const entity = this.pool.spawn(key, pt)
-    this.entityList.push(entity)
-    this.hasChanged = true
-    return entity
-  }
-
   evaluateTerrainVariants() {
     this.rect.traverse(pt => {
       const tHere = this.terrainAt(pt)
@@ -212,7 +213,7 @@ export class Region {
 
       if (tHere.tiles && tHere.render) {
         // ledge water/sand/etc
-        if (tHere.tilesLedge && tHere.render) {
+        if (tHere.tilesLedge) {
           if (tAbove.name !== tHere.name) {
             tHere.tiles = tHere.tilesLedge
             tHere.render = {
@@ -224,23 +225,25 @@ export class Region {
         }
 
         // walls vertical/horizontal
-        if (tHere.wall && tHere.tilesVertical && tHere.tilesHorizontal && tHere.render) {
+        if (tHere.wall && tHere.tilesVertical && tHere.tilesHorizontal) {
           if (tBelow.wall && !tHere.isVertical) {
-            tHere.render = {
+            this.create(pt, tHere.key)
+            const t = this.terrainAt(pt)
+            t.render = {
               char: rnd(1) ? tHere.tilesVertical[0] : pick(tHere.tilesVertical),
               color: 'transparent',
               bgColor: 'transparent',
             }
-            tHere.isVertical = true
-            delete tHere.isHorizontal
+            t.isVertical = true
           } else if (!tBelow.wall && !tHere.isHorizontal) {
-            tHere.render = {
+            this.create(pt, tHere.key)
+            const t = this.terrainAt(pt)
+            t.render = {
               char: rnd(1) ? tHere.tilesHorizontal[0] : pick(tHere.tilesHorizontal),
               color: 'transparent',
               bgColor: 'transparent',
             }
-            tHere.isHorizontal = true
-            delete tHere.isVertical
+            t.isHorizontal = true
           }
         }
 

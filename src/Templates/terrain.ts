@@ -117,12 +117,12 @@ export const terrain = {
       'stoneFloor5',
       'stoneFloor6',
     ],
-    tag: ['terrain', 'pickTile'],
+    tag: ['terrain', 'floor', 'pickTile'],
   },
   dirtFloor: {
     name: 'floor',
     tiles: ['dirtFloor1', 'dirtFloor2', 'dirtFloor3', 'dirtFloor4', 'dirtFloor5', 'dirtFloor6'],
-    tag: ['terrain', 'pickTile'],
+    tag: ['terrain', 'floor', 'pickTile'],
   },
   dirtFloorHole: {
     name: 'hole',
@@ -142,6 +142,6 @@ export const terrain = {
       'mossTileFloor4',
       'mossTileFloor5',
     ],
-    tag: ['terrain', 'pickTile'],
+    tag: ['terrain', 'floor', 'pickTile'],
   },
 } as const

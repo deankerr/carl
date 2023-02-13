@@ -1,6 +1,5 @@
 import { CONFIG } from '../config'
 import { Region } from '../Core'
-import { Overseer2 } from './Overseer2'
 import { Rect } from '../Model/Rectangle'
 import { pick } from '../lib/util'
 import { BSP } from './modules'
@@ -9,15 +8,20 @@ import { Overseer3 } from './Overseer3'
 
 export function crypt(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDisplayHeight) {
   const region = new Region(width, height)
-  const O3 = new Overseer3(region)
+  const O3 = new Overseer3(region, {
+    wall: 'cryptWall',
+    floor: 'stoneTileFloor',
+    door: 'stoneDoor',
+  })
 
   region.name = 'crypt'
-
-  const wall = 'cryptWall'
-  const floor = 'stoneTileFloor'
+  const { wall, floor, door } = O3.theme
 
   const drawRoom = (rect: Rect) => {
-    rect.scale(1).traverse((pt, edge) => region.create(pt, edge ? wall : floor))
+    rect.scale(1).traverse((pt, edge) => {
+      // region.create(pt, edge ? wall : floor)
+      edge ? O3.wall(pt) : O3.floor(pt)
+    })
   }
 
   const bsp = new BSP(region.rect.scale(-1))
@@ -36,8 +40,8 @@ export function crypt(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDispl
 
   // create doors
   connectRooms(rooms, pt => {
-    region.create(pt, floor)
-    region.create(pt, pick(['woodenDoor', 'stoneDoor', 'jailDoor', 'redDoor']))
+    O3.floor(pt)
+    O3.door(pt)
     O3.snap('Connect Room')
   })
 
