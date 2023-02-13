@@ -23,7 +23,7 @@ export class Visualizer {
 
     const player = this.engine.pool.spawn('player', point(0, 0))
 
-    const r = new Region(width, height, this.engine.pool, player)
+    const r = new Region(width, height, player)
     r.revealAll = true
     r.name = 'mirror world'
 

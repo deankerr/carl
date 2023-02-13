@@ -8,7 +8,7 @@ import { rndCluster, floodFindRegions } from './modules/flood'
 import { Overseer2 } from './Overseer2'
 
 export function cave(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
-  const region = new Region(width, height, window.game.pool)
+  const region = new Region(width, height)
   const O2 = new Overseer2(region)
 
   region.name = 'cave'

@@ -7,7 +7,7 @@ import { BSP } from './modules'
 import { Room, findAdjacent, connectRooms } from './modules/Room'
 
 export function crypt(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDisplayHeight) {
-  const region = new Region(width, height, window.game.pool)
+  const region = new Region(width, height)
   const O2 = new Overseer2(region)
 
   region.name = 'crypt'

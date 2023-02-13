@@ -10,6 +10,7 @@ export class Region {
   name = 'Somewhere'
   rect: Rect
 
+  pool = window.game.pool
   terrainMap = new Map<Point, Entity>()
   entities: Entity[] = []
   turnQueue = new Queue<number>()
@@ -29,12 +30,7 @@ export class Region {
 
   visualizer: Visualizer | undefined
 
-  constructor(
-    readonly width: number,
-    readonly height: number,
-    readonly pool: EntityPool,
-    player?: Entity
-  ) {
+  constructor(readonly width: number, readonly height: number, player?: Entity) {
     this.rect = Rect.at(point(0, 0), this.width, this.height)
     if (player) this.createPlayer(player)
   }

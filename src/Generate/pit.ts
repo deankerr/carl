@@ -8,7 +8,7 @@ import { connectRooms, findAdjacent, Room } from './modules/Room'
 import { Overseer2 } from './Overseer2'
 
 export function pit(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
-  const region = new Region(width, height, window.game.pool)
+  const region = new Region(width, height)
   const O2 = new Overseer2(region)
 
   region.name = 'pit'
