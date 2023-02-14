@@ -5,25 +5,25 @@ import { Rect } from '../Model/Rectangle'
 import { BinarySpacePartition } from './modules'
 import { ConstraintSatisfactionProblemSolver } from './modules/CSP'
 import { connectRooms, findAdjacent, Room } from './modules/Room'
-import { Overseer2 } from './Overseer2'
+import { Overseer3 } from './Overseer3'
 
 export function cavern(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
   const region = new Region(width, height)
-  const O2 = new Overseer2(region)
-
   region.name = 'cavern'
-  const wall = 'cavernWall'
-  const floor = 'dirtFloor'
+
+  const O3 = new Overseer3(region)
+  O3.theme.wall = 'cavernWall'
+  O3.theme.floor = 'dirtFloor'
 
   const drawRoom = (rect: Rect) => {
-    rect.scale(1).traverse((pt, edge) => O2.terrain(pt, edge ? wall : floor))
+    O3.room(rect)
   }
 
   const bsp = new BinarySpacePartition(region.rect.scale(-1))
   bsp.run(
     6,
     rect => drawRoom(rect),
-    i => O2.snapshot('BSP ' + i)
+    i => O3.snap('BSP ' + i)
   )
 
   // create rooms from BSP leaves
@@ -41,9 +41,9 @@ export function cavern(width = CONFIG.generateWidth, height = CONFIG.generateHei
 
   // create doors
   connectRooms(rooms, pt => {
-    O2.terrain(pt, floor)
-    O2.feature(pt, pick(['woodenDoor', 'stoneDoor', 'jailDoor', 'redDoor']))
-    O2.snapshot('Connect Room')
+    O3.floor(pt)
+    O3.door(pt)
+    O3.snap('Connect Room')
   })
 
   // apply CSP
@@ -79,7 +79,7 @@ export function cavern(width = CONFIG.generateWidth, height = CONFIG.generateHei
     csp.solve('sconce', 2)
 
     csp.each((pt, cell) => {
-      cell.entities.forEach(k => O2.add(pt, k))
+      cell.entities.forEach(k => O3.add(pt, k))
     })
   }
 
@@ -91,6 +91,6 @@ export function cavern(width = CONFIG.generateWidth, height = CONFIG.generateHei
   //   cell.entities.forEach(k => O2.add(pt, k))
   // })
 
-  O2.finalize()
+  O3.finalize()
   return region
 }
