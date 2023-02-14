@@ -3,7 +3,6 @@ import { EntityKey, Region } from '../Core'
 import { Rect } from '../Model/Rectangle'
 import { loop, pick, rnd, shuffle } from '../lib/util'
 import { BinarySpacePartition } from './modules'
-import { Room, findAdjacent, connectRooms } from './modules/Room'
 import { Overseer3 } from './Overseer3'
 import { ConstraintSatisfactionProblemSolver, CSPObjectKey, cspObjects } from './modules/CSP'
 
