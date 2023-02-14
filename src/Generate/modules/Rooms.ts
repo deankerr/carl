@@ -52,6 +52,8 @@ export class Rooms {
       search(southPts, point(0, 1))
       search(westPts, point(-1, 0))
       // console.log('room', room.rID, edgeMap)
+
+      // build spanning tree of rooms to connect
     }
   }
 

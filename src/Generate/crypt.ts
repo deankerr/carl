@@ -4,8 +4,8 @@ import { Rect } from '../Model/Rectangle'
 import { loop, pick, rnd, shuffle } from '../lib/util'
 import { BinarySpacePartition } from './modules'
 import { Overseer3 } from './Overseer3'
-import { ConstraintSatisfactionProblemSolver, CSPObjectKey, cspObjects } from './modules/CSP'
 import { Rooms } from './modules/Rooms'
+import { CSPVar, Solver } from './modules/CSP'
 
 export function crypt(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDisplayHeight) {
   const region = new Region(width, height, 'crypt')
@@ -42,11 +42,16 @@ export function crypt(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDispl
   const rooms = new Rooms(region, roomRects, O3.theme)
   rooms.each(r => O3.debugSymbolN(r.rect.centerPoint(), r.rID))
 
-  rooms.each(r => {
-    for (const [room, pts] of r.roomEdges) {
-      pts.forEach(pt => O3.debugSymbol(pt, r.rID))
-    }
-  })
+  const s = new Solver(region)
+  // s.initializeRect(region.rect)
+  s.initializeRect(rooms.rooms[0].rect)
+  s.solve(CSPVar.cornerWebs)
+
+  // rooms.each(r => {
+  //   for (const [room, pts] of r.roomEdges) {
+  //     pts.forEach(pt => O3.debugSymbol(pt, r.rID))
+  //   }
+  // })
   // O3.debugSymbol(rooms.rooms[0].rect, 4)
 
   // loop(6, () => {

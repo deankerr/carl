@@ -95,12 +95,12 @@ export class Overseer3 {
 
   debugSymbolN(pt: Point, n: number, color = 'transparent', bgColor = 'transparent') {
     const s = n.toString()
-    if (s.length === 1) {
-      const d = this.pool.spawn('debug', pt)
-      d.render = { ...d.render, char: s, color, bgColor }
+    s.split('').forEach((c, i) => {
+      const d = this.pool.spawn('debug', i === 0 ? pt : pt.east(i))
+      d.render = { ...d.render, char: c, color, bgColor }
       this.debugSymbolList.push(d)
       this.region.entityList.push(d)
-    }
+    })
   }
 
   debugSymbol(area: Point | Rect, n: number) {

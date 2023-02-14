@@ -3,7 +3,6 @@ import { FeatureKey, Region } from '../Core'
 import { loop, pick } from '../lib/util'
 import { Rect } from '../Model/Rectangle'
 import { BinarySpacePartition } from './modules'
-import { ConstraintSatisfactionProblemSolver } from './modules/CSP'
 import { Overseer3 } from './Overseer3'
 
 export function cavern(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
