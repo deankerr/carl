@@ -14,8 +14,6 @@ export class Region {
   terrainMap = new Map<Point, Entity>()
   entityList: Entity[] = []
 
-  entityMap = new Map<Point, Entity[]>()
-
   turnQueue = new Queue<number>()
 
   // rendering relevant data
@@ -72,7 +70,6 @@ export class Region {
 
     const entity = this.pool.spawn(key, pt)
     this.entityList.push(entity)
-    this.entityMapCell(pt).push(entity)
 
     this.hasChanged = true
     return entity
@@ -90,28 +87,12 @@ export class Region {
   }
 
   destroyEntity(entity: Entity) {
-    // console.log('destroy entity', entity.label)
-    if (entity.position) {
-      const cell = this.entityMapCell(entity.position)
-      this.entityMap.set(
-        entity.position,
-        cell.filter(e => e.eID !== entity.eID)
-      )
-    }
     this.entityList = this.entityList.filter(e => e.eID !== entity.eID)
 
     // turn queue
     if (entity.actor) {
       this.turnQueue.remove(entity.eID)
     }
-  }
-
-  entityMapCell(pt: Point) {
-    const cell = this.entityMap.get(pt)
-    if (cell) return cell
-    const newCell: Entity[] = []
-    this.entityMap.set(pt, newCell)
-    return newCell
   }
 
   // * Entity Queries
