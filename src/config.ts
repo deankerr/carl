@@ -1,8 +1,8 @@
 // const PROD = import.meta.env.PROD
 
 const appInitial = 'game'
-const seed = 1235
-// const seed = null
+// const seed = 1235
+const seed = null
 
 const mainDisplayWidth = 39
 const mainDisplayHeight = 19
@@ -14,7 +14,7 @@ const messageBufferDisplaySize = 5
 const generateWidth = 39 // approx 1.5 times graphical display size
 const generateHeight = 19
 
-const setMainToMapSize = false
+const setMainToMapSize = true
 
 // '#111a0e'
 const mainBackgroundColor = '#000000'

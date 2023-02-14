@@ -20,7 +20,7 @@ class BinaryRect {
 
     this.leaf1 = new BinaryRect(r1)
     this.leaf2 = new BinaryRect(r2)
-    console.log('Vertical', 'r1:', r1, 'r2:', r2, 'rr:', remainder)
+    console.log('Vertical', 'at', at, 'split', split, 'r1:', r1, 'r2:', r2, 'rr:', remainder)
     return [this.leaf1, this.leaf2, remainder] as [BinaryRect, BinaryRect, Rect]
   }
 
@@ -34,7 +34,7 @@ class BinaryRect {
 
     this.leaf1 = new BinaryRect(r1)
     this.leaf2 = new BinaryRect(r2)
-    console.log('Horizontal', 'r1:', r1, 'r2:', r2, 'rr:', remainder)
+    console.log('Horizontal', 'at', at, 'split', split, 'r1:', r1, 'r2:', r2, 'rr:', remainder)
     return [this.leaf1, this.leaf2, remainder] as [BinaryRect, BinaryRect, Rect]
   }
 }
@@ -42,13 +42,16 @@ class BinaryRect {
 export class BinarySpacePartition {
   minWidth = 6
   minHeight = 4
-  maxRatio = 2
+  maxRatio = 3
 
   root: BinaryRect
   queue: BinaryRect[] = []
   remaining: Rect[] = []
 
+  dbCount = 0
+
   constructor(readonly initialRect: Rect) {
+    initialRect.id = this.dbCount++
     this.root = new BinaryRect(initialRect)
     this.queue.push(this.root)
   }
@@ -58,51 +61,54 @@ export class BinarySpacePartition {
     if (!next) return false
 
     const r = next.rect
-
+    console.group('Assess', r, 'r.width - 1:', r.width - 1)
     // Find all possible split points
     // vertical
     const vAvail: number[] = []
+    const vS = [rdb(r.id, r.id, r.id, r.id, false, false)]
     for (const i of range(1, r.width - 1)) {
-      const ratio1 = r.height / i
-      const ratio2 = r.height / (r.width - i)
-      if (
-        ratio1 <= this.maxRatio &&
-        ratio2 <= this.maxRatio &&
-        i >= this.minWidth &&
-        r.width - i >= this.minWidth
-      )
+      const ratio1 = i / r.height
+      const ratio2 = (r.width - i) / r.height
+      const ratios = ratio1 <= this.maxRatio && ratio2 <= this.maxRatio
+      const widths = i >= this.minWidth && r.width - i >= this.minWidth
+      if (ratios && widths) {
         vAvail.push(i)
+      }
+      vS.push(rdb(i, ratio1, r.width - i, ratio2, ratios, widths))
     }
 
     // horizontal
     const hAvail: number[] = []
+    const hS = [rdb(r.id, r.id, r.id, r.id, false, false)]
     for (const i of range(1, r.height - 1)) {
       const ratio1 = r.width / i
       const ratio2 = r.width / (r.height - i)
-      if (
-        ratio1 <= this.maxRatio &&
-        ratio2 <= this.maxRatio &&
-        i >= this.minHeight &&
-        r.height - i >= this.minHeight
-      )
-        hAvail.push(i)
+      const ratios = ratio1 <= this.maxRatio && ratio2 <= this.maxRatio
+      const heights = i >= this.minHeight && r.height - i >= this.minHeight
+      if (ratios && heights) hAvail.push(i)
+      hS.push(rdb(i, ratio1, r.height - i, ratio2, ratios, heights))
     }
 
     const v = vAvail.length > 0 ? pick(vAvail) : 0
     const h = hAvail.length > 0 ? pick(hAvail) : 0
-
+    console.table(vS)
+    console.log('vAvail:', vAvail)
+    console.table(hS)
+    console.log('hAvail:', hAvail)
     let result: [BinaryRect, BinaryRect, Rect] | undefined
     if (v && h) {
       rnd(1) ? (result = next.splitVertical(v)) : (result = next.splitHorizontal(h))
     } else if (v) result = next.splitVertical(v)
     else if (h) result = next.splitHorizontal(h)
-
+    console.groupEnd()
     if (!result) {
-      console.warn('Failed to split', this)
+      console.warn('Failed to split', next, hS)
       return false
     }
 
     const [leaf1, leaf2, remainder] = result
+    leaf1.rect.id = this.dbCount++
+    leaf2.rect.id = this.dbCount++
     this.queue.push(leaf1, leaf2)
     this.remaining.push(remainder)
     return true
@@ -167,3 +173,14 @@ export class BinarySpacePartition {
 }
 
 type RectFn = (rect: Rect) => unknown
+
+function rdb(
+  size1: number,
+  ratio1: number,
+  size2: number,
+  ratio2: number,
+  ratiosOk: boolean,
+  sizeOK: boolean
+) {
+  return { size1, ratio1: ratio1.toFixed(2), size2, ratio2: ratio2.toFixed(2), ratiosOk, sizeOK }
+}

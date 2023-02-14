@@ -40,7 +40,7 @@ export class Overseer3 {
     this.rect = region.rect
     this.BSP = new BinarySpacePartition(this.rect)
     this.snap('Init')
-    console.log('O3:', region.name)
+    console.log(`%c  O3: ${region.name}  `, 'font-weight: bold; background-color: orange;')
   }
 
   snap(message = '') {
@@ -68,10 +68,15 @@ export class Overseer3 {
     if (this.region.at(pt).filter(e => e.door).length === 0) this.region.create(pt, this.theme.door)
   }
 
-  room(rect: Rect) {
+  room(rect: Rect, debug = false) {
     rect.traverse((pt, edge) => {
       edge ? this.wall(pt) : this.floor(pt)
     })
+    if (debug) {
+      const d = this.pool.spawn('debug', rect.centerPoint())
+      d.render = { ...d.render, char: `${debugChar[rect.id]}` }
+      this.region.entityList.push(d)
+    }
   }
 
   add(area: Point | Rect, key: EntityKey, snapMsg?: string) {
@@ -85,6 +90,14 @@ export class Overseer3 {
     if (snapMsg) this.snap(snapMsg)
   }
 
+  debug(area: Point | Rect) {
+    const pt = area instanceof Rect ? area.centerPoint() : area
+    const d = this.pool.spawn('debug', pt)
+    const char = debugChar.shift() ?? '?'
+    d.render = { ...d.render, char }
+    this.region.entityList.push(d)
+  }
+
   finalize() {
     this.snap('Complete')
 
@@ -93,3 +106,5 @@ export class Overseer3 {
     console.log(`O3: ${this.timeEnd - this.timeStart}ms`, this)
   }
 }
+
+const debugChar = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()-=+.,:;"<>/|'.split('')

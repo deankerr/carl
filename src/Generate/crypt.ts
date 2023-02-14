@@ -13,7 +13,7 @@ export function crypt(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDispl
 
   const O3 = new Overseer3(region)
   O3.theme.wall = 'cryptWall'
-  O3.theme.floor = 'stoneFloor'
+  O3.theme.floor = 'stoneTileFloor'
 
   const drawRoom = (rect: Rect) => {
     rect.scale(1).traverse((pt, edge) => {

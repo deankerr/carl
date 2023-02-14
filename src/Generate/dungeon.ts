@@ -10,6 +10,7 @@ export function dungeon(width = CONFIG.generateWidth, height = CONFIG.generateHe
   const region = new Region(width, height)
   region.name = 'dungeon'
   const O3 = new Overseer3(region)
+  O3.theme.floor = 'stoneFloor'
 
   O3.room(region.rect)
   O3.snap('Initial room')
@@ -45,19 +46,17 @@ export function dungeon(width = CONFIG.generateWidth, height = CONFIG.generateHe
     })
   }
 
-  // const sections = O3.BSP.queue.map(s => new BinarySpacePartition(s.rect))
-  // let ii = 0
-  // for (const section of sections) {
-  //   section.run(
-  //     1,
-  //     rect => {
-  //       console.log(ii++, rect)
-  //       O3.room(rect)
-  //     },
-  //     i => O3.snap('room ' + i)
-  //   )
-  //   // console.log('section:', section)
-  // }
+  const sections = O3.BSP.queue.map(s => new BinarySpacePartition(s.rect))
+  for (const section of sections) {
+    section.run(
+      1,
+      rect => {
+        O3.room(rect, true)
+      },
+      i => O3.snap('room ' + i)
+    )
+    // console.log('section:', section)
+  }
 
   // O3.snap()
   // O3.BSP.bisectRegionRivers('acid', rnd(1, 3), 9, 2, 3, 1)
