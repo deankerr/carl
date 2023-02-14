@@ -36,7 +36,6 @@ export class Overseer3 {
 
   constructor(readonly region: Region) {
     this.rect = region.rect
-    this.snap('Init')
     console.log(`%c  O3: ${region.name}  `, 'font-weight: bold; background-color: orange;')
   }
 
@@ -65,15 +64,12 @@ export class Overseer3 {
     if (this.region.at(pt).filter(e => e.door).length === 0) this.region.create(pt, this.theme.door)
   }
 
-  room(rect: Rect, debug = false) {
+  room(rect: Rect, snapMsg?: string) {
     rect.traverse((pt, edge) => {
       edge ? this.wall(pt) : this.floor(pt)
     })
-    if (debug) {
-      const d = this.pool.spawn('debug', rect.centerPoint())
-      d.render = { ...d.render, char: `${debugChar[rect.id]}` }
-      this.region.entityList.push(d)
-    }
+
+    if (snapMsg) this.snap(snapMsg)
   }
 
   add(area: Point | Rect, key: EntityKey, snapMsg?: string) {

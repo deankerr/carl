@@ -7,7 +7,6 @@ import { Entity, EntityPool, EntityKey, EntityWith } from './Entity'
 import { Visualizer } from './Visualizer'
 
 export class Region {
-  name = ''
   rect: Rect
 
   pool = window.game.pool
@@ -34,7 +33,7 @@ export class Region {
 
   visualizer: Visualizer | undefined
 
-  constructor(readonly width: number, readonly height: number) {
+  constructor(readonly width: number, readonly height: number, public name = 'Somewhere') {
     this.rect = Rect.at(point(0, 0), this.width, this.height)
   }
 

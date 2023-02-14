@@ -51,8 +51,6 @@ export class BinarySpacePartition {
 
     this.rectQueue.push(leaf1, leaf2)
     this.rectGaps.push(leafGap)
-
-    console.log(next.rect.id, 'created l1:', leaf1.rect, 'l2', leaf2.rect, 'lG', leafGap.rect)
   }
 
   splitLargest(dir: 'vertical' | 'horizontal' | 'best', variance: number, gap = 0) {
@@ -72,8 +70,11 @@ export class BinarySpacePartition {
     this.rectQueue = this.rectQueue.filter(r => r !== next)
     this.rectQueue.push(leaf1, leaf2)
     this.rectGaps.push(leafGap)
+  }
 
-    console.log(next.rect.id, 'created l1:', leaf1.rect, 'l2', leaf2.rect, 'lG', leafGap.rect)
+  splitN(amount: number) {
+    console.log('BSP - split', amount)
+    for (let i = 0; i < amount; i++) this.splitNext()
   }
 
   splitAll() {
@@ -148,7 +149,6 @@ class BinaryRect {
   }
 
   splitHorizontal(at: number, gap = 0) {
-    console.log('BSP split horizontal at', at)
     const rect = this.rect
     if (at < 0 || at > rect.height) throw new Error('Invalid split point')
 
