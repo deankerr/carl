@@ -266,7 +266,17 @@ export function oryxTinyMap(size: number) {
       'redDoorVerticalOpenTop',
       'redDoorVerticalOpen',
     ],
-    ['crate', 'brokenCrate', 'chest', 'openChestFull', 'openChestEmpty', 'sconce1', 'sconce2'],
+    [
+      'crate',
+      'brokenCrate',
+      'chest',
+      'openChestFull',
+      'openChestEmpty',
+      'sconce1',
+      'sconce2',
+      'sconceLower1',
+      'sconeLower2',
+    ],
     ['webNW', 'webNE', 'webSW', 'webSE', 'web'],
     [
       'grassTuft1',

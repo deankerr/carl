@@ -2,21 +2,18 @@ import { CONFIG } from '../config'
 import { EntityKey, Region } from '../Core'
 import { Rect } from '../Model/Rectangle'
 import { loop, pick, rnd, shuffle } from '../lib/util'
-import { BSP } from './modules'
+import { BinarySpacePartition } from './modules'
 import { Room, findAdjacent, connectRooms } from './modules/Room'
 import { Overseer3 } from './Overseer3'
 import { ConstraintSatisfactionProblemSolver, CSPObjectKey, cspObjects } from './modules/CSP'
 
 export function crypt(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDisplayHeight) {
   const region = new Region(width, height)
-  const O3 = new Overseer3(region, {
-    wall: pick(['dungeonWall', 'cryptWall', 'caveWall', 'cavernWall']),
-    floor: pick(['stoneFloor', 'dirtFloor', 'stoneTileFloor']),
-    door: 'stoneDoor',
-  })
+  region.name = 'crypt'
 
-  region.name = ''
-  const { wall, floor, door } = O3.theme
+  const O3 = new Overseer3(region)
+  O3.theme.wall = 'cryptWall'
+  O3.theme.floor = 'stoneFloor'
 
   const drawRoom = (rect: Rect) => {
     rect.scale(1).traverse((pt, edge) => {
@@ -24,14 +21,14 @@ export function crypt(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDispl
     })
   }
 
-  const bsp = new BSP(region.rect)
-  bsp.trisectLargest('vertical', rnd(1, 11), rnd(1, 2))
+  const bsp = new BinarySpacePartition(region.rect)
+  bsp.trisectLargest('vertical', rnd(1, 13), rnd(1, 2))
   bsp.trisectLargest('horizontal', rnd(1, 2), rnd(1, 2))
   bsp.trisectLargest('largest', 1, 1)
 
   // bsp.leaves(rect => drawRoom(rect))
-  const subBSP: BSP[] = []
-  bsp.leaves(rect => subBSP.push(new BSP(rect.scale(-1))))
+  const subBSP: BinarySpacePartition[] = []
+  bsp.leaves(rect => subBSP.push(new BinarySpacePartition(rect.scale(-1))))
 
   subBSP.forEach(sub => sub.leaves(rect => drawRoom(rect)))
   O3.snap()

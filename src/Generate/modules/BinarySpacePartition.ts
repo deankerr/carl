@@ -10,9 +10,9 @@ class BinaryRect {
     const r = this.rect
   }
 
-  splitVertical(at?: number, size = 1) {
+  splitVertical(at: number, size = 0) {
     const r = this.rect
-    const split = r.x + (at ?? half(r.width))
+    const split = r.x + at
 
     const r1 = Rect.atxy2(point(r.x, r.y), point(split - size, r.y2))
     const r2 = Rect.atxy2(point(split + size, r.y), point(r.x2, r.y2))
@@ -20,12 +20,13 @@ class BinaryRect {
 
     this.leaf1 = new BinaryRect(r1)
     this.leaf2 = new BinaryRect(r2)
+    console.log('Vertical', 'r1:', r1, 'r2:', r2, 'rr:', remainder)
     return [this.leaf1, this.leaf2, remainder] as [BinaryRect, BinaryRect, Rect]
   }
 
-  splitHorizontal(at?: number, size = 1) {
+  splitHorizontal(at: number, size = 0) {
     const r = this.rect
-    const split = r.y + (at ?? half(r.height))
+    const split = r.y + at
 
     const r1 = Rect.atxy2(point(r.x, r.y), point(r.x2, split - size))
     const r2 = Rect.atxy2(point(r.x, split + size), point(r.x2, r.y2))
@@ -33,11 +34,12 @@ class BinaryRect {
 
     this.leaf1 = new BinaryRect(r1)
     this.leaf2 = new BinaryRect(r2)
+    console.log('Horizontal', 'r1:', r1, 'r2:', r2, 'rr:', remainder)
     return [this.leaf1, this.leaf2, remainder] as [BinaryRect, BinaryRect, Rect]
   }
 }
 
-export class BSP {
+export class BinarySpacePartition {
   minWidth = 6
   minHeight = 4
   maxRatio = 2
@@ -100,28 +102,18 @@ export class BSP {
       return false
     }
 
-    const [child1, child2] = result
-    this.queue.push(child1, child2)
+    const [leaf1, leaf2, remainder] = result
+    this.queue.push(leaf1, leaf2)
+    this.remaining.push(remainder)
     return true
   }
 
-  splitNextVertical(at: number) {
-    const next = this.queue.shift()
-    if (!next) return
-
-    const [leaf1, leaf2] = next.splitVertical(half(next.rect.width) + (rnd(1) ? at : -at))
-    this.queue.push(leaf1, leaf2)
-  }
-
-  splitNextHorizontal(at: number) {
-    const next = this.queue.shift()
-    if (!next) return
-
-    const [leaf1, leaf2] = next.splitHorizontal(half(next.rect.width) + (rnd(1) ? at : -at))
-    this.queue.push(leaf1, leaf2)
-  }
-
-  trisectLargest(dir: 'vertical' | 'horizontal' | 'largest', variance: number, size: number) {
+  trisectLargest(
+    dir: 'vertical' | 'horizontal' | 'largest',
+    variance: number,
+    size: number,
+    then?: RectFn
+  ) {
     const [largest] = [...this.queue].sort((a, b) => b.rect.area - a.rect.area)
     const { rect } = largest
 
@@ -140,10 +132,11 @@ export class BSP {
     const [leaf1, leaf2, remainder] = leaves
     this.queue.push(leaf1, leaf2)
     this.remaining.push(remainder)
-    return remainder
+
+    if (then) then(remainder)
   }
 
-  run(iterations: number, then: LeafFn, after: (i: number) => unknown) {
+  run(iterations: number, then: RectFn, after: (i: number) => unknown) {
     let i = 0
     console.log('iterations:', iterations)
     while (i++ < iterations) {
@@ -155,7 +148,7 @@ export class BSP {
     }
   }
 
-  leaves(callback: LeafFn) {
+  leaves(callback: RectFn) {
     function climb(s: BinaryRect) {
       if (s.leaf1 && s.leaf2) {
         climb(s.leaf1)
@@ -168,9 +161,9 @@ export class BSP {
     climb(this.root)
   }
 
-  remainders(callback: LeafFn) {
+  remainders(callback: RectFn) {
     this.remaining.forEach(rect => callback(rect))
   }
 }
 
-type LeafFn = (rect: Rect) => unknown
+type RectFn = (rect: Rect) => unknown

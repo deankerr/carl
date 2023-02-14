@@ -17,12 +17,10 @@ export class Rect {
   readonly cy: number
 
   readonly area: number
+  readonly p1: Point
+  readonly p2: Point
 
   constructor(pt: Point, width: number, height: number, public id = 0) {
-    if (width < 1 || height < 1)
-      throw new Error(
-        `Please do not create zero/negative width Rects, as I cannot fathom them. w:${width} h: ${height}`
-      )
     const { x, y } = pt
     this.x = x
     this.y = y
@@ -37,6 +35,10 @@ export class Rect {
     this.cy = this.y2 - Math.floor(this.height / 2)
 
     this.area = width * height
+    this.p1 = point(this.x, this.y)
+    this.p2 = point(this.x2, this.y2)
+
+    if (width < 0 || height < 0) console.warn('Negative size rect', this)
   }
 
   // Travels through the x/y coords
@@ -131,14 +133,6 @@ export class Rect {
 
   centerPoint() {
     return point(this.cx, this.cy)
-  }
-
-  xy1() {
-    return point(this.x, this.y)
-  }
-
-  xy2() {
-    return point(this.x2, this.y2)
   }
 
   // Construction

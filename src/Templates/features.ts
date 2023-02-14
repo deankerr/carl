@@ -216,25 +216,31 @@ export const features = {
   sconce: {
     name: 'sconce',
     tiles: ['sconce1', 'sconce2'],
-    tilesAutoCycle: 120,
+    tilesAutoCycle: 400,
+    tag: ['feature'],
+  },
+  sconceLower: {
+    name: 'sconce',
+    tiles: ['sconceLower1', 'sconceLower2'],
+    tilesAutoCycle: 400,
     tag: ['feature'],
   },
   candles: {
     name: 'candles',
     tiles: ['candles1', 'candles2'],
-    tilesAutoCycle: 120,
+    tilesAutoCycle: 200,
     tag: ['feature'],
   },
   candlesNE: {
     name: 'candles',
     tiles: ['candlesNE1', 'candlesNE2'],
-    tilesAutoCycle: 120,
+    tilesAutoCycle: 200,
     tag: ['feature'],
   },
   candlesSE: {
     name: 'candles',
     tiles: ['candlesSE1', 'candlesSE2'],
-    tilesAutoCycle: 120,
+    tilesAutoCycle: 200,
     tag: ['feature'],
   },
   carpet: {

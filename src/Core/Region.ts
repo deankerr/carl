@@ -7,7 +7,7 @@ import { Entity, EntityPool, EntityKey, EntityWith } from './Entity'
 import { Visualizer } from './Visualizer'
 
 export class Region {
-  name = 'Somewhere'
+  name = ''
   rect: Rect
 
   pool = window.game.pool
@@ -91,7 +91,7 @@ export class Region {
   }
 
   destroyEntity(entity: Entity) {
-    console.log('destroy entity', entity.label)
+    // console.log('destroy entity', entity.label)
     if (entity.position) {
       const cell = this.entityMapCell(entity.position)
       this.entityMap.set(
@@ -214,14 +214,14 @@ export class Region {
       if (tHere.tiles && tHere.render) {
         // ledge water/sand/etc
         if (tHere.tilesLedge) {
-          if (tAbove.name !== tHere.name) {
+          if (tAbove.key !== tHere.key) {
             tHere.tiles = tHere.tilesLedge
             tHere.render = {
               char: tHere.tilesLedge[0],
               color: 'transparent',
               bgColor: 'transparent',
             }
-          }
+          } else this.create(pt, tHere.key)
         }
 
         // walls vertical/horizontal

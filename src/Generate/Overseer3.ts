@@ -2,6 +2,7 @@ import { Entity, EntityKey, Region } from '../Core'
 import { Visualizer } from '../Core/Visualizer'
 import { Point } from '../Model/Point'
 import { Rect } from '../Model/Rectangle'
+import { BinarySpacePartition } from './modules'
 
 export type Snapshot = {
   terrainMap: Map<Point, Entity>
@@ -25,6 +26,7 @@ type RegionTheme = {
 
 export class Overseer3 {
   rect: Rect
+  BSP: BinarySpacePartition
   pool = window.game.pool
 
   timeStart = Date.now()
@@ -32,22 +34,18 @@ export class Overseer3 {
 
   history: Snapshot[] = []
 
-  constructor(readonly region: Region, readonly theme: RegionTheme) {
+  theme: RegionTheme = { wall: 'dungeonWall', floor: 'dirtFloor', door: 'woodenDoor' }
+
+  constructor(readonly region: Region) {
     this.rect = region.rect
+    this.BSP = new BinarySpacePartition(this.rect)
     this.snap('Init')
+    console.log('O3:', region.name)
   }
 
   snap(message = '') {
     this.region.evaluateTerrainVariants()
     this.history.push(createSnapshot(this.region.terrainMap, this.region.entityList, message))
-  }
-
-  finalize() {
-    this.snap('Complete')
-
-    this.region.visualizer = new Visualizer(this.region, this.history)
-    this.timeEnd = Date.now()
-    console.log(`O3: ${this.timeEnd - this.timeStart}ms`, this)
   }
 
   wall(pt: Point) {
@@ -70,7 +68,13 @@ export class Overseer3 {
     if (this.region.at(pt).filter(e => e.door).length === 0) this.region.create(pt, this.theme.door)
   }
 
-  add(area: Point | Rect, key: EntityKey) {
+  room(rect: Rect) {
+    rect.traverse((pt, edge) => {
+      edge ? this.wall(pt) : this.floor(pt)
+    })
+  }
+
+  add(area: Point | Rect, key: EntityKey, snapMsg?: string) {
     if (area instanceof Rect) {
       area.traverse(pt => {
         this.region.create(pt, key)
@@ -78,5 +82,14 @@ export class Overseer3 {
     } else {
       this.region.create(area, key)
     }
+    if (snapMsg) this.snap(snapMsg)
+  }
+
+  finalize() {
+    this.snap('Complete')
+
+    this.region.visualizer = new Visualizer(this.region, this.history)
+    this.timeEnd = Date.now()
+    console.log(`O3: ${this.timeEnd - this.timeStart}ms`, this)
   }
 }

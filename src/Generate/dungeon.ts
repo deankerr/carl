@@ -1,45 +1,70 @@
 import { CONFIG } from '../config'
-import { Region } from '../Core'
-import { Overseer2 } from './Overseer2'
+import { EntityKey, Region } from '../Core'
 import { Rect } from '../Model/Rectangle'
-import { pick } from '../lib/util'
-import { BSP } from './modules'
+import { pick, rnd } from '../lib/util'
+import { BinarySpacePartition } from './modules'
 import { Room, findAdjacent, connectRooms } from './modules/Room'
+import { Overseer3 } from './Overseer3'
 
-export function dungeon(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDisplayHeight) {
+export function dungeon(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
   const region = new Region(width, height)
-  const O2 = new Overseer2(region)
-
   region.name = 'dungeon'
+  const O3 = new Overseer3(region)
 
-  const wall = 'dungeonWall'
-  const floor = 'stoneTileFloor'
+  O3.room(region.rect)
+  O3.snap('Initial room')
 
-  const drawRoom = (rect: Rect) => {
-    rect.scale(1).traverse((pt, edge) => O2.terrain(pt, edge ? wall : floor))
+  // split region with rivers
+  const riverKey: EntityKey = 'acid'
+  const dir = !rnd(1)
+  if (dir) {
+    console.log('rivers vertical first')
+    O3.BSP.trisectLargest('vertical', rnd(1, 9), 2, rect => {
+      O3.add(rect, riverKey, 'Big River Vertical')
+    })
+
+    O3.BSP.trisectLargest('horizontal', rnd(1, 2), 1, rect => {
+      O3.add(rect, riverKey, 'river horizontal')
+    })
+
+    O3.BSP.trisectLargest('largest', 1, 1, rect => {
+      O3.add(rect, riverKey, 'river largest')
+    })
+  } else {
+    console.log('rivers horizontal first')
+    O3.BSP.trisectLargest('horizontal', rnd(2), 2, rect => {
+      O3.add(rect, riverKey, 'big river horizontal')
+    })
+
+    O3.BSP.trisectLargest('vertical', rnd(3, 7), 1, rect => {
+      O3.add(rect, riverKey, 'river vertical')
+    })
+
+    O3.BSP.trisectLargest('largest', 1, 1, rect => {
+      O3.add(rect, riverKey, 'river largest')
+    })
   }
 
-  const bsp = new BSP(region.rect.scale(-1))
-  bsp.run(
-    6,
-    rect => drawRoom(rect),
-    i => O2.snapshot('BSP ' + i)
-  )
+  // const sections = O3.BSP.queue.map(s => new BinarySpacePartition(s.rect))
+  // let ii = 0
+  // for (const section of sections) {
+  //   section.run(
+  //     1,
+  //     rect => {
+  //       console.log(ii++, rect)
+  //       O3.room(rect)
+  //     },
+  //     i => O3.snap('room ' + i)
+  //   )
+  //   // console.log('section:', section)
+  // }
 
-  // create rooms from BSP leaves
-  const rooms: Room[] = []
-  bsp.leaves(rect => rooms.push(new Room(rect)))
+  // O3.snap()
+  // O3.BSP.bisectRegionRivers('acid', rnd(1, 3), 9, 2, 3, 1)
+  // O3.snap()
+  // console.log('O3.BSP:', O3.BSP)
+  // O3.BSP.all.leaves(rect => O3.floor(rect))
 
-  // find adjacent room points
-  findAdjacent(rooms, region)
-
-  // create doors
-  connectRooms(rooms, pt => {
-    O2.terrain(pt, floor)
-    O2.feature(pt, pick(['woodenDoor', 'stoneDoor']))
-    O2.snapshot('Connect Room')
-  })
-
-  O2.finalize()
+  O3.finalize()
   return region
 }

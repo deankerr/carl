@@ -213,7 +213,8 @@ export const cspObjects = {
     ['isDirtFloor']
   ),
   webCorner: createCSPObject(['webCorner'], ['isFloor', 'isCorner']),
-  sconce: createCSPObject(['sconce'], ['isNorthernExposedWall']),
+  // sconce: createCSPObject(['sconce', 'sconceLower'], ['isNorthernExposedWall'], ['0', '1']),
+  sconce: createCSPObject(['sconce'], ['isNorthernExposedWall'], ['0']),
   smallPitPlatform: createCSPObject(
     ['dirtFloorHole'],
     ['isFloor'],

@@ -31,10 +31,10 @@ export const terrain = {
   },
   blood: {
     name: 'blood',
-    tiles: ['blood1', 'blood2'],
+    tiles: ['blood1', 'blood2', 'bloodClear'],
     tag: ['terrain'],
-    tilesAutoCycle: 1000,
-    tilesLedge: ['bloodLedge1', 'bloodLedge2'],
+    tilesAutoRandom: 1500,
+    tilesLedge: ['bloodLedge1', 'bloodLedge2', 'bloodClearLedge'],
   },
   sludge: {
     name: 'sludge',

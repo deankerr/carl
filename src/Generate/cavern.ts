@@ -2,7 +2,7 @@ import { CONFIG } from '../config'
 import { FeatureKey, Region } from '../Core'
 import { pick } from '../lib/util'
 import { Rect } from '../Model/Rectangle'
-import { BSP } from './modules'
+import { BinarySpacePartition } from './modules'
 import { ConstraintSatisfactionProblemSolver } from './modules/CSP'
 import { connectRooms, findAdjacent, Room } from './modules/Room'
 import { Overseer2 } from './Overseer2'
@@ -19,7 +19,7 @@ export function cavern(width = CONFIG.generateWidth, height = CONFIG.generateHei
     rect.scale(1).traverse((pt, edge) => O2.terrain(pt, edge ? wall : floor))
   }
 
-  const bsp = new BSP(region.rect.scale(-1))
+  const bsp = new BinarySpacePartition(region.rect.scale(-1))
   bsp.run(
     6,
     rect => drawRoom(rect),
