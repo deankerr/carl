@@ -2,7 +2,7 @@ export const features = {
   debug: {
     name: 'debug',
     tiles: ['0'],
-    tag: ['feature'],
+    tag: ['feature', 'debug'],
   },
   woodenDoor: {
     name: 'door',

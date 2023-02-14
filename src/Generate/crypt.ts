@@ -5,6 +5,7 @@ import { loop, pick, rnd, shuffle } from '../lib/util'
 import { BinarySpacePartition } from './modules'
 import { Overseer3 } from './Overseer3'
 import { ConstraintSatisfactionProblemSolver, CSPObjectKey, cspObjects } from './modules/CSP'
+import { Rooms } from './modules/Rooms'
 
 export function crypt(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDisplayHeight) {
   const region = new Region(width, height, 'crypt')
@@ -13,6 +14,9 @@ export function crypt(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDispl
   O3.theme.wall = 'cryptWall'
   O3.theme.floor = 'stoneTileFloor'
   O3.room(region.rect, 'Theme')
+
+  // ! dev
+  window.O3Debug = O3
 
   const BSP = new BinarySpacePartition(region.rect)
   if (rnd(1)) {
@@ -29,7 +33,21 @@ export function crypt(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDispl
   BSP.rectGaps.forEach(g => O3.add(g.rect, liquidKey, 'river'))
 
   BSP.splitN(rnd(3, 6))
-  BSP.leaves(r => O3.room(r, 'Room'))
+  const roomRects: Rect[] = []
+  BSP.leaves(r => {
+    O3.room(r, 'Room')
+    roomRects.push(r)
+  })
+
+  const rooms = new Rooms(region, roomRects, O3.theme)
+  rooms.each(r => O3.debugSymbolN(r.rect.centerPoint(), r.rID))
+
+  rooms.each(r => {
+    for (const [room, pts] of r.roomEdges) {
+      pts.forEach(pt => O3.debugSymbol(pt, r.rID))
+    }
+  })
+  // O3.debugSymbol(rooms.rooms[0].rect, 4)
 
   // loop(6, () => {
   //   BSP.splitNext()

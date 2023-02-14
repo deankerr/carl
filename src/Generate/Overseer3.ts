@@ -17,7 +17,7 @@ function createSnapshot(
   return { terrainMap: new Map([...terrainMap]), entityList: [...entityList], message }
 }
 
-type RegionTheme = {
+export type RegionTheme = {
   wall: Extract<EntityKey, 'dungeonWall' | 'caveWall' | 'cryptWall' | 'cavernWall'>
   floor: Extract<EntityKey, 'dirtFloor' | 'stoneFloor' | 'stoneTileFloor'>
   door: Extract<EntityKey, 'woodenDoor' | 'stoneDoor' | 'jailDoor' | 'redDoor'>
@@ -33,6 +33,8 @@ export class Overseer3 {
   history: Snapshot[] = []
 
   theme: RegionTheme = { wall: 'dungeonWall', floor: 'dirtFloor', door: 'woodenDoor' }
+
+  debugSymbolList: Entity[] = []
 
   constructor(readonly region: Region) {
     this.rect = region.rect
@@ -91,6 +93,36 @@ export class Overseer3 {
     this.region.entityList.push(d)
   }
 
+  debugSymbolN(pt: Point, n: number, color = 'transparent', bgColor = 'transparent') {
+    const s = n.toString()
+    if (s.length === 1) {
+      const d = this.pool.spawn('debug', pt)
+      d.render = { ...d.render, char: s, color, bgColor }
+      this.debugSymbolList.push(d)
+      this.region.entityList.push(d)
+    }
+  }
+
+  debugSymbol(area: Point | Rect, n: number) {
+    const symbols = ['auraHoly', 'auraBlue', 'auraRed', 'auraGreen', 'auraPurple']
+
+    const createDebugPt = (pt: Point, n: number) => {
+      const d = this.pool.spawn('debug', pt)
+      d.render = { ...d.render, char: symbols[n % 5] }
+      this.debugSymbolList.push(d)
+      this.region.entityList.push(d)
+    }
+
+    if (area instanceof Point) {
+      createDebugPt(area, n)
+      return
+    }
+
+    area.traverse(pt => {
+      createDebugPt(pt, n)
+    })
+  }
+
   finalize() {
     this.snap('Complete')
 
@@ -101,3 +133,9 @@ export class Overseer3 {
 }
 
 const debugChar = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()-=+.,:;"<>/|'.split('')
+
+declare global {
+  interface Window {
+    O3Debug: Overseer3
+  }
+}

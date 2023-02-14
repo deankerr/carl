@@ -99,6 +99,7 @@ export type Tag =
   | 'renderAbove'
   | 'wall'
   | 'floor'
+  | 'debug'
   | 'isLedge'
   | 'isHorizontal'
   | 'isVertical'
