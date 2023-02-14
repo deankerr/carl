@@ -1,6 +1,6 @@
 import { CONFIG } from '../config'
 import { FeatureKey, Region } from '../Core'
-import { pick } from '../lib/util'
+import { loop, pick } from '../lib/util'
 import { Rect } from '../Model/Rectangle'
 import { BinarySpacePartition } from './modules'
 import { ConstraintSatisfactionProblemSolver } from './modules/CSP'
@@ -19,16 +19,17 @@ export function cavern(width = CONFIG.generateWidth, height = CONFIG.generateHei
     O3.room(rect)
   }
 
-  const bsp = new BinarySpacePartition(region.rect.scale(-1))
-  bsp.run(
-    6,
-    rect => drawRoom(rect),
-    i => O3.snap('BSP ' + i)
-  )
-
+  const BSP = new BinarySpacePartition(region.rect)
+  loop(6, () => {
+    BSP.splitNext()
+  })
+  BSP.leaves(r => {
+    O3.room(r)
+    O3.snap('room')
+  })
   // create rooms from BSP leaves
   const rooms: Room[] = []
-  bsp.leaves(rect => rooms.push(new Room(rect)))
+  BSP.leaves(rect => rooms.push(new Room(rect)))
 
   // debug room markers
   // rooms.forEach(r => {

@@ -21,29 +21,32 @@ export function crypt(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDispl
     })
   }
 
-  const bsp = new BinarySpacePartition(region.rect)
-  bsp.trisectLargest('vertical', rnd(1, 13), rnd(1, 2))
-  bsp.trisectLargest('horizontal', rnd(1, 2), rnd(1, 2))
-  bsp.trisectLargest('largest', 1, 1)
+  const BSP = new BinarySpacePartition(region.rect)
+  BSP.splitLargest('vertical', rnd(1, 13), rnd(1, 2))
+  BSP.splitLargest('horizontal', rnd(1, 2), rnd(1, 2))
+  BSP.splitLargest('best', 1, 1)
 
-  // bsp.leaves(rect => drawRoom(rect))
   const subBSP: BinarySpacePartition[] = []
-  bsp.leaves(rect => subBSP.push(new BinarySpacePartition(rect.scale(-1))))
+  BSP.leaves(rect => subBSP.push(new BinarySpacePartition(rect.scale(-1))))
 
   subBSP.forEach(sub => sub.leaves(rect => drawRoom(rect)))
   O3.snap()
 
   const liquidKey = pick(['sludge', 'water', 'blood', 'oil', 'slime', 'acid']) as EntityKey
-  bsp.remainders(rect => O3.add(rect, liquidKey))
+  BSP.rectGaps.forEach(g => O3.add(g.rect, liquidKey))
   O3.snap()
 
   subBSP.forEach((sub, i) =>
-    sub.run(
-      rnd(i),
-      rect => drawRoom(rect),
-      i => O3.snap()
-    )
+    loop(rnd(i), () => {
+      sub.splitNext()
+    })
   )
+  subBSP.forEach(sub => {
+    sub.leaves(r => {
+      O3.room(r)
+      O3.snap('room')
+    })
+  })
 
   const rooms: Room[] = []
   subBSP.forEach(sub => sub.leaves(rect => rooms.push(new Room(rect))))

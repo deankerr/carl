@@ -2,7 +2,6 @@ import { Entity, EntityKey, Region } from '../Core'
 import { Visualizer } from '../Core/Visualizer'
 import { Point } from '../Model/Point'
 import { Rect } from '../Model/Rectangle'
-import { BinarySpacePartition } from './modules'
 
 export type Snapshot = {
   terrainMap: Map<Point, Entity>
@@ -26,7 +25,6 @@ type RegionTheme = {
 
 export class Overseer3 {
   rect: Rect
-  BSP: BinarySpacePartition
   pool = window.game.pool
 
   timeStart = Date.now()
@@ -38,7 +36,6 @@ export class Overseer3 {
 
   constructor(readonly region: Region) {
     this.rect = region.rect
-    this.BSP = new BinarySpacePartition(this.rect)
     this.snap('Init')
     console.log(`%c  O3: ${region.name}  `, 'font-weight: bold; background-color: orange;')
   }
