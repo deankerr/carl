@@ -5,6 +5,7 @@ import { Rect } from '../../Model/Rectangle'
 import { Overseer3, RegionTheme } from '../Overseer3'
 
 export class Rooms {
+  roomIDs = 0
   rooms: Room[] = []
   constructor(
     readonly region: Region,
@@ -12,7 +13,7 @@ export class Rooms {
     rects: Rect[],
     regionTheme: RegionTheme
   ) {
-    rects.forEach(r => this.rooms.push(new Room(r, regionTheme)))
+    rects.forEach(r => this.rooms.push(new Room(r, regionTheme, this.roomIDs++)))
 
     // ? skip if only 1 room
     if (this.rooms.length <= 1) return
@@ -23,9 +24,10 @@ export class Rooms {
       const others = this.rooms.filter(r => r !== room)
       const edgeMap = room.roomEdges
 
+      // create lists of edge points in each cardinal direction
       const searchRect = room.rect.scale(-1)
       const edgePoints = searchRect.edgePoints()
-      // north
+
       const northPts = edgePoints.filter(p => p.y === searchRect.y)
       const eastPts = edgePoints.filter(p => p.x === searchRect.x2)
       const southPts = edgePoints.filter(p => p.y === searchRect.y2)
@@ -63,13 +65,18 @@ export class Rooms {
     }
 
     console.groupCollapsed('Edge map')
-    this.rooms.forEach(r => console.log(r.roomEdges))
+    this.rooms.forEach(r =>
+      console.log(
+        'Room',
+        r.rID,
+        '->',
+        [...r.roomEdges.keys()].map(r2 => r2.rID)
+      )
+    )
     console.groupEnd()
 
     const start = pick(this.rooms)
-
     const connected = [start]
-    console.log('start:', start.rID)
 
     connect(start, pts => {
       pts.forEach(pt => {
@@ -84,7 +91,6 @@ export class Rooms {
 
     function connect(origin: Room, callback: (pt: Point[]) => unknown) {
       const adjacent = shuffle([...origin.roomEdges.keys()])
-      console.log('connect:', origin.rID)
 
       while (adjacent.length > 0) {
         const target = adjacent.pop()
@@ -93,10 +99,11 @@ export class Rooms {
           return
         }
         if (connected.includes(target)) continue
-        console.log('to:', target.rID)
+
         const pts = shuffle([...(origin.roomEdges.get(target) ?? [])])
         const pt = pts[0]
 
+        console.log(`connect ${origin.rID} -> ${target.rID}`)
         callback(pt)
 
         connected.push(origin, target)
@@ -115,9 +122,6 @@ export class Rooms {
 type RoomCallback = (room: Room) => unknown
 
 export class Room {
-  rID = roomIDs++
   roomEdges = new Map<Room, Point[][]>()
-  constructor(readonly rect: Rect, public theme: RegionTheme) {}
+  constructor(readonly rect: Rect, public theme: RegionTheme, public rID: number) {}
 }
-
-let roomIDs = 0

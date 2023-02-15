@@ -43,67 +43,20 @@ export function crypt(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDispl
   const rooms = new Rooms(region, O3, roomRects, O3.theme)
   rooms.each(r => O3.debugSymbolN(r.rect.centerPoint(), r.rID))
 
-  // const s = new Solver(region)
-  // s.initializeRect(region.rect)
-  // s.initializeRect(rooms.rooms[0].rect)
-  // s.solve(CSPVar.cornerWebs)
+  rooms.each(room => {
+    if (room.rID > 0) return
+    const s = new Solver(region)
+    s.initializeRect(room.rect)
 
-  // rooms.each(r => {
-  //   for (const [room, pts] of r.roomEdges) {
-  //     pts.forEach(pt => O3.debugSymbol(pt, r.rID))
-  //   }
-  // })
-  // O3.debugSymbol(rooms.rooms[0].rect, 4)
+    s.solve([
+      CSPVar.sconce,
+      CSPVar.sconce,
+      CSPVar.cornerCandles,
+      CSPVar.cornerCandles,
+      // CSPVar.smallPitPlatform,
+    ])
+  })
 
-  // loop(6, () => {
-  //   BSP.splitNext()
-  // })
-  // BSP.leaves(r => {
-  //   O3.room(r, 'Room')
-  // })
-
-  // const rooms: Room[] = []
-  // subBSP.forEach(sub => sub.leaves(rect => rooms.push(new Room(rect))))
-
-  // const cspMany = [
-  //   'grassTuft',
-  //   'mushrooms',
-  //   'webCorner',
-  //   'sconce',
-  //   'cornerCandles',
-  // ] as CSPObjectKey[]
-
-  // const cspOne: CSPObjectKey[] = shuffle([
-  //   'smallPitPlatform',
-  //   'smallAcidPool',
-  //   'smallAcidPoolPlatform',
-  //   'smallBloodPool',
-  //   'smallCarpet',
-  //   'smallCarpetTall',
-  //   'smallOilPool',
-  //   'smallWaterPool',
-  //   'statueCarpetAltar',
-  // ])
-
-  // for (const room of rooms) {
-  //   const csp = new ConstraintSatisfactionProblemSolver(region)
-  //   csp.initializeRect(room.rect.scale(1))
-
-  //   const one = cspOne.pop()
-  //   if (one) csp.solve(one)
-  //   const two = cspOne.pop()
-  //   if (two) csp.solve(two)
-
-  //   loop(10, () => {
-  //     csp.solve(pick(cspMany))
-  //   })
-
-  //   csp.each((pt, cell) => {
-  //     cell.entities.forEach(k => O3.add(pt, k))
-  //   })
-  // }
-
-  // console.log('rooms:', rooms)
   O3.finalize()
   return region
 }

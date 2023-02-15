@@ -10,46 +10,97 @@ export class Solver {
     rect.traverse(pt => this.domain.push(pt))
   }
 
-  solve<K extends keyof typeof CSPVar>(variable: typeof CSPVar[K]) {
+  solve<K extends keyof typeof CSPVar>(variables: typeof CSPVar[K][]) {
     if (this.domain.length === 0) throw new Error('CSP: Domain is empty')
-    console.log('variable:', variable)
-    const { constraints, key, object } = variable
-    const domain = shuffle(this.domain)
-    let satisfies = true
+    for (const variable of variables) {
+      const { constraints, key, object } = variable
+      console.log('variable:', key)
+      const domain = shuffle(this.domain)
+      let satisfies = false
 
-    for (const pt of domain) {
-      console.log('for pt')
-      if ('all' in constraints) {
-        for (const c of constraints.all) {
-          console.log('try', c)
-          satisfies = CSPConstraints[c](this.region, pt)
-          console.log('satisfies:', satisfies)
-          if (!satisfies) break
+      for (const pt of domain) {
+        let isRoot = true
+        // TODO DRY
+        console.log('assess pt', pt.s)
+        if ('all' in constraints) {
+          for (const c of constraints.all) {
+            console.log('(all) try', c)
+            satisfies = CSPConstraints[c](this.region, pt, this.domain)
+            console.log('satisfies:', satisfies)
+            if (!satisfies) break
+          }
+          if (!satisfies) continue
+        }
+
+        if ('root' in constraints && isRoot) {
+          for (const c of constraints.root) {
+            console.log('(root) try', c)
+            satisfies = CSPConstraints[c](this.region, pt, this.domain)
+            isRoot = false
+            console.log('satisfies:', satisfies)
+            if (!satisfies) break
+          }
+          if (!satisfies) continue
+        }
+
+        if ('other' in constraints && !isRoot) {
+          for (const c of constraints.other) {
+            console.log('(other) try', c)
+            satisfies = CSPConstraints[c](this.region, pt, this.domain)
+            console.log('satisfies:', satisfies)
+            if (!satisfies) break
+          }
+          if (!satisfies) continue
+        }
+
+        console.log('SUCCESS!')
+
+        // place object
+        if (Array.isArray(object)) {
+          console.log('place as array')
+          object.forEach((k, i) => {
+            if (k !== 'x') {
+              const n = parseInt(k)
+              const eKey = key[n]
+              const eeeKey = Array.isArray(eKey) ? pick(eKey) : eKey
+              const relPt = pt.east(i)
+              this.region.create(relPt, eeeKey as EntityKey)
+            }
+          })
+          break
+        } else if (0 in object) {
+          // todo type any[]
+          console.log('place as object')
+
+          let relY = 0
+          for (const layers of Object.values(object)) {
+            if (Array.isArray(layers)) {
+              for (const layer of layers) {
+                console.log('layer:', layer)
+                let relX = 0
+                for (const x of layer) {
+                  if (x !== 'x') {
+                    const keyRef = parseInt(x)
+                    const eKey = key[keyRef] as EntityKey
+                    const relPt = pt.add(relX, relY)
+                    console.log('relPt', relPt.s)
+                    this.region.create(relPt, eKey)
+                  }
+                  relX++
+                }
+              }
+            }
+            relY++
+          }
+          break
+        } else {
+          console.error("CSP: I don't know how to place that")
         }
       }
-      if (!satisfies) continue
 
-      console.log('SUCCESS!')
-
-      // place object
-      if (Array.isArray(object)) {
-        object.forEach((k, i) => {
-          if (k !== 'x') {
-            const n = parseInt(k)
-            const eKey = key[n]
-            const eeeKey = Array.isArray(eKey) ? pick(eKey) : eKey
-            const relPt = pt.east(i)
-            this.region.create(relPt, eeeKey)
-          }
-        })
-        break
-      } else {
-        console.error("CSP: I don't know how to place that")
+      if (!satisfies) {
+        console.error('CSP Failed to solve')
       }
-    }
-
-    if (!satisfies) {
-      console.error('CSP Failed to solve')
     }
   }
 }
@@ -57,10 +108,10 @@ export class Solver {
 export const CSPVar = {
   sconce: {
     constraints: {
-      root: ['isExposedWall'],
-      other: ['isNotWall'],
+      root: ['isExposedWall', 'isNorthernWall'],
+      other: ['isNotWall', 'isEmpty'],
     },
-    key: ['sconce', 'sconesLower'],
+    key: ['sconce', 'sconceLower'],
     object: {
       0: ['0'],
       1: ['1'],
@@ -75,9 +126,16 @@ export const CSPVar = {
   },
   cornerWebs: {
     constraints: {
-      all: ['isFloor', 'isCorner'],
+      all: ['isEmpty', 'isFloor', 'isCorner'],
     },
     key: ['webCorner'],
+    object: ['0'],
+  },
+  cornerCandles: {
+    constraints: {
+      all: ['isEmpty', 'isFloor', 'isCorner'],
+    },
+    key: [['candles', 'candlesNE', 'candlesSE']],
     object: ['0'],
   },
   smallPitPlatform: {
@@ -107,17 +165,17 @@ export const CSPVar = {
       5: ['xxxxxx', '      '],
     },
   },
-} as const
+}
 
 const CSPConstraints = {
-  cellIsEmpty: function (region: Region, pt: Point) {
+  isEmpty: function (region: Region, pt: Point) {
     return region.at(pt).length <= 1 // ???
   },
   isWall: function (region: Region, pt: Point) {
     return 'wall' in region.terrainAt(pt)
   },
-  isNotWall: function (region: Region, pt: Point) {
-    return this.isWall(region, pt)
+  isNotWall: function (region: Region, pt: Point, domain: Point[]) {
+    return this.isWall(region, pt, domain)
   },
   isFloor: function (region: Region, pt: Point) {
     return region.terrainAt(pt).floor === true
@@ -128,6 +186,11 @@ const CSPConstraints = {
   isExposedWall: function (region: Region, pt: Point) {
     const t = region.terrainAt(pt)
     return 'wall' in t && 'isHorizontal' in t && !('wall' in region.terrainAt(pt.south()))
+  },
+  isNorthernWall: function (region: Region, pt: Point, domain: Point[]) {
+    const ySorted = [...domain].sort((a, b) => a.y - b.y)
+    console.log('ySorted:', ySorted)
+    return pt.y === ySorted[0].y
   },
   isCorner: function (region: Region, pt: Point) {
     const neighbours = pt
@@ -140,31 +203,58 @@ const CSPConstraints = {
   isCenterAligned: function (region: Region, pt: Point) {
     return true // todo
   },
-}
+} as { [key: string]: (region: Region, pt: Point, domain: Point[]) => boolean }
 
-// states -
-//  empty: cell is free and can receive object,
-//  margin: cell is free and should stay free (ie.doorway)
-//  full: cell has received object
-
-// type CSPCell = {
-//   state: 'empty' | 'margin' | 'full'
-//   terrain: EntityKey
-//   entities: EntityKey[]
-//   isWall: boolean
-//   isDoor: boolean
-//   isOutOfBounds: boolean
-// }
-
-// function createCSPCell(): CSPCell {
-//   return {
-//     state: 'empty',
-//     terrain: 'nothing',
-//     entities: [],
-//     isWall: false,
-//     isDoor: false,
-//     isOutOfBounds: false,
-//   }
+// export type CSPObjectKey = keyof typeof cspObjects
+// export const cspObjects = {
+//   grassTuft: createCSPObject(['grassTuft'], ['isDirtFloor']),
+//   mushrooms: createCSPObject(
+//     ['redMushrooms', 'purpleMushrooms', 'yellowMushrooms'],
+//     ['isDirtFloor']
+//   ),
+//   webCorner: createCSPObject(['webCorner'], ['isFloor', 'isCorner']),
+//   // sconce: createCSPObject(['sconce', 'sconceLower'], ['isNorthernExposedWall'], ['0', '1']),
+//   sconce: createCSPObject(['sconce'], ['isNorthernExposedWall'], ['0']),
+//   smallPitPlatform: createCSPObject(
+//     ['dirtFloorHole'],
+//     ['isFloor'],
+//     ['xxxxxxx', 'x00000x', 'x0xxx0x', 'x00000x', 'xxxxxxx']
+//   ),
+//   cornerCandles: createCSPObject(['candles', 'candlesNE', 'candlesSE'], ['isFloor', 'isCorner']),
+//   smallWaterPool: createCSPObject(
+//     ['water'],
+//     ['isFloor'],
+//     ['xxxxx', 'x000x', 'x000x', 'x000x', 'xxxxx']
+//   ),
+//   smallSlimePool: createCSPObject(['slime'], ['isFloor'], ['xxxx', 'x00x', 'x00x', 'xxxx']),
+//   smallOilPool: createCSPObject(['oil'], ['isFloor'], ['xxxx', 'x00x', 'x00x', 'xxxx']),
+//   smallAcidPool: createCSPObject(
+//     ['acid'],
+//     ['isFloor'],
+//     ['xxxxx', 'x000x', 'x000x', 'x000x', 'xxxxx']
+//   ),
+//   smallBloodPool: createCSPObject(['blood'], ['isFloor'], ['xxxx', 'x00x', 'x00x', 'xxxx']),
+//   smallSludgePool: createCSPObject(['sludge'], ['isFloor'], ['xxxx', 'x00x', 'x00x', 'xxxx']),
+//   smallAcidPoolPlatform: createCSPObject(
+//     ['acid'],
+//     ['isFloor'],
+//     ['xxxxx', 'x000x', 'x0x0x', 'x000x', 'xxxxx']
+//   ),
+//   smallCarpet: createCSPObject(
+//     ['carpet', 'carpetEmblem1', 'carpetEmblem2'],
+//     ['isFloor'],
+//     ['20002', '00100', '20002']
+//   ),
+//   smallCarpetTall: createCSPObject(
+//     ['carpet', 'carpetEmblem1', 'carpetEmblem2'],
+//     ['isFloor'],
+//     ['202', '000', '010', '000', '202']
+//   ),
+//   statueCarpetAltar: createCSPObject(
+//     ['statueDragon', 'carpet', 'cavernWall'],
+//     ['isFloor'],
+//     ['0110', '1221', '1221', '0110']
+//   ),
 // }
 
 // export class ConstraintSatisfactionProblemSolver {
@@ -202,14 +292,6 @@ const CSPConstraints = {
 //       cell.isWall = terrainHere.wall === true
 //       cell.isDoor = entitiesHere.filter(e => e.door).length > 0
 //     })
-//   }
-
-//   debugLogPointMap() {
-//     console.groupCollapsed('Cell Map')
-//     for (const [pt, cell] of this.cellMap) {
-//       console.log(pt, cell)
-//     }
-//     console.groupEnd()
 //   }
 
 //   solve(key: keyof typeof cspObjects, amount = 1) {
@@ -316,82 +398,12 @@ const CSPConstraints = {
 //   }
 // }
 
-// export type Constraint =
-//   | 'cellIsEmpty'
-//   | 'isFloor'
-//   | 'isNorthernExposedWall'
-//   | 'isDirtFloor'
-//   | 'isCorner'
-
 // type CSPObject = {
 //   entity: EntityKey[]
 //   constraint: Constraint[]
 //   grid: string[]
 // }
 
-// /*
-// grid:
-//   'xxxxx',
-//   'x0A0x',
-//   'xxxxx
-
-// x = apply constraints + mark as full but place nothing
-// A = any - pick random
-// 0-9 = place entity[n]
-// */
-
 // function createCSPObject(entity: EntityKey[], constraint: Constraint[], grid = ['A']): CSPObject {
 //   return { entity, constraint: ['cellIsEmpty', ...constraint], grid }
-// }
-
-// export type CSPObjectKey = keyof typeof cspObjects
-// export const cspObjects = {
-//   grassTuft: createCSPObject(['grassTuft'], ['isDirtFloor']),
-//   mushrooms: createCSPObject(
-//     ['redMushrooms', 'purpleMushrooms', 'yellowMushrooms'],
-//     ['isDirtFloor']
-//   ),
-//   webCorner: createCSPObject(['webCorner'], ['isFloor', 'isCorner']),
-//   // sconce: createCSPObject(['sconce', 'sconceLower'], ['isNorthernExposedWall'], ['0', '1']),
-//   sconce: createCSPObject(['sconce'], ['isNorthernExposedWall'], ['0']),
-//   smallPitPlatform: createCSPObject(
-//     ['dirtFloorHole'],
-//     ['isFloor'],
-//     ['xxxxxxx', 'x00000x', 'x0xxx0x', 'x00000x', 'xxxxxxx']
-//   ),
-//   cornerCandles: createCSPObject(['candles', 'candlesNE', 'candlesSE'], ['isFloor', 'isCorner']),
-//   smallWaterPool: createCSPObject(
-//     ['water'],
-//     ['isFloor'],
-//     ['xxxxx', 'x000x', 'x000x', 'x000x', 'xxxxx']
-//   ),
-//   smallSlimePool: createCSPObject(['slime'], ['isFloor'], ['xxxx', 'x00x', 'x00x', 'xxxx']),
-//   smallOilPool: createCSPObject(['oil'], ['isFloor'], ['xxxx', 'x00x', 'x00x', 'xxxx']),
-//   smallAcidPool: createCSPObject(
-//     ['acid'],
-//     ['isFloor'],
-//     ['xxxxx', 'x000x', 'x000x', 'x000x', 'xxxxx']
-//   ),
-//   smallBloodPool: createCSPObject(['blood'], ['isFloor'], ['xxxx', 'x00x', 'x00x', 'xxxx']),
-//   smallSludgePool: createCSPObject(['sludge'], ['isFloor'], ['xxxx', 'x00x', 'x00x', 'xxxx']),
-//   smallAcidPoolPlatform: createCSPObject(
-//     ['acid'],
-//     ['isFloor'],
-//     ['xxxxx', 'x000x', 'x0x0x', 'x000x', 'xxxxx']
-//   ),
-//   smallCarpet: createCSPObject(
-//     ['carpet', 'carpetEmblem1', 'carpetEmblem2'],
-//     ['isFloor'],
-//     ['20002', '00100', '20002']
-//   ),
-//   smallCarpetTall: createCSPObject(
-//     ['carpet', 'carpetEmblem1', 'carpetEmblem2'],
-//     ['isFloor'],
-//     ['202', '000', '010', '000', '202']
-//   ),
-//   statueCarpetAltar: createCSPObject(
-//     ['statueDragon', 'carpet', 'cavernWall'],
-//     ['isFloor'],
-//     ['0110', '1221', '1221', '0110']
-//   ),
 // }

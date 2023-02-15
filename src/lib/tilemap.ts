@@ -279,7 +279,7 @@ export function oryxTinyMap(size: number) {
       'sconce1',
       'sconce2',
       'sconceLower1',
-      'sconeLower2',
+      'sconceLower2',
     ],
     [
       'webNW',
