@@ -265,6 +265,10 @@ export function oryxTinyMap(size: number) {
       'redDoorVerticalClosedTop',
       'redDoorVerticalOpenTop',
       'redDoorVerticalOpen',
+      'woodenBoards1',
+      'woodenBoards2',
+      'woodenBoards3',
+      'woodenPanel',
     ],
     [
       'crate',

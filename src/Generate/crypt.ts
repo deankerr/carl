@@ -13,6 +13,7 @@ export function crypt(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDispl
   const O3 = new Overseer3(region)
   O3.theme.wall = 'cryptWall'
   O3.theme.floor = 'stoneTileFloor'
+  O3.theme.door = 'woodenDoor'
   O3.room(region.rect, 'Theme')
 
   // ! dev
@@ -39,13 +40,13 @@ export function crypt(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDispl
     roomRects.push(r)
   })
 
-  const rooms = new Rooms(region, roomRects, O3.theme)
+  const rooms = new Rooms(region, O3, roomRects, O3.theme)
   rooms.each(r => O3.debugSymbolN(r.rect.centerPoint(), r.rID))
 
-  const s = new Solver(region)
+  // const s = new Solver(region)
   // s.initializeRect(region.rect)
-  s.initializeRect(rooms.rooms[0].rect)
-  s.solve(CSPVar.cornerWebs)
+  // s.initializeRect(rooms.rooms[0].rect)
+  // s.solve(CSPVar.cornerWebs)
 
   // rooms.each(r => {
   //   for (const [room, pts] of r.roomEdges) {
