@@ -18,9 +18,9 @@ function createSnapshot(
 }
 
 export type RegionTheme = {
-  wall: Extract<EntityKey, 'dungeonWall' | 'caveWall' | 'cryptWall' | 'cavernWall'>
-  floor: Extract<EntityKey, 'dirtFloor' | 'stoneFloor' | 'stoneTileFloor'>
-  door: Extract<EntityKey, 'woodenDoor' | 'stoneDoor' | 'jailDoor' | 'redDoor'>
+  wall: EntityKey
+  floor: EntityKey
+  door: EntityKey
 }
 
 export class Overseer3 {
@@ -83,6 +83,57 @@ export class Overseer3 {
       this.region.create(area, key)
     }
     if (snapMsg) this.snap(snapMsg)
+  }
+
+  clear(pt: Point | Rect) {
+    if (pt instanceof Rect) {
+      pt.traverse(pt => this.clear(pt))
+      return
+    }
+
+    const [_terrain, ...entities] = this.region.at(pt)
+    entities.forEach(e => this.region.destroyEntity(e))
+  }
+
+  building(pt: Point, sign?: 'blank' | 'weapon' | 'potion' | 'inn') {
+    this.clear(Rect.atC(pt, 3, 4))
+    const pt1 = pt.add(0, -2)
+    const pt2 = pt.add(0, -1)
+
+    this.add(pt1.west(1), 'buildingChimney')
+    this.add(pt1, 'buildingRoof')
+    this.add(pt1.east(1), 'buildingRoof')
+
+    this.add(pt2.west(1), 'buildingRoofFront')
+    this.add(pt2, 'buildingRoofFront')
+    this.add(pt2.east(1), 'buildingRoofFront')
+
+    this.add(pt.west(1), 'buildingWindow')
+    this.add(pt, 'buildingEntry')
+    this.add(pt.east(1), 'buildingWindow')
+
+    if (sign) {
+      switch (sign) {
+        case 'blank':
+          this.add(pt.east(2), 'signBlank')
+          break
+        case 'weapon':
+          this.add(pt.east(2), 'signWeapon')
+          break
+        case 'potion':
+          this.add(pt.east(2), 'signPotion')
+          break
+        case 'inn':
+          this.add(pt.east(2), 'signInn')
+          break
+      }
+    }
+
+    // this.add(pt.add(-2, 1), 'grassTile')
+    // this.add(pt.add(-1, 1), 'grassTile')
+    // this.add(pt.add(0, 1), 'grassTile')
+    // this.add(pt.add(1, 1), 'grassTile')
+    // this.add(pt.add(2, 1), 'grassTile')
   }
 
   debug(area: Point | Rect) {

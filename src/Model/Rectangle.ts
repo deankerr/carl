@@ -15,6 +15,7 @@ export class Rect {
   // Center
   readonly cx: number
   readonly cy: number
+  readonly center: Point
 
   readonly area: number
   readonly p1: Point
@@ -33,6 +34,7 @@ export class Rect {
 
     this.cx = this.x2 - Math.floor(this.width / 2)
     this.cy = this.y2 - Math.floor(this.height / 2)
+    this.center = point(this.cx, this.cy)
 
     this.area = width * height
     this.p1 = point(this.x, this.y)
@@ -81,7 +83,7 @@ export class Rect {
     const x = this.x - xBy
     const y = this.y - yBy
     const width = this.width + xBy * 2
-    const height = this.height + xBy * 2
+    const height = this.height + yBy * 2
     // enforce minimum of size 1 to avoid weirdness
     return Rect.at(point(x, y), width > 0 ? width : 1, height > 0 ? height : 1)
   }

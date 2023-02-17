@@ -1,7 +1,8 @@
 export const beings = {
   player: {
     name: 'player',
-    tiles: ['warrior'],
+    tiles: ['warriorBlueE1', 'warriorBlueE2'],
+    tilesAutoCycle: 750,
     tag: ['playerControlled', 'actor', 'blocksMovement', 'being', 'signalUpdatePlayerFOV'],
     fieldOfView: 16,
   },
@@ -26,10 +27,15 @@ export const beings = {
     tag: ['being', 'actor', 'blocksMovement'],
   },
   scorpionBlack: {
-    label: 'scorpionBlack',
     name: 'giant scorpion',
     tiles: ['scorpionBlack1', 'scorpionBlack2'],
     tilesAutoCycle: 1000,
     tag: ['being', 'actor', 'blocksMovement'],
+  },
+  horse: {
+    name: 'horsey',
+    tiles: ['horseS1', 'horseS2'],
+    tag: ['being', 'blocksMovement'],
+    tilesAutoCycle: 1000,
   },
 } as const

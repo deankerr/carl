@@ -278,4 +278,36 @@ export const features = {
     tiles: ['statueMonster'],
     tag: ['feature', 'blocksMovement'],
   },
+  shrub: {
+    name: 'shrub',
+    tiles: ['shrub1', 'shrub2'],
+    tag: ['feature', 'pickTile', 'memorable'],
+  },
+  campfire: {
+    name: 'campfire',
+    tiles: ['campfire1', 'campfire2'],
+    tilesAutoCycle: 350,
+    tag: ['feature', 'memorable'],
+    trodOn: 'You feel a sense of urgency.',
+  },
+  signBlank: {
+    name: 'sign',
+    tiles: ['signBlank'],
+    tag: ['feature', 'memorable'],
+  },
+  signWeapon: {
+    name: 'sign',
+    tiles: ['signWeapon'],
+    tag: ['feature', 'memorable'],
+  },
+  signPotion: {
+    name: 'sign',
+    tiles: ['signPotion'],
+    tag: ['feature', 'memorable'],
+  },
+  signInn: {
+    name: 'sign',
+    tiles: ['signInn'],
+    tag: ['feature', 'memorable'],
+  },
 } as const

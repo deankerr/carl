@@ -5,6 +5,7 @@ import { Region } from './'
 export class Atlas {
   zones: Zone[] = [
     { label: 'crypt', generator: Generate.crypt, regions: [], regionIndex: 0 },
+    { label: 'town', generator: Generate.townDemo, regions: [], regionIndex: 0 },
     { label: 'cave', generator: Generate.cave, regions: [], regionIndex: 0 },
     { label: 'dungeon', generator: Generate.dungeon, regions: [], regionIndex: 0 },
     { label: 'cavern', generator: Generate.cavern, regions: [], regionIndex: 0 },

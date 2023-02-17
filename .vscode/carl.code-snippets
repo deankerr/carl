@@ -27,44 +27,49 @@
   //   "description": "CARL! Component Template"
   // },
 
-  // "Entity Template": {
-  //   "prefix": "ent-template",
-  //   "body": [
-  //     "${1:monster}: (pt: Point) => {",
-  //     "  return {",
-  //     "    id: '$1',",
-  //     "    ...C.position(pt.x, pt.y),",
-  //     "    ...C.render('${2:m}', '${3:red}'),",
-  //     "    ...C.description($1)",
-  //     "    ...C.tagActor(),",
-  //     "  }",
-  //     "},"
-  //   ],
-  //   "description": "CARL! Entity Template"
-  // },
-
-  "carl template - terrain": {
-    "prefix": "ttterrain",
+  "Template": {
+    "prefix": "ttemplate",
+    "body": ["${1:KEY}: {", " name: '${2:NAME}',", " tiles: [''],", " tag: ['${3:TYPETAG}'],", "}"],
+    "description": "CARL Template"
+  },
+  "Region Generator": {
+    "prefix": "reggen",
     "body": [
-      "{ label: '${1:NAME}', name: ['$1'], form: ['${2:CHAR}', '#${3:COLOR}'], tag: ['${4:terrain}'] },"
+      "import { CONFIG } from '../config'",
+      "import { Region } from '../Core'",
+      "import { Overseer3 } from './Overseer3'",
+      "",
+      "export function ${1:NAME}(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDisplayHeight) {",
+      " const region = new Region(width, height, 'crypt')",
+      " const O3 = new Overseer3(region)",
+      " O3.theme.wall = 'cryptWall'",
+      " O3.theme.floor = 'stoneTileFloor'",
+      " O3.theme.door = 'woodenDoor'",
+      " O3.room(region.rect, 'Theme')",
+      "",
+      " // generator",
+      "",
+      " O3.finalize()",
+      " return region",
+      "}"
     ],
-    "description": "CARL terrain template"
+    "description": "CARL generator template"
   },
 
-  "X Y Arguments": {
+  "X/Y Arguments": {
     "prefix": "xynumber",
     "body": ["x: number, y: number"],
     "description": "x/y: number arguement"
   },
 
-  "xywh Args": {
+  "X/Y/W/H Arguments": {
     "prefix": "xywhnumber",
     "body": ["x: number, y: number, width: number, height: number"],
     "description": "x/y/width/height: number arguement "
   },
 
-  "wh argrs": {
-    "prefix": "wh:number",
+  "W/H Arguments": {
+    "prefix": "whnumber",
     "body": ["width: number, height: number"],
     "description": "w/h: number"
   },

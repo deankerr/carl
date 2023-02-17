@@ -124,9 +124,14 @@ export const terrain = {
     tiles: ['dirtFloor1', 'dirtFloor2', 'dirtFloor3', 'dirtFloor4', 'dirtFloor5', 'dirtFloor6'],
     tag: ['terrain', 'floor', 'pickTile'],
   },
-  dirtFloorHole: {
+  dirtPath: {
+    name: 'path',
+    tiles: ['dirtTiles1', 'dirtTiles2', 'dirtTiles3'],
+    tag: ['terrain', 'pickTile'],
+  },
+  dirtFloorPit: {
     name: 'hole',
-    tiles: ['unknown', 'dirtFloorHoleLedge'],
+    tiles: ['unknown', 'dirtFloorPit'],
     tag: ['terrain', 'blocksMovement', 'pickTileLedge'],
   },
   stoneTileFloor: {
@@ -144,9 +149,60 @@ export const terrain = {
     ],
     tag: ['terrain', 'floor', 'pickTile'],
   },
+  stonePebbleFloor: {
+    name: 'floor',
+    tiles: [
+      'stonePebbleFloor1',
+      'stonePebbleFloor2',
+      'stonePebbleFloor3',
+      'stonePebbleFloor4',
+      'stonePebbleFloor5',
+    ],
+    tag: ['terrain', 'floor', 'pickTileEqually'],
+  },
+  grassFloor: {
+    name: 'grass',
+    tiles: ['grass1', 'grass2', 'grass3', 'grass4', 'grass5', 'grass6'],
+    tag: ['terrain', 'floor', 'pickTile'],
+  },
+  grassPath: {
+    name: 'path',
+    tiles: ['grassTiles1', 'grassTiles2', 'grassTiles3'],
+    tag: ['terrain', 'pickTile'],
+  },
+  grassTile: {
+    name: 'path',
+    tiles: ['grassTile'],
+    tag: ['terrain'],
+  },
   bridgeFloor: {
     name: 'bridge',
-    tiles: ['woodenBoards1', 'woodenBoards2', 'woodenBoards3'],
+    tiles: ['woodenBoards1', 'woodenBoards2', 'woodenBoards3', 'woodenPanel'],
     tag: ['terrain', 'floor', 'pickTileEqually'],
+  },
+  buildingWindow: {
+    name: 'building',
+    tiles: ['buildingWindow1', 'buildingWindow2'],
+    tag: ['terrain', 'blocksMovement', 'pickTile'],
+  },
+  buildingEntry: {
+    name: 'building',
+    tiles: ['buildingDoor'],
+    tag: ['terrain', 'blocksMovement'],
+  },
+  buildingRoofFront: {
+    name: 'building',
+    tiles: ['buildingRoofFront1', 'buildingRoofFront2'],
+    tag: ['terrain', 'blocksMovement', 'pickTile'],
+  },
+  buildingRoof: {
+    name: 'building',
+    tiles: ['buildingRoof1', 'buildingRoof2'],
+    tag: ['terrain', 'blocksMovement', 'blocksLight', 'pickTile'],
+  },
+  buildingChimney: {
+    name: 'building',
+    tiles: ['buildingChimney'],
+    tag: ['terrain', 'blocksMovement', 'blocksLight'],
   },
 } as const
