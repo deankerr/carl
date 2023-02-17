@@ -164,6 +164,12 @@ export class Region {
     return transparent
   }
 
+  ROTisPassable(x: number, y: number) {
+    const pt = point(x, y)
+    const here = this.at(pt)
+    return !here.some(e => e.blocksMovement)
+  }
+
   rndWalkable() {
     let max = 1000
     while (max-- > 0) {

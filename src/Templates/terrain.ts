@@ -76,12 +76,32 @@ export const terrain = {
     ],
     tag: [...wallTags],
   },
+  dungeonStairsDown: {
+    name: 'stairs',
+    tiles: ['dungeonStairsDown'],
+    tag: ['terrain'],
+  },
+  dungeonPool: {
+    name: 'well',
+    tiles: ['dungeonWell'],
+    tag: ['terrain', 'blocksMovement'],
+  },
   caveWall: {
     name: 'wall',
     tiles: ['caveVertical1'],
     tilesVertical: ['caveVertical1', 'caveVertical2', 'caveVertical3', 'caveVertical4'],
     tilesHorizontal: ['caveHorizontal1', 'caveHorizontal2', 'caveHorizontal3', 'caveHorizontal4'],
     tag: [...wallTags],
+  },
+  caveStairsDown: {
+    name: 'stairs',
+    tiles: ['caveStairsDown'],
+    tag: ['terrain'],
+  },
+  cavePool: {
+    name: 'well',
+    tiles: ['caveWell'],
+    tag: ['terrain', 'blocksMovement'],
   },
   cryptWall: {
     name: 'wall',
@@ -95,6 +115,16 @@ export const terrain = {
     ],
     tag: [...wallTags],
   },
+  cryptStairsDown: {
+    name: 'stairs',
+    tiles: ['cryptStairsDown'],
+    tag: ['terrain'],
+  },
+  cryptPool: {
+    name: 'well',
+    tiles: ['cryptWell'],
+    tag: ['terrain', 'blocksMovement'],
+  },
   cavernWall: {
     name: 'wall',
     tiles: ['cavernVertical1'],
@@ -106,6 +136,16 @@ export const terrain = {
       'cavernHorizontal4',
     ],
     tag: [...wallTags],
+  },
+  cavernStairsDown: {
+    name: 'stairs',
+    tiles: ['cavernStairsDown'],
+    tag: ['terrain'],
+  },
+  cavernPool: {
+    name: 'well',
+    tiles: ['cavernWell'],
+    tag: ['terrain', 'blocksMovement'],
   },
   stoneFloor: {
     name: 'floor',
@@ -123,6 +163,11 @@ export const terrain = {
     name: 'floor',
     tiles: ['dirtFloor1', 'dirtFloor2', 'dirtFloor3', 'dirtFloor4', 'dirtFloor5', 'dirtFloor6'],
     tag: ['terrain', 'floor', 'pickTile'],
+  },
+  dirtFloorDetailed: {
+    name: 'floor',
+    tiles: ['dirtFloor2', 'dirtFloor3', 'dirtFloor4', 'dirtFloor5', 'dirtFloor6'],
+    tag: ['terrain', 'floor', 'pickTileEqually'],
   },
   dirtPath: {
     name: 'path',

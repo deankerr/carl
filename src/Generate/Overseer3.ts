@@ -1,6 +1,8 @@
+import * as ROT from 'rot-js'
 import { Entity, EntityKey, Region } from '../Core'
 import { Visualizer } from '../Core/Visualizer'
-import { Point } from '../Model/Point'
+import { rnd } from '../lib/util'
+import { point, Point } from '../Model/Point'
 import { Rect } from '../Model/Rectangle'
 
 export type Snapshot = {
@@ -93,6 +95,16 @@ export class Overseer3 {
 
     const [_terrain, ...entities] = this.region.at(pt)
     entities.forEach(e => this.region.destroyEntity(e))
+  }
+
+  path(pt1: Point, pt2: Point, key: EntityKey, passAll = false) {
+    const passFn = passAll ? () => true : this.region.ROTisPassable.bind(this.region)
+    const pathFn = new ROT.Path.AStar(pt2.x, pt2.y, passFn, { topology: rnd(1) ? 4 : 8 })
+    pathFn.compute(pt1.x, pt1.y, (x, y) => {
+      const pPt = point(x, y)
+      this.clear(pPt)
+      this.add(pPt, key)
+    })
   }
 
   building(pt: Point, sign?: 'blank' | 'weapon' | 'potion' | 'inn') {

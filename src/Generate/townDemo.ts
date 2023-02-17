@@ -17,18 +17,10 @@ export function townDemo(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDi
   dish.addAlways(region.rect.edgePoints())
   dish.randomize(40).current((pt, alive) => (alive ? O3.add(pt, 'shrub') : O3.clear(pt)))
   O3.snap('cell init')
-
   dish.generation(4, 5)((pt, alive) => (alive ? O3.add(pt, 'shrub') : O3.clear(pt)))
   O3.snap('cell 1')
-
   dish.generation(4, 5)((pt, alive) => (alive ? O3.add(pt, 'shrub') : O3.clear(pt)))
   O3.snap('cell 2')
-
-  // dish.generation(4, 5)((pt, alive) => (alive ? O3.add(pt, 'shrub') : O3.clear(pt)))
-  // O3.snap('cell 3')
-
-  // dish.generation(4, 5)((pt, alive) => (alive ? O3.add(pt, 'shrub') : O3.clear(pt)))
-  // O3.snap('cell 4')
 
   O3.floor(region.rect)
   O3.snap('grass')
@@ -43,25 +35,31 @@ export function townDemo(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDi
   O3.add(bridgeRect, 'bridgeFloor')
 
   const cPt = region.rect.center
-  const bPt1 = cPt.add(-2, 0)
+  const bPt1 = cPt.add(-2, 0) // hut
   O3.building(bPt1)
+
+  const bPt2 = cPt.add(-12, -5) // potion
+  O3.building(bPt2, 'potion')
+
+  const bPt3 = cPt.add(14, -5) // weapon
+  O3.building(bPt3, 'weapon')
+
+  const bPt4 = cPt.add(9, 1) // inn
+  O3.building(bPt4, 'inn')
+
+  // paths
+  O3.path(bPt2.south(1), bPt1.south(1), 'grassPath')
+  O3.path(bPt1.south(), bPt3.south(), 'grassPath')
+  O3.path(bPt1.south(), bPt4.south(), 'grassPath')
+
   O3.add(bPt1.add(-1, 1), 'catTan')
   O3.add(bPt1.add(2, 1), 'thief')
+  O3.add(bPt1.east(5), 'cavePool')
 
-  const bPt2 = cPt.add(-12, -5)
-  const bPt3 = cPt.add(14, -5)
-  O3.building(bPt2, 'potion')
   O3.add(bPt2.add(-1, 1), 'guy')
 
-  O3.building(bPt3, 'weapon')
   O3.add(bPt3.add(0, 1), 'girl')
 
-  for (let xi = bPt2.x - 1; xi <= bPt3.x + 1; xi++) {
-    O3.add(point(xi, bPt2.y + 1), 'grassPath')
-  }
-
-  const bPt4 = cPt.add(9, 1)
-  O3.building(bPt4, 'inn')
   O3.add(bPt4.add(-1, 1), 'sorceress')
   O3.add(bPt4.add(1, 1), 'catBrown')
 
@@ -69,6 +67,37 @@ export function townDemo(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDi
   O3.add(cfPt, 'campfire')
   O3.add(cfPt.west(2), 'horse')
   O3.add(cfPt.east(2), 'archer')
+
+  const dPt = cPt.add(2, -6)
+  const dRect = Rect.atC(dPt, 5, 3)
+  O3.clear(dRect)
+  O3.snap('d dirt')
+  const ddish = new CellDish(dRect.scale(1))
+  ddish.edge = false
+  ddish.addAlways(dRect.toPts())
+  ddish.randomize(45).current((pt, alive) => O3.add(pt, alive ? 'dirtFloorDetailed' : 'grassFloor'))
+  O3.snap('d dirt')
+
+  ddish.generation(
+    4,
+    5
+  )((pt, alive) => {
+    O3.add(pt, alive ? 'dirtFloorDetailed' : 'grassFloor')
+  })
+  ddish.alive(pt => O3.clear(pt))
+  O3.snap('d dirt')
+
+  // O3.add(dRect, 'dirtFloorDetailed')
+  // O3.path(dRect.p1, dRect.p1.east(4), 'dirtLedge')
+
+  O3.add(dRect.p1, 'dirtBoulder')
+  O3.add(dRect.p1.south(1), 'dirtBoulder')
+  O3.add(dRect.p1.east(4), 'stoneBoulder')
+
+  O3.add(dRect.p2.north(1), 'bones')
+  O3.add(dRect.p2.west(1), 'bones')
+
+  O3.add(dPt, 'cryptStairsDown')
 
   O3.finalize()
   return region

@@ -4,7 +4,7 @@ import { Region } from '../Core'
 import { loop, pick, shuffle } from '../lib/util'
 import { Point } from '../Model/Point'
 import { CellDish } from './modules/cellular'
-import { rndCluster, floodFindRegions } from './modules/flood'
+import { floodFindRegions } from './modules/flood'
 import { Overseer3 } from './Overseer3'
 
 export function cave(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {

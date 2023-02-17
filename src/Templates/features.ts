@@ -310,4 +310,30 @@ export const features = {
     tiles: ['signInn'],
     tag: ['feature', 'memorable'],
   },
+  shadow: {
+    name: 'shadow',
+    tiles: ['shadow'],
+    tag: ['feature', 'memorable'],
+  },
+  dirtLedge: {
+    name: 'dirtLedge',
+    tiles: ['dirtLedge'],
+    tag: ['feature', 'memorable'],
+  },
+  stoneBoulder: {
+    name: 'boulder',
+    tiles: ['stoneBoulder'],
+    tag: ['feature', 'blocksMovement'],
+  },
+  dirtBoulder: {
+    name: 'boulder',
+    tiles: ['dirtBoulder'],
+    tag: ['feature', 'blocksMovement'],
+  },
+  bones: {
+    name: 'bones',
+    tiles: ['bones1', 'bones2', 'bones3'],
+    tag: ['feature', 'pickTileEqually'],
+    trodOn: 'You trample some musty old bones.',
+  },
 } as const
