@@ -117,6 +117,10 @@ export class Rooms {
   each(callback: RoomCallback) {
     this.rooms.forEach(r => callback(r))
   }
+
+  debugNumberRooms() {
+    this.each(r => this.O3.debugSymbolN(r.rect.centerPoint(), r.rID))
+  }
 }
 
 type RoomCallback = (room: Room) => unknown

@@ -1,11 +1,12 @@
 import { CONFIG } from '../config'
-import { FeatureKey, Region } from '../Core'
-import { loop, pick } from '../lib/util'
+import { EntityKey, FeatureKey, Region } from '../Core'
+import { loop, pick, rnd } from '../lib/util'
 import { Rect } from '../Model/Rectangle'
 import { BinarySpacePartition } from './modules'
+import { Rooms } from './modules/Rooms'
 import { Overseer3 } from './Overseer3'
 
-export function cavern(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
+export function cavern(width = CONFIG.generateWidth * 3, height = CONFIG.generateHeight * 3) {
   const region = new Region(width, height)
   region.name = 'cavern'
 
@@ -18,77 +19,28 @@ export function cavern(width = CONFIG.generateWidth, height = CONFIG.generateHei
   }
 
   const BSP = new BinarySpacePartition(region.rect)
-  loop(6, () => {
-    BSP.splitNext()
-  })
+
+  const liquidKey = pick(['sludge', 'blood', 'oil', 'slime', 'acid']) as EntityKey
+  if (rnd(1)) {
+    BSP.splitLargest('vertical', rnd(3, 7), rnd(1, 2))
+    BSP.splitLargest('horizontal', rnd(1, 3), 1)
+    BSP.splitLargest('best', 1, 1)
+  } else {
+    BSP.splitLargest('horizontal', rnd(1, 3), 2)
+    BSP.splitLargest('vertical', rnd(3, 5), 1)
+    BSP.splitLargest('best', 1, 1)
+  }
+  BSP.rectGaps.forEach(g => O3.add(g.rect, liquidKey, 'river'))
+
+  BSP.splitN(48)
+  const roomRects: Rect[] = []
   BSP.leaves(r => {
-    O3.room(r)
-    O3.snap('room')
+    O3.room(r, 'Room')
+    roomRects.push(r)
   })
-  // create rooms from BSP leaves
-  // const rooms: Room[] = []
-  // BSP.leaves(rect => rooms.push(new Room(rect)))
 
-  // // debug room markers
-  // // rooms.forEach(r => {
-  // //   const k = ('debug' + r.debugid) as FeatureKey
-  // //   O2.feature(r.rect.center(), k)
-  // // })
-
-  // // find adjacent room points
-  // findAdjacent(rooms, region)
-
-  // // create doors
-  // connectRooms(rooms, pt => {
-  //   O3.floor(pt)
-  //   O3.door(pt)
-  //   O3.snap('Connect Room')
-  // })
-
-  // // apply CSP
-  // for (const room of rooms) {
-  //   const csp = new ConstraintSatisfactionProblemSolver(region)
-  //   csp.initializeRect(room.rect.scale(1))
-  //   // csp.solve('smallPitPlatform')
-  //   switch (room.debugid % 6) {
-  //     case 0:
-  //       csp.solve('smallWaterPool')
-  //       break
-  //     case 1:
-  //       csp.solve('smallSlimePool')
-  //       break
-  //     case 2:
-  //       csp.solve('statueCarpetAltar')
-  //       break
-  //     case 3:
-  //       csp.solve('smallAcidPoolPlatform')
-  //       break
-  //     case 4:
-  //       csp.solve('smallCarpetTall')
-  //       break
-  //     case 5:
-  //       csp.solve('smallCarpet')
-  //       break
-  //   }
-
-  //   csp.solve('grassTuft', 4)
-  //   csp.solve('mushrooms', 4)
-  //   csp.solve('webCorner', 2)
-  //   csp.solve('cornerCandles', 2)
-  //   csp.solve('sconce', 2)
-
-  //   csp.each((pt, cell) => {
-  //     cell.entities.forEach(k => O3.add(pt, k))
-  //   })
-  // }
-
-  // first room only
-  // const csp = new ConstraintSatisfactionProblemSolver(region)
-  // csp.initializeRect(rooms[0].rect.scale(1))
-  // csp.solve('smallOilPool')
-  // csp.each((pt, cell) => {
-  //   cell.entities.forEach(k => O2.add(pt, k))
-  // })
+  const rooms = new Rooms(region, O3, roomRects, O3.theme)
+  rooms.debugNumberRooms()
 
   O3.finalize()
   return region

@@ -41,7 +41,7 @@ export function crypt(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDispl
   })
 
   const rooms = new Rooms(region, O3, roomRects, O3.theme)
-  rooms.each(r => O3.debugSymbolN(r.rect.centerPoint(), r.rID))
+  rooms.debugNumberRooms()
 
   rooms.each(room => {
     if (room.rID > 0) return
