@@ -4,15 +4,15 @@ const appInitial = 'game'
 const seed = 643
 // const seed = null
 
-const mainDisplayWidth = 39
-const mainDisplayHeight = 19
+const mainDisplayWidth = 37
+const mainDisplayHeight = 17
 
 const messageDisplayWidth = 69
 const messageDisplayHeight = 35
 const messageBufferDisplaySize = 5
 
-const generateWidth = 39 // approx 1.5 times graphical display size
-const generateHeight = 19
+const generateWidth = 37 // approx 1.5 times graphical display size
+const generateHeight = 17
 
 const setMainToMapSize = true
 

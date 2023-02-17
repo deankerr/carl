@@ -7,7 +7,7 @@ import { Overseer3 } from './Overseer3'
 import { Rooms } from './modules/Rooms'
 import { CSPVar, Solver } from './modules/CSP'
 
-export function crypt(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDisplayHeight) {
+export function crypt(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
   const region = new Region(width, height, 'crypt')
 
   const O3 = new Overseer3(region)

@@ -1,12 +1,12 @@
 import { CONFIG } from '../config'
 import { Region } from '../Core'
-import { rnd } from '../lib/util'
+import { floor, half, rnd } from '../lib/util'
 import { point } from '../Model/Point'
 import { Rect } from '../Model/Rectangle'
 import { BinarySpacePartition, CellDish } from './modules'
 import { Overseer3 } from './Overseer3'
 
-export function townDemo(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDisplayHeight) {
+export function townDemo(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
   const region = new Region(width, height, 'crypt')
   const O3 = new Overseer3(region)
   O3.theme.wall = 'cryptWall'
@@ -52,30 +52,14 @@ export function townDemo(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDi
   O3.path(bPt1.south(), bPt3.south(), 'grassPath')
   O3.path(bPt1.south(), bPt4.south(), 'grassPath')
 
-  O3.add(bPt1.add(-1, 1), 'catTan')
-  O3.add(bPt1.add(2, 1), 'thief')
-  O3.add(bPt1.east(5), 'cavePool')
-
-  O3.add(bPt2.add(-1, 1), 'guy')
-
-  O3.add(bPt3.add(0, 1), 'girl')
-
-  O3.add(bPt4.add(-1, 1), 'sorceress')
-  O3.add(bPt4.add(1, 1), 'catBrown')
-
-  const cfPt = cPt.add(-12, 0)
-  O3.add(cfPt, 'campfire')
-  O3.add(cfPt.west(2), 'horse')
-  O3.add(cfPt.east(2), 'archer')
-
   const dPt = cPt.add(2, -6)
   const dRect = Rect.atC(dPt, 5, 3)
   O3.clear(dRect)
   O3.snap('d dirt')
-  const ddish = new CellDish(dRect.scale(1))
+  const ddish = new CellDish(dRect.scale(1).translate(0, 1))
   ddish.edge = false
   ddish.addAlways(dRect.toPts())
-  ddish.randomize(45).current((pt, alive) => O3.add(pt, alive ? 'dirtFloorDetailed' : 'grassFloor'))
+  ddish.randomize(40).current((pt, alive) => O3.add(pt, alive ? 'dirtFloorDetailed' : 'grassFloor'))
   O3.snap('d dirt')
 
   ddish.generation(
@@ -98,6 +82,22 @@ export function townDemo(width = CONFIG.mainDisplayWidth, height = CONFIG.mainDi
   O3.add(dRect.p2.west(1), 'bones')
 
   O3.add(dPt, 'cryptStairsDown')
+
+  O3.add(bPt1.add(-1, 1), 'catTan')
+  O3.add(bPt1.add(2, 1), 'thief')
+  O3.add(bPt1.east(5), 'cavePool')
+
+  O3.add(bPt2.add(-1, 1), 'guy')
+
+  O3.add(bPt3.add(0, 1), 'girl')
+
+  O3.add(bPt4.add(-1, 1), 'sorceress')
+  O3.add(bPt4.add(1, 1), 'catBrown')
+
+  const cfPt = cPt.add(-12, 0)
+  O3.add(cfPt, 'campfire')
+  O3.add(cfPt.west(2), 'horse')
+  O3.add(cfPt.east(2), 'archer')
 
   O3.finalize()
   return region
