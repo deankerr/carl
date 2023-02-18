@@ -1,7 +1,7 @@
 import { Entity, EntityKey, Region } from '../../Core'
 import { loop, Queue, rnd, shuffle } from '../../lib/util'
-import { point, Point, pointRect } from '../../Model/Point'
-import { Rect } from '../../Model/Rectangle'
+import { point, Point, pointRect } from '../../lib/Shape/Point'
+import { Rect } from '../../lib/Shape/Rectangle'
 
 // export function* floodWalkable(startPt: Point, O2: O2Module) {
 //   const { region } = O2

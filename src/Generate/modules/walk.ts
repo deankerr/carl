@@ -1,5 +1,5 @@
 import { loop, pick, rnd } from '../../lib/util'
-import { neighbours4, point, Point } from '../../Model/Point'
+import { neighbours4, point, Point } from '../../lib/Shape/Point'
 
 // 'drunkard's walk' - randomly move in a direction, returning a pt there
 export function walk(

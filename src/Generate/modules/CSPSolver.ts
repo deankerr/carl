@@ -1,9 +1,11 @@
 import { Entity, EntityKey, Region } from '../../Core'
+import { CSPConstraints } from './CSPConstraints'
+import { CSPVar } from './CSPVariables'
 import { pick, shuffle } from '../../lib/util'
-import { Point } from '../../Model/Point'
-import { Rect } from '../../Model/Rectangle'
+import { Point } from '../../lib/Shape/Point'
+import { Rect } from '../../lib/Shape/Rectangle'
 
-export class Solver {
+export class CSPSolver {
   domain: Point[] = []
   constructor(readonly region: Region) {}
   initializeRect(rect: Rect) {
@@ -104,106 +106,6 @@ export class Solver {
     }
   }
 }
-
-export const CSPVar = {
-  sconce: {
-    constraints: {
-      root: ['isExposedWall', 'isNorthernWall'],
-      other: ['isNotWall', 'isEmpty'],
-    },
-    key: ['sconce', 'sconceLower'],
-    object: {
-      0: ['0'],
-      1: ['1'],
-    },
-  },
-  mushrooms: {
-    constraints: {
-      all: ['isDirtFloor'],
-    },
-    key: [['redMushrooms', 'purpleMushrooms', 'yellowMushrooms']],
-    object: ['0'],
-  },
-  cornerWebs: {
-    constraints: {
-      all: ['isEmpty', 'isFloor', 'isCorner'],
-    },
-    key: ['webCorner'],
-    object: ['0'],
-  },
-  cornerCandles: {
-    constraints: {
-      all: ['isEmpty', 'isFloor', 'isCorner'],
-    },
-    key: [['candles', 'candlesNE', 'candlesSE']],
-    object: ['0'],
-  },
-  smallPitPlatform: {
-    constraints: {
-      all: ['isFloor'],
-    },
-    key: ['dirtFloorHole'],
-    object: {
-      0: ['xxxxxxx'],
-      1: ['x00000x'],
-      2: ['x0xxx0x'],
-      3: ['x00000x'],
-      4: ['xxxxxxx'],
-    },
-  },
-  statueAltar: {
-    constraints: {
-      all: ['isFloor', 'isCenterAligned'],
-    },
-    key: ['carpet', 'statueDragon', 'wall'],
-    object: {
-      0: ['xxxxxx', '      '],
-      1: ['x0000x', ' 1  1 '],
-      2: ['x0000x', '  22  '],
-      3: ['x0000x', '  22  '],
-      4: ['x0000x', ' 1  1 '],
-      5: ['xxxxxx', '      '],
-    },
-  },
-}
-
-const CSPConstraints = {
-  isEmpty: function (region: Region, pt: Point) {
-    return region.at(pt).length <= 1 // ???
-  },
-  isWall: function (region: Region, pt: Point) {
-    return 'wall' in region.terrainAt(pt)
-  },
-  isNotWall: function (region: Region, pt: Point, domain: Point[]) {
-    return this.isWall(region, pt, domain)
-  },
-  isFloor: function (region: Region, pt: Point) {
-    return region.terrainAt(pt).floor === true
-  },
-  isDirtFloor: function (region: Region, pt: Point) {
-    return region.terrainAt(pt).label.includes('dirtFloor')
-  },
-  isExposedWall: function (region: Region, pt: Point) {
-    const t = region.terrainAt(pt)
-    return 'wall' in t && 'isHorizontal' in t && !('wall' in region.terrainAt(pt.south()))
-  },
-  isNorthernWall: function (region: Region, pt: Point, domain: Point[]) {
-    const ySorted = [...domain].sort((a, b) => a.y - b.y)
-    console.log('ySorted:', ySorted)
-    return pt.y === ySorted[0].y
-  },
-  isCorner: function (region: Region, pt: Point) {
-    const neighbours = pt
-      .neighbours4()
-      .map(npt => region.terrainAt(npt))
-      .filter(c => c.wall)
-    console.log('neighbours:', neighbours)
-    return neighbours.length === 2 // doorways could trigger this
-  },
-  isCenterAligned: function (region: Region, pt: Point) {
-    return true // todo
-  },
-} as { [key: string]: (region: Region, pt: Point, domain: Point[]) => boolean }
 
 // export type CSPObjectKey = keyof typeof cspObjects
 // export const cspObjects = {

@@ -1,5 +1,5 @@
 import * as ROT from 'rot-js'
-import { Point } from '../Model/Point'
+import { Point } from '../lib/Shape/Point'
 import { Direction, DIRECTIONS } from '../lib/direction'
 
 export type ActionTypes =

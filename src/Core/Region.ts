@@ -1,8 +1,8 @@
 import { Color } from 'rot-js/lib/color'
 import { CONFIG } from '../config'
 import { loop, pick, Queue, rnd } from '../lib/util'
-import { Point, point, pointRect } from '../Model/Point'
-import { Rect } from '../Model/Rectangle'
+import { Point, point, pointRect } from '../lib/Shape/Point'
+import { Rect } from '../lib/Shape/Rectangle'
 import { Entity, EntityPool, EntityKey, EntityWith } from './Entity'
 import { Visualizer } from './Visualizer'
 

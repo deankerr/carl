@@ -2,8 +2,8 @@ import * as ROT from 'rot-js'
 import { Entity, EntityKey, Region } from '../Core'
 import { Visualizer } from '../Core/Visualizer'
 import { rnd } from '../lib/util'
-import { point, Point } from '../Model/Point'
-import { Rect } from '../Model/Rectangle'
+import { point, Point } from '../lib/Shape/Point'
+import { Rect } from '../lib/Shape/Rectangle'
 
 export type Snapshot = {
   terrainMap: Map<Point, Entity>

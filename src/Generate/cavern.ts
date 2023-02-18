@@ -1,7 +1,7 @@
 import { CONFIG } from '../config'
 import { EntityKey, FeatureKey, Region } from '../Core'
 import { loop, pick, rnd } from '../lib/util'
-import { Rect } from '../Model/Rectangle'
+import { Rect } from '../lib/Shape/Rectangle'
 import { BinarySpacePartition } from './modules'
 import { Rooms } from './modules/Rooms'
 import { Overseer3 } from './Overseer3'

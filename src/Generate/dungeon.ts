@@ -1,6 +1,6 @@
 import { CONFIG } from '../config'
 import { EntityKey, Region } from '../Core'
-import { Rect } from '../Model/Rectangle'
+import { Rect } from '../lib/Shape/Rectangle'
 import { pick, rnd } from '../lib/util'
 import { BinarySpacePartition } from './modules'
 import { Overseer3 } from './Overseer3'

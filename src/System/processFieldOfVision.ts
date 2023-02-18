@@ -2,7 +2,7 @@ import * as ROT from 'rot-js'
 import { Engine } from '../Core/Engine'
 import { logger } from '../lib/logger'
 
-import { point, Point } from '../Model/Point'
+import { point, Point } from '../lib/Shape/Point'
 
 export const processFieldOfVision = (engine: Engine) => {
   const log = logger('sys', 'turn', 'processFieldOfVision')

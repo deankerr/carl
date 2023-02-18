@@ -1,13 +1,13 @@
 import { CONFIG } from '../config'
 import { Region } from '../Core'
 import { floor, half, rnd } from '../lib/util'
-import { point } from '../Model/Point'
-import { Rect } from '../Model/Rectangle'
+import { point } from '../lib/Shape/Point'
+import { Rect } from '../lib/Shape/Rectangle'
 import { BinarySpacePartition, CellDish } from './modules'
 import { Overseer3 } from './Overseer3'
 
 export function townDemo(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
-  const region = new Region(width, height, 'crypt')
+  const region = new Region(width, height, 'town demo')
   const O3 = new Overseer3(region)
   O3.theme.wall = 'cryptWall'
   O3.theme.floor = 'grassFloor'

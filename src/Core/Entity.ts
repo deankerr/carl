@@ -1,5 +1,5 @@
 import { logger } from '../lib/logger'
-import { Point } from '../Model/Point'
+import { Point } from '../lib/Shape/Point'
 import { features, terrain, beings } from '../Templates'
 import { FoundryKey, Component, ComponentFoundry, FoundryParam, Components } from './Components'
 

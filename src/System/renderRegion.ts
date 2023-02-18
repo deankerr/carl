@@ -3,8 +3,8 @@ import { Entity, EntityWith } from '../Core'
 import { Engine } from '../Core/Engine'
 import { addLight, transformHSL } from '../lib/color'
 import { clamp, floor, half } from '../lib/util'
-import { point } from '../Model/Point'
-import { Rect } from '../Model/Rectangle'
+import { point } from '../lib/Shape/Point'
+import { Rect } from '../lib/Shape/Rectangle'
 
 // record the time and type of the last light flicker update
 // let lastLightFlicker = 0

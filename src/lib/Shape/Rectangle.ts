@@ -1,5 +1,5 @@
 // import * as ROT from 'rot-js'
-import { pick, rnd } from '../lib/util'
+import { pick, rnd } from '../util'
 import { point, Point } from './Point'
 
 export class Rect {

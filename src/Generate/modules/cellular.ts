@@ -1,6 +1,6 @@
 import { rnd } from '../../lib/util'
-import { Point } from '../../Model/Point'
-import { Rect } from '../../Model/Rectangle'
+import { Point } from '../../lib/Shape/Point'
+import { Rect } from '../../lib/Shape/Rectangle'
 
 type StatusFn = (pt: Point, alive: boolean) => unknown
 

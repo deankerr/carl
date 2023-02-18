@@ -1,5 +1,5 @@
 import { ActionTypes } from './Action'
-import { Point } from '../Model/Point'
+import { Point } from '../lib/Shape/Point'
 import { EntityKey } from './Entity'
 
 export const ComponentFoundry = {

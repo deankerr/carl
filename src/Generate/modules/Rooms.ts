@@ -1,7 +1,7 @@
 import { Region } from '../../Core'
 import { pick, shuffle } from '../../lib/util'
-import { point, Point } from '../../Model/Point'
-import { Rect } from '../../Model/Rectangle'
+import { point, Point } from '../../lib/Shape/Point'
+import { Rect } from '../../lib/Shape/Rectangle'
 import { Overseer3, RegionTheme } from '../Overseer3'
 
 export class Rooms {

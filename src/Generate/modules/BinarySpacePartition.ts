@@ -1,5 +1,5 @@
-import { point } from '../../Model/Point'
-import { Rect } from '../../Model/Rectangle'
+import { point } from '../../lib/Shape/Point'
+import { Rect } from '../../lib/Shape/Rectangle'
 import { half, pick, rnd } from '../../lib/util'
 
 const minResultWidth = 7

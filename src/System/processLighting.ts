@@ -3,7 +3,7 @@ import { Color } from 'rot-js/lib/color'
 import { Engine } from '../Core/Engine'
 // import { transformHSL } from '../lib/color'
 import { logger } from '../lib/logger'
-import { point } from '../Model/Point'
+import { point } from '../lib/Shape/Point'
 
 export const processLighting = (engine: Engine) => {
   const { local, options } = engine

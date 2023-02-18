@@ -1,11 +1,10 @@
 import { CONFIG } from '../config'
 import { EntityKey, Region } from '../Core'
-import { Rect } from '../Model/Rectangle'
+import { Rect } from '../lib/Shape/Rectangle'
 import { loop, pick, rnd, shuffle } from '../lib/util'
-import { BinarySpacePartition } from './modules'
+import { BinarySpacePartition, CSPSolver, CSPVar } from './modules'
 import { Overseer3 } from './Overseer3'
 import { Rooms } from './modules/Rooms'
-import { CSPVar, Solver } from './modules/CSP'
 
 export function crypt(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
   const region = new Region(width, height, 'crypt')
@@ -45,7 +44,7 @@ export function crypt(width = CONFIG.generateWidth, height = CONFIG.generateHeig
 
   rooms.each(room => {
     if (room.rID > 0) return
-    const s = new Solver(region)
+    const s = new CSPSolver(region)
     s.initializeRect(room.rect)
 
     s.solve([

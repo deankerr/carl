@@ -2,7 +2,7 @@
 import { CONFIG } from '../config'
 import { Region } from '../Core'
 import { loop, pick, shuffle } from '../lib/util'
-import { Point } from '../Model/Point'
+import { Point } from '../lib/Shape/Point'
 import { CellDish } from './modules/cellular'
 import { floodFindRegions } from './modules/flood'
 import { Overseer3 } from './Overseer3'
