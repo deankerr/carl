@@ -1,4 +1,61 @@
 export const features = {
+  // Stairs
+  dungeonStairsDown: {
+    name: 'stairs',
+    tiles: ['dungeonStairsDown'],
+    tag: ['feature'],
+    portal: ['here', 'down'],
+  },
+
+  dungeonStairsUp: {
+    name: 'stairs',
+    tiles: ['dungeonStairsUp'],
+    tag: ['feature'],
+    portal: ['here', 'up'],
+  },
+
+  caveStairsDown: {
+    name: 'stairs',
+    tiles: ['caveStairsDown'],
+    tag: ['feature'],
+    portal: ['here', 'down'],
+  },
+
+  caveStairsUp: {
+    name: 'stairs',
+    tiles: ['caveStairsUp'],
+    tag: ['feature'],
+    portal: ['here', 'up'],
+  },
+
+  cryptStairsDown: {
+    name: 'stairs',
+    tiles: ['cryptStairsDown'],
+    tag: ['feature'],
+    portal: ['here', 'down'],
+  },
+
+  cryptStairsUp: {
+    name: 'stairs',
+    tiles: ['cryptStairsUp'],
+    tag: ['feature'],
+    portal: ['here', 'up'],
+  },
+
+  cavernStairsDown: {
+    name: 'stairs',
+    tiles: ['cavernStairsDown'],
+    tag: ['feature'],
+    portal: ['here', 'down'],
+  },
+
+  cavernStairsUp: {
+    name: 'stairs',
+    tiles: ['cavernStairsUp'],
+    tag: ['feature'],
+    portal: ['here', 'up'],
+  },
+
   // Doors
   woodenDoor: {
     name: 'door',

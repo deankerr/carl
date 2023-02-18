@@ -1,6 +1,7 @@
 # TODO
 
 - Basic items (for now just disappear when walked on)
+- Add enemy beings
 
 ### CSP:
 
@@ -57,6 +58,7 @@
 
 ## Someday
 
+- Recategorise template files by theme rather than terrain/feature/being
 - Spatial indexing of entities? (ECS - automate marking cells as dirty re: render data)
 - Memoize cell render data
 - Exception handling
