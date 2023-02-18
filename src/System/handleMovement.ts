@@ -7,6 +7,7 @@ export const handleMovement = (engine: Engine, isPlayerTurn: boolean) => {
   const log = logger('sys', 'handleMovement')
   const { local } = engine
   const [currentEntity] = local.get('acting', 'position')
+  if (!currentEntity) return
   const action = currentEntity.acting
 
   if (!('move' in action)) {

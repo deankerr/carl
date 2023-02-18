@@ -2,7 +2,7 @@
 
 import { GameContext } from '.'
 import { logger } from '../lib/logger'
-import { ActionTypes, Move, MetaUI, ChangeRegion, ChangeZone, Visualize } from './Action'
+import { ActionTypes, Move, MetaUI, ChangeRegion, ChangeZone, Visualize, UsePortal } from './Action'
 
 type KeyMap = Record<string, ActionTypes>
 
@@ -35,8 +35,10 @@ export function handle(event: KeyboardEvent, context: GameContext): ActionTypes 
   if (move[k]) return move[k]
 
   const gameKeys: KeyMap = {
-    Comma: ChangeRegion('up'),
-    Period: ChangeRegion('down'),
+    'shift Comma': ChangeRegion('up'),
+    'shift Period': ChangeRegion('down'),
+    Comma: UsePortal(),
+    Period: UsePortal(),
     KeyV: Visualize('init'),
     // debug
     'shift Digit1': ChangeZone(0),

@@ -10,6 +10,8 @@ export type ActionTypes =
   | Tread
   | ChangeRegion
   | ChangeZone
+  | ChangeLocation
+  | UsePortal
   | Visualize
   | None
 
@@ -26,6 +28,11 @@ export const ChangeRegion = (going: 'down' | 'up') => {
 export type ChangeZone = { changeZone: { to: number } }
 export const ChangeZone = (to: number) => {
   return { changeZone: { to } }
+}
+
+export type ChangeLocation = { changeLocation: { zone: string; level: 'down' | 'up' | number } }
+export const ChangeLocation = (zone: string, level: 'down' | 'up' | number) => {
+  return { changeLocation: { zone, level } }
 }
 
 export type MeleeAttack = { meleeAttack: Point }
@@ -72,6 +79,11 @@ export const Tread = (pt: Point): Tread => {
 export type MetaUI = { ui: string }
 export const MetaUI = (doThing: string) => {
   return { ui: doThing }
+}
+
+export type UsePortal = { usePortal: true }
+export const UsePortal = (): UsePortal => {
+  return { usePortal: true }
 }
 
 export type Visualize = { visualize: string }

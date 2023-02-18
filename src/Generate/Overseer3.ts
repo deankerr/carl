@@ -140,12 +140,12 @@ export class Overseer3 {
           break
       }
     }
+  }
 
-    // this.add(pt.add(-2, 1), 'grassTile')
-    // this.add(pt.add(-1, 1), 'grassTile')
-    // this.add(pt.add(0, 1), 'grassTile')
-    // this.add(pt.add(1, 1), 'grassTile')
-    // this.add(pt.add(2, 1), 'grassTile')
+  portal(pt: Point, terrain: EntityKey, zone: string, level: 'down' | 'up' | number) {
+    const tPortal = this.region.create(pt, terrain)
+    if (!tPortal) return
+    tPortal.portal = { zone, level }
   }
 
   debug(area: Point | Rect) {

@@ -81,7 +81,8 @@ export function townDemo(width = CONFIG.generateWidth, height = CONFIG.generateH
   O3.add(dRect.p2.north(1), 'bones')
   O3.add(dRect.p2.west(1), 'bones')
 
-  O3.add(dPt, 'cryptStairsDown')
+  // O3.add(dPt, 'cryptStairsDown')
+  O3.portal(dPt, 'dungeonStairsDown', 'crypt', 0)
 
   O3.add(bPt1.add(-1, 1), 'catTan')
   O3.add(bPt1.add(2, 1), 'thief')

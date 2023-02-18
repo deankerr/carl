@@ -45,6 +45,7 @@ export class Region {
     else this.entityList.push(entity)
 
     this.hasChanged = true
+    return entity
   }
 
   createDoor(pt: Point, key: EntityKey) {
@@ -56,13 +57,15 @@ export class Region {
       const doorNorth = this.pool.spawn(keyTop, pt.add(0, -1))
       const door = this.pool.spawn(keyV, pt)
       this.entityList.push(door, doorNorth)
+      this.hasChanged = true
+      return door
     } else {
       // spawn normally
       const entity = this.pool.spawn(key, pt)
       this.entityList.push(entity)
+      this.hasChanged = true
+      return entity
     }
-
-    this.hasChanged = true
   }
 
   createEntity(pt: Point, key: EntityKey) {

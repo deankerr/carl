@@ -5,6 +5,7 @@ export const handleTread = (engine: Engine, isPlayerTurn: boolean) => {
   const log = logger('sys', 'handleTread')
   const { local } = engine
   const [currentEntity] = local.get('acting', 'position')
+  if (!currentEntity) return
   const { acting: action } = currentEntity
 
   if (!('tread' in action)) return //log.msg('handleTread: not a tread action')

@@ -40,7 +40,7 @@ export function crypt(width = CONFIG.generateWidth, height = CONFIG.generateHeig
   })
 
   const rooms = new Rooms(region, O3, roomRects, O3.theme)
-  rooms.debugNumberRooms()
+  // rooms.debugNumberRooms()
 
   rooms.each(room => {
     if (room.rID > 0) return
@@ -55,6 +55,9 @@ export function crypt(width = CONFIG.generateWidth, height = CONFIG.generateHeig
       // CSPVar.smallPitPlatform,
     ])
   })
+
+  O3.portal(rooms.rooms[0].rect.center.west(), 'cryptStairsUp', 'town', 0)
+  O3.portal(rooms.rooms[1].rect.center.east(), 'cryptStairsDown', 'here', 'down')
 
   O3.finalize()
   return region

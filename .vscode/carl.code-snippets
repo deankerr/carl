@@ -32,6 +32,26 @@
     "body": ["${1:KEY}: {", " name: '${2:NAME}',", " tiles: [''],", " tag: ['${3:TYPETAG}'],", "}"],
     "description": "CARL Template"
   },
+
+  "System": {
+    "prefix": "newsystem",
+    "body": [
+      "import { Engine } from '../Core/Engine'",
+      "",
+      "export const ${1:SYSTEM} = (engine: Engine, isPlayerTurn: boolean) => {",
+      " const { local } = engine",
+      " const [eActing] = local.get('acting', 'position')",
+      " const { acting: action } = eActing",
+      "",
+      " if (!('${2:ACTION}' in action)) return",
+      "",
+      " // system body",
+      "",
+      "}"
+    ],
+    "description": "CARL New System Template"
+  },
+
   "Region Generator": {
     "prefix": "reggen",
     "body": [

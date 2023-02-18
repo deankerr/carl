@@ -5,6 +5,7 @@ export const handleMeleeAttack = (engine: Engine, isPlayerTurn: boolean) => {
   const log = logger('sys', 'handleMeleeAttack')
   const { local } = engine
   const [currentEntity] = local.get('acting')
+  if (!currentEntity) return
   const { acting: action } = currentEntity
 
   if (!('meleeAttack' in action)) return //log.msg('handleMeleeAttack: not a meleeAttack action')

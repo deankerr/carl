@@ -6,6 +6,7 @@ export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
   const log = logger('sys', 'handleBump')
   const { local } = engine
   const [currentEntity] = local.get('acting', 'position')
+  if (!currentEntity) return
   const { acting: action } = currentEntity
 
   if (!('bump' in action)) return //log.msg('handleBump: not a bump action')

@@ -17,9 +17,11 @@ import {
 import * as Action from './Action'
 
 import { ActionTypes, Engine, Entity, Region } from './'
+import { handlePortal } from '../System/handlePortal'
 
 export class System {
   turnProcess = [
+    handlePortal,
     handleMovement,
     handleTread,
     handleBump,
@@ -76,6 +78,6 @@ export class System {
   }
 
   change(change: ActionTypes) {
-    this.regionChangeProcess.forEach(sys => sys(this.engine, change))
+    this.regionChangeProcess.forEach(sys => sys(this.engine, true, change))
   }
 }
