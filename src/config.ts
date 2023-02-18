@@ -5,16 +5,16 @@ const seed = 643
 // const seed = null
 
 const mainDisplayWidth = 37
-const mainDisplayHeight = 17
+const mainDisplayHeight = 19
 
 const messageDisplayWidth = 69
 const messageDisplayHeight = 35
 const messageBufferDisplaySize = 5
 
 const generateWidth = 37 // approx 1.5 times graphical display size
-const generateHeight = 17
+const generateHeight = 19
 
-const setMainToMapSize = true
+const setMainToMapSize = false
 
 // '#111a0e'
 const mainBackgroundColor = '#000000'

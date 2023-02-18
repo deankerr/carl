@@ -336,4 +336,9 @@ export const features = {
     tag: ['feature', 'pickTileEqually'],
     trodOn: 'You trample some musty old bones.',
   },
+  invisibleBlock: {
+    name: 'invisible Block',
+    tiles: ['stoneBoulder'],
+    tag: ['feature', 'invisible', 'blocksMovement'],
+  },
 } as const

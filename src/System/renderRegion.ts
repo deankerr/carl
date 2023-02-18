@@ -75,7 +75,7 @@ export function renderRegion(engine: Engine) {
     } else {
       // currently visible
       const stack: Entity[] = [nothing]
-      const here = entities.filter(e => e.position === pt)
+      const here = entities.filter(e => e.position === pt && !e.invisible)
 
       const terrain = local.terrainMap.get(pt)
       const features = here.filter(e => e.feature)
