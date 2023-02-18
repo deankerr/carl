@@ -1,32 +1,66 @@
 # TODO
 
+- Restore stairs/doors: up/down dungeon levels, zone changes
+- Basic items (for now just disappear when walked on)
+
+### CSP:
+
+- Backtracking
+- Room tags -> apply CSP (random?) template
+- Visualizer - success/failed tries, domain state highlighting (w/ debug symbols)
+
+#### Variables
+
+- Bounding box
+- Margin box (ie. adjacent space considered "full")
+- Multi-layer structures
+- Variable structures (eg, 3 objects anywhere in bounding box, cellular?)
+- Select appropriate structure from list (eg. sconce/wall deco structure that fits/aligns)
+
+#### Constraints
+
+- Better support for domain level constraints - eg. center alignment
+- Parameters - eg. place x within min/max distance of y
+
+#### Domain
+
+- Formalise domain instantiation
+- Irregular shape domains
+- Initialize cells as full/empty/margin based on region queries/tags
+- eg, shrubs considered "full" despite not blocking movement
+
 ## Soon
 
-- stairs to Prefab ruin1 above outdoor, render outdoor "below"
-- Domains: generate levels with "set piece" connectors, or auto depth stairs. Component on connector describes where it leads
-- Refactor Level, generators to properly support domain switching/implement domain connection schema
-- Level: create walkable pt list during generate for spawning
-- Test ROT-JS patch, submit PR
-- Player/NPC abilities
-- ECS debug dialog - change entity components to demo ECS
+- Player/NPC abilities (especially w/ visual effects)
+- Basic combat
+- Basic inventory
+- ECS debug dialog - demonstrate ECS with interface to change entity components live
+
+### Sprites
+
+- Same sprite entities reference single copy of sprite
+- Centralised animation updates
+- Per region noise based selection of wall/floor etc. variants
+- Being sprite direction/facing support
 
 ## Someday
 
-- Add more decoration terrain/items/void decor - reeds
-- Create logger, Exception handling
-- render: move to key + lookup table, allow easier pallette switching.
+- Exception handling
 - (W)alk/autoexplore
-- ??? Patch ROT.JS to handle drawOver tiles? ???
-- light bleeds slightly into void?
 - Unify function declaration style
-- Refactor Generate to improvement corridor placement, flexibility, visualizer integration into Game, entity generation
 - Viewport doesn't move until you are closer to the side
 - Dev/Prod Configs
-- level: voronoi map - bee hive/crystal cavern
-- Standard colors (standard sat/lum?)
+
+## Maybe
+
 - vignette/player position effects luminance level wide
-- Precalculate lighting animation (flames flickering etc)
-- Lessen emitter colors indoors
+- level: voronoi map - bee hive/crystal cavern
+- Add more decoration terrain/items/void decor - reeds
+- Level: create walkable pt list during generate for spawning
+- Patch ROT.JS to handle drawOver tiles?
+- Test ROT-JS patch, submit PR
+- light bleeds slightly into void?
+- Switch main rendering engine (PIXI?)
 
 # Known Bugs
 
