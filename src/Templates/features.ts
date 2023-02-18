@@ -1,9 +1,5 @@
 export const features = {
-  debug: {
-    name: 'debug',
-    tiles: ['0'],
-    tag: ['feature', 'debug'],
-  },
+  // Doors
   woodenDoor: {
     name: 'door',
     tiles: ['woodenDoorClosed', 'woodenDoorOpen'],
@@ -11,6 +7,7 @@ export const features = {
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
   },
+
   woodenDoorVertical: {
     name: 'door',
     tiles: ['woodenDoorVerticalClosed', 'woodenDoorVerticalOpen'],
@@ -27,6 +24,7 @@ export const features = {
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
   },
+
   woodenDoorVerticalTop: {
     name: 'door',
     tiles: ['woodenDoorVerticalClosedTop', 'woodenDoorVerticalOpenTop'],
@@ -42,6 +40,7 @@ export const features = {
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
   },
+
   stoneDoor: {
     name: 'door',
     tiles: ['stoneDoorClosed', 'stoneDoorOpen'],
@@ -58,6 +57,7 @@ export const features = {
     tileTriggers: ['isClosed', 'isOpen'],
     tileVariant: ['stoneDoorV', 'stoneDoorVNorth'],
   },
+
   stoneDoorVertical: {
     name: 'door',
     tiles: ['stoneDoorVerticalClosed', 'stoneDoorVerticalOpen'],
@@ -74,6 +74,7 @@ export const features = {
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
   },
+
   stoneDoorVerticalTop: {
     name: 'door',
     tiles: ['stoneDoorVerticalClosedTop', 'stoneDoorVerticalOpenTop'],
@@ -89,6 +90,7 @@ export const features = {
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
   },
+
   jailDoor: {
     name: 'door',
     tiles: ['jailDoorClosed', 'jailDoorOpen'],
@@ -97,6 +99,7 @@ export const features = {
     tileTriggers: ['isClosed', 'isOpen'],
     tileVariant: ['jailDoorV', 'jailDoorVNorth'],
   },
+
   jailDoorVertical: {
     name: 'door',
     tiles: ['jailDoorVerticalClosed', 'jailDoorVerticalOpen'],
@@ -113,6 +116,7 @@ export const features = {
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
   },
+
   jailDoorVerticalTop: {
     name: 'door',
     tiles: ['jailDoorVerticalClosedTop', 'jailDoorVerticalOpenTop'],
@@ -128,6 +132,7 @@ export const features = {
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
   },
+
   redDoor: {
     name: 'door',
     tiles: ['redDoorClosed', 'redDoorOpen'],
@@ -136,6 +141,7 @@ export const features = {
     tileTriggers: ['isClosed', 'isOpen'],
     tileVariant: ['redDoorV', 'redDoorVNorth'],
   },
+
   redDoorVertical: {
     name: 'door',
     tiles: ['redDoorVerticalClosed', 'redDoorVerticalOpen'],
@@ -152,6 +158,7 @@ export const features = {
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
   },
+
   redDoorVerticalTop: {
     name: 'door',
     tiles: ['redDoorVerticalClosedTop', 'redDoorVerticalOpenTop'],
@@ -167,21 +174,26 @@ export const features = {
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
   },
+
+  // Floor decoration
   web: {
     name: 'web',
     tiles: ['web1'],
     tag: ['feature'],
   },
+
   webCorner: {
     name: 'web',
     tiles: ['webNW', 'webNE', 'webSW', 'webSE'],
     tag: ['feature', 'pickTileCorner'],
   },
+
   cactus: {
     name: 'cactus',
     tiles: ['cactus'],
     tag: ['feature'],
   },
+
   lilypad1: {
     name: 'lilypad',
     tiles: ['lilypad11', 'lilypad12'],
@@ -189,6 +201,7 @@ export const features = {
     tag: ['feature'],
     trodOn: 'You bounce off the lilypad.',
   },
+
   lilypad2: {
     name: 'lilypad',
     tiles: ['lilypad21', 'lilypad22'],
@@ -196,6 +209,7 @@ export const features = {
     tag: ['feature'],
     trodOn: 'You bounce off the lilypad.',
   },
+
   lilypad3: {
     name: 'lilypad',
     tiles: ['lilypad31', 'lilypad32'],
@@ -203,6 +217,7 @@ export const features = {
     tag: ['feature'],
     trodOn: 'You bounce off the lilypad.',
   },
+
   lilypad4: {
     name: 'lilypad',
     tiles: ['lilypad41', 'lilypad42'],
@@ -210,91 +225,76 @@ export const features = {
     tag: ['feature'],
     trodOn: 'You bounce off the lilypad.',
   },
+
   grassTuft: {
     name: 'tuft of grass',
     tiles: ['grassTuft1', 'grassTuft2', 'grassTuft3', 'grassTuft4', 'grassTuft5'],
     tag: ['feature', 'pickTileEqually'],
   },
+
   redMushrooms: {
     name: 'red mushrooms',
     tiles: ['redMushrooms'],
     tag: ['feature'],
   },
+
   purpleMushrooms: {
     name: 'purple mushrooms',
     tiles: ['purpleMushrooms'],
     tag: ['feature'],
   },
+
   yellowMushrooms: {
     name: 'yellow mushrooms',
     tiles: ['yellowMushrooms'],
     tag: ['feature'],
   },
-  sconce: {
-    name: 'sconce',
-    tiles: ['sconce1', 'sconce2'],
-    tilesAutoCycle: 400,
-    tag: ['feature'],
-  },
-  sconceLower: {
-    name: 'sconce',
-    tiles: ['sconceLower1', 'sconceLower2'],
-    tilesAutoCycle: 400,
-    tag: ['feature'],
-  },
+
   candles: {
     name: 'candles',
     tiles: ['candles1', 'candles2'],
     tilesAutoCycle: 200,
     tag: ['feature'],
   },
+
   candlesNE: {
     name: 'candles',
     tiles: ['candlesNE1', 'candlesNE2'],
     tilesAutoCycle: 200,
     tag: ['feature'],
   },
+
   candlesSE: {
     name: 'candles',
     tiles: ['candlesSE1', 'candlesSE2'],
     tilesAutoCycle: 200,
     tag: ['feature'],
   },
+
   carpet: {
     name: 'carpet',
     tiles: ['carpet1', 'carpet2', 'carpet3'],
     tag: ['feature', 'pickTile'],
   },
+
   carpetEmblem1: {
     name: 'carpetEmblem1',
     tiles: ['carpetEmblem1'],
     tag: ['feature'],
   },
+
   carpetEmblem2: {
     name: 'carpet',
     tiles: ['carpetEmblem2'],
     tag: ['feature'],
   },
-  statueWarrior: {
-    name: 'warrior statue',
-    tiles: ['statueWarrior'],
-    tag: ['feature', 'blocksMovement'],
-  },
-  statueDragon: {
-    name: 'warrior statue',
-    tiles: ['statueDragon'],
-    tag: ['feature', 'blocksMovement'],
-  },
-  statueMonster: {
-    name: 'warrior statue',
-    tiles: ['statueMonster'],
-    tag: ['feature', 'blocksMovement'],
-  },
+
   shrub: {
     name: 'shrub',
     tiles: ['shrub1', 'shrub2'],
     tag: ['feature', 'pickTile', 'memorable'],
   },
+
   campfire: {
     name: 'campfire',
     tiles: ['campfire1', 'campfire2'],
@@ -302,55 +302,106 @@ export const features = {
     tag: ['feature', 'memorable'],
     trodOn: 'You feel a sense of urgency.',
   },
+
   signBlank: {
     name: 'sign',
     tiles: ['signBlank'],
     tag: ['feature', 'memorable'],
   },
+
   signWeapon: {
     name: 'sign',
     tiles: ['signWeapon'],
     tag: ['feature', 'memorable'],
   },
+
   signPotion: {
     name: 'sign',
     tiles: ['signPotion'],
     tag: ['feature', 'memorable'],
   },
+
   signInn: {
     name: 'sign',
     tiles: ['signInn'],
     tag: ['feature', 'memorable'],
   },
-  shadow: {
-    name: 'shadow',
-    tiles: ['shadow'],
-    tag: ['feature', 'memorable'],
-  },
+
   dirtLedge: {
     name: 'dirtLedge',
     tiles: ['dirtLedge'],
     tag: ['feature', 'memorable'],
   },
-  stoneBoulder: {
-    name: 'boulder',
-    tiles: ['stoneBoulder'],
-    tag: ['feature', 'blocksMovement'],
-  },
-  dirtBoulder: {
-    name: 'boulder',
-    tiles: ['dirtBoulder'],
-    tag: ['feature', 'blocksMovement'],
-  },
+
   bones: {
     name: 'bones',
     tiles: ['bones1', 'bones2', 'bones3'],
     tag: ['feature', 'pickTileEqually'],
     trodOn: 'You trample some musty old bones.',
   },
+
+  // Wall decoration
+  sconce: {
+    name: 'sconce',
+    tiles: ['sconce1', 'sconce2'],
+    tilesAutoCycle: 400,
+    tag: ['feature'],
+  },
+
+  sconceLower: {
+    name: 'sconce',
+    tiles: ['sconceLower1', 'sconceLower2'],
+    tilesAutoCycle: 400,
+    tag: ['feature'],
+  },
+
+  // Solid decoration
+  statueWarrior: {
+    name: 'warrior statue',
+    tiles: ['statueWarrior'],
+    tag: ['feature', 'blocksMovement'],
+  },
+
+  statueDragon: {
+    name: 'warrior statue',
+    tiles: ['statueDragon'],
+    tag: ['feature', 'blocksMovement'],
+  },
+
+  statueMonster: {
+    name: 'warrior statue',
+    tiles: ['statueMonster'],
+    tag: ['feature', 'blocksMovement'],
+  },
+
+  stoneBoulder: {
+    name: 'boulder',
+    tiles: ['stoneBoulder'],
+    tag: ['feature', 'blocksMovement'],
+  },
+
+  dirtBoulder: {
+    name: 'boulder',
+    tiles: ['dirtBoulder'],
+    tag: ['feature', 'blocksMovement'],
+  },
+
+  // Utility
+  shadow: {
+    name: 'shadow',
+    tiles: ['shadow'],
+    tag: ['feature', 'memorable'],
+  },
+
   invisibleBlock: {
     name: 'invisible Block',
     tiles: ['stoneBoulder'],
     tag: ['feature', 'invisible', 'blocksMovement'],
+  },
+
+  debug: {
+    name: 'debug',
+    tiles: ['0'],
+    tag: ['feature', 'debug'],
   },
 } as const

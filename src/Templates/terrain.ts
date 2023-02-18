@@ -1,6 +1,7 @@
 const wallTags = ['terrain', 'blocksLight', 'blocksMovement', 'wall']
 
 export const terrain = {
+  // Liquid
   water: {
     name: 'water',
     tiles: ['water1', 'water2'],
@@ -8,6 +9,7 @@ export const terrain = {
     tilesAutoCycle: 1000,
     tilesLedge: ['waterLedge1', 'waterLedge2'],
   },
+
   slime: {
     name: 'slime',
     tiles: ['slime1', 'slime2'],
@@ -15,6 +17,7 @@ export const terrain = {
     tilesAutoCycle: 1000,
     tilesLedge: ['slimeLedge1', 'slimeLedge2'],
   },
+
   oil: {
     name: 'oil',
     tiles: ['oil1', 'oil2'],
@@ -22,6 +25,7 @@ export const terrain = {
     tilesAutoRandom: 1500,
     tilesLedge: ['oilLedge1', 'oilLedge2'],
   },
+
   acid: {
     name: 'acid',
     tiles: ['acid1', 'acid2', 'acidClear'],
@@ -29,6 +33,7 @@ export const terrain = {
     tilesAutoRandom: 1500,
     tilesLedge: ['acidLedge1', 'acidLedge2', 'acidClearLedge'],
   },
+
   blood: {
     name: 'blood',
     tiles: ['blood1', 'blood2', 'bloodClear'],
@@ -36,6 +41,7 @@ export const terrain = {
     tilesAutoRandom: 1500,
     tilesLedge: ['bloodLedge1', 'bloodLedge2', 'bloodClearLedge'],
   },
+
   sludge: {
     name: 'sludge',
     tiles: ['sludge1', 'sludge2'],
@@ -43,27 +49,9 @@ export const terrain = {
     tilesAutoRandom: 1500,
     tilesLedge: ['sludgeLedge1', 'sludgeLedge2'],
   },
-  nothing: {
-    name: 'nothing',
-    tiles: ['nothing'],
-    tag: ['terrain'],
-  },
-  unknown: {
-    name: 'unknown',
-    tiles: ['unknown'],
-    tag: ['terrain'],
-  },
-  endlessVoid: {
-    name: 'endless void',
-    tiles: ['unknown'],
-    tag: ['blocksLight', 'blocksMovement', 'terrain'],
-  },
-  sand: {
-    name: 'sand',
-    tiles: ['sand'],
-    tag: ['terrain'],
-    tilesLedge: ['sandLedge'],
-  },
+
+  // Wall/Structural
+  // dungeon theme
   dungeonWall: {
     name: 'wall',
     tiles: ['dungeonVertical1'],
@@ -76,23 +64,28 @@ export const terrain = {
     ],
     tag: [...wallTags],
   },
+
   dungeonStairsDown: {
     name: 'stairs',
     tiles: ['dungeonStairsDown'],
     tag: ['terrain'],
     portal: ['here', 'down'],
   },
+
   dungeonStairsUp: {
     name: 'stairs',
     tiles: ['dungeonStairsUp'],
     tag: ['terrain'],
     portal: ['here', 'up'],
   },
+
   dungeonPool: {
     name: 'well',
     tiles: ['dungeonWell'],
     tag: ['terrain', 'blocksMovement'],
   },
+
+  // cave theme
   caveWall: {
     name: 'wall',
     tiles: ['caveVertical1'],
@@ -100,23 +93,28 @@ export const terrain = {
     tilesHorizontal: ['caveHorizontal1', 'caveHorizontal2', 'caveHorizontal3', 'caveHorizontal4'],
     tag: [...wallTags],
   },
+
   caveStairsDown: {
     name: 'stairs',
     tiles: ['caveStairsDown'],
     tag: ['terrain'],
     portal: ['here', 'down'],
   },
+
   caveStairsUp: {
     name: 'stairs',
     tiles: ['caveStairsUp'],
     tag: ['terrain'],
     portal: ['here', 'up'],
   },
+
   cavePool: {
     name: 'well',
     tiles: ['caveWell'],
     tag: ['terrain', 'blocksMovement'],
   },
+
+  // crypt theme
   cryptWall: {
     name: 'wall',
     tiles: ['cryptVertical1'],
@@ -129,23 +127,28 @@ export const terrain = {
     ],
     tag: [...wallTags],
   },
+
   cryptStairsDown: {
     name: 'stairs',
     tiles: ['cryptStairsDown'],
     tag: ['terrain'],
     portal: ['here', 'down'],
   },
+
   cryptStairsUp: {
     name: 'stairs',
     tiles: ['cryptStairsUp'],
     tag: ['terrain'],
     portal: ['here', 'up'],
   },
+
   cryptPool: {
     name: 'well',
     tiles: ['cryptWell'],
     tag: ['terrain', 'blocksMovement'],
   },
+
+  // cavern theme
   cavernWall: {
     name: 'wall',
     tiles: ['cavernVertical1'],
@@ -175,6 +178,8 @@ export const terrain = {
     tiles: ['cavernWell'],
     tag: ['terrain', 'blocksMovement'],
   },
+
+  // Floor
   stoneFloor: {
     name: 'floor',
     tiles: [
@@ -187,26 +192,31 @@ export const terrain = {
     ],
     tag: ['terrain', 'floor', 'pickTile'],
   },
+
   dirtFloor: {
     name: 'floor',
     tiles: ['dirtFloor1', 'dirtFloor2', 'dirtFloor3', 'dirtFloor4', 'dirtFloor5', 'dirtFloor6'],
     tag: ['terrain', 'floor', 'pickTile'],
   },
+
   dirtFloorDetailed: {
     name: 'floor',
     tiles: ['dirtFloor2', 'dirtFloor3', 'dirtFloor4', 'dirtFloor5', 'dirtFloor6'],
     tag: ['terrain', 'floor', 'pickTileEqually'],
   },
+
   dirtPath: {
     name: 'path',
     tiles: ['dirtTiles1', 'dirtTiles2', 'dirtTiles3'],
     tag: ['terrain', 'pickTile'],
   },
+
   dirtFloorPit: {
     name: 'hole',
     tiles: ['unknown', 'dirtFloorPit'],
     tag: ['terrain', 'blocksMovement', 'pickTileLedge'],
   },
+
   stoneTileFloor: {
     name: 'floor',
     tiles: [
@@ -222,6 +232,7 @@ export const terrain = {
     ],
     tag: ['terrain', 'floor', 'pickTile'],
   },
+
   stonePebbleFloor: {
     name: 'floor',
     tiles: [
@@ -233,49 +244,85 @@ export const terrain = {
     ],
     tag: ['terrain', 'floor', 'pickTileEqually'],
   },
+
   grassFloor: {
     name: 'grass',
     tiles: ['grass1', 'grass2', 'grass3', 'grass4', 'grass5', 'grass6'],
     tag: ['terrain', 'floor', 'pickTile'],
   },
+
   grassPath: {
     name: 'path',
     tiles: ['grassTiles1', 'grassTiles2', 'grassTiles3'],
     tag: ['terrain', 'pickTile'],
   },
+
   grassTile: {
     name: 'path',
     tiles: ['grassTile'],
     tag: ['terrain'],
   },
+
+  sand: {
+    name: 'sand',
+    tiles: ['sand'],
+    tag: ['terrain'],
+    tilesLedge: ['sandLedge'],
+  },
+
   bridgeFloor: {
     name: 'bridge',
     tiles: ['woodenBoards1', 'woodenBoards2', 'woodenBoards3', 'woodenPanel'],
     tag: ['terrain', 'floor', 'pickTileEqually'],
   },
+
+  // Building
   buildingWindow: {
     name: 'building',
     tiles: ['buildingWindow1', 'buildingWindow2'],
     tag: ['terrain', 'blocksMovement', 'pickTile'],
   },
+
   buildingEntry: {
     name: 'building',
     tiles: ['buildingDoor'],
     tag: ['terrain', 'blocksMovement'],
   },
+
   buildingRoofFront: {
     name: 'building',
     tiles: ['buildingRoofFront1', 'buildingRoofFront2'],
     tag: ['terrain', 'blocksMovement', 'pickTile'],
   },
+
   buildingRoof: {
     name: 'building',
     tiles: ['buildingRoof1', 'buildingRoof2'],
     tag: ['terrain', 'blocksMovement', 'blocksLight', 'pickTile'],
   },
+
   buildingChimney: {
     name: 'building',
     tiles: ['buildingChimney'],
     tag: ['terrain', 'blocksMovement', 'blocksLight'],
+  },
+
+  // Utility
+  nothing: {
+    name: 'nothing',
+    tiles: ['nothing'],
+    tag: ['terrain'],
+  },
+
+  unknown: {
+    name: 'unknown',
+    tiles: ['unknown'],
+    tag: ['terrain'],
+  },
+
+  endlessVoid: {
+    name: 'endless void',
+    tiles: ['unknown'],
+    tag: ['blocksLight', 'blocksMovement', 'terrain'],
   },
 } as const
