@@ -80,6 +80,13 @@ export const terrain = {
     name: 'stairs',
     tiles: ['dungeonStairsDown'],
     tag: ['terrain'],
+    portal: ['here', 'down'],
+  },
+  dungeonStairsUp: {
+    name: 'stairs',
+    tiles: ['dungeonStairsUp'],
+    tag: ['terrain'],
+    portal: ['here', 'up'],
   },
   dungeonPool: {
     name: 'well',
@@ -97,6 +104,13 @@ export const terrain = {
     name: 'stairs',
     tiles: ['caveStairsDown'],
     tag: ['terrain'],
+    portal: ['here', 'down'],
+  },
+  caveStairsUp: {
+    name: 'stairs',
+    tiles: ['caveStairsUp'],
+    tag: ['terrain'],
+    portal: ['here', 'up'],
   },
   cavePool: {
     name: 'well',
@@ -119,6 +133,13 @@ export const terrain = {
     name: 'stairs',
     tiles: ['cryptStairsDown'],
     tag: ['terrain'],
+    portal: ['here', 'down'],
+  },
+  cryptStairsUp: {
+    name: 'stairs',
+    tiles: ['cryptStairsUp'],
+    tag: ['terrain'],
+    portal: ['here', 'up'],
   },
   cryptPool: {
     name: 'well',
@@ -141,6 +162,13 @@ export const terrain = {
     name: 'stairs',
     tiles: ['cavernStairsDown'],
     tag: ['terrain'],
+    portal: ['here', 'down'],
+  },
+  cavernStairsUp: {
+    name: 'stairs',
+    tiles: ['cavernStairsUp'],
+    tag: ['terrain'],
+    portal: ['here', 'up'],
   },
   cavernPool: {
     name: 'well',

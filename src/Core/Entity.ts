@@ -43,11 +43,12 @@ export class EntityPool {
       if ('tileTriggers' in t) e = this.attach(e, 'tileTriggers', ...t.tileTriggers)
       if ('tilesAutoCycle' in t) e = this.attach(e, 'tilesAutoCycle', t.tilesAutoCycle)
       if ('tilesAutoRandom' in t) e = this.attach(e, 'tilesAutoRandom', t.tilesAutoRandom)
-
       if ('tilesVertical' in t) e = { ...e, ...this.components.tilesVertical(...t.tilesVertical) }
       if ('tilesHorizontal' in t)
         e = { ...e, ...this.components.tilesHorizontal(...t.tilesHorizontal) }
       if ('tilesLedge' in t) e = { ...e, ...this.components.tilesLedge(...t.tilesLedge) }
+
+      if ('portal' in t) e = { ...e, ...this.attach(e, 'portal', t.portal[0], t.portal[1]) }
 
       // if (t.emitLight) {
       //   const color =

@@ -80,6 +80,10 @@ export const ComponentFoundry = {
   ledgeVariant: (key: EntityKey) => {
     return { ledgeVariant: key }
   },
+
+  portal: (zone: string, level: 'down' | 'up' | number) => {
+    return { portal: { zone, level } }
+  },
 }
 
 export type Tag =
