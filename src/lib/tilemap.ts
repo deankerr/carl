@@ -535,7 +535,7 @@ export function oryxTinyMap(size: number) {
       'silverCoin',
       'goldCoin',
     ],
-    ['leatherHelm', 'leatherShield', 'leatherGlove', 'leatherPants', 'leatherBoot'],
+    ['leatherHelm', 'leatherArmor', 'leatherGlove', 'leatherPants', 'leatherBoot'],
   ]
 
   return tiles.reduce((acc, curr, y) => {

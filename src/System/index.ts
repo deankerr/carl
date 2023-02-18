@@ -2,6 +2,9 @@ export * from './handleBump'
 export * from './handleMeleeAttack'
 export * from './handleMovement'
 export * from './handleTread'
+
+export * from './handlePickUp'
+
 export * from './processDeath'
 export * from './processFieldOfVision'
 export * from './processTileUpdate'

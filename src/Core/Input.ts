@@ -2,7 +2,16 @@
 
 import { GameContext } from '.'
 import { logger } from '../lib/logger'
-import { ActionTypes, Move, MetaUI, ChangeRegion, ChangeZone, Visualize, UsePortal } from './Action'
+import {
+  ActionTypes,
+  Move,
+  MetaUI,
+  ChangeRegion,
+  ChangeZone,
+  Visualize,
+  UsePortal,
+  PickUp,
+} from './Action'
 
 type KeyMap = Record<string, ActionTypes>
 
@@ -35,6 +44,7 @@ export function handle(event: KeyboardEvent, context: GameContext): ActionTypes 
   if (move[k]) return move[k]
 
   const gameKeys: KeyMap = {
+    KeyP: PickUp(),
     'shift Comma': ChangeRegion('up'),
     'shift Period': ChangeRegion('down'),
     Comma: UsePortal(),

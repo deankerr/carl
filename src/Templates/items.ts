@@ -2,19 +2,19 @@ import { EntityKey } from '../Core'
 
 export const items = {
   book: {
-    name: 'dusty old tome',
+    name: 'ancient thesaurus',
     tiles: ['bookBrown'],
     tag: ['feature', 'item'],
   },
 
   skullBook: {
-    name: 'sinister old tome',
+    name: 'scary book of goosebumps',
     tiles: ['bookBlack'],
     tag: ['feature', 'item'],
   },
 
   greenBook: {
-    name: 'book about birdwatching',
+    name: "book of microsoft encarta '95",
     tiles: ['bookGreen'],
     tag: ['feature', 'item'],
   },
@@ -26,19 +26,19 @@ export const items = {
   },
 
   scroll: {
-    name: 'list of places to eat around here',
+    name: 'list of good places to eat around here',
     tiles: ['scroll'],
     tag: ['feature', 'item'],
   },
 
   blueOrb: {
-    name: 'orb of wanning monarchy',
+    name: 'orb of retrospection',
     tiles: ['orbBlue'],
     tag: ['feature', 'item'],
   },
 
   goldSkull: {
-    name: 'golden skull',
+    name: 'handsome golden skull',
     tiles: ['skullGold'],
     tag: ['feature', 'item'],
   },
@@ -50,7 +50,7 @@ export const items = {
   },
 
   bluePotion: {
-    name: 'potion of manta',
+    name: 'potion of blue powerade',
     tiles: ['potionBlue'],
     tag: ['feature', 'item'],
   },
@@ -62,13 +62,13 @@ export const items = {
   },
 
   goldPotion: {
-    name: 'potion of lemon juice',
+    name: 'potion of lemon delight',
     tiles: ['potionGold'],
     tag: ['feature', 'item'],
   },
 
   blackPotion: {
-    name: 'potion of solid lead',
+    name: 'potion of asphalt',
     tiles: ['potionBlack'],
     tag: ['feature', 'item'],
   },
@@ -118,6 +118,36 @@ export const items = {
   goldPile: {
     name: 'pile of gold',
     tiles: ['goldPile'],
+    tag: ['feature', 'item'],
+  },
+
+  leatherHelm: {
+    name: 'leather helm',
+    tiles: ['leatherHelm'],
+    tag: ['feature', 'item'],
+  },
+
+  leatherArmor: {
+    name: 'leather armor',
+    tiles: ['leatherArmor'],
+    tag: ['feature', 'item'],
+  },
+
+  leatherGloves: {
+    name: 'leather gloves',
+    tiles: ['leatherGlove'],
+    tag: ['feature', 'item'],
+  },
+
+  leatherLeggings: {
+    name: 'leather chaps',
+    tiles: ['leatherLeggings'],
+    tag: ['feature', 'item'],
+  },
+
+  leatherBoots: {
+    name: 'leather boots',
+    tiles: ['leatherBoot'],
     tag: ['feature', 'item'],
   },
 }

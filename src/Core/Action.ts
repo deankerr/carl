@@ -11,6 +11,7 @@ export type ActionTypes =
   | ChangeRegion
   | ChangeZone
   | ChangeLocation
+  | PickUp
   | UsePortal
   | Visualize
   | None
@@ -81,8 +82,13 @@ export const MetaUI = (doThing: string) => {
   return { ui: doThing }
 }
 
-export type UsePortal = { usePortal: true }
-export const UsePortal = (): UsePortal => {
+export type PickUp = { pickUp: boolean }
+export const PickUp = () => {
+  return { pickUp: true }
+}
+
+export type UsePortal = { usePortal: boolean }
+export const UsePortal = () => {
   return { usePortal: true }
 }
 

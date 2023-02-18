@@ -13,6 +13,7 @@ import {
   renderRegion,
   handleLocationChange,
   processRegionInitialization,
+  handlePickUp,
 } from '../System'
 import * as Action from './Action'
 
@@ -22,6 +23,7 @@ import { handlePortal } from '../System/handlePortal'
 export class System {
   turnProcess = [
     handlePortal,
+    handlePickUp,
     handleMovement,
     handleTread,
     handleBump,
