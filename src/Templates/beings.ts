@@ -72,6 +72,35 @@ export const beings = {
   },
 
   // Unfriendly
+
+  goblinSword: {
+    name: 'sword goblin',
+    tiles: ['goblinSwordE1', 'goblinSwordE2'],
+    tilesAutoCycle: 1000,
+    tag: ['being', 'actor', 'blocksMovement', 'hostile'],
+  },
+
+  goblinShaman: {
+    name: 'goblin shaman',
+    tiles: ['goblinShamanE1', 'goblinShamanE2'],
+    tilesAutoCycle: 1000,
+    tag: ['being', 'actor', 'blocksMovement', 'hostile'],
+  },
+
+  goblinSpear: {
+    name: 'spear shaman',
+    tiles: ['goblinSpearE1', 'goblinSpearE2'],
+    tilesAutoCycle: 1000,
+    tag: ['being', 'actor', 'blocksMovement', 'hostile'],
+  },
+
+  bigGoblin: {
+    name: 'goblino',
+    tiles: ['bigGoblinE1', 'bigGoblinE2'],
+    tilesAutoCycle: 1000,
+    tag: ['being', 'actor', 'blocksMovement', 'hostile'],
+  },
+
   spiderRed: {
     name: 'giant spider',
     tiles: ['spiderRed1', 'spiderRed2'],

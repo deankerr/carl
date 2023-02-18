@@ -1,4 +1,15 @@
 export const CSPVar = {
+  goblinPack: {
+    constraints: {
+      all: ['isFloor'],
+    },
+    key: ['goblinSword', 'goblinSpear', 'goblinShaman', 'bigGoblin'],
+    object: {
+      0: ['0101'],
+      1: ['1230'],
+      2: ['0101'],
+    },
+  },
   sconce: {
     constraints: {
       root: ['isExposedWall', 'isNorthernWall'],
