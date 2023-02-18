@@ -1,5 +1,6 @@
 import tileSet32URL from '../assets/oryx32.png'
 import oryxTinyURL from '../assets/oryxTiny.png'
+import oryxTinyFont24URL from '../assets/oryxTinyFont24.png'
 import { App } from './App'
 
 console.log('it begins')
@@ -22,18 +23,28 @@ oryxTiny.onload = () => {
   init()
 }
 
+let oryxTinyFont24Loaded = false
+const oryxTinyFont24 = new Image()
+oryxTinyFont24.src = oryxTinyFont24URL
+oryxTinyFont24.onload = () => {
+  window.oryxTinyFont24 = oryxTinyFont24
+  oryxTinyFont24Loaded = true
+  init()
+}
+
 function init() {
   if (window.game) {
     console.log('One is enough')
     return
   }
 
-  if (tileSet32Loaded && oryxTinyLoaded) App()
+  if (tileSet32Loaded && oryxTinyLoaded && oryxTinyFont24Loaded) App()
 }
 
 declare global {
   interface Window {
     tileSet32: HTMLImageElement
     oryxTiny: HTMLImageElement
+    oryxTinyFont24: HTMLImageElement
   }
 }

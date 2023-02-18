@@ -1,6 +1,6 @@
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
-import { tileMapOryxMain, oryxTinyMap } from './tilemap'
+import { tileMapOryxMain, oryxTinyMap, oryxTinyFontMap } from './tilemap'
 
 const tinySize = 48
 export const createTile2Display = (
@@ -62,6 +62,23 @@ export const createMessageDisplay = () => {
   return display
 }
 
+export const createTextDisplay = () => {
+  const display = new ROT.Display({
+    layout: 'tile-gl',
+    width: CONFIG.textDisplayWidth,
+    height: CONFIG.textDisplayHeight,
+    fg: 'transparent',
+    bg: 'transparent',
+    tileWidth: 24,
+    tileHeight: 28,
+    tileSet: window.oryxTinyFont24,
+    tileColorize: true,
+    tileMap: oryxTinyFontMap(24, 28),
+  })
+
+  return display
+}
+
 export const createHTMLWrapper = () => {
   const body = document.body
   body.style.backgroundColor = CONFIG.htmlBackgroundColor
@@ -104,14 +121,21 @@ export const createGameDisplay = () => {
 
   main.style.maxWidth = '99vw'
   main.style.maxHeight = '99vh'
-  // main.style.minWidth = '98vw'
-  // main.style.minHeight = '100%'
 
+  // text display canvas
+  const textDisplay = createTextDisplay()
+  const textC = textDisplay.getContainer()
+  if (!textC) throw new Error('Unable to get textDisplay container')
+  textC.style.maxWidth = '99vw'
+  textC.style.maxHeight = '99vh'
+  textC.style.position = 'absolute'
+
+  wrapper.appendChild(textC)
   wrapper.appendChild(msg)
   wrapper.appendChild(main)
 
   document.body.appendChild(wrapper)
-  return [msgDisplay, mainDisplay]
+  return [msgDisplay, mainDisplay, textDisplay]
 }
 
 export function mouseMove(d: ROT.Display, callback: (ev: MouseEvent) => unknown) {

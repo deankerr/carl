@@ -20,6 +20,7 @@ import { Visualizer } from './Visualizer'
 export class Engine {
   mainDisplay: ROT.Display
   msgDisplay: ROT.Display
+  textDisplay: ROT.Display
 
   context: GameContext = 'game'
   attached: Visualizer | undefined
@@ -44,15 +45,17 @@ export class Engine {
   }
 
   constructor() {
-    const [msg, main] = createGameDisplay()
+    const [msg, main, text] = createGameDisplay()
     this.mainDisplay = main
     this.msgDisplay = msg
+    this.textDisplay = text
   }
 
   init() {
     this.system.init()
     listen(this.update.bind(this))
     console.log(this)
+    this.textDisplay.drawText(1, 1, 'HELLO')
     if (CONFIG.autoStartVisualizer) this.visualizer(Visualize('init'))
   }
 
