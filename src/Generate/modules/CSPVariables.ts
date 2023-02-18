@@ -1,4 +1,5 @@
 export const CSPVar = {
+  // hostile
   goblinPack: {
     constraints: {
       all: ['isFloor'],
@@ -10,6 +11,49 @@ export const CSPVar = {
       2: ['0101'],
     },
   },
+
+  skeletonPack: {
+    constraints: {
+      all: ['isFloor'],
+    },
+    key: ['skeleton', 'skeletonWarrior', 'skeletonShaman', 'skeletonKing'],
+    object: {
+      0: ['0101'],
+      1: ['1230'],
+      2: ['0101'],
+    },
+  },
+
+  beholder: {
+    constraints: {
+      all: ['isFloor'],
+    },
+    key: ['beholder'],
+    object: ['0'],
+  },
+
+  gelCube: {
+    constraints: {
+      all: ['isFloor'],
+    },
+    key: ['gelCube'],
+    object: ['0'],
+  },
+
+  spiderPack: {
+    constraints: {
+      all: ['isFloor'],
+    },
+    key: ['spider'],
+    object: {
+      0: ['x0x'],
+      1: ['0x0'],
+      2: ['x0x'],
+    },
+  },
+
+  // decoration
+
   sconce: {
     constraints: {
       root: ['isExposedWall', 'isNorthernWall'],

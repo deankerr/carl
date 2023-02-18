@@ -101,6 +101,71 @@ export const beings = {
     tag: ['being', 'actor', 'blocksMovement', 'hostile'],
   },
 
+  skeleton: {
+    name: 'skeleton',
+    tiles: ['skeletonE1', 'skeletonE2'],
+    tilesAutoCycle: 1000,
+    tag: ['being', 'actor', 'blocksMovement', 'hostile'],
+  },
+
+  skeletonWarrior: {
+    name: 'skeleton warrior',
+    tiles: ['skeletonWarriorE1', 'skeletonWarriorE2'],
+    tilesAutoCycle: 1000,
+    tag: ['being', 'actor', 'blocksMovement', 'hostile'],
+  },
+
+  skeletonShaman: {
+    name: 'skeleton shaman',
+    tiles: ['skeletonShamanE1', 'skeletonShamanE2'],
+    tilesAutoCycle: 1000,
+    tag: ['being', 'actor', 'blocksMovement', 'hostile'],
+  },
+
+  skeletonKing: {
+    name: 'king skellybones',
+    tiles: ['skeletonKingE1', 'skeletonKingE2'],
+    tilesAutoCycle: 1000,
+    tag: ['being', 'actor', 'blocksMovement', 'hostile'],
+  },
+
+  beholder: {
+    name: 'beholder',
+    tiles: ['beholderE1', 'beholderE2'],
+    tilesAutoCycle: 1000,
+    tag: ['being', 'actor', 'blocksMovement', 'hostile'],
+  },
+
+  spider: {
+    name: 'spider',
+    tiles: ['spiderE1', 'spiderE2'],
+    tilesAutoCycle: 1000,
+    tag: ['being', 'actor', 'blocksMovement', 'hostile'],
+  },
+
+  rat: {
+    name: 'giant rat',
+    tiles: ['ratE1', 'ratE2'],
+    tilesAutoCycle: 1000,
+    tag: ['being', 'actor', 'blocksMovement', 'hostile'],
+  },
+
+  bat: {
+    name: 'bat',
+    tiles: ['batE1', 'batE2'],
+    tilesAutoCycle: 1000,
+    tag: ['being', 'actor', 'blocksMovement', 'hostile'],
+  },
+
+  gelCube: {
+    name: 'gelatinous cube',
+    tiles: ['gelCubeE1', 'gelCubeE2'],
+    tilesAutoCycle: 1000,
+    tag: ['being', 'actor', 'blocksMovement', 'hostile'],
+  },
+
+  // alt tileset
+
   spiderRed: {
     name: 'giant spider',
     tiles: ['spiderRed1', 'spiderRed2'],

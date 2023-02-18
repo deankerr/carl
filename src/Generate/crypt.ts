@@ -57,7 +57,13 @@ export function crypt(
       CSPVar.cornerCandles,
       CSPVar.cornerCandles,
       // CSPVar.smallPitPlatform,
-      CSPVar.goblinPack,
+      pick([
+        CSPVar.goblinPack,
+        CSPVar.skeletonPack,
+        CSPVar.beholder,
+        CSPVar.gelCube,
+        CSPVar.spiderPack,
+      ]),
     ])
 
     loop(5, () => O3.add(room.rect.scale(-1).rndPt(), pick(itemKeys)))
