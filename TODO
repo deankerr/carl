@@ -58,6 +58,7 @@
 
 ## Someday
 
+- Describe entity color for messages
 - Recategorise template files by theme rather than terrain/feature/being
 - Spatial indexing of entities? (ECS - automate marking cells as dirty re: render data)
 - Memoize cell render data

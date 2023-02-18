@@ -59,7 +59,7 @@ export function crypt(
       // CSPVar.smallPitPlatform,
     ])
 
-    O3.add(room.rect.rndPt(), pick(itemKeys))
+    loop(5, () => O3.add(room.rect.scale(-1).rndPt(), pick(itemKeys)))
   })
 
   O3.portal(

@@ -23,5 +23,11 @@ export const handleTread = (engine: Engine, isPlayerTurn: boolean) => {
     }
   }
 
+  // item here
+  const items = entitiesHere.filter(e => e.item)
+  for (const item of items) {
+    engine.message(`There is a ${item.name} lying here.`, item)
+  }
+
   log.end('handleTread: done')
 }
