@@ -15,6 +15,7 @@ import {
   ActionTypes,
   Visualize,
 } from './'
+import { SpriteManager } from './Sprite'
 import { Visualizer } from './Visualizer'
 
 export class Engine {
@@ -25,8 +26,9 @@ export class Engine {
   context: GameContext = 'game'
   attached: Visualizer | undefined
 
+  sprites = new SpriteManager()
   component = ComponentFoundry
-  pool = new EntityPool(this.component)
+  pool = new EntityPool(this.sprites)
   system = new System(this)
 
   atlas = new Atlas()

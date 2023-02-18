@@ -1,6 +1,13 @@
 # TODO
 
-- Add enemy beings
+### Sprites
+
+- Same sprite entities reference single copy of sprite
+- Centralised animation updates
+- Per region noise based selection of wall/floor etc. variants
+- Being sprite direction/facing support
+- Better ledge/shadow support
+- ! Typed tilemap !
 
 ### CSP:
 
@@ -35,14 +42,6 @@
 - Basic inventory
 - ECS debug dialog - demonstrate ECS with interface to change entity components live
 
-### Sprites
-
-- Same sprite entities reference single copy of sprite
-- Centralised animation updates
-- Per region noise based selection of wall/floor etc. variants
-- Being sprite direction/facing support
-- Better ledge/shadow support
-
 ### Region/Overseer
 
 - Usability/consistency pass
@@ -57,6 +56,7 @@
 
 ## Someday
 
+- Add more beings
 - Describe entity color for messages
 - Recategorise template files by theme rather than terrain/feature/being
 - Spatial indexing of entities? (ECS - automate marking cells as dirty re: render data)

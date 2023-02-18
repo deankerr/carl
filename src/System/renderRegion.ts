@@ -12,7 +12,7 @@ import { Rect } from '../lib/Shape/Rectangle'
 
 export function renderRegion(engine: Engine) {
   const { mainDisplay, local } = engine
-  if (!local.hasChanged) return
+  // if (!local.hasChanged) return
 
   // * ========== Viewport ========== *
   const { width, height } = mainDisplay.getOptions()
@@ -96,6 +96,10 @@ export function renderRegion(engine: Engine) {
 
       // extract form data, applying lighting/fade if applicable
       const renderStack = stack.map(e => {
+        if (e.sprite) {
+          return { ...nothing.render, char: e.sprite.current.tile }
+        }
+
         const render = { ...nothing.render, ...e.render }
         // if (visible && lighting.has(pt)) {
         //   const light = lighting.get(pt) ?? [0, 0, 0]

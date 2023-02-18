@@ -4,10 +4,14 @@ export const terrain = {
   // Liquid
   water: {
     name: 'water',
-    tiles: ['water1', 'water2'],
+    tiles: ['W'],
     tag: ['terrain', 'liquid'],
-    tilesAutoCycle: 1000,
     tilesLedge: ['waterLedge1', 'waterLedge2'],
+    sprite: {
+      base: ['water1', 'water2'],
+      ledge: ['waterLedge1', 'waterLedge2'],
+      animate: ['cycle', 1000],
+    },
   },
 
   slime: {

@@ -2,6 +2,7 @@ import { logger } from '../lib/logger'
 import { Point } from '../lib/Shape/Point'
 import { features, terrain, beings, items } from '../Templates'
 import { FoundryKey, Component, ComponentFoundry, FoundryParam, Components } from './Components'
+import { SpriteConfig, SpriteManager } from './Sprite'
 
 const templates = { ...beings, ...features, ...terrain, ...items }
 
@@ -17,9 +18,10 @@ export type EntityKey = TerrainKey | FeatureKey | BeingKey | ItemKey
 
 export class EntityPool {
   private count = 0
+  readonly C = ComponentFoundry
   readonly pool = new Map<string, Entity>()
 
-  constructor(readonly components: typeof ComponentFoundry) {
+  constructor(readonly sprites: SpriteManager) {
     const log = logger('entity', 'init')
 
     for (const [key, t] of Object.entries(templates)) {
@@ -27,28 +29,32 @@ export class EntityPool {
         eID: 0,
         label: key,
         key: key as EntityKey,
-        ...components.name(t.name),
-        ...components.render('unknown'),
+        ...this.C.name(t.name),
+        ...this.C.render('unknown'),
+      }
+
+      // ! dev
+      if ('sprite' in t) {
+        e = { ...e, ...this.C.sprite(this.sprites, t.sprite) }
       }
 
       if (t.tiles) {
         e.render.char = t.tiles[0]
-        e = { ...e, ...this.components.tiles(...t.tiles) }
+        e = { ...e, ...this.C.tiles(...t.tiles) }
       }
 
       if (t.tag) e = this.attach(e, 'tag', ...t.tag)
       if ('trodOn' in t) e = this.attach(e, 'trodOn', t.trodOn)
-      if ('bumpMessage' in t) e = { ...e, ...this.components.bumpMessage(t.bumpMessage) }
+      if ('bumpMessage' in t) e = { ...e, ...this.C.bumpMessage(t.bumpMessage) }
 
       if ('fieldOfView' in t) e = this.attach(e, 'fieldOfView', t.fieldOfView)
 
       if ('tileTriggers' in t) e = this.attach(e, 'tileTriggers', ...t.tileTriggers)
       if ('tilesAutoCycle' in t) e = this.attach(e, 'tilesAutoCycle', t.tilesAutoCycle)
       if ('tilesAutoRandom' in t) e = this.attach(e, 'tilesAutoRandom', t.tilesAutoRandom)
-      if ('tilesVertical' in t) e = { ...e, ...this.components.tilesVertical(...t.tilesVertical) }
-      if ('tilesHorizontal' in t)
-        e = { ...e, ...this.components.tilesHorizontal(...t.tilesHorizontal) }
-      if ('tilesLedge' in t) e = { ...e, ...this.components.tilesLedge(...t.tilesLedge) }
+      if ('tilesVertical' in t) e = { ...e, ...this.C.tilesVertical(...t.tilesVertical) }
+      if ('tilesHorizontal' in t) e = { ...e, ...this.C.tilesHorizontal(...t.tilesHorizontal) }
+      if ('tilesLedge' in t) e = { ...e, ...this.C.tilesLedge(...t.tilesLedge) }
 
       if ('portal' in t) e = { ...e, ...this.attach(e, 'portal', t.portal[0], t.portal[1]) }
 
@@ -67,7 +73,7 @@ export class EntityPool {
   }
 
   attach<T extends FoundryKey>(e: Entity, componentName: T, ...p: FoundryParam[T]) {
-    const c = Reflect.apply(this.components[componentName], undefined, p)
+    const c = Reflect.apply(this.C[componentName], undefined, p)
     // logger('entity', 'attach', `${componentName}`).msg(
     //   `attach ${e.label} ${componentName} [${[...p.values()]}]`
     // )
@@ -83,7 +89,7 @@ export class EntityPool {
   spawn(key: EntityKey, at: Point) {
     const eID = this.count++
     const label = key + '-' + eID
-    const e = { ...this.thaw(key), eID, label, ...this.components.position(at) }
+    const e = { ...this.thaw(key), eID, label, ...this.C.position(at) }
     return e
   }
 

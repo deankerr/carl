@@ -305,15 +305,18 @@ export const features = {
   shrub: {
     name: 'shrub',
     tiles: ['shrub1', 'shrub2'],
-    tag: ['feature', 'pickTile', 'memorable'],
+    tag: ['feature', 'pickTile'],
   },
 
   campfire: {
     name: 'campfire',
-    tiles: ['campfire1', 'campfire2'],
-    tilesAutoCycle: 350,
-    tag: ['feature', 'memorable'],
+    tiles: ['C'],
+    tag: ['feature'],
     trodOn: 'You feel a sense of urgency.',
+    sprite: {
+      base: ['campfire1', 'campfire2'],
+      animate: ['cycle', 350],
+    },
   },
 
   signBlank: {
@@ -396,6 +399,15 @@ export const features = {
   dirtBoulder: {
     name: 'boulder',
     tiles: ['dirtBoulder'],
+    tag: ['feature', 'blocksMovement'],
+  },
+
+  bookshelf: {
+    name: 'bookshelf',
+    tiles: ['bookshelf'],
+    sprite: {
+      base: ['bookshelf'],
+    },
     tag: ['feature', 'blocksMovement'],
   },
 

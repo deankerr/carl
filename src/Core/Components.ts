@@ -1,6 +1,7 @@
 import { ActionTypes } from './Action'
 import { Point } from '../lib/Shape/Point'
 import { EntityKey } from './Entity'
+import { SpriteConfig, SpriteManager } from './Sprite'
 
 export const ComponentFoundry = {
   acting: (action: ActionTypes) => {
@@ -83,6 +84,11 @@ export const ComponentFoundry = {
 
   portal: (zone: string, level: 'down' | 'up' | number) => {
     return { portal: { zone, level } }
+  },
+
+  // ! dev
+  sprite: (spriteMan: SpriteManager, spriteConfig: any) => {
+    return { sprite: spriteMan.register(spriteConfig) }
   },
 }
 

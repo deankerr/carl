@@ -1,9 +1,16 @@
 export const beings = {
   // Friendly
+  // player: {
+  //   name: 'player',
+  //   tiles: ['warriorBlueE1', 'warriorBlueE2'],
+  //   tilesAutoCycle: 750,
+  //   tag: ['playerControlled', 'actor', 'blocksMovement', 'being', 'signalUpdatePlayerFOV'],
+  //   fieldOfView: 16,
+  // },
+
   player: {
     name: 'player',
-    tiles: ['warriorBlueE1', 'warriorBlueE2'],
-    tilesAutoCycle: 750,
+    tiles: ['E'],
     tag: ['playerControlled', 'actor', 'blocksMovement', 'being', 'signalUpdatePlayerFOV'],
     fieldOfView: 16,
   },
