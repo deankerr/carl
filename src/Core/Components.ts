@@ -65,6 +65,10 @@ export const ComponentFoundry = {
     return { trodOn: { msg } }
   },
 
+  bumpMessage: (msg: string) => {
+    return { bumpMessage: { msg } }
+  },
+
   tileVariant: (...keys: EntityKey[]) => {
     return { tileVariant: keys }
   },
@@ -109,6 +113,8 @@ export type Tag =
   | 'pickTileCorner'
   | 'pickTileLedge'
   | 'invisible'
+  | 'hostile'
+  | 'friendly'
 
 export type FoundryKey = keyof typeof ComponentFoundry
 export type FoundryParam = { [K in FoundryKey]: Parameters<typeof ComponentFoundry[K]> }

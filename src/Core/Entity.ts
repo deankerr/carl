@@ -36,6 +36,8 @@ export class EntityPool {
 
       if (t.tag) e = this.attach(e, 'tag', ...t.tag)
       if ('trodOn' in t) e = this.attach(e, 'trodOn', t.trodOn)
+      if ('bumpMessage' in t) e = { ...e, ...this.components.bumpMessage(t.bumpMessage) }
+
       if ('fieldOfView' in t) e = this.attach(e, 'fieldOfView', t.fieldOfView)
 
       if ('tileTriggers' in t) e = this.attach(e, 'tileTriggers', ...t.tileTriggers)

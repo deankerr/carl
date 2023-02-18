@@ -20,10 +20,11 @@ export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
     log.msg('handleBump: entity bump')
 
     // ? assuming there can only be one entity here
-    const [bumpedEntity] = bumped
+    const [eBumped] = bumped
+    // TODO non-player bump reactions
     if (isPlayerTurn) {
       // * handle door
-      const door = local.has(bumpedEntity, 'isClosed', 'tiles', 'tileTriggers')
+      const door = local.has(eBumped, 'isClosed', 'tiles', 'tileTriggers')
       if (door) {
         local
           .entity(door)
@@ -48,19 +49,24 @@ export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
         return log.end()
       }
 
-      // * attack!
-      local.entity(bumpedEntity).modify('tag', 'meleeAttackTarget')
+      // * hostile - attack
+      if (eBumped.hostile) {
+        local.entity(eBumped).modify('tag', 'meleeAttackTarget')
 
-      // update acting component
-      // local.entity(currentEntity, component.acting(Action.MeleeAttack(action.bump)))
-      local.entity(currentEntity).modify('acting', Action.MeleeAttack(action.bump))
-      log.msg(`handleBump: action - MeleeAttack ${bumpedEntity.label}`)
-    }
+        // update acting component
+        local.entity(currentEntity).modify('acting', Action.MeleeAttack(action.bump))
+        log.msg(`handleBump: action - MeleeAttack ${eBumped.label}`)
+      }
 
-    // * NPC attack something
-    else {
-      log.msg('handleBump:', currentEntity.label, 'bumped', bumpedEntity.label)
-      // TODO
+      // * friendly msg
+      else if (eBumped.friendly && eBumped.bumpMessage) {
+        engine.message(eBumped.name + ': ' + eBumped.bumpMessage.msg, eBumped)
+      }
+
+      // * generic bump msg
+      else {
+        engine.message(`You bounce off the ${eBumped.name}.`, eBumped)
+      }
     }
   }
   log.end()
