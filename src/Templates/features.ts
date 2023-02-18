@@ -60,7 +60,7 @@ export const features = {
   woodenDoor: {
     name: 'door',
     tiles: ['woodenDoorClosed', 'woodenDoorOpen'],
-    tag: ['memorable', 'feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door'],
+    tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door'],
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
   },
@@ -69,7 +69,6 @@ export const features = {
     name: 'door',
     tiles: ['woodenDoorVerticalClosed', 'woodenDoorVerticalOpen'],
     tag: [
-      'memorable',
       'feature',
       'blocksLight',
       'blocksMovement',
@@ -85,15 +84,7 @@ export const features = {
   woodenDoorVerticalTop: {
     name: 'door',
     tiles: ['woodenDoorVerticalClosedTop', 'woodenDoorVerticalOpenTop'],
-    tag: [
-      'memorable',
-      'feature',
-      'blocksLight',
-      'blocksMovement',
-      'isClosed',
-      'door',
-      'isVertical',
-    ],
+    tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door', 'isVertical'],
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
   },
@@ -101,15 +92,7 @@ export const features = {
   stoneDoor: {
     name: 'door',
     tiles: ['stoneDoorClosed', 'stoneDoorOpen'],
-    tag: [
-      'memorable',
-      'feature',
-      'blocksLight',
-      'blocksMovement',
-      'isClosed',
-      'door',
-      'renderLevelHigh',
-    ],
+    tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door', 'renderLevelHigh'],
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
     tileVariant: ['stoneDoorV', 'stoneDoorVNorth'],
@@ -119,7 +102,6 @@ export const features = {
     name: 'door',
     tiles: ['stoneDoorVerticalClosed', 'stoneDoorVerticalOpen'],
     tag: [
-      'memorable',
       'feature',
       'blocksLight',
       'blocksMovement',
@@ -135,15 +117,7 @@ export const features = {
   stoneDoorVerticalTop: {
     name: 'door',
     tiles: ['stoneDoorVerticalClosedTop', 'stoneDoorVerticalOpenTop'],
-    tag: [
-      'memorable',
-      'feature',
-      'blocksLight',
-      'blocksMovement',
-      'isClosed',
-      'door',
-      'isVertical',
-    ],
+    tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door', 'isVertical'],
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
   },
@@ -151,7 +125,7 @@ export const features = {
   jailDoor: {
     name: 'door',
     tiles: ['jailDoorClosed', 'jailDoorOpen'],
-    tag: ['memorable', 'feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door'],
+    tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door'],
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
     tileVariant: ['jailDoorV', 'jailDoorVNorth'],
@@ -161,7 +135,6 @@ export const features = {
     name: 'door',
     tiles: ['jailDoorVerticalClosed', 'jailDoorVerticalOpen'],
     tag: [
-      'memorable',
       'feature',
       'blocksLight',
       'blocksMovement',
@@ -177,15 +150,7 @@ export const features = {
   jailDoorVerticalTop: {
     name: 'door',
     tiles: ['jailDoorVerticalClosedTop', 'jailDoorVerticalOpenTop'],
-    tag: [
-      'memorable',
-      'feature',
-      'blocksLight',
-      'blocksMovement',
-      'isClosed',
-      'door',
-      'isVertical',
-    ],
+    tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door', 'isVertical'],
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
   },
@@ -193,7 +158,7 @@ export const features = {
   redDoor: {
     name: 'door',
     tiles: ['redDoorClosed', 'redDoorOpen'],
-    tag: ['memorable', 'feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door'],
+    tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door'],
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
     tileVariant: ['redDoorV', 'redDoorVNorth'],
@@ -203,7 +168,6 @@ export const features = {
     name: 'door',
     tiles: ['redDoorVerticalClosed', 'redDoorVerticalOpen'],
     tag: [
-      'memorable',
       'feature',
       'blocksLight',
       'blocksMovement',
@@ -219,15 +183,7 @@ export const features = {
   redDoorVerticalTop: {
     name: 'door',
     tiles: ['redDoorVerticalClosedTop', 'redDoorVerticalOpenTop'],
-    tag: [
-      'memorable',
-      'feature',
-      'blocksLight',
-      'blocksMovement',
-      'isClosed',
-      'door',
-      'isVertical',
-    ],
+    tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door', 'isVertical'],
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
   },

@@ -86,9 +86,9 @@ export function renderRegion(engine: Engine) {
         if (features.length > 0) stack.push(...features)
         stack.push(...beings)
       } else {
-        // area previously seen, render terrain and memorable features
+        // area previously seen, render terrain and features
         if (terrain) stack.push(terrain)
-        stack.push(...features.filter(f => f.memorable))
+        if (features) stack.push(...features)
       }
 
       // sort z-levels

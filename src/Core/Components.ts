@@ -96,7 +96,6 @@ export type Tag =
   | 'isClosed'
   | 'isOpen'
   | 'meleeAttackTarget'
-  | 'memorable'
   | 'playerControlled'
   | 'signalLightPathUpdated'
   | 'signalModified'
