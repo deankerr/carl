@@ -5,7 +5,11 @@ import { pick, rnd } from '../lib/util'
 import { BinarySpacePartition } from './modules'
 import { Overseer3 } from './Overseer3'
 
-export function dungeon(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
+export function dungeon(
+  isTopLevel: boolean,
+  width = CONFIG.generateWidth,
+  height = CONFIG.generateHeight
+) {
   const region = new Region(width, height)
   region.name = 'dungeon'
   const O3 = new Overseer3(region)

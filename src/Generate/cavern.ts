@@ -6,7 +6,11 @@ import { BinarySpacePartition } from './modules'
 import { Rooms } from './modules/Rooms'
 import { Overseer3 } from './Overseer3'
 
-export function cavern(width = CONFIG.generateWidth * 3, height = CONFIG.generateHeight * 3) {
+export function cavern(
+  isTopLevel: boolean,
+  width = CONFIG.generateWidth * 3,
+  height = CONFIG.generateHeight * 3
+) {
   const region = new Region(width, height)
   region.name = 'cavern'
 

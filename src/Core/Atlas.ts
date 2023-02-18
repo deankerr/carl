@@ -42,7 +42,7 @@ export class Atlas {
 
   generate(index: number) {
     logger('atlas').msg('atlas: generate', this.zone.label)
-    const region = this.zone.generator()
+    const region = this.zone.generator(index === 0)
     this.zone.regions[index] = region
     this.region = region
   }
@@ -70,7 +70,7 @@ export class Atlas {
 
 export type Zone = {
   label: string
-  generator: (width?: number, height?: number) => Region
+  generator: (isTopLevel: boolean) => Region
   regions: Region[]
   regionIndex: number
 }

@@ -7,7 +7,11 @@ import { CellDish } from './modules/cellular'
 import { floodFindRegions } from './modules/flood'
 import { Overseer3 } from './Overseer3'
 
-export function cave(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
+export function cave(
+  isTopLevel: boolean,
+  width = CONFIG.generateWidth,
+  height = CONFIG.generateHeight
+) {
   const region = new Region(width, height)
   const O3 = new Overseer3(region)
 

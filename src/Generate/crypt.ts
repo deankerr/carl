@@ -6,7 +6,11 @@ import { BinarySpacePartition, CSPSolver, CSPVar } from './modules'
 import { Overseer3 } from './Overseer3'
 import { Rooms } from './modules/Rooms'
 
-export function crypt(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
+export function crypt(
+  isTopLevel: boolean,
+  width = CONFIG.generateWidth,
+  height = CONFIG.generateHeight
+) {
   const region = new Region(width, height, 'crypt')
 
   const O3 = new Overseer3(region)
@@ -56,7 +60,12 @@ export function crypt(width = CONFIG.generateWidth, height = CONFIG.generateHeig
     ])
   })
 
-  O3.portal(rooms.rooms[0].rect.center.west(), 'cryptStairsUp', 'town', 0)
+  O3.portal(
+    rooms.rooms[0].rect.center.west(),
+    'cryptStairsUp',
+    isTopLevel ? 'town' : 'here',
+    isTopLevel ? 0 : 'up'
+  )
   O3.portal(rooms.rooms[1].rect.center.east(), 'cryptStairsDown', 'here', 'down')
 
   O3.finalize()

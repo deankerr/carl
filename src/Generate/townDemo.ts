@@ -6,7 +6,11 @@ import { Rect } from '../lib/Shape/Rectangle'
 import { BinarySpacePartition, CellDish } from './modules'
 import { Overseer3 } from './Overseer3'
 
-export function townDemo(width = CONFIG.generateWidth, height = CONFIG.generateHeight) {
+export function townDemo(
+  isTopLevel: boolean,
+  width = CONFIG.generateWidth,
+  height = CONFIG.generateHeight
+) {
   const region = new Region(width, height, 'town demo')
   const O3 = new Overseer3(region)
   O3.theme.wall = 'cryptWall'
@@ -81,8 +85,7 @@ export function townDemo(width = CONFIG.generateWidth, height = CONFIG.generateH
   O3.add(dRect.p2.north(1), 'bones')
   O3.add(dRect.p2.west(1), 'bones')
 
-  // O3.add(dPt, 'cryptStairsDown')
-  O3.portal(dPt, 'dungeonStairsDown', 'crypt', 0)
+  O3.portal(dPt, 'cryptStairsDown', 'crypt', 0)
 
   O3.add(bPt1.add(-1, 1), 'catTan')
   O3.add(bPt1.add(2, 1), 'thief')
