@@ -2,6 +2,7 @@ import { ActionTypes } from './Action'
 import { Point } from '../lib/Shape/Point'
 import { EntityKey } from './Entity'
 import { SpriteConfig, SpriteManager } from './Sprite'
+import { Cardinal } from '../lib/direction'
 
 export const ComponentFoundry = {
   acting: (action: ActionTypes) => {
@@ -90,6 +91,10 @@ export const ComponentFoundry = {
   sprite: (spriteMan: SpriteManager, spriteConfig: any) => {
     return { sprite: spriteMan.register(spriteConfig) }
   },
+
+  facing: (dir: Cardinal) => {
+    return { facing: dir }
+  },
 }
 
 export type Tag =
@@ -125,6 +130,7 @@ export type Tag =
   | 'hostile'
   | 'friendly'
   | 'item'
+  | 'ledge'
 
 export type FoundryKey = keyof typeof ComponentFoundry
 export type FoundryParam = { [K in FoundryKey]: Parameters<typeof ComponentFoundry[K]> }

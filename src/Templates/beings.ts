@@ -1,18 +1,14 @@
 export const beings = {
   // Friendly
-  // player: {
-  //   name: 'player',
-  //   tiles: ['warriorBlueE1', 'warriorBlueE2'],
-  //   tilesAutoCycle: 750,
-  //   tag: ['playerControlled', 'actor', 'blocksMovement', 'being', 'signalUpdatePlayerFOV'],
-  //   fieldOfView: 16,
-  // },
-
   player: {
     name: 'player',
     tiles: ['E'],
     tag: ['playerControlled', 'actor', 'blocksMovement', 'being', 'signalUpdatePlayerFOV'],
     fieldOfView: 16,
+    sprite: {
+      build: 'warrior',
+      animate: ['cycle', 750],
+    },
   },
 
   archer: {
@@ -155,6 +151,10 @@ export const beings = {
     tiles: ['ratE1', 'ratE2'],
     tilesAutoCycle: 1000,
     tag: ['being', 'actor', 'blocksMovement', 'hostile'],
+    sprite: {
+      build: 'rat',
+      animate: ['cycle', 750],
+    },
   },
 
   bat: {

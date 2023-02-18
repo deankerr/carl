@@ -29,7 +29,7 @@ goblin: {
 
 */
 
-import { Queue } from '../lib/util'
+import { pick, Queue } from '../lib/util'
 
 const templt = {
   goblin: {
@@ -64,15 +64,19 @@ const templt = {
 export type SpriteConfig = {
   base: string[]
   ledge?: string[]
+  build?: string
   animate?: [AnimType, number]
   // noise: string[]
   // noiseChance: number[]
 }
 
 export type Sprites = {
-  current: Sprite
   base: Sprite
   ledge?: Sprite
+  north?: Sprite
+  east?: Sprite
+  south?: Sprite
+  west?: Sprite
 }
 
 type AnimType = 'static' | 'cycle' | 'random'
@@ -80,21 +84,31 @@ type AnimType = 'static' | 'cycle' | 'random'
 export class SpriteManager {
   all = new Map<string, Sprite>()
 
-  register(config: SpriteConfig) {
+  register(config: SpriteConfig): Sprites {
     console.log('==== sm register: ====')
     console.log(config)
 
     const [animType, animSpeed] = config.animate ?? ['static', 0]
 
+    if (config.build) return this.build(config.build, animType, animSpeed)
+
     const base = this.sprite(config.base, animType, animSpeed)
-    const current = base
-    const sprites: Sprites = { current, base }
+    const sprites: Sprites = { base }
 
     if (config.ledge) sprites.ledge = this.sprite(config.ledge, animType, animSpeed)
 
     return sprites
   }
 
+  build(key: string, animType: AnimType, animSpeed: number) {
+    const north = this.sprite([key + 'N1', key + 'N2'], animType, animSpeed)
+    const east = this.sprite([key + 'E1', key + 'E2'], animType, animSpeed)
+    const south = this.sprite([key + 'S1', key + 'S2'], animType, animSpeed)
+    const west = this.sprite([key + 'W1', key + 'W2'], animType, animSpeed)
+    const base = pick([east, south, west])
+
+    return { base, north, east, south, west, ssID: spritesID++ }
+  }
   hash(tiles: string[], animType: AnimType, animSpeed: number) {
     return animType + '-' + animSpeed + '-' + tiles.join('-')
   }
@@ -109,6 +123,8 @@ export class SpriteManager {
     return sprite
   }
 }
+
+let spritesID = 0
 
 let spriteID = 0
 

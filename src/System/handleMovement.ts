@@ -1,5 +1,6 @@
 import * as Action from '../Core/Action'
 import { Engine } from '../Core/Engine'
+import { Cardinal, Direction } from '../lib/direction'
 import { logger } from '../lib/logger'
 
 // , isPlayerTurn: boolean
@@ -16,12 +17,15 @@ export const handleMovement = (engine: Engine, isPlayerTurn: boolean) => {
   }
 
   log.msg('handleMovement:', currentEntity.label, action.move.dir)
-
+  const { dir } = action.move
   // wait, just return (for now)
   if (action.move.dir === 'WAIT') {
     log.msg('handleMovement: result - wait')
     return
   }
+
+  // update facing direction
+  currentEntity.facing = facingMap[dir]
 
   const newPt = currentEntity.position.add(action.move.x, action.move.y)
 
@@ -45,4 +49,16 @@ export const handleMovement = (engine: Engine, isPlayerTurn: boolean) => {
   local.entity(currentEntity).modify('acting', Action.Tread(newPt)).modify('position', newPt)
 
   log.end()
+}
+
+const facingMap: Record<Direction, Cardinal> = {
+  N: 'north',
+  NE: 'east',
+  E: 'east',
+  SE: 'east',
+  S: 'south',
+  SW: 'west',
+  W: 'west',
+  NW: 'west',
+  WAIT: 'east',
 }

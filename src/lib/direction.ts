@@ -9,5 +9,12 @@ export const DIRECTIONS = {
   S: 'SOUTH',
   SE: 'SOUTH-EAST',
 } as const
-
 export type Direction = keyof typeof DIRECTIONS
+
+export const CardinalDirs = {
+  north: 'north',
+  east: 'east',
+  south: 'south',
+  west: 'west',
+} as const
+export type Cardinal = keyof typeof CardinalDirs

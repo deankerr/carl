@@ -47,6 +47,9 @@ export function dungeon(
   O3.add(ptC.east(), 'campfire')
   O3.add(ptC.east().south(), 'campfire')
 
+  O3.add(ptC.north(2), 'rat')
+  O3.add(ptC.north(3), 'rat')
+
   for (const e of region.get('position')) {
     console.log(e.key, e)
   }
