@@ -55,7 +55,6 @@ export const createMessageDisplay = () => {
     tileWidth: msgTileSize,
     tileHeight: msgTileSize,
     tileSet: window.tileSet32,
-    tileColorize: true,
     tileMap: tileMapOryxMain,
   })
 
