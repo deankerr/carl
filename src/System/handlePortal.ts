@@ -9,11 +9,11 @@ export const handlePortal = (engine: Engine, isPlayerTurn: boolean) => {
 
   if (!('usePortal' in action)) return
 
-  const [tHere] = local.at(eActing.position)
+  const [pHere] = local.at(eActing.position).filter(e => e.portal)
 
-  if (tHere.portal) {
+  if (pHere.portal) {
     console.log('portal action')
-    engine.system.change(Action.ChangeLocation(tHere.portal.zone, tHere.portal.level))
+    engine.system.change(Action.ChangeLocation(pHere.portal.zone, pHere.portal.level))
   } else {
     console.log('No portal here')
   }
