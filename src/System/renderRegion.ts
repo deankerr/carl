@@ -125,9 +125,10 @@ export function renderRegion(engine: Engine) {
 const recalledFade = { sat: { by: 0.8 }, lum: { by: 0.8 } }
 
 const zLevel = (e: Entity) => {
-  if (e.renderAbove) return 4
-  if (e.being) return 2
-  if (e.feature) return 1
+  if (e.renderLevelHigh) return 10
+  if (e.being) return 7
+  if (e.item) return 5
+  if (e.feature) return 3
   return 0
 }
 

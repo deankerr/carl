@@ -104,7 +104,7 @@ export type Tag =
   | 'terrain'
   | 'door'
   | 'hasDoorNorth'
-  | 'renderAbove'
+  | 'renderLevelHigh'
   | 'wall'
   | 'floor'
   | 'liquid'
@@ -119,6 +119,7 @@ export type Tag =
   | 'invisible'
   | 'hostile'
   | 'friendly'
+  | 'item'
 
 export type FoundryKey = keyof typeof ComponentFoundry
 export type FoundryParam = { [K in FoundryKey]: Parameters<typeof ComponentFoundry[K]> }

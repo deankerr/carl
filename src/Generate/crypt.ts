@@ -2,9 +2,9 @@ import { CONFIG } from '../config'
 import { EntityKey, Region } from '../Core'
 import { Rect } from '../lib/Shape/Rectangle'
 import { loop, pick, rnd, shuffle } from '../lib/util'
-import { BinarySpacePartition, CSPSolver, CSPVar } from './modules'
+import { BinarySpacePartition, CSPSolver, CSPVar, Rooms } from './modules'
 import { Overseer3 } from './Overseer3'
-import { Rooms } from './modules/Rooms'
+import { itemKeys } from '../Templates'
 
 export function crypt(
   isTopLevel: boolean,
@@ -47,7 +47,7 @@ export function crypt(
   // rooms.debugNumberRooms()
 
   rooms.each(room => {
-    if (room.rID > 0) return
+    // if (room.rID > 0) return
     const s = new CSPSolver(region)
     s.initializeRect(room.rect)
 
@@ -58,6 +58,8 @@ export function crypt(
       CSPVar.cornerCandles,
       // CSPVar.smallPitPlatform,
     ])
+
+    O3.add(room.rect.rndPt(), pick(itemKeys))
   })
 
   O3.portal(

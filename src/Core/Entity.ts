@@ -1,17 +1,19 @@
 import { logger } from '../lib/logger'
 import { Point } from '../lib/Shape/Point'
-import { features, terrain, beings } from '../Templates'
+import { features, terrain, beings, items } from '../Templates'
 import { FoundryKey, Component, ComponentFoundry, FoundryParam, Components } from './Components'
 
-const templates = { ...beings, ...features, ...terrain }
+const templates = { ...beings, ...features, ...terrain, ...items }
 
 export type eID = { eID: number; label: string; key: EntityKey }
 export type Entity = eID & Component<'name'> & Component<'render'> & Partial<Components>
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
+
 export type TerrainKey = keyof typeof terrain
-export type FeatureKey = keyof typeof features | '[clear]'
+export type FeatureKey = keyof typeof features
 export type BeingKey = keyof typeof beings
-export type EntityKey = TerrainKey | FeatureKey | BeingKey
+export type ItemKey = keyof typeof items
+export type EntityKey = TerrainKey | FeatureKey | BeingKey | ItemKey
 
 export class EntityPool {
   private count = 0
