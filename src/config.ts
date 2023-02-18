@@ -11,8 +11,8 @@ const messageDisplayWidth = 69
 const messageDisplayHeight = 35
 const messageBufferDisplaySize = 5
 
-const textDisplayWidth = mainDisplayWidth * 2
-const textDisplayHeight = mainDisplayHeight * 2
+const textDisplayWidth = mainDisplayWidth * 2 - 1
+const textDisplayHeight = 32
 
 const generateWidth = 37 // approx 1.5 times graphical display size
 const generateHeight = 19

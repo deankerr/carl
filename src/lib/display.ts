@@ -76,6 +76,11 @@ export const createTextDisplay = () => {
     tileMap: oryxTinyFontMap(24, 28),
   })
 
+  // debug
+  // for (let i = 0; i < 33; i++) {
+  //   display.drawText(0, i, 'HELLO')
+  // }
+
   return display
 }
 

@@ -538,11 +538,13 @@ export const tileMapOryxMain = {
 
 export function oryxTinyFontMap(xSize: number, ySize: number) {
   const tiles = [
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.split(''),
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 '.split(''),
     '!@#$%^&*()-+=:;,"<>.?/\\[]_|'.split(''),
   ]
 
-  return tiles.reduce((acc, curr, y) => {
+  const tilesLower = ['abcdefghijklmnopqrstuvwxyz'.split('')]
+
+  const tileKey1 = tiles.reduce((acc, curr, y) => {
     const row = curr.reduce((rAcc, rCurr, x) => {
       const tile = { [rCurr]: [x * xSize, y * ySize] } as Record<string, [number, number]>
       return { ...rAcc, ...tile }
@@ -550,4 +552,15 @@ export function oryxTinyFontMap(xSize: number, ySize: number) {
 
     return { ...acc, ...row }
   }, {} as Record<string, [number, number]>)
+
+  const tileKey2 = tilesLower.reduce((acc, curr, y) => {
+    const row = curr.reduce((rAcc, rCurr, x) => {
+      const tile = { [rCurr]: [x * xSize, y * ySize] } as Record<string, [number, number]>
+      return { ...rAcc, ...tile }
+    }, {} as Record<string, [number, number]>)
+
+    return { ...acc, ...row }
+  }, {} as Record<string, [number, number]>)
+
+  return { ...tileKey1, ...tileKey2 }
 }

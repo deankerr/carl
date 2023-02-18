@@ -55,7 +55,6 @@ export class Engine {
     this.system.init()
     listen(this.update.bind(this))
     console.log(this)
-    this.textDisplay.drawText(1, 1, 'HELLO')
     if (CONFIG.autoStartVisualizer) this.visualizer(Visualize('init'))
   }
 
