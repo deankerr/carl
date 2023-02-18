@@ -1,5 +1,6 @@
 # TODO
 
+- Friendly beings + stop obliterating non-combat entities
 - Restore stairs/doors: up/down dungeon levels, zone changes
 - Basic items (for now just disappear when walked on)
 
@@ -42,9 +43,24 @@
 - Centralised animation updates
 - Per region noise based selection of wall/floor etc. variants
 - Being sprite direction/facing support
+- Better ledge/shadow support
+
+### Region/Overseer
+
+- Usability/consistency pass
+- Standardise API-like query results
+
+### ECS
+
+- Usability/consistency pass (esp. Systems)
+- Maintain consistent object reference for entities - just replace components
+- Automatic mapping of template data to correct component without hardcoding (if possible)
+- Basic AI module
 
 ## Someday
 
+- Spatial indexing of entities? (ECS - automate marking cells as dirty re: render data)
+- Memoize cell render data
 - Exception handling
 - (W)alk/autoexplore
 - Unify function declaration style
@@ -64,4 +80,6 @@
 
 # Known Bugs
 
-- mozzies
+- Rooms doesn't reliably connect all rooms
+- Animated tiles out of sync (ie water)
+- Sprites occasionally randomly disappear for a frame (?)
