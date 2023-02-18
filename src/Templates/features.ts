@@ -87,6 +87,10 @@ export const features = {
     tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door'],
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
+    sprite: {
+      base: ['woodenDoorClosed', 'woodenDoorOpen'],
+      trigger: ['isClosed', 'isOpen'],
+    },
   },
 
   woodenDoorVertical: {
@@ -103,6 +107,10 @@ export const features = {
     ],
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
+    sprite: {
+      base: ['woodenDoorVerticalClosed', 'woodenDoorVerticalOpen'],
+      trigger: ['isClosed', 'isOpen'],
+    },
   },
 
   woodenDoorVerticalTop: {
@@ -111,6 +119,10 @@ export const features = {
     tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door', 'isVertical'],
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
+    sprite: {
+      base: ['woodenDoorVerticalClosedTop', 'woodenDoorVerticalOpenTop'],
+      trigger: ['isClosed', 'isOpen'],
+    },
   },
 
   stoneDoor: {
@@ -120,6 +132,10 @@ export const features = {
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
     tileVariant: ['stoneDoorV', 'stoneDoorVNorth'],
+    sprite: {
+      base: ['stoneDoorClosed', 'stoneDoorOpen'],
+      trigger: ['isClosed', 'isOpen'],
+    },
   },
 
   stoneDoorVertical: {
@@ -136,6 +152,10 @@ export const features = {
     ],
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
+    sprite: {
+      base: ['stoneDoorVerticalClosed', 'stoneDoorVerticalOpen'],
+      trigger: ['isClosed', 'isOpen'],
+    },
   },
 
   stoneDoorVerticalTop: {
@@ -144,6 +164,10 @@ export const features = {
     tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door', 'isVertical'],
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
+    sprite: {
+      base: ['stoneDoorVerticalClosedTop', 'stoneDoorVerticalOpenTop'],
+      trigger: ['isClosed', 'isOpen'],
+    },
   },
 
   jailDoor: {
@@ -153,6 +177,10 @@ export const features = {
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
     tileVariant: ['jailDoorV', 'jailDoorVNorth'],
+    sprite: {
+      base: ['jailDoorClosed', 'jailDoorOpen'],
+      trigger: ['isClosed', 'isOpen'],
+    },
   },
 
   jailDoorVertical: {
@@ -169,6 +197,10 @@ export const features = {
     ],
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
+    sprite: {
+      base: ['jailDoorVerticalClosed', 'jailDoorVerticalOpen'],
+      trigger: ['isClosed', 'isOpen'],
+    },
   },
 
   jailDoorVerticalTop: {
@@ -177,6 +209,10 @@ export const features = {
     tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door', 'isVertical'],
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
+    sprite: {
+      base: ['jailDoorVerticalClosedTop', 'jailDoorVerticalOpenTop'],
+      trigger: ['isClosed', 'isOpen'],
+    },
   },
 
   redDoor: {
@@ -186,6 +222,10 @@ export const features = {
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
     tileVariant: ['redDoorV', 'redDoorVNorth'],
+    sprite: {
+      base: ['redDoorClosed', 'redDoorOpen'],
+      trigger: ['isClosed', 'isOpen'],
+    },
   },
 
   redDoorVertical: {
@@ -202,6 +242,10 @@ export const features = {
     ],
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
+    sprite: {
+      base: ['redDoorVerticalClosed', 'redDoorVerticalOpen'],
+      trigger: ['isClosed', 'isOpen'],
+    },
   },
 
   redDoorVerticalTop: {
@@ -210,6 +254,10 @@ export const features = {
     tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door', 'isVertical'],
     trodOn: 'You carefully backflip through the door.',
     tileTriggers: ['isClosed', 'isOpen'],
+    sprite: {
+      base: ['redDoorVerticalClosedTop', 'redDoorVerticalOpenTop'],
+      trigger: ['isClosed', 'isOpen'],
+    },
   },
 
   // Floor decoration

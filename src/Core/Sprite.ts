@@ -30,6 +30,7 @@ goblin: {
 */
 
 import { pick, Queue, rnd, shuffle } from '../lib/util'
+import { Tag } from './Components'
 
 const templt = {
   goblin: {
@@ -66,6 +67,7 @@ export type SpriteConfig = {
   ledge?: string[]
   build?: string
   animate?: [AnimType, number]
+  trigger?: Tag[]
   // noise: string[]
   // noiseChance: number[]
 }
@@ -79,6 +81,7 @@ export type Sprites = {
   east?: Sprite
   south?: Sprite
   west?: Sprite
+  trigger?: Tag[]
 }
 
 type AnimType = 'static' | 'cycle' | 'random'
@@ -98,6 +101,7 @@ export class SpriteManager {
     const sprites: Sprites = { base, type: animType, speed: animSpeed }
 
     if (config.ledge) sprites.ledge = this.sprite(config.ledge, animType, animSpeed)
+    if (config.trigger) sprites.trigger = config.trigger
 
     return sprites
   }

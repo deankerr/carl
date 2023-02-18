@@ -97,18 +97,28 @@ export function renderRegion(engine: Engine) {
       // extract form data, applying lighting/fade if applicable
       const renderStack = stack.map(e => {
         if (e.sprite) {
+          const render = { ...nothing.render, char: e.sprite.base.tile }
+
           if (e.sprite.ledge) {
             const tAbove = local.terrainAt(pt.north(1))
             if (tAbove.key !== e.key) {
-              return { ...nothing.render, char: e.sprite.ledge.tile }
+              render.char = e.sprite.ledge.tile
             }
           }
 
           if (e.facing && e.sprite[e.facing]) {
             const s = e.sprite[e.facing]?.tile
-            if (s) return { ...nothing.render, char: s }
+            if (s) render.char = s
           }
-          return { ...nothing.render, char: e.sprite.base.tile }
+
+          if (e.sprite.trigger && e.sprite.base) {
+            const { trigger, base } = e.sprite
+            trigger.forEach((trig, i) => {
+              if (trig in e) render.char = base.tiles[i]
+            })
+          }
+
+          return render
         }
 
         const render = { ...nothing.render, ...e.render }
