@@ -89,7 +89,15 @@ export class EntityPool {
   spawn(key: EntityKey, at: Point) {
     const eID = this.count++
     const label = key + '-' + eID
-    const e = { ...this.thaw(key), eID, label, ...this.C.position(at) }
+    let e = { ...this.thaw(key), eID, label, ...this.C.position(at) }
+
+    if (e.sprite?.type === 'random') {
+      const tKey = templates[key]
+      if ('sprite' in tKey) {
+        e = { ...e, ...this.C.sprite(this.sprites, tKey.sprite) }
+      }
+    }
+
     return e
   }
 

@@ -29,7 +29,7 @@ goblin: {
 
 */
 
-import { pick, Queue } from '../lib/util'
+import { pick, Queue, rnd, shuffle } from '../lib/util'
 
 const templt = {
   goblin: {
@@ -72,6 +72,8 @@ export type SpriteConfig = {
 
 export type Sprites = {
   base: Sprite
+  type: AnimType
+  speed: number
   ledge?: Sprite
   north?: Sprite
   east?: Sprite
@@ -85,15 +87,15 @@ export class SpriteManager {
   all = new Map<string, Sprite>()
 
   register(config: SpriteConfig): Sprites {
-    console.log('==== sm register: ====')
-    console.log(config)
+    // console.log('==== sm register: ====')
+    // console.log(config)
 
     const [animType, animSpeed] = config.animate ?? ['static', 0]
 
     if (config.build) return this.build(config.build, animType, animSpeed)
 
     const base = this.sprite(config.base, animType, animSpeed)
-    const sprites: Sprites = { base }
+    const sprites: Sprites = { base, type: animType, speed: animSpeed }
 
     if (config.ledge) sprites.ledge = this.sprite(config.ledge, animType, animSpeed)
 
@@ -107,10 +109,13 @@ export class SpriteManager {
     const west = this.sprite([key + 'W1', key + 'W2'], animType, animSpeed)
     const base = pick([east, south, west])
 
-    return { base, north, east, south, west, ssID: spritesID++ }
+    return { base, north, east, south, west, ssID: spritesID++, type: animType, speed: animSpeed }
   }
+
   hash(tiles: string[], animType: AnimType, animSpeed: number) {
-    return animType + '-' + animSpeed + '-' + tiles.join('-')
+    let hash = animType + '-' + animSpeed + '-' + tiles.join('-')
+    if (animType === 'random') hash += '-' + rnd(20)
+    return hash
   }
 
   sprite(tiles: string[], animType: AnimType, animSpeed: number) {
@@ -142,7 +147,11 @@ export class Sprite {
       this.cycle()
     }
 
-    console.log('new sprite:', this)
+    if (this.type === 'random' && this.speed) {
+      this.random()
+    }
+
+    // console.log('new sprite:', this)
   }
 
   cycle() {
@@ -151,5 +160,15 @@ export class Sprite {
 
     this.tile = next
     setTimeout(this.cycle.bind(this), this.speed)
+  }
+
+  random() {
+    const next = rnd(this.tiles.length - 1)
+    this.tile = this.tiles[next]
+    setTimeout(this.random.bind(this), this.speed)
+  }
+
+  clone() {
+    return new Sprite(this.tiles, this.type, this.speed)
   }
 }

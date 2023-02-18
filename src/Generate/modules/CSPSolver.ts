@@ -16,19 +16,19 @@ export class CSPSolver {
     if (this.domain.length === 0) throw new Error('CSP: Domain is empty')
     for (const variable of variables) {
       const { constraints, key, object } = variable
-      console.log('variable:', key)
+      //console.log('variable:', key)
       const domain = shuffle(this.domain)
       let satisfies = false
 
       for (const pt of domain) {
         let isRoot = true
         // TODO DRY
-        console.log('assess pt', pt.s)
+        //console.log('assess pt', pt.s)
         if ('all' in constraints) {
           for (const c of constraints.all) {
-            console.log('(all) try', c)
+            //console.log('(all) try', c)
             satisfies = CSPConstraints[c](this.region, pt, this.domain)
-            console.log('satisfies:', satisfies)
+            //console.log('satisfies:', satisfies)
             if (!satisfies) break
           }
           if (!satisfies) continue
@@ -36,10 +36,10 @@ export class CSPSolver {
 
         if ('root' in constraints && isRoot) {
           for (const c of constraints.root) {
-            console.log('(root) try', c)
+            //console.log('(root) try', c)
             satisfies = CSPConstraints[c](this.region, pt, this.domain)
             isRoot = false
-            console.log('satisfies:', satisfies)
+            //console.log('satisfies:', satisfies)
             if (!satisfies) break
           }
           if (!satisfies) continue
@@ -47,19 +47,19 @@ export class CSPSolver {
 
         if ('other' in constraints && !isRoot) {
           for (const c of constraints.other) {
-            console.log('(other) try', c)
+            //console.log('(other) try', c)
             satisfies = CSPConstraints[c](this.region, pt, this.domain)
-            console.log('satisfies:', satisfies)
+            //console.log('satisfies:', satisfies)
             if (!satisfies) break
           }
           if (!satisfies) continue
         }
 
-        console.log('SUCCESS!')
+        //console.log('SUCCESS!')
 
         // place object
         if (Array.isArray(object)) {
-          console.log('place as array')
+          //console.log('place as array')
           object.forEach((k, i) => {
             if (k !== 'x') {
               const n = parseInt(k)
@@ -72,20 +72,20 @@ export class CSPSolver {
           break
         } else if (0 in object) {
           // todo type any[]
-          console.log('place as object')
+          //console.log('place as object')
 
           let relY = 0
           for (const layers of Object.values(object)) {
             if (Array.isArray(layers)) {
               for (const layer of layers) {
-                console.log('layer:', layer)
+                //console.log('layer:', layer)
                 let relX = 0
                 for (const x of layer) {
                   if (x !== 'x') {
                     const keyRef = parseInt(x)
                     const eKey = key[keyRef] as EntityKey
                     const relPt = pt.add(relX, relY)
-                    console.log('relPt', relPt.s)
+                    //console.log('relPt', relPt.s)
                     this.region.create(relPt, eKey)
                   }
                   relX++

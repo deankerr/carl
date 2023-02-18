@@ -5,6 +5,9 @@ export const features = {
     tiles: ['dungeonStairsDown'],
     tag: ['feature'],
     portal: ['here', 'down'],
+    sprite: {
+      base: ['dungeonStairsDown'],
+    },
   },
 
   dungeonStairsUp: {
@@ -12,6 +15,9 @@ export const features = {
     tiles: ['dungeonStairsUp'],
     tag: ['feature'],
     portal: ['here', 'up'],
+    sprite: {
+      base: ['dungeonStairsUp'],
+    },
   },
 
   caveStairsDown: {
@@ -19,6 +25,9 @@ export const features = {
     tiles: ['caveStairsDown'],
     tag: ['feature'],
     portal: ['here', 'down'],
+    sprite: {
+      base: ['caveStairsDown'],
+    },
   },
 
   caveStairsUp: {
@@ -26,6 +35,9 @@ export const features = {
     tiles: ['caveStairsUp'],
     tag: ['feature'],
     portal: ['here', 'up'],
+    sprite: {
+      base: ['caveStairsUp'],
+    },
   },
 
   cryptStairsDown: {
@@ -33,6 +45,9 @@ export const features = {
     tiles: ['cryptStairsDown'],
     tag: ['feature'],
     portal: ['here', 'down'],
+    sprite: {
+      base: ['cryptStairsDown'],
+    },
   },
 
   cryptStairsUp: {
@@ -40,6 +55,9 @@ export const features = {
     tiles: ['cryptStairsUp'],
     tag: ['feature'],
     portal: ['here', 'up'],
+    sprite: {
+      base: ['cryptStairsUp'],
+    },
   },
 
   cavernStairsDown: {
@@ -47,6 +65,9 @@ export const features = {
     tiles: ['cavernStairsDown'],
     tag: ['feature'],
     portal: ['here', 'down'],
+    sprite: {
+      base: ['cavernStairsDown'],
+    },
   },
 
   cavernStairsUp: {
@@ -54,6 +75,9 @@ export const features = {
     tiles: ['cavernStairsUp'],
     tag: ['feature'],
     portal: ['here', 'up'],
+    sprite: {
+      base: ['cavernStairsUp'],
+    },
   },
 
   // Doors
@@ -193,18 +217,50 @@ export const features = {
     name: 'web',
     tiles: ['web1'],
     tag: ['feature'],
+    sprite: {
+      base: ['web1'],
+    },
   },
-
-  webCorner: {
+  webNW: {
     name: 'web',
-    tiles: ['webNW', 'webNE', 'webSW', 'webSE'],
-    tag: ['feature', 'pickTileCorner'],
+    tiles: ['web1'],
+    tag: ['feature'],
+    sprite: {
+      base: ['webNW'],
+    },
+  },
+  webNE: {
+    name: 'web',
+    tiles: ['web1'],
+    tag: ['feature'],
+    sprite: {
+      base: ['webNE'],
+    },
+  },
+  webSW: {
+    name: 'web',
+    tiles: ['web1'],
+    tag: ['feature'],
+    sprite: {
+      base: ['webSW'],
+    },
+  },
+  webSE: {
+    name: 'web',
+    tiles: ['web1'],
+    tag: ['feature'],
+    sprite: {
+      base: ['webSE'],
+    },
   },
 
   cactus: {
     name: 'cactus',
     tiles: ['cactus'],
     tag: ['feature'],
+    sprite: {
+      base: ['cactus'],
+    },
   },
 
   lilypad1: {
@@ -213,6 +269,10 @@ export const features = {
     tilesAutoCycle: 1000,
     tag: ['feature'],
     trodOn: 'You bounce off the lilypad.',
+    sprite: {
+      base: ['lilypad11', 'lilypad12'],
+      animate: ['cycle', 1000],
+    },
   },
 
   lilypad2: {
@@ -221,6 +281,10 @@ export const features = {
     tilesAutoCycle: 1000,
     tag: ['feature'],
     trodOn: 'You bounce off the lilypad.',
+    sprite: {
+      base: ['lilypad21', 'lilypad22'],
+      animate: ['cycle', 1000],
+    },
   },
 
   lilypad3: {
@@ -229,6 +293,10 @@ export const features = {
     tilesAutoCycle: 1000,
     tag: ['feature'],
     trodOn: 'You bounce off the lilypad.',
+    sprite: {
+      base: ['lilypad31', 'lilypad32'],
+      animate: ['cycle', 1000],
+    },
   },
 
   lilypad4: {
@@ -237,30 +305,46 @@ export const features = {
     tilesAutoCycle: 1000,
     tag: ['feature'],
     trodOn: 'You bounce off the lilypad.',
+    sprite: {
+      base: ['lilypad41', 'lilypad42'],
+      animate: ['cycle', 1000],
+    },
   },
 
   grassTuft: {
     name: 'tuft of grass',
     tiles: ['grassTuft1', 'grassTuft2', 'grassTuft3', 'grassTuft4', 'grassTuft5'],
     tag: ['feature', 'pickTileEqually'],
+    sprite: {
+      base: ['grassTuft1', 'grassTuft2', 'grassTuft3', 'grassTuft4', 'grassTuft5'],
+    },
   },
 
   redMushrooms: {
     name: 'red mushrooms',
     tiles: ['redMushrooms'],
     tag: ['feature'],
+    sprite: {
+      base: ['redMushrooms'],
+    },
   },
 
   purpleMushrooms: {
     name: 'purple mushrooms',
     tiles: ['purpleMushrooms'],
     tag: ['feature'],
+    sprite: {
+      base: ['purpleMushrooms'],
+    },
   },
 
   yellowMushrooms: {
     name: 'yellow mushrooms',
     tiles: ['yellowMushrooms'],
     tag: ['feature'],
+    sprite: {
+      base: ['yellowMushrooms'],
+    },
   },
 
   candles: {
@@ -268,6 +352,10 @@ export const features = {
     tiles: ['candles1', 'candles2'],
     tilesAutoCycle: 200,
     tag: ['feature'],
+    sprite: {
+      base: ['candles1'],
+      animate: ['cycle', 200],
+    },
   },
 
   candlesNE: {
@@ -275,6 +363,10 @@ export const features = {
     tiles: ['candlesNE1', 'candlesNE2'],
     tilesAutoCycle: 200,
     tag: ['feature'],
+    sprite: {
+      base: ['candlesNE1'],
+      animate: ['cycle', 200],
+    },
   },
 
   candlesSE: {
@@ -282,30 +374,46 @@ export const features = {
     tiles: ['candlesSE1', 'candlesSE2'],
     tilesAutoCycle: 200,
     tag: ['feature'],
+    sprite: {
+      base: ['candlesSE1'],
+      animate: ['cycle', 200],
+    },
   },
 
   carpet: {
     name: 'carpet',
     tiles: ['carpet1', 'carpet2', 'carpet3'],
     tag: ['feature', 'pickTile'],
+    sprite: {
+      base: ['carpet1'],
+    },
   },
 
   carpetEmblem1: {
     name: 'carpetEmblem1',
     tiles: ['carpetEmblem1'],
     tag: ['feature'],
+    sprite: {
+      base: ['carpetEmblem1'],
+    },
   },
 
   carpetEmblem2: {
     name: 'carpet',
     tiles: ['carpetEmblem2'],
     tag: ['feature'],
+    sprite: {
+      base: ['carpetEmblem2'],
+    },
   },
 
   shrub: {
     name: 'shrub',
     tiles: ['shrub1', 'shrub2'],
     tag: ['feature', 'pickTile'],
+    sprite: {
+      base: ['shrub1'],
+    },
   },
 
   campfire: {
@@ -323,30 +431,45 @@ export const features = {
     name: 'sign',
     tiles: ['signBlank'],
     tag: ['feature', 'memorable'],
+    sprite: {
+      base: ['signBlank'],
+    },
   },
 
   signWeapon: {
     name: 'sign',
     tiles: ['signWeapon'],
     tag: ['feature', 'memorable'],
+    sprite: {
+      base: ['signWeapon'],
+    },
   },
 
   signPotion: {
     name: 'sign',
     tiles: ['signPotion'],
     tag: ['feature', 'memorable'],
+    sprite: {
+      base: ['signPotion'],
+    },
   },
 
   signInn: {
     name: 'sign',
     tiles: ['signInn'],
     tag: ['feature', 'memorable'],
+    sprite: {
+      base: ['signInn'],
+    },
   },
 
   dirtLedge: {
     name: 'dirtLedge',
     tiles: ['dirtLedge'],
     tag: ['feature', 'memorable'],
+    sprite: {
+      base: ['dirtLedge'],
+    },
   },
 
   bones: {
@@ -354,6 +477,9 @@ export const features = {
     tiles: ['bones1', 'bones2', 'bones3'],
     tag: ['feature', 'pickTileEqually'],
     trodOn: 'You trample some musty old bones.',
+    sprite: {
+      base: ['bones1'],
+    },
   },
 
   // Wall decoration
@@ -362,6 +488,10 @@ export const features = {
     tiles: ['sconce1', 'sconce2'],
     tilesAutoCycle: 400,
     tag: ['feature'],
+    sprite: {
+      base: ['sconce1'],
+      animate: ['cycle', 400],
+    },
   },
 
   sconceLower: {
@@ -369,6 +499,10 @@ export const features = {
     tiles: ['sconceLower1', 'sconceLower2'],
     tilesAutoCycle: 400,
     tag: ['feature'],
+    sprite: {
+      base: ['sconceLower1'],
+      animate: ['cycle', 400],
+    },
   },
 
   // Solid decoration
@@ -376,30 +510,45 @@ export const features = {
     name: 'warrior statue',
     tiles: ['statueWarrior'],
     tag: ['feature', 'blocksMovement'],
+    sprite: {
+      base: ['statueWarrior'],
+    },
   },
 
   statueDragon: {
     name: 'warrior statue',
     tiles: ['statueDragon'],
     tag: ['feature', 'blocksMovement'],
+    sprite: {
+      base: ['statueDragon'],
+    },
   },
 
   statueMonster: {
     name: 'warrior statue',
     tiles: ['statueMonster'],
     tag: ['feature', 'blocksMovement'],
+    sprite: {
+      base: ['statueMonster'],
+    },
   },
 
   stoneBoulder: {
     name: 'boulder',
     tiles: ['stoneBoulder'],
     tag: ['feature', 'blocksMovement'],
+    sprite: {
+      base: ['stoneBoulder'],
+    },
   },
 
   dirtBoulder: {
     name: 'boulder',
     tiles: ['dirtBoulder'],
     tag: ['feature', 'blocksMovement'],
+    sprite: {
+      base: ['dirtBoulder'],
+    },
   },
 
   bookshelf: {
@@ -416,17 +565,26 @@ export const features = {
     name: 'shadow',
     tiles: ['shadow'],
     tag: ['feature', 'memorable'],
+    sprite: {
+      base: ['shadow'],
+    },
   },
 
   invisibleBlock: {
     name: 'invisible Block',
     tiles: ['stoneBoulder'],
     tag: ['feature', 'invisible', 'blocksMovement'],
+    sprite: {
+      base: ['stoneBoulder'],
+    },
   },
 
   debug: {
     name: 'debug',
     tiles: ['0'],
     tag: ['feature', 'debug'],
+    sprite: {
+      base: ['0'],
+    },
   },
 } as const

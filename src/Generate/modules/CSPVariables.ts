@@ -76,7 +76,7 @@ export const CSPVar = {
     constraints: {
       all: ['isEmpty', 'isFloor', 'isCorner'],
     },
-    key: ['webCorner'],
+    key: ['webNE'],
     object: ['0'],
   },
   cornerCandles: {

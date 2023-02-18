@@ -20,6 +20,11 @@ export const terrain = {
     tag: ['terrain', 'liquid'],
     tilesAutoCycle: 1000,
     tilesLedge: ['slimeLedge1', 'slimeLedge2'],
+    sprite: {
+      base: ['slime1', 'slime2'],
+      ledge: ['slimeLedge1', 'slimeLedge2'],
+      animate: ['cycle', 1000],
+    },
   },
 
   oil: {
@@ -28,6 +33,11 @@ export const terrain = {
     tag: ['terrain', 'liquid'],
     tilesAutoRandom: 1500,
     tilesLedge: ['oilLedge1', 'oilLedge2'],
+    sprite: {
+      base: ['oil1', 'oil2'],
+      ledge: ['oilLedge1', 'oilLedge2'],
+      animate: ['random', 1000],
+    },
   },
 
   acid: {
@@ -36,6 +46,11 @@ export const terrain = {
     tag: ['terrain', 'liquid'],
     tilesAutoRandom: 1500,
     tilesLedge: ['acidLedge1', 'acidLedge2', 'acidClearLedge'],
+    sprite: {
+      base: ['acid1', 'acid2', 'acidClear'],
+      ledge: ['acidLedge1', 'acidLedge2', 'acidClearLedge'],
+      animate: ['random', 1000],
+    },
   },
 
   blood: {
@@ -44,6 +59,11 @@ export const terrain = {
     tag: ['terrain', 'liquid'],
     tilesAutoRandom: 1500,
     tilesLedge: ['bloodLedge1', 'bloodLedge2', 'bloodClearLedge'],
+    sprite: {
+      base: ['blood1', 'blood2', 'bloodClear'],
+      ledge: ['bloodLedge1', 'bloodLedge2', 'bloodClearLedge'],
+      animate: ['random', 1000],
+    },
   },
 
   sludge: {
@@ -52,6 +72,11 @@ export const terrain = {
     tag: ['terrain', 'liquid'],
     tilesAutoRandom: 1500,
     tilesLedge: ['sludgeLedge1', 'sludgeLedge2'],
+    sprite: {
+      base: ['sludge1', 'sludge2'],
+      ledge: ['sludgeLedge1', 'sludgeLedge2'],
+      animate: ['random', 1000],
+    },
   },
 
   // Wall/Structural

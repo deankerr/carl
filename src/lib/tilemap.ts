@@ -687,6 +687,8 @@ export function oryxTinyMap(size: number) {
       'bugW1',
       'horseE1',
       'horseS1',
+      'horseN1',
+      'horseW1',
     ],
     [
       'plantE2',
@@ -699,6 +701,8 @@ export function oryxTinyMap(size: number) {
       'bugW2',
       'horseE2',
       'horseS2',
+      'horseN2',
+      'horseW2',
     ],
     [
       'wightE1',

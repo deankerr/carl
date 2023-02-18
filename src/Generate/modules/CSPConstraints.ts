@@ -23,7 +23,7 @@ export const CSPConstraints = {
   },
   isNorthernWall: function (region: Region, pt: Point, domain: Point[]) {
     const ySorted = [...domain].sort((a, b) => a.y - b.y)
-    console.log('ySorted:', ySorted)
+    // console.log('ySorted:', ySorted)
     return pt.y === ySorted[0].y
   },
   isCorner: function (region: Region, pt: Point) {
@@ -31,7 +31,7 @@ export const CSPConstraints = {
       .neighbours4()
       .map(npt => region.terrainAt(npt))
       .filter(c => c.wall)
-    console.log('neighbours:', neighbours)
+    // console.log('neighbours:', neighbours)
     return neighbours.length === 2 // doorways could trigger this
   },
   isCenterAligned: function (region: Region, pt: Point) {
