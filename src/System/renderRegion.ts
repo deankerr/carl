@@ -141,16 +141,6 @@ export function renderRegion(engine: Engine) {
           render.char = sprite.tiles[i]
         }
 
-        if (visible && lighting.has(pt)) {
-          // const light = lighting.get(pt) ?? [0, 0, 0]
-          // if (Date.now() - lastLightFlicker > CONFIG.lightFlickerFreq) {
-          //   flickerDimmed = !flickerDimmed
-          //   lastLightFlicker = Date.now()
-          // }
-          // render.color = addLight(render.color, light, flickerDimmed)
-        } else if (known && !visible) {
-          // render.color = transformHSL(render.color, recalledFade)
-        }
         return render
       })
 

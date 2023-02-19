@@ -1,3 +1,4 @@
+import { transformHSL } from '../lib/color'
 import { logger } from '../lib/logger'
 import { Point } from '../lib/Shape/Point'
 import { features, terrain, beings, items } from '../Templates'
@@ -40,15 +41,6 @@ export class EntityPool {
       if ('fieldOfView' in t) e = this.attach(e, 'fieldOfView', t.fieldOfView)
 
       if ('portal' in t) e = { ...e, ...this.attach(e, 'portal', t.portal[0], t.portal[1]) }
-
-      // if (t.emitLight) {
-      //   const color =
-      //     t.emitLight[0] === 'auto'
-      //       ? transformHSL(e.render.color, { lum: { to: 0.1 } })
-      //       : t.emitLight[0]
-      //   e = this.attach(e, 'emitLight', color, t.emitLight[1])
-      //   e = this.attach(e, 'tag', 'signalLightPathUpdated')
-      // }
 
       this.pool.set(key, e)
     }

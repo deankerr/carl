@@ -346,16 +346,17 @@ export const features = {
     name: 'candles',
     tag: ['feature'],
     sprite: {
-      base: ['candles1'],
+      base: ['candles1', 'candles2'],
       animate: ['cycle', 200],
     },
+    emitLight: ['auto'],
   },
 
   candlesNE: {
     name: 'candles',
     tag: ['feature'],
     sprite: {
-      base: ['candlesNE1'],
+      base: ['candlesNE1', 'candlesNE2'],
       animate: ['cycle', 200],
     },
   },
@@ -364,7 +365,7 @@ export const features = {
     name: 'candles',
     tag: ['feature'],
     sprite: {
-      base: ['candlesSE1'],
+      base: ['candlesSE1', 'candlesSE2'],
       animate: ['cycle', 200],
     },
   },
@@ -469,6 +470,7 @@ export const features = {
       base: ['sconce1'],
       animate: ['cycle', 400],
     },
+    emitLight: ['auto'],
   },
 
   sconceLower: {
