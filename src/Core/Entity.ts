@@ -96,32 +96,7 @@ export class EntityPool {
     Object.assign(e, ...com)
   }
 
-  // region entity manager
-  entity(localState: Entity[], entity: Entity) {
-    const index = localState.findIndex(e => e === entity)
-    if (index < 0) throw new Error(`Unable to locate entity to modify ${entity.label}`)
-    let store = entity
-
-    const modify = <T extends FoundryKey>(cName: T, ...p: FoundryParam[T]) => {
-      store = this.attachName(store, cName, ...p)
-      localState[index] = store
-      return options
-    }
-
-    const remove = <T extends keyof Components>(componentName: T) => {
-      const e = { ...store }
-      Reflect.deleteProperty(e, componentName)
-      store = e
-      localState[index] = store
-      // logger('entity', 'remove', `${componentName}`).msg(`remove ${e.label} ${componentName}`)
-      return options
-    }
-
-    const options = { modify, remove }
-
-    return options
-  }
-
+  // live entity manager
   modify(e: Entity) {
     const entity = e
 

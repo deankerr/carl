@@ -103,15 +103,6 @@ export function townDemo(
   O3.add(cfPt.west(2), 'horse')
   O3.add(cfPt.east(2), 'archer')
 
-  const [horse] = region.entityList.filter(e => e.key === 'horse')
-  // region.pool.addComponentName(horse, 'position', point(1, 1))
-  // region.pool.addComponentName(horse, 'tag', 'actor')
-  region.pool
-    .modify(horse)
-    .define('position', region.rect.center)
-    .define('tag', 'blocksLight')
-    .remove('bumpMessage')
-
   O3.finalize()
   return region
 }

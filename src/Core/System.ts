@@ -32,7 +32,6 @@ export class System {
 
   regionChangeProcess = [handleLocationChange, processRegionInitialization, processFieldOfVision]
 
-  // preRenderProcess = [processLighting]
   renderProcess = [renderRegion, renderMessageLog]
 
   constructor(readonly engine: Engine) {}
@@ -45,11 +44,13 @@ export class System {
 
     let maxLoops = 500
     while (maxLoops-- > 0) {
-      const action = e.playerControlled ? playerAction : Action.__randomMove()
-
       log.msg('Start turn:', e.label)
+
+      const action = e.playerControlled ? playerAction : Action.__randomMove()
       local.modify(e).define('acting', action)
+
       this.turnProcess.forEach(sys => sys(engine, e.playerControlled == true))
+
       local.modify(local.get('acting')[0]).remove('acting')
 
       e = this.next(local)
@@ -68,7 +69,6 @@ export class System {
 
   render(engine: Engine) {
     const log = logger('sys', 'runRender')
-    // this.preRenderProcess.forEach(sys => sys(engine))
     this.renderProcess.forEach(sys => sys(engine))
     log.end()
   }

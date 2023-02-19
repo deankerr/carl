@@ -1,9 +1,9 @@
 import * as ROT from 'rot-js'
 import { Entity, EntityKey, EntityPool, Region } from '../Core'
 import { Visualizer } from '../Core/Visualizer'
-import { rnd } from '../lib/util'
 import { point, Point } from '../lib/Shape/Point'
 import { Rect } from '../lib/Shape/Rectangle'
+import { rnd } from '../lib/util'
 
 export type Snapshot = {
   terrainMap: Map<Point, Entity>
@@ -158,8 +158,9 @@ export class Overseer3 {
   debugSymbolN(pt: Point, n: number, color = 'transparent', bgColor = 'transparent') {
     const s = n.toString()
     s.split('').forEach((c, i) => {
-      let d = this.pool.spawn('debug', i === 0 ? pt : pt.east(i))
-      d = { ...d, ...this.pool.C.sprite(this.pool.sprites, { base: [c] }) }
+      const d = this.pool.spawn('debug', i === 0 ? pt : pt.east(i))
+      this.pool.attach(d, this.pool.C.sprite(this.pool.sprites, { base: [c] }))
+
       this.debugSymbolList.push(d)
       this.region.entityList.push(d)
     })
@@ -169,8 +170,9 @@ export class Overseer3 {
     const symbols = ['auraHoly', 'auraBlue', 'auraRed', 'auraGreen', 'auraPurple']
 
     const createDebugPt = (pt: Point, n: number) => {
-      let d = this.pool.spawn('debug', pt)
-      d = { ...d, ...this.pool.C.sprite(this.pool.sprites, { base: [symbols[n % 5]] }) }
+      const d = this.pool.spawn('debug', pt)
+      this.pool.attach(d, this.pool.C.sprite(this.pool.sprites, { base: [symbols[n % 5]] }))
+
       this.debugSymbolList.push(d)
       this.region.entityList.push(d)
     }
