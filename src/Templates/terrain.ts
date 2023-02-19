@@ -4,9 +4,7 @@ export const terrain = {
   // Liquid
   water: {
     name: 'water',
-    tiles: ['W'],
     tag: ['terrain', 'liquid'],
-    tilesLedge: ['waterLedge1', 'waterLedge2'],
     sprite: {
       base: ['water1', 'water2'],
       ledge: ['waterLedge1', 'waterLedge2'],
@@ -16,10 +14,7 @@ export const terrain = {
 
   slime: {
     name: 'slime',
-    tiles: ['slime1', 'slime2'],
     tag: ['terrain', 'liquid'],
-    tilesAutoCycle: 1000,
-    tilesLedge: ['slimeLedge1', 'slimeLedge2'],
     sprite: {
       base: ['slime1', 'slime2'],
       ledge: ['slimeLedge1', 'slimeLedge2'],
@@ -29,10 +24,7 @@ export const terrain = {
 
   oil: {
     name: 'oil',
-    tiles: ['oil1', 'oil2'],
     tag: ['terrain', 'liquid'],
-    tilesAutoRandom: 1500,
-    tilesLedge: ['oilLedge1', 'oilLedge2'],
     sprite: {
       base: ['oil1', 'oil2'],
       ledge: ['oilLedge1', 'oilLedge2'],
@@ -42,10 +34,7 @@ export const terrain = {
 
   acid: {
     name: 'acid',
-    tiles: ['acid1', 'acid2', 'acidClear'],
     tag: ['terrain', 'liquid'],
-    tilesAutoRandom: 1500,
-    tilesLedge: ['acidLedge1', 'acidLedge2', 'acidClearLedge'],
     sprite: {
       base: ['acid1', 'acid2', 'acidClear'],
       ledge: ['acidLedge1', 'acidLedge2', 'acidClearLedge'],
@@ -55,10 +44,7 @@ export const terrain = {
 
   blood: {
     name: 'blood',
-    tiles: ['blood1', 'blood2', 'bloodClear'],
     tag: ['terrain', 'liquid'],
-    tilesAutoRandom: 1500,
-    tilesLedge: ['bloodLedge1', 'bloodLedge2', 'bloodClearLedge'],
     sprite: {
       base: ['blood1', 'blood2', 'bloodClear'],
       ledge: ['bloodLedge1', 'bloodLedge2', 'bloodClearLedge'],
@@ -68,10 +54,7 @@ export const terrain = {
 
   sludge: {
     name: 'sludge',
-    tiles: ['sludge1', 'sludge2'],
     tag: ['terrain', 'liquid'],
-    tilesAutoRandom: 1500,
-    tilesLedge: ['sludgeLedge1', 'sludgeLedge2'],
     sprite: {
       base: ['sludge1', 'sludge2'],
       ledge: ['sludgeLedge1', 'sludgeLedge2'],
@@ -83,14 +66,6 @@ export const terrain = {
   // dungeon theme
   dungeonWall: {
     name: 'wall',
-    tiles: ['dungeonVertical1'],
-    tilesVertical: ['dungeonVertical1', 'dungeonVertical2', 'dungeonVertical3', 'dungeonVertical4'],
-    tilesHorizontal: [
-      'dungeonHorizontal1',
-      'dungeonHorizontal2',
-      'dungeonHorizontal3',
-      'dungeonHorizontal4',
-    ],
     tag: [...wallTags],
     sprite: {
       base: ['dungeonVertical1', 'dungeonVertical2', 'dungeonVertical3', 'dungeonVertical4'],
@@ -106,7 +81,6 @@ export const terrain = {
 
   dungeonPool: {
     name: 'well',
-    tiles: ['dungeonWell'],
     tag: ['terrain', 'blocksMovement'],
     sprite: {
       base: ['dungeonWell'],
@@ -116,9 +90,6 @@ export const terrain = {
   // cave theme
   caveWall: {
     name: 'wall',
-    tiles: ['caveVertical1'],
-    tilesVertical: ['caveVertical1', 'caveVertical2', 'caveVertical3', 'caveVertical4'],
-    tilesHorizontal: ['caveHorizontal1', 'caveHorizontal2', 'caveHorizontal3', 'caveHorizontal4'],
     tag: [...wallTags],
     sprite: {
       base: ['caveVertical1', 'caveVertical2', 'caveVertical3', 'caveVertical4'],
@@ -129,7 +100,6 @@ export const terrain = {
 
   cavePool: {
     name: 'well',
-    tiles: ['caveWell'],
     tag: ['terrain', 'blocksMovement'],
     sprite: {
       base: ['caveWell'],
@@ -139,14 +109,7 @@ export const terrain = {
   // crypt theme
   cryptWall: {
     name: 'wall',
-    tiles: ['cryptVertical1'],
-    tilesVertical: ['cryptVertical1', 'cryptVertical2', 'cryptVertical3', 'cryptVertical4'],
-    tilesHorizontal: [
-      'cryptHorizontal1',
-      'cryptHorizontal2',
-      'cryptHorizontal3',
-      'cryptHorizontal4',
-    ],
+
     tag: [...wallTags],
     sprite: {
       base: ['cryptVertical1', 'cryptVertical2', 'cryptVertical3', 'cryptVertical4'],
@@ -157,7 +120,6 @@ export const terrain = {
 
   cryptPool: {
     name: 'well',
-    tiles: ['cryptWell'],
     tag: ['terrain', 'blocksMovement'],
     sprite: {
       base: ['cryptWell'],
@@ -167,14 +129,7 @@ export const terrain = {
   // cavern theme
   cavernWall: {
     name: 'wall',
-    tiles: ['cavernVertical1'],
-    tilesVertical: ['cavernVertical1', 'cavernVertical2', 'cavernVertical3', 'cavernVertical4'],
-    tilesHorizontal: [
-      'cavernHorizontal1',
-      'cavernHorizontal2',
-      'cavernHorizontal3',
-      'cavernHorizontal4',
-    ],
+
     tag: [...wallTags],
     sprite: {
       base: ['cavernVertical1', 'cavernVertical2', 'cavernVertical3', 'cavernVertical4'],
@@ -185,7 +140,6 @@ export const terrain = {
 
   cavernPool: {
     name: 'well',
-    tiles: ['cavernWell'],
     tag: ['terrain', 'blocksMovement'],
     sprite: {
       base: ['cavernWell'],
@@ -195,15 +149,8 @@ export const terrain = {
   // Floor
   stoneFloor: {
     name: 'floor',
-    tiles: [
-      'stoneFloor1',
-      'stoneFloor2',
-      'stoneFloor3',
-      'stoneFloor4',
-      'stoneFloor5',
-      'stoneFloor6',
-    ],
-    tag: ['terrain', 'floor', 'pickTile'],
+
+    tag: ['terrain', 'floor'],
     sprite: {
       base: [
         'stoneFloor1',
@@ -219,8 +166,7 @@ export const terrain = {
 
   dirtFloor: {
     name: 'floor',
-    tiles: ['dirtFloor1', 'dirtFloor2', 'dirtFloor3', 'dirtFloor4', 'dirtFloor5', 'dirtFloor6'],
-    tag: ['terrain', 'floor', 'pickTile'],
+    tag: ['terrain', 'floor'],
     sprite: {
       base: ['dirtFloor1', 'dirtFloor2', 'dirtFloor3', 'dirtFloor4', 'dirtFloor5', 'dirtFloor6'],
       noise: [1],
@@ -229,8 +175,7 @@ export const terrain = {
 
   dirtFloorDetailed: {
     name: 'floor',
-    tiles: ['dirtFloor2', 'dirtFloor3', 'dirtFloor4', 'dirtFloor5', 'dirtFloor6'],
-    tag: ['terrain', 'floor', 'pickTileEqually'],
+    tag: ['terrain', 'floor'],
     sprite: {
       base: ['dirtFloor2', 'dirtFloor3', 'dirtFloor4', 'dirtFloor5', 'dirtFloor6'],
       noise: [1],
@@ -239,7 +184,6 @@ export const terrain = {
 
   dirtPath: {
     name: 'path',
-    tiles: ['dirtTiles1', 'dirtTiles2', 'dirtTiles3'],
     tag: ['terrain', 'pickTile'],
     sprite: {
       base: ['dirtTiles1', 'dirtTiles2', 'dirtTiles3'],
@@ -249,8 +193,7 @@ export const terrain = {
 
   dirtFloorPit: {
     name: 'hole',
-    tiles: ['unknown', 'dirtFloorPit'],
-    tag: ['terrain', 'blocksMovement', 'pickTileLedge'],
+    tag: ['terrain', 'blocksMovement'],
     sprite: {
       base: ['dirtFloorPit'],
     },
@@ -258,17 +201,6 @@ export const terrain = {
 
   stoneTileFloor: {
     name: 'floor',
-    tiles: [
-      'stoneTileFloor3',
-      'stoneTileFloor1',
-      'stoneTileFloor2',
-      'stoneTileFloor4',
-      'mossTileFloor1',
-      'mossTileFloor2',
-      'mossTileFloor3',
-      'mossTileFloor4',
-      'mossTileFloor5',
-    ],
     tag: ['terrain', 'floor'],
     sprite: {
       base: [
@@ -288,13 +220,6 @@ export const terrain = {
 
   stonePebbleFloor: {
     name: 'floor',
-    tiles: [
-      'stonePebbleFloor1',
-      'stonePebbleFloor2',
-      'stonePebbleFloor3',
-      'stonePebbleFloor4',
-      'stonePebbleFloor5',
-    ],
     tag: ['terrain', 'floor', 'pickTileEqually'],
     sprite: {
       base: [
@@ -310,7 +235,6 @@ export const terrain = {
 
   grassFloor: {
     name: 'grass',
-    tiles: ['grass1', 'grass2', 'grass3', 'grass4', 'grass5', 'grass6'],
     tag: ['terrain', 'floor', 'pickTile'],
     sprite: {
       base: ['grass1', 'grass2', 'grass3', 'grass4', 'grass5', 'grass6'],
@@ -320,8 +244,7 @@ export const terrain = {
 
   grassPath: {
     name: 'path',
-    tiles: ['grassTiles1', 'grassTiles2', 'grassTiles3'],
-    tag: ['terrain', 'pickTile'],
+    tag: ['terrain'],
     sprite: {
       base: ['grassTiles1', 'grassTiles2', 'grassTiles3'],
       noise: [1],
@@ -330,7 +253,6 @@ export const terrain = {
 
   grassTile: {
     name: 'path',
-    tiles: ['grassTile'],
     tag: ['terrain'],
     sprite: {
       base: ['grassTile'],
@@ -339,9 +261,7 @@ export const terrain = {
 
   sand: {
     name: 'sand',
-    tiles: ['sand'],
     tag: ['terrain'],
-    tilesLedge: ['sandLedge'],
     sprite: {
       base: ['sand'],
     },
@@ -349,8 +269,7 @@ export const terrain = {
 
   bridgeFloor: {
     name: 'bridge',
-    tiles: ['woodenBoards1', 'woodenBoards2', 'woodenBoards3', 'woodenPanel'],
-    tag: ['terrain', 'floor', 'pickTileEqually'],
+    tag: ['terrain', 'floor'],
     sprite: {
       base: ['woodenBoards1', 'woodenBoards2', 'woodenBoards3', 'woodenPanel'],
       noise: [1],
@@ -360,8 +279,7 @@ export const terrain = {
   // Building
   buildingWindow: {
     name: 'building',
-    tiles: ['buildingWindow1', 'buildingWindow2'],
-    tag: ['terrain', 'blocksMovement', 'pickTile'],
+    tag: ['terrain', 'blocksMovement'],
     sprite: {
       base: ['buildingWindow1', 'buildingWindow2'],
       noise: [1],
@@ -370,7 +288,6 @@ export const terrain = {
 
   buildingEntry: {
     name: 'building',
-    tiles: ['buildingDoor'],
     tag: ['terrain', 'blocksMovement'],
     sprite: {
       base: ['buildingDoor'],
@@ -379,8 +296,7 @@ export const terrain = {
 
   buildingRoofFront: {
     name: 'building',
-    tiles: ['buildingRoofFront1', 'buildingRoofFront2'],
-    tag: ['terrain', 'blocksMovement', 'pickTile'],
+    tag: ['terrain', 'blocksMovement'],
     sprite: {
       base: ['buildingRoofFront1', 'buildingRoofFront2'],
       noise: [1],
@@ -389,8 +305,7 @@ export const terrain = {
 
   buildingRoof: {
     name: 'building',
-    tiles: ['buildingRoof1', 'buildingRoof2'],
-    tag: ['terrain', 'blocksMovement', 'blocksLight', 'pickTile'],
+    tag: ['terrain', 'blocksMovement', 'blocksLight'],
     sprite: {
       base: ['buildingRoof1', 'buildingRoofFront2'],
     },
@@ -398,7 +313,6 @@ export const terrain = {
 
   buildingChimney: {
     name: 'building',
-    tiles: ['buildingChimney'],
     tag: ['terrain', 'blocksMovement', 'blocksLight'],
     sprite: {
       base: ['buildingChimney'],
@@ -408,7 +322,6 @@ export const terrain = {
   // Utility
   nothing: {
     name: 'nothing',
-    tiles: ['nothing'],
     tag: ['terrain'],
     sprite: {
       base: ['nothing'],
@@ -417,7 +330,6 @@ export const terrain = {
 
   unknown: {
     name: 'unknown',
-    tiles: ['unknown'],
     tag: ['terrain'],
     sprite: {
       base: ['unknown'],
@@ -426,7 +338,6 @@ export const terrain = {
 
   endlessVoid: {
     name: 'endless void',
-    tiles: ['unknown'],
     tag: ['blocksLight', 'blocksMovement', 'terrain'],
     sprite: {
       base: ['unknown'],

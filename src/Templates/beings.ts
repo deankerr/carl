@@ -2,7 +2,6 @@ export const beings = {
   // Friendly
   player: {
     name: 'player',
-    tiles: ['E'],
     tag: ['playerControlled', 'actor', 'blocksMovement', 'being', 'signalUpdatePlayerFOV'],
     fieldOfView: 16,
     sprite: {
@@ -13,8 +12,6 @@ export const beings = {
 
   archer: {
     name: 'archer',
-    tiles: ['archerW1', 'archerW2'],
-    tilesAutoCycle: 750,
     tag: ['being', 'actor', 'blocksMovement', 'friendly'],
     bumpMessage: 'Give me a target!',
     sprite: {
@@ -25,8 +22,6 @@ export const beings = {
 
   sorceress: {
     name: 'sorceress',
-    tiles: ['sorceressW1', 'sorceressW2'],
-    tilesAutoCycle: 750,
     tag: ['being', 'actor', 'blocksMovement', 'friendly'],
     bumpMessage: 'The flows of magic are whimsical today.',
     sprite: {
@@ -37,8 +32,6 @@ export const beings = {
 
   guy: {
     name: 'guy',
-    tiles: ['guyW1', 'guyW2'],
-    tilesAutoCycle: 750,
     tag: ['being', 'actor', 'blocksMovement', 'friendly'],
     bumpMessage: 'More work?',
     sprite: {
@@ -49,8 +42,6 @@ export const beings = {
 
   girl: {
     name: 'girl',
-    tiles: ['girlW1', 'girlW2'],
-    tilesAutoCycle: 750,
     tag: ['being', 'actor', 'blocksMovement', 'friendly'],
     bumpMessage: 'Welcome to our town, Glen Waverley.',
     sprite: {
@@ -61,8 +52,6 @@ export const beings = {
 
   thief: {
     name: 'thief',
-    tiles: ['thiefE1', 'thiefE2'],
-    tilesAutoCycle: 750,
     tag: ['being', 'actor', 'blocksMovement', 'friendly'],
     bumpMessage: "I've got what you need.",
     sprite: {
@@ -73,8 +62,6 @@ export const beings = {
 
   catBrown: {
     name: 'cat',
-    tiles: ['catBrownS1', 'catBrownS2'],
-    tilesAutoCycle: 750,
     tag: ['being', 'actor', 'blocksMovement', 'friendly'],
     bumpMessage: 'Meow!',
     sprite: {
@@ -84,8 +71,6 @@ export const beings = {
   },
   catTan: {
     name: 'cat',
-    tiles: ['catTanS1', 'catTanS2'],
-    tilesAutoCycle: 750,
     tag: ['being', 'actor', 'blocksMovement', 'friendly'],
     bumpMessage: 'Mrow!',
     sprite: {
@@ -96,9 +81,7 @@ export const beings = {
 
   horse: {
     name: 'horsey',
-    tiles: ['horseS1', 'horseS2'],
     tag: ['being', 'blocksMovement', 'friendly'],
-    tilesAutoCycle: 1000,
     bumpMessage: 'Hurumph!',
     sprite: {
       build: 'horse',
@@ -110,8 +93,6 @@ export const beings = {
 
   goblinSword: {
     name: 'sword goblin',
-    tiles: ['goblinSwordE1', 'goblinSwordE2'],
-    tilesAutoCycle: 1000,
     tag: ['being', 'actor', 'blocksMovement', 'hostile'],
     sprite: {
       build: 'goblinSword',
@@ -121,8 +102,6 @@ export const beings = {
 
   goblinShaman: {
     name: 'goblin shaman',
-    tiles: ['goblinShamanE1', 'goblinShamanE2'],
-    tilesAutoCycle: 1000,
     tag: ['being', 'actor', 'blocksMovement', 'hostile'],
     sprite: {
       build: 'goblinShaman',
@@ -132,8 +111,6 @@ export const beings = {
 
   goblinSpear: {
     name: 'spear shaman',
-    tiles: ['goblinSpearE1', 'goblinSpearE2'],
-    tilesAutoCycle: 1000,
     tag: ['being', 'actor', 'blocksMovement', 'hostile'],
     sprite: {
       build: 'goblinSpear',
@@ -143,8 +120,6 @@ export const beings = {
 
   bigGoblin: {
     name: 'goblino',
-    tiles: ['bigGoblinE1', 'bigGoblinE2'],
-    tilesAutoCycle: 1000,
     tag: ['being', 'actor', 'blocksMovement', 'hostile'],
     sprite: {
       build: 'bigGoblin',
@@ -154,8 +129,6 @@ export const beings = {
 
   skeleton: {
     name: 'skeleton',
-    tiles: ['skeletonE1', 'skeletonE2'],
-    tilesAutoCycle: 1000,
     tag: ['being', 'actor', 'blocksMovement', 'hostile'],
     sprite: {
       build: 'skeleton',
@@ -165,8 +138,6 @@ export const beings = {
 
   skeletonWarrior: {
     name: 'skeleton warrior',
-    tiles: ['skeletonWarriorE1', 'skeletonWarriorE2'],
-    tilesAutoCycle: 1000,
     tag: ['being', 'actor', 'blocksMovement', 'hostile'],
     sprite: {
       build: 'skeletonWarrior',
@@ -176,8 +147,6 @@ export const beings = {
 
   skeletonShaman: {
     name: 'skeleton shaman',
-    tiles: ['skeletonShamanE1', 'skeletonShamanE2'],
-    tilesAutoCycle: 1000,
     tag: ['being', 'actor', 'blocksMovement', 'hostile'],
     sprite: {
       build: 'skeletonShaman',
@@ -187,8 +156,6 @@ export const beings = {
 
   skeletonKing: {
     name: 'king skellybones',
-    tiles: ['skeletonKingE1', 'skeletonKingE2'],
-    tilesAutoCycle: 1000,
     tag: ['being', 'actor', 'blocksMovement', 'hostile'],
     sprite: {
       build: 'skeletonKing',
@@ -198,8 +165,6 @@ export const beings = {
 
   beholder: {
     name: 'beholder',
-    tiles: ['beholderE1', 'beholderE2'],
-    tilesAutoCycle: 1000,
     tag: ['being', 'actor', 'blocksMovement', 'hostile'],
     sprite: {
       build: 'beholder',
@@ -209,8 +174,6 @@ export const beings = {
 
   spider: {
     name: 'spider',
-    tiles: ['spiderE1', 'spiderE2'],
-    tilesAutoCycle: 1000,
     tag: ['being', 'actor', 'blocksMovement', 'hostile'],
     sprite: {
       build: 'spider',
@@ -220,8 +183,6 @@ export const beings = {
 
   rat: {
     name: 'giant rat',
-    tiles: ['ratE1', 'ratE2'],
-    tilesAutoCycle: 1000,
     tag: ['being', 'actor', 'blocksMovement', 'hostile'],
     sprite: {
       build: 'rat',
@@ -231,8 +192,6 @@ export const beings = {
 
   bat: {
     name: 'bat',
-    tiles: ['batE1', 'batE2'],
-    tilesAutoCycle: 1000,
     tag: ['being', 'actor', 'blocksMovement', 'hostile'],
     sprite: {
       build: 'bat',
@@ -242,42 +201,10 @@ export const beings = {
 
   gelCube: {
     name: 'gelatinous cube',
-    tiles: ['gelCubeE1', 'gelCubeE2'],
-    tilesAutoCycle: 1000,
     tag: ['being', 'actor', 'blocksMovement', 'hostile'],
     sprite: {
       build: 'gelCube',
       animate: ['cycle', 750],
     },
   },
-
-  // alt tileset
-
-  // spiderRed: {
-  //   name: 'giant spider',
-  //   tiles: ['spiderRed1', 'spiderRed2'],
-  //   tilesAutoCycle: 1000,
-  //   tag: ['being', 'actor', 'blocksMovement'],
-  // },
-
-  // spiderBlack: {
-  //   name: 'giant spider',
-  //   tiles: ['spiderBlack1', 'spiderBlack2'],
-  //   tilesAutoCycle: 1000,
-  //   tag: ['being', 'actor', 'blocksMovement'],
-  // },
-
-  // scorpionRed: {
-  //   name: 'giant scorpion',
-  //   tiles: ['scorpionRed1', 'scorpionRed2'],
-  //   tilesAutoCycle: 1000,
-  //   tag: ['being', 'actor', 'blocksMovement'],
-  // },
-
-  // scorpionBlack: {
-  //   name: 'giant scorpion',
-  //   tiles: ['scorpionBlack1', 'scorpionBlack2'],
-  //   tilesAutoCycle: 1000,
-  //   tag: ['being', 'actor', 'blocksMovement'],
-  // },
 } as const
