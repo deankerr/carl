@@ -1,16 +1,11 @@
 export * from './handleBump'
+export * from './handleLocationChange'
 export * from './handleMeleeAttack'
 export * from './handleMovement'
-export * from './handleTread'
-
 export * from './handlePickUp'
-
+export * from './handleTread'
 export * from './processDeath'
 export * from './processFieldOfVision'
-export * from './processLighting'
-
-export * from './renderRegion'
-export * from './renderMessageLog'
-
-export * from './handleLocationChange'
 export * from './processRegionInitialization'
+export * from './renderMessageLog'
+export * from './renderRegion'

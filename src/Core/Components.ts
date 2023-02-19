@@ -21,10 +21,6 @@ export const ComponentFoundry = {
     return { acting: action }
   },
 
-  emitLight: (color: string, enabled = true) => {
-    return { emitLight: { color, enabled } } // todo add flicker option
-  },
-
   fieldOfView: (radius: number, visible = new Set<Point>()) => {
     return { fieldOfView: { radius, visible } }
   },
@@ -37,7 +33,7 @@ export const ComponentFoundry = {
     return { position }
   },
 
-  tag: (...tags: string[]) => {
+  tag: (...tags: Tag[]) => {
     return tags.reduce((acc, curr) => {
       return { ...acc, [curr]: true }
     }, {} as { [K in Tag]?: true })
@@ -61,10 +57,6 @@ export const ComponentFoundry = {
 
   facing: (dir: Cardinal) => {
     return { facing: dir }
-  },
-
-  tint: (color: string, bgColor = 'transparent') => {
-    return { color, bgColor }
   },
 }
 

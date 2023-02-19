@@ -351,7 +351,6 @@ export const features = {
       base: ['candles1', 'candles2'],
       animate: ['cycle', 200],
     },
-    emitLight: ['auto'],
   },
 
   candlesNE: {

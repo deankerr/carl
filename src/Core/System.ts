@@ -2,22 +2,21 @@ import { CONFIG } from '../config'
 import { logger } from '../lib/logger'
 import {
   handleBump,
+  handleLocationChange,
   handleMeleeAttack,
   handleMovement,
+  handlePickUp,
   handleTread,
   processDeath,
   processFieldOfVision,
-  processLighting,
+  processRegionInitialization,
   renderMessageLog,
   renderRegion,
-  handleLocationChange,
-  processRegionInitialization,
-  handlePickUp,
 } from '../System'
 import * as Action from './Action'
 
-import { ActionTypes, Engine, Entity, Region } from './'
 import { handlePortal } from '../System/handlePortal'
+import { ActionTypes, Engine, Entity, Region } from './'
 
 export class System {
   turnProcess = [
@@ -33,7 +32,7 @@ export class System {
 
   regionChangeProcess = [handleLocationChange, processRegionInitialization, processFieldOfVision]
 
-  preRenderProcess = [processLighting]
+  // preRenderProcess = [processLighting]
   renderProcess = [renderRegion, renderMessageLog]
 
   constructor(readonly engine: Engine) {}
@@ -69,7 +68,7 @@ export class System {
 
   render(engine: Engine) {
     const log = logger('sys', 'runRender')
-    this.preRenderProcess.forEach(sys => sys(engine))
+    // this.preRenderProcess.forEach(sys => sys(engine))
     this.renderProcess.forEach(sys => sys(engine))
     log.end()
   }
