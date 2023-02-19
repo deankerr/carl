@@ -34,7 +34,7 @@ export class System {
 
   regionChangeProcess = [handleLocationChange, processRegionInitialization, processFieldOfVision]
 
-  preRenderProcess = [processLighting]
+  preRenderProcess = [processTileUpdate, processLighting]
   renderProcess = [renderRegion, renderMessageLog]
 
   constructor(readonly engine: Engine) {}

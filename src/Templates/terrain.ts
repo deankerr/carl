@@ -127,6 +127,10 @@ export const terrain = {
       'cryptHorizontal4',
     ],
     tag: [...wallTags],
+    sprite: {
+      base: ['cryptVertical1', 'cryptVertical2', 'cryptVertical3', 'cryptVertical4'],
+      exposed: ['cryptHorizontal1', 'cryptHorizontal2', 'cryptHorizontal3', 'cryptHorizontal4'],
+    },
   },
 
   cryptPool: {
@@ -206,6 +210,36 @@ export const terrain = {
       'mossTileFloor4',
       'mossTileFloor5',
     ],
+    tag: ['terrain', 'floor'],
+    sprite: {
+      base: [
+        'stoneTileFloor3',
+        'stoneTileFloor1',
+        'stoneTileFloor2',
+        'stoneTileFloor4',
+        'mossTileFloor1',
+        'mossTileFloor2',
+        'mossTileFloor3',
+        'mossTileFloor4',
+        'mossTileFloor5',
+      ],
+      noise: [1, 1, 1, 1, 1, 1, 1, 1],
+    },
+  },
+
+  stoneTileFloor2: {
+    name: 'floor',
+    tiles: [
+      'stoneTileFloor3',
+      'stoneTileFloor1',
+      'stoneTileFloor2',
+      'stoneTileFloor4',
+      'mossTileFloor1',
+      'mossTileFloor2',
+      'mossTileFloor3',
+      'mossTileFloor4',
+      'mossTileFloor5',
+    ],
     tag: ['terrain', 'floor', 'pickTile'],
   },
 
@@ -225,6 +259,10 @@ export const terrain = {
     name: 'grass',
     tiles: ['grass1', 'grass2', 'grass3', 'grass4', 'grass5', 'grass6'],
     tag: ['terrain', 'floor', 'pickTile'],
+    sprite: {
+      base: ['grass1', 'grass2', 'grass3', 'grass4', 'grass5', 'grass6'],
+      noise: [1, 1, 1, 1, 1, 1],
+    },
   },
 
   grassPath: {

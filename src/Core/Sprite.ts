@@ -68,20 +68,22 @@ export type SpriteConfig = {
   build?: string
   animate?: [AnimType, number]
   trigger?: Tag[]
-  // noise: string[]
-  // noiseChance: number[]
+  noise?: number[]
+  exposed?: string[]
 }
 
 export type Sprites = {
   base: Sprite
   type: AnimType
   speed: number
+  trigger?: Tag[]
+  noise?: number[]
   ledge?: Sprite
   north?: Sprite
   east?: Sprite
   south?: Sprite
   west?: Sprite
-  trigger?: Tag[]
+  exposed?: Sprite
 }
 
 type AnimType = 'static' | 'cycle' | 'random'
@@ -101,7 +103,9 @@ export class SpriteManager {
     const sprites: Sprites = { base, type: animType, speed: animSpeed }
 
     if (config.ledge) sprites.ledge = this.sprite(config.ledge, animType, animSpeed)
+    if (config.exposed) sprites.exposed = this.sprite(config.exposed, animType, animSpeed)
     if (config.trigger) sprites.trigger = config.trigger
+    if (config.noise) sprites.noise = config.noise
 
     return sprites
   }

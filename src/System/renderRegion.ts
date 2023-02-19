@@ -61,6 +61,7 @@ export function renderRegion(engine: Engine) {
 
   mainDisplay.clear()
 
+  const debugNCount: Record<number, number> = {}
   // Iterate through the visible set of points the size of the main display
   viewportRect.traverse(viewPt => {
     // the region location to render here
@@ -97,12 +98,13 @@ export function renderRegion(engine: Engine) {
       // extract form data, applying lighting/fade if applicable
       const renderStack = stack.map(e => {
         if (e.sprite) {
+          const { base, ledge, trigger, exposed, noise } = e.sprite
           const render = { ...nothing.render, char: e.sprite.base.tile }
 
-          if (e.sprite.ledge) {
+          if (ledge) {
             const tAbove = local.terrainAt(pt.north(1))
             if (tAbove.key !== e.key) {
-              render.char = e.sprite.ledge.tile
+              render.char = ledge.tile
             }
           }
 
@@ -111,11 +113,31 @@ export function renderRegion(engine: Engine) {
             if (s) render.char = s
           }
 
-          if (e.sprite.trigger && e.sprite.base) {
-            const { trigger, base } = e.sprite
+          if (trigger && base) {
             trigger.forEach((trig, i) => {
               if (trig in e) render.char = base.tiles[i]
             })
+          }
+
+          if (exposed) {
+            const tBelow = local.terrainAt(pt.south(1))
+            if (!tBelow.wall) render.char = exposed.tile
+          }
+
+          if (noise) {
+            // const v = Math.round((local.noise.get(pt.x, pt.y) + 1) * 50)
+            // render.char = base.tiles[v % base.tiles.length]
+            const v = local.noise.get(pt.x, pt.y)
+
+            if (v <= 0) render.char = base.tiles[0]
+            else {
+              const v2 = Math.round(v * (base.tiles.length - 1))
+              render.char = base.tiles[v2]
+              if (render.char === undefined) console.log(v2)
+
+              if (debugNCount[v2]) debugNCount[v2]++
+              else debugNCount[v2] = 1
+            }
           }
 
           return render
@@ -145,6 +167,8 @@ export function renderRegion(engine: Engine) {
       )
     }
   })
+
+  console.log('debugNCount:', debugNCount)
 }
 
 const recalledFade = { sat: { by: 0.8 }, lum: { by: 0.8 } }

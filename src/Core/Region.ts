@@ -1,3 +1,4 @@
+import * as ROT from 'rot-js'
 import { Color } from 'rot-js/lib/color'
 import { CONFIG } from '../config'
 import { loop, pick, Queue, rnd } from '../lib/util'
@@ -8,6 +9,7 @@ import { Visualizer } from './Visualizer'
 
 export class Region {
   rect: Rect
+  noise = new ROT.Noise.Simplex()
 
   pool = window.game.pool
 

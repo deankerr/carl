@@ -13,7 +13,7 @@ export function dungeon(
   const region = new Region(width, height)
   region.name = 'dungeon'
   const O3 = new Overseer3(region)
-  O3.theme.floor = 'stoneFloor'
+  O3.theme.floor = 'stoneTileFloor'
 
   O3.room(region.rect)
   O3.snap('Initial room')
@@ -37,26 +37,26 @@ export function dungeon(
   //   O3.add(g.rect, riverKey)
   //   O3.snap('river')
   // })
-  const ptC = region.rect.center
-  O3.add(ptC.west(), 'water')
-  O3.add(ptC.west().south(), 'water')
+  // const ptC = region.rect.center
+  // O3.add(ptC.west(), 'water')
+  // O3.add(ptC.west().south(), 'water')
 
-  O3.add(ptC, 'bookshelf')
-  O3.add(ptC.north(), 'bookshelf')
+  // O3.add(ptC, 'bookshelf')
+  // O3.add(ptC.north(), 'bookshelf')
 
-  O3.add(ptC.east(), 'campfire')
-  O3.add(ptC.east().south(), 'campfire')
+  // O3.add(ptC.east(), 'campfire')
+  // O3.add(ptC.east().south(), 'campfire')
 
-  O3.add(ptC.north(2), 'rat')
-  O3.add(ptC.north(3), 'rat')
+  // O3.add(ptC.north(2), 'rat')
+  // O3.add(ptC.north(3), 'rat')
 
-  for (const e of region.get('position')) {
-    console.log(e.key, e)
-  }
+  // for (const e of region.get('position')) {
+  //   console.log(e.key, e)
+  // }
 
-  for (const e of region.at(ptC.west())) {
-    if (e.key === 'water') console.log(e.key, e)
-  }
+  // for (const e of region.at(ptC.west())) {
+  //   if (e.key === 'water') console.log(e.key, e)
+  // }
 
   O3.finalize()
   return region
