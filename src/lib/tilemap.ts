@@ -187,7 +187,7 @@ export function createOryxTinyMap(size: number) {
       'cellarDoorClosed',
       'cellarDoorOpen',
       'cellarDoorOpenUpper',
-      'shadow',
+      'lightShadow',
     ],
     [
       'stoneDoorClosed',
@@ -314,7 +314,7 @@ export function createOryxTinyMap(size: number) {
       'pots2',
       'pot',
     ],
-    ['web1', 'web2', 'sand', 'sandLedge', 'cactus', 'dirtLedge'],
+    ['web1', 'web2', 'sand', 'sandLedge', 'cactus', 'dirtLedge', 'recalled'],
     [],
     [],
     [],

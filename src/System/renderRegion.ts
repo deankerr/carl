@@ -52,6 +52,7 @@ export function renderRegion(engine: Engine) {
 
   const unknown = local.pool.symbolic('unknown')
   const nothing = local.pool.symbolic('nothing')
+  const recalled = local.pool.symbolic('recalled')
 
   const { areaKnown, areaVisible, lighting } = local
   const entities = local.get('position')
@@ -89,6 +90,7 @@ export function renderRegion(engine: Engine) {
         stack.push(terrain)
         stack.push(...features)
         stack.push(...items)
+        stack.push(recalled)
       }
 
       // sort z-levels

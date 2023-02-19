@@ -73,5 +73,4 @@
 # Known Bugs
 
 - Rooms doesn't reliably connect all rooms
-- Animated tiles out of sync (ie water)
 - Sprites occasionally randomly disappear for a frame (?)

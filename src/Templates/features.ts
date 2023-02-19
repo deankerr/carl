@@ -534,7 +534,15 @@ export const features = {
     name: 'shadow',
     tag: ['feature'],
     sprite: {
-      base: ['shadow'],
+      base: ['lightShadow'],
+    },
+  },
+
+  recalled: {
+    name: 'recalled',
+    tag: ['feature', 'renderLevelHigh'],
+    sprite: {
+      base: ['recalled'],
     },
   },
 
