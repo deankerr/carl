@@ -94,6 +94,8 @@ export class Region {
     if (entity.actor) {
       this.turnQueue.remove(entity.eID)
     }
+
+    this.pool.live.delete(entity)
   }
 
   // * Entity Queries

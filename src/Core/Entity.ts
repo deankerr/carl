@@ -49,14 +49,6 @@ export class EntityPool {
     }
   }
 
-  // attach<T extends FoundryKey>(e: Entity, componentName: T, ...p: FoundryParam[T]) {
-  //   const c = Reflect.apply(this.C[componentName], undefined, p)
-  //   // logger('entity', 'attach', `${componentName}`).msg(
-  //   //   `attach ${e.label} ${componentName} [${[...p.values()]}]`
-  //   // )
-  //   return { ...e, ...c }
-  // }
-
   private thaw(key: EntityKey) {
     const thawed = this.pool.get(key)
     if (!thawed) throw new Error(`Could not thaw entity ${key}`)
