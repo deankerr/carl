@@ -1,10 +1,9 @@
 import * as ROT from 'rot-js'
-import { Color } from 'rot-js/lib/color'
 import { CONFIG } from '../config'
-import { loop, pick, Queue, rnd } from '../lib/util'
-import { Point, point, pointRect } from '../lib/Shape/Point'
+import { Point, point } from '../lib/Shape/Point'
 import { Rect } from '../lib/Shape/Rectangle'
-import { Entity, EntityPool, EntityKey, EntityWith } from './Entity'
+import { Queue, rnd } from '../lib/util'
+import { Entity, EntityKey, EntityWith } from './Entity'
 import { Visualizer } from './Visualizer'
 
 export class Region {
@@ -25,9 +24,6 @@ export class Region {
 
   recallAll = CONFIG.recallAll
   revealAll = CONFIG.revealAll
-
-  lighting = new Map<Point, Color>()
-  emitters = new Set<Entity>()
 
   hasChanged = true
 
@@ -86,9 +82,9 @@ export class Region {
     this.hasChanged = true
   }
 
-  entity(entity: Entity) {
+  modify(entity: Entity) {
     this.hasChanged = true
-    return this.pool.entity(this.entityList, entity)
+    return this.pool.modify(entity)
   }
 
   destroyEntity(entity: Entity) {

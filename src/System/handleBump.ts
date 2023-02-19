@@ -28,22 +28,22 @@ export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
       const door = local.has(eBumped, 'isClosed')
       if (door) {
         local
-          .entity(door)
+          .modify(door)
           .remove('isClosed')
           .remove('blocksLight')
           .remove('blocksMovement')
-          .modify('tag', 'isOpen')
-          .modify('tag', 'signalLightPathUpdated')
+          .define('tag', 'isOpen')
+          .define('tag', 'signalLightPathUpdated')
 
         if (door.isVertical) {
           const [doorNorth] = local.at(action.bump.add(0, -1)).filter(e => e.door)
           local
-            .entity(doorNorth)
+            .modify(doorNorth)
             .remove('isClosed')
             .remove('blocksLight')
             .remove('blocksMovement')
-            .modify('tag', 'isOpen')
-            .modify('tag', 'signalLightPathUpdated')
+            .define('tag', 'isOpen')
+            .define('tag', 'signalLightPathUpdated')
         }
 
         engine.message('Knock knock!!!', door)
@@ -52,10 +52,10 @@ export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
 
       // * hostile - attack
       if (eBumped.hostile) {
-        local.entity(eBumped).modify('tag', 'meleeAttackTarget')
+        local.modify(eBumped).define('tag', 'meleeAttackTarget')
 
         // update acting component
-        local.entity(currentEntity).modify('acting', Action.MeleeAttack(action.bump))
+        local.modify(currentEntity).define('acting', Action.MeleeAttack(action.bump))
         log.msg(`handleBump: action - MeleeAttack ${eBumped.label}`)
       }
 

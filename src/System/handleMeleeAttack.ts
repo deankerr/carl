@@ -19,7 +19,7 @@ export const handleMeleeAttack = (engine: Engine, isPlayerTurn: boolean) => {
   if (isPlayerTurn) {
     // kill target
     log.msg(`handleMeleeAttack: player killed ${targetEntity.label}`)
-    local.entity(targetEntity).modify('tag', 'dead')
+    local.modify(targetEntity).define('tag', 'dead')
     engine.message(`You obliterate the ${targetEntity.name} with your mind!`, targetEntity)
   } else {
     // TODO in player vision/hearing range only
@@ -32,7 +32,7 @@ export const handleMeleeAttack = (engine: Engine, isPlayerTurn: boolean) => {
   // ? cleanup
   const taggedEntities = local.get('meleeAttackTarget')
   for (const entity of taggedEntities) {
-    local.entity(entity).remove('meleeAttackTarget')
+    local.modify(entity).remove('meleeAttackTarget')
     log.msg(`handleMeleeAttack: cleanup - removed tagMeleeAttackTarget from ${entity.label}`)
   }
 }

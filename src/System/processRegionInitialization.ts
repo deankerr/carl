@@ -16,7 +16,7 @@ export function processRegionInitialization(engine: Engine) {
 
   local.turnQueue = queue
 
-  local.entity(player).modify('tag', 'signalUpdatePlayerFOV')
+  local.modify(player).define('tag', 'signalUpdatePlayerFOV')
 
   if (CONFIG.setMainToMapSize)
     engine.mainDisplay.setOptions({ width: local.width, height: local.height })

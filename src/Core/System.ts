@@ -48,9 +48,9 @@ export class System {
       const action = e.playerControlled ? playerAction : Action.__randomMove()
 
       log.msg('Start turn:', e.label)
-      local.entity(e).modify('acting', action)
+      local.modify(e).define('acting', action)
       this.turnProcess.forEach(sys => sys(engine, e.playerControlled == true))
-      local.entity(local.get('acting')[0]).remove('acting')
+      local.modify(local.get('acting')[0]).remove('acting')
 
       e = this.next(local)
 

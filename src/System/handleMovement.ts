@@ -31,7 +31,7 @@ export const handleMovement = (engine: Engine, isPlayerTurn: boolean) => {
 
   // debug no clip
   if (engine.options.debugMode && isPlayerTurn) {
-    local.entity(currentEntity).modify('acting', Action.Tread(newPt)).modify('position', newPt)
+    local.modify(currentEntity).define('acting', Action.Tread(newPt)).define('position', newPt)
     return
   }
 
@@ -40,13 +40,13 @@ export const handleMovement = (engine: Engine, isPlayerTurn: boolean) => {
   // walkable check
   if (entitiesHere.some(e => e.blocksMovement)) {
     log.msg('handleMovement: new action - Bump ')
-    local.entity(currentEntity).modify('acting', Action.Bump(newPt))
+    local.modify(currentEntity).define('acting', Action.Bump(newPt))
     return log.end()
   }
 
   // valid move, create tread action and update position
   log.msg('handleMovement: new action - Tread')
-  local.entity(currentEntity).modify('acting', Action.Tread(newPt)).modify('position', newPt)
+  local.modify(currentEntity).define('acting', Action.Tread(newPt)).define('position', newPt)
 
   log.end()
 }

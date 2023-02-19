@@ -27,8 +27,8 @@ export const processFieldOfVision = (engine: Engine) => {
       }
     )
     local
-      .entity(entity)
-      .modify('fieldOfView', entity.fieldOfView.radius, visible)
+      .modify(entity)
+      .define('fieldOfView', entity.fieldOfView.radius, visible)
       .remove('signalUpdatePlayerFOV')
 
     // player specific

@@ -1,9 +1,8 @@
 import { CONFIG } from '../config'
 import { Region } from '../Core'
-import { floor, half, rnd } from '../lib/util'
 import { point } from '../lib/Shape/Point'
 import { Rect } from '../lib/Shape/Rectangle'
-import { BinarySpacePartition, CellDish } from './modules'
+import { CellDish } from './modules'
 import { Overseer3 } from './Overseer3'
 
 export function townDemo(
@@ -103,6 +102,15 @@ export function townDemo(
   O3.add(cfPt, 'campfire')
   O3.add(cfPt.west(2), 'horse')
   O3.add(cfPt.east(2), 'archer')
+
+  const [horse] = region.entityList.filter(e => e.key === 'horse')
+  // region.pool.addComponentName(horse, 'position', point(1, 1))
+  // region.pool.addComponentName(horse, 'tag', 'actor')
+  region.pool
+    .modify(horse)
+    .define('position', region.rect.center)
+    .define('tag', 'blocksLight')
+    .remove('bumpMessage')
 
   O3.finalize()
   return region

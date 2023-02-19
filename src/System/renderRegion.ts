@@ -1,10 +1,8 @@
-import * as ROT from 'rot-js'
-import { CONFIG } from '../config'
-import { Entity, EntityWith } from '../Core'
+import { Entity } from '../Core'
 import { Engine } from '../Core/Engine'
-import { clamp, floor, half } from '../lib/util'
 import { point } from '../lib/Shape/Point'
 import { Rect } from '../lib/Shape/Rectangle'
+import { clamp, floor, half } from '../lib/util'
 
 export function renderRegion(engine: Engine) {
   const { mainDisplay, local, textDisplay } = engine
@@ -49,7 +47,7 @@ export function renderRegion(engine: Engine) {
   const nothing = local.pool.symbolic('nothing')
   const recalled = local.pool.symbolic('recalled')
 
-  const { areaKnown, areaVisible, lighting } = local
+  const { areaKnown, areaVisible } = local
   const entities = local.get('position')
 
   mainDisplay.clear()

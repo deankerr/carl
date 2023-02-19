@@ -5,7 +5,7 @@ import { SpriteConfig, SpriteManager } from './Sprite'
 
 export type FoundryKey = keyof typeof ComponentFoundry
 export type FoundryParam = { [K in FoundryKey]: Parameters<typeof ComponentFoundry[K]> }
-type FoundryReturn = ReturnType<typeof ComponentFoundry[FoundryKey]>
+export type FoundryReturn = ReturnType<typeof ComponentFoundry[FoundryKey]>
 
 export type Component<K extends FoundryKey> = ReturnType<typeof ComponentFoundry[K]>
 export type Components = UnionToIntersection<FoundryReturn>

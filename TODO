@@ -42,6 +42,7 @@
 ### ECS
 
 - Usability/consistency pass (esp. Systems)
+- Reduce System boilerplate - pass in object with common requirements (local, currentActing etc.)
 - Maintain consistent object reference for entities - just replace components
 - Automatic mapping of template data to correct component without hardcoding (if possible)
 - Basic AI module
