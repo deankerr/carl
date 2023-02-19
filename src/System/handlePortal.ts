@@ -1,5 +1,5 @@
-import { Engine } from '../Core/Engine'
 import * as Action from '../Core/Action'
+import { Engine } from '../Core/Engine'
 
 export const handlePortal = (engine: Engine, isPlayerTurn: boolean) => {
   const { local } = engine
@@ -11,8 +11,7 @@ export const handlePortal = (engine: Engine, isPlayerTurn: boolean) => {
 
   const [pHere] = local.at(eActing.position).filter(e => e.portal)
 
-  if (pHere.portal) {
-    console.log('portal action')
+  if (pHere?.portal) {
     engine.system.change(Action.ChangeLocation(pHere.portal.zone, pHere.portal.level))
   } else {
     console.log('No portal here')
