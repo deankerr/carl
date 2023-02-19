@@ -90,9 +90,11 @@ export function renderRegion(engine: Engine) {
       stack.sort((a, b) => zLevel(a) - zLevel(b))
 
       // extract form data, applying lighting/fade if applicable
-      const renderStack = stack.reduce((acc, e) => {
+      const renderStack: [string, string, string][] = stack.reduce((acc, e) => {
         const { base, ledge, ledgeOverlay, trigger, exposed, noise } = e.sprite
         let tile = e.sprite.base.tile
+        let color = 'transparent'
+        let bgColor = 'transparent'
 
         // liquid
         if (ledge) {
@@ -138,20 +140,24 @@ export function renderRegion(engine: Engine) {
         if (ledgeOverlay) {
           const tAbove = local.terrainAt(pt.north(1))
           if (tAbove.key !== e.key) {
-            return [...acc, tile, ledgeOverlay.tile]
+            return [...acc, [tile, color, bgColor], [ledgeOverlay.tile, color, bgColor]]
           }
         }
 
-        return [...acc, tile]
-      }, [] as string[])
+        // colors
+        if (e.color) color = e.color
+        if (e.bgColor) bgColor = e.bgColor
+
+        return [...acc, [tile, color, bgColor]]
+      }, [] as [string, string, string][])
 
       // draw
       mainDisplay.draw(
         viewPt.x,
         viewPt.y,
-        renderStack.map(s => s),
-        renderStack.map(_ => 'transparent'),
-        renderStack.map(_ => 'transparent')
+        renderStack.map(s => s[0]),
+        renderStack.map(s => s[1]),
+        renderStack.map(s => s[2])
       )
     }
   })

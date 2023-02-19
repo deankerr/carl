@@ -44,6 +44,7 @@ export class EntityPool {
       if ('bumpMessage' in t) e = { ...e, ...C.bumpMessage(...t.bumpMessage) }
       if ('fieldOfView' in t) e = { ...e, ...C.fieldOfView(...t.fieldOfView) }
       if ('portal' in t) e = { ...e, ...C.portal(t.portal[0], t.portal[1]) }
+      if ('color' in t) e = { ...e, ...C.color(...t.color) }
 
       this.pool.set(key, e)
     }

@@ -1,50 +1,65 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CONFIG } from '../config'
-import { Region } from '../Core'
-import { loop, pick, shuffle } from '../lib/util'
-import { Point } from '../lib/Shape/Point'
+import { Entity, EntityWith, Region } from '../Core'
+import { DijkstraMap } from '../lib/dijkstra'
 import { CellDish } from './modules/cellular'
-import { floodFindRegions } from './modules/flood'
 import { Overseer3 } from './Overseer3'
+
+const mapScale = 2
 
 export function cave(
   isTopLevel: boolean,
-  width = CONFIG.generateWidth,
-  height = CONFIG.generateHeight
+  width = CONFIG.generateWidth * mapScale,
+  height = CONFIG.generateHeight * mapScale
 ) {
-  const region = new Region(width, height)
+  const region = new Region(width, height, 'cave')
   const O3 = new Overseer3(region)
-
-  region.name = 'cave'
 
   //* cave generation
   const wall = 'caveWall'
   const floor = 'dirtFloor'
   const water = 'water'
   const sand = 'sand'
-
-  const clear = '[clear]'
   const web = 'web'
 
   const caveDish = new CellDish(region.rect)
   caveDish.addAlways(region.rect.edgePoints())
-  caveDish.randomize(45).current((pt, alive) => O3.add(pt, alive ? wall : floor))
-  O3.snap('cell init')
-
+  caveDish.randomize(30).current((pt, alive) => O3.add(pt, alive ? wall : floor))
+  // O3.snap('cell init')
   caveDish.generation(4, 5)((pt, alive) => O3.add(pt, alive ? wall : floor))
-  O3.snap('cell 1')
-
+  // O3.snap('cell 1')
   caveDish.generation(4, 5)((pt, alive) => O3.add(pt, alive ? wall : floor))
-  O3.snap('cell 2')
-
+  // O3.snap('cell 2')
   caveDish.generation(4, 5)((pt, alive) => O3.add(pt, alive ? wall : floor))
-  O3.snap('cell 3')
-
+  // O3.snap('cell 3')
   caveDish.generation(4, 5)((pt, alive) => O3.add(pt, alive ? wall : floor))
-  O3.snap('cell 4')
-
+  // O3.snap('cell 4')
   caveDish.generation(4, 5)((pt, alive) => O3.add(pt, alive ? wall : floor))
-  O3.snap('cell 5')
+  // O3.snap('cell 5')
+  caveDish.generation(4, 5)((pt, alive) => O3.add(pt, alive ? wall : floor))
+  // O3.snap('cell 5')
+  caveDish.generation(4, 5)((pt, alive) => O3.add(pt, alive ? wall : floor))
+  // O3.snap('cell 5')
+
+  // const open = floodFindRegions(region.rect, pt => {
+  //   return !region.terrainAt(pt).blocksMovement
+  // })
+
+  // open.forEach((v, pt) => {
+  //   if (v >= 0) O3.debugCN(pt, v)
+  // })
+
+  const player = region.createPlayer() as EntityWith<Entity, 'position'>
+
+  const dijk = new DijkstraMap()
+  region.rect.traverse(pt => {
+    if (!region.terrainAt(pt).blocksMovement) {
+      dijk.map.set(pt, 99)
+    }
+  })
+  dijk.map.set(player.position, 0)
+  dijk.run()
+  dijk.each((pt, val) => O3.debugCN(pt, val, val / 120))
 
   // //* lake
   // const lakeSeed = rndCluster(5, O3.module())

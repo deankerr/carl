@@ -1,6 +1,6 @@
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
-import { tileMapOryxMain, oryxTinyMap, oryxTinyFontMap } from './tilemap'
+import { oryxTinyFontMap, oryxTinyMap, tileMapOryxMain } from './tilemap'
 
 const tinySize = 48
 export const createTile2Display = (

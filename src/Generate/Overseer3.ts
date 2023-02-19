@@ -1,6 +1,7 @@
 import * as ROT from 'rot-js'
 import { Entity, EntityKey, EntityPool, Region } from '../Core'
 import { Visualizer } from '../Core/Visualizer'
+import { HSLToHex } from '../lib/color'
 import { point, Point } from '../lib/Shape/Point'
 import { Rect } from '../lib/Shape/Rectangle'
 import { rnd } from '../lib/util'
@@ -37,11 +38,15 @@ export class Overseer3 {
   theme: RegionTheme = { wall: 'dungeonWall', floor: 'dirtFloor', door: 'woodenDoor' }
 
   debugSymbolList: Entity[] = []
+  debugCNMap = new Map<Point, Entity>()
 
   constructor(readonly region: Region) {
     this.rect = region.rect
     this.pool = region.pool
-    console.log(`%c  O3: ${region.name}  `, 'font-weight: bold; background-color: orange;')
+    console.log(
+      `%c  O3: ${region.name} - Area: ${region.width * region.height} `,
+      'font-weight: bold; background-color: orange;'
+    )
   }
 
   snap(message = '') {
@@ -187,6 +192,35 @@ export class Overseer3 {
     })
   }
 
+  debugCN(
+    area: Point | Rect,
+    n: number,
+    color: 'transparent' | number = 'transparent',
+    bgColor: 'transparent' | number = 'transparent'
+  ) {
+    if (area instanceof Rect) {
+      area.traverse(pt => this.debugCN(pt, n, color, bgColor))
+      return
+    }
+
+    const pt = area
+
+    const d = this.region.create(pt, 'debugColor')
+    if (!d) return
+
+    const fg = typeof color === 'number' ? HSLToHex([color, 1, 0.5]) : color
+    const bg = typeof bgColor === 'number' ? HSLToHex([bgColor, 0.5, 0.5]) : bgColor
+
+    this.region
+      .modify(d)
+      .define('color', fg, bg)
+      .define('sprite', this.pool.sprites, { base: [nAlpha(n)] })
+
+    const prev = this.debugCNMap.get(pt)
+    if (prev) this.region.destroyEntity(prev)
+    this.debugCNMap.set(pt, d)
+  }
+
   finalize() {
     this.snap('Complete')
 
@@ -200,4 +234,11 @@ declare global {
   interface Window {
     O3Debug: Overseer3
   }
+}
+
+function nAlpha(n: number) {
+  if (n < 0) return '?'
+  if (n > 35) return '!'
+  const map = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  return map[n]
 }

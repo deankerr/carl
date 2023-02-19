@@ -34,7 +34,7 @@ export class Region {
   }
 
   //  * Entity Management
-  create(pt: Point, key: EntityKey) {
+  create(pt: Point, key: EntityKey): Entity | undefined {
     if (!this.rect.pointIntersects(pt)) return
     if (key.includes('Door')) return this.createDoor(pt, key)
 

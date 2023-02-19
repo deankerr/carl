@@ -58,6 +58,10 @@ export const ComponentFoundry = {
   facing: (dir: Cardinal) => {
     return { facing: dir }
   },
+
+  color: (color: string, bgColor: string) => {
+    return { color, bgColor }
+  },
 }
 
 export type Tag =

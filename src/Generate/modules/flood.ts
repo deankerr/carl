@@ -1,6 +1,4 @@
-import { Entity, EntityKey, Region } from '../../Core'
-import { loop, Queue, rnd, shuffle } from '../../lib/util'
-import { point, Point, pointRect } from '../../lib/Shape/Point'
+import { Point } from '../../lib/Shape/Point'
 import { Rect } from '../../lib/Shape/Rectangle'
 
 // export function* floodWalkable(startPt: Point, O2: O2Module) {
@@ -72,6 +70,7 @@ export function floodFindRegions(rect: Rect, predicate: (pt: Point) => boolean) 
   })
 
   logPointMap(rect, regions)
+
   const rCount: Record<number, number> = {}
   for (const [pt, v] of regions) {
     if (v === -1) continue
