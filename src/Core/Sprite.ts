@@ -1,66 +1,6 @@
-/* 
-
-being sprite - facing - SpriteF4
-  - auto build from entity key
-  - same for all - 4 directions of 2 anim frames
-  - cycle
-  ? made up of individual animated units
-  ? system to update current render as?
-
-liquid sprite - SpriteL
-  - ledge variant
-  - some 6, some 4. different animation types
-  - random - ? individual??
-
-other anim: campfire, torch
-
-? support adding shadow to terrain sprites?
-? wall/floor noise sprites?
-
-- processSpriteUpdate
-  responds to hasChanged + region init
-  selects facing/ledge (/noise?)
-
-goblin: {
-  tile: ['goblinE1'],
-  facingSprite: ['goblin', 1000],
-}
-
-
-*/
-
 import { pick, Queue, rnd, shuffle } from '../lib/util'
+import { oryxTinyMap } from '../lib/tilemap'
 import { Tag } from './Components'
-
-const templt = {
-  goblin: {
-    name: 'goblin',
-    sprite: ['directional', 750, 'goblin'], // spriteman constructs directional anim sprite
-  },
-
-  goblin2: {
-    sprite: {
-      facing: 'goblin',
-      animate: ['cycle', 750],
-    },
-  },
-
-  dungwall: {
-    sprite: {
-      noise: ['dungWall1', 'dungWall2', 'dungWall3'],
-    },
-  },
-}
-
-/* 
-  Sys SpriteUpdates (?)
-  on hasChanged + region init check
-    - FACING
-      check current facing dir (stored where?)
-    - LEDGE
-      check ledge condition (above is different entity)
-    - NOISE?
-*/
 
 export type SpriteConfig = {
   base: string[]
@@ -92,9 +32,6 @@ export class SpriteManager {
   all = new Map<string, Sprite>()
 
   register(config: SpriteConfig): Sprites {
-    // console.log('==== sm register: ====')
-    // console.log(config)
-
     const [animType, animSpeed] = config.animate ?? ['static', 0]
 
     if (config.build) return this.build(config.build, animType, animSpeed)
@@ -131,6 +68,10 @@ export class SpriteManager {
     const cached = this.all.get(hash)
     if (cached) return cached
 
+    tiles.forEach(t => {
+      if (!oryxTinyMap[t]) throw new Error(`Unknown tile: ${t}`)
+    })
+
     const sprite = new Sprite(tiles, animType, animSpeed)
     this.all.set(hash, sprite)
     return sprite
@@ -138,7 +79,6 @@ export class SpriteManager {
 }
 
 let spritesID = 0
-
 let spriteID = 0
 
 export class Sprite {
@@ -158,8 +98,6 @@ export class Sprite {
     if (this.type === 'random' && this.speed) {
       this.random()
     }
-
-    // console.log('new sprite:', this)
   }
 
   cycle() {

@@ -103,7 +103,7 @@ export class Rooms {
         const pts = shuffle([...(origin.roomEdges.get(target) ?? [])])
         const pt = pts[0]
 
-        console.log(`connect ${origin.rID} -> ${target.rID}`)
+        // console.log(`connect ${origin.rID} -> ${target.rID}`)
         callback(pt)
 
         connected.push(origin, target)

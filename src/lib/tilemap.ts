@@ -1,4 +1,4 @@
-export function oryxTinyMap(size: number) {
+export function createOryxTinyMap(size: number) {
   const tiles = [
     [
       'dungeonHorizontal1',
@@ -863,6 +863,8 @@ export function oryxTinyMap(size: number) {
     return { ...acc, ...row }
   }, {} as Record<string, [number, number]>)
 }
+
+export const oryxTinyMap = createOryxTinyMap(48)
 
 const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 const punctuation = '!@#$%^&*()-=+.,:;"<>?\\/|-:'
