@@ -1,5 +1,5 @@
 import * as ROT from 'rot-js'
-import { Entity, EntityKey, Region } from '../Core'
+import { Entity, EntityKey, EntityPool, Region } from '../Core'
 import { Visualizer } from '../Core/Visualizer'
 import { rnd } from '../lib/util'
 import { point, Point } from '../lib/Shape/Point'
@@ -27,7 +27,7 @@ export type RegionTheme = {
 
 export class Overseer3 {
   rect: Rect
-  pool = window.game.pool
+  pool: EntityPool
 
   timeStart = Date.now()
   timeEnd = 0
@@ -40,6 +40,7 @@ export class Overseer3 {
 
   constructor(readonly region: Region) {
     this.rect = region.rect
+    this.pool = region.pool
     console.log(`%c  O3: ${region.name}  `, 'font-weight: bold; background-color: orange;')
   }
 
@@ -147,19 +148,11 @@ export class Overseer3 {
     tPortal.portal = { zone, level }
   }
 
-  debug(area: Point | Rect) {
-    const pt = area instanceof Rect ? area.centerPoint() : area
-    const d = this.pool.spawn('debug', pt)
-    const char = debugChar.shift() ?? '?'
-    // d.render = { ...d.render, char }
-    this.region.entityList.push(d)
-  }
-
   debugSymbolN(pt: Point, n: number, color = 'transparent', bgColor = 'transparent') {
     const s = n.toString()
     s.split('').forEach((c, i) => {
-      const d = this.pool.spawn('debug', i === 0 ? pt : pt.east(i))
-      // d.render = { ...d.render, char: c, color, bgColor }
+      let d = this.pool.spawn('debug', i === 0 ? pt : pt.east(i))
+      d = { ...d, ...this.pool.C.sprite(this.pool.sprites, { base: [c] }) }
       this.debugSymbolList.push(d)
       this.region.entityList.push(d)
     })
@@ -169,9 +162,8 @@ export class Overseer3 {
     const symbols = ['auraHoly', 'auraBlue', 'auraRed', 'auraGreen', 'auraPurple']
 
     const createDebugPt = (pt: Point, n: number) => {
-      const d = this.pool.spawn('debug', pt)
-      // d.render = { ...d.render, char: symbols[n % 5] }
-      // d.sprite = {...d.sprite, }
+      let d = this.pool.spawn('debug', pt)
+      d = { ...d, ...this.pool.C.sprite(this.pool.sprites, { base: [symbols[n % 5]] }) }
       this.debugSymbolList.push(d)
       this.region.entityList.push(d)
     }
@@ -194,8 +186,6 @@ export class Overseer3 {
     console.log(`O3: ${this.timeEnd - this.timeStart}ms`, this)
   }
 }
-
-const debugChar = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()-=+.,:;"<>/|'.split('')
 
 declare global {
   interface Window {

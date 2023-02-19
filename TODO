@@ -1,14 +1,5 @@
 # TODO
 
-### Sprites
-
-- Same sprite entities reference single copy of sprite
-- Centralised animation updates
-- Per region noise based selection of wall/floor etc. variants
-- Being sprite direction/facing support
-- Better ledge/shadow support
-- ! Typed tilemap !
-
 ### CSP:
 
 - Backtracking
@@ -37,6 +28,7 @@
 
 ## Soon
 
+- Better ledge/shadow support
 - Player/NPC abilities (especially w/ visual effects)
 - Basic combat
 - Basic inventory
