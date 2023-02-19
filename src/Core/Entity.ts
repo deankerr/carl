@@ -1,8 +1,6 @@
-import { transformHSL } from '../lib/color'
-import { logger } from '../lib/logger'
 import { Point } from '../lib/Shape/Point'
-import { features, terrain, beings, items } from '../Templates'
-import { FoundryKey, Component, ComponentFoundry, FoundryParam, Components } from './Components'
+import { beings, features, items, terrain } from '../Templates'
+import { Component, ComponentFoundry, Components, FoundryKey, FoundryParam } from './Components'
 import { SpriteConfig, SpriteManager } from './Sprite'
 
 const templates = { ...beings, ...features, ...terrain, ...items }
@@ -17,34 +15,37 @@ export type BeingKey = keyof typeof beings
 export type ItemKey = keyof typeof items
 export type EntityKey = TerrainKey | FeatureKey | BeingKey | ItemKey
 
+export type EntityTemplate = {
+  name: string
+  sprite: SpriteConfig
+  tag: FoundryParam['tag']
+} & Partial<Omit<FoundryParam, 'name' | 'sprite'>>
+
 export class EntityPool {
   private count = 0
   readonly C = ComponentFoundry
   readonly pool = new Map<string, Entity>()
 
   constructor(readonly sprites: SpriteManager) {
-    const log = logger('entity', 'init')
+    const C = this.C
 
     for (const [key, t] of Object.entries(templates)) {
       let e = {
         eID: 0,
         label: key,
         key: key as EntityKey,
-        ...this.C.name(t.name),
-        ...this.C.sprite(this.sprites, t.sprite),
+        ...C.name(t.name),
+        ...C.sprite(this.sprites, t.sprite),
+        ...C.tag(...t.tag),
       }
 
-      if (t.tag) e = this.attach(e, 'tag', ...t.tag)
-      if ('trodOn' in t) e = this.attach(e, 'trodOn', t.trodOn)
-      if ('bumpMessage' in t) e = { ...e, ...this.C.bumpMessage(t.bumpMessage) }
-
-      if ('fieldOfView' in t) e = this.attach(e, 'fieldOfView', t.fieldOfView)
-
-      if ('portal' in t) e = { ...e, ...this.attach(e, 'portal', t.portal[0], t.portal[1]) }
+      if ('trodOn' in t) e = { ...e, ...C.trodOn(...t.trodOn) }
+      if ('bumpMessage' in t) e = { ...e, ...C.bumpMessage(...t.bumpMessage) }
+      if ('fieldOfView' in t) e = { ...e, ...C.fieldOfView(...t.fieldOfView) }
+      if ('portal' in t) e = { ...e, ...C.portal(t.portal[0], t.portal[1]) }
 
       this.pool.set(key, e)
     }
-    log.end()
   }
 
   attach<T extends FoundryKey>(e: Entity, componentName: T, ...p: FoundryParam[T]) {

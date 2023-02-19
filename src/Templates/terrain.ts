@@ -1,4 +1,6 @@
-const wallTags = ['terrain', 'blocksLight', 'blocksMovement', 'wall']
+import { Tag, EntityTemplate } from '../Core'
+
+const wallTags: Tag[] = ['terrain', 'blocksLight', 'blocksMovement', 'wall']
 
 export const terrain = {
   // Liquid
@@ -109,7 +111,6 @@ export const terrain = {
   // crypt theme
   cryptWall: {
     name: 'wall',
-
     tag: [...wallTags],
     sprite: {
       base: ['cryptVertical1', 'cryptVertical2', 'cryptVertical3', 'cryptVertical4'],
@@ -129,7 +130,6 @@ export const terrain = {
   // cavern theme
   cavernWall: {
     name: 'wall',
-
     tag: [...wallTags],
     sprite: {
       base: ['cavernVertical1', 'cavernVertical2', 'cavernVertical3', 'cavernVertical4'],
@@ -191,7 +191,7 @@ export const terrain = {
 
   dirtPath: {
     name: 'path',
-    tag: ['terrain', 'pickTile'],
+    tag: ['terrain'],
     sprite: {
       base: ['dirtTiles1', 'dirtTiles2', 'dirtTiles3'],
       noise: [0],
@@ -227,7 +227,7 @@ export const terrain = {
 
   stonePebbleFloor: {
     name: 'floor',
-    tag: ['terrain', 'floor', 'pickTileEqually'],
+    tag: ['terrain', 'floor'],
     sprite: {
       base: [
         'stonePebbleFloor1',
@@ -350,4 +350,4 @@ export const terrain = {
       base: ['unknown'],
     },
   },
-} as const
+} satisfies Record<string, EntityTemplate>

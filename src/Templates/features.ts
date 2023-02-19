@@ -1,3 +1,5 @@
+import { EntityTemplate } from '../Core'
+
 export const features = {
   // Stairs
   dungeonStairsDown: {
@@ -76,7 +78,7 @@ export const features = {
   woodenDoor: {
     name: 'door',
     tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door'],
-    trodOn: 'You carefully backflip through the door.',
+    trodOn: ['You carefully backflip through the door.'],
     sprite: {
       base: ['woodenDoorClosed', 'woodenDoorOpen'],
       trigger: ['isClosed', 'isOpen'],
@@ -94,7 +96,7 @@ export const features = {
       'isVertical',
       'renderLevelHigh',
     ],
-    trodOn: 'You carefully backflip through the door.',
+    trodOn: ['You carefully backflip through the door.'],
     sprite: {
       base: ['woodenDoorVerticalClosed', 'woodenDoorVerticalOpen'],
       trigger: ['isClosed', 'isOpen'],
@@ -104,7 +106,7 @@ export const features = {
   woodenDoorVerticalTop: {
     name: 'door',
     tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door', 'isVertical'],
-    trodOn: 'You carefully backflip through the door.',
+    trodOn: ['You carefully backflip through the door.'],
     sprite: {
       base: ['woodenDoorVerticalClosedTop', 'woodenDoorVerticalOpenTop'],
       trigger: ['isClosed', 'isOpen'],
@@ -114,7 +116,7 @@ export const features = {
   stoneDoor: {
     name: 'door',
     tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door', 'renderLevelHigh'],
-    trodOn: 'You carefully backflip through the door.',
+    trodOn: ['You carefully backflip through the door.'],
     sprite: {
       base: ['stoneDoorClosed', 'stoneDoorOpen'],
       trigger: ['isClosed', 'isOpen'],
@@ -132,7 +134,7 @@ export const features = {
       'isVertical',
       'renderLevelHigh',
     ],
-    trodOn: 'You carefully backflip through the door.',
+    trodOn: ['You carefully backflip through the door.'],
     sprite: {
       base: ['stoneDoorVerticalClosed', 'stoneDoorVerticalOpen'],
       trigger: ['isClosed', 'isOpen'],
@@ -142,7 +144,7 @@ export const features = {
   stoneDoorVerticalTop: {
     name: 'door',
     tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door', 'isVertical'],
-    trodOn: 'You carefully backflip through the door.',
+    trodOn: ['You carefully backflip through the door.'],
     sprite: {
       base: ['stoneDoorVerticalClosedTop', 'stoneDoorVerticalOpenTop'],
       trigger: ['isClosed', 'isOpen'],
@@ -152,7 +154,7 @@ export const features = {
   jailDoor: {
     name: 'door',
     tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door'],
-    trodOn: 'You carefully backflip through the door.',
+    trodOn: ['You carefully backflip through the door.'],
     sprite: {
       base: ['jailDoorClosed', 'jailDoorOpen'],
       trigger: ['isClosed', 'isOpen'],
@@ -170,7 +172,7 @@ export const features = {
       'isVertical',
       'renderLevelHigh',
     ],
-    trodOn: 'You carefully backflip through the door.',
+    trodOn: ['You carefully backflip through the door.'],
     sprite: {
       base: ['jailDoorVerticalClosed', 'jailDoorVerticalOpen'],
       trigger: ['isClosed', 'isOpen'],
@@ -180,7 +182,7 @@ export const features = {
   jailDoorVerticalTop: {
     name: 'door',
     tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door', 'isVertical'],
-    trodOn: 'You carefully backflip through the door.',
+    trodOn: ['You carefully backflip through the door.'],
     sprite: {
       base: ['jailDoorVerticalClosedTop', 'jailDoorVerticalOpenTop'],
       trigger: ['isClosed', 'isOpen'],
@@ -190,7 +192,7 @@ export const features = {
   redDoor: {
     name: 'door',
     tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door'],
-    trodOn: 'You carefully backflip through the door.',
+    trodOn: ['You carefully backflip through the door.'],
     sprite: {
       base: ['redDoorClosed', 'redDoorOpen'],
       trigger: ['isClosed', 'isOpen'],
@@ -208,7 +210,7 @@ export const features = {
       'isVertical',
       'renderLevelHigh',
     ],
-    trodOn: 'You carefully backflip through the door.',
+    trodOn: ['You carefully backflip through the door.'],
     sprite: {
       base: ['redDoorVerticalClosed', 'redDoorVerticalOpen'],
       trigger: ['isClosed', 'isOpen'],
@@ -218,7 +220,7 @@ export const features = {
   redDoorVerticalTop: {
     name: 'door',
     tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door', 'isVertical'],
-    trodOn: 'You carefully backflip through the door.',
+    trodOn: ['You carefully backflip through the door.'],
     sprite: {
       base: ['redDoorVerticalClosedTop', 'redDoorVerticalOpenTop'],
       trigger: ['isClosed', 'isOpen'],
@@ -273,7 +275,7 @@ export const features = {
   lilypad1: {
     name: 'lilypad',
     tag: ['feature'],
-    trodOn: 'You bounce off the lilypad.',
+    trodOn: ['You bounce off the lilypad.'],
     sprite: {
       base: ['lilypad11', 'lilypad12'],
       animate: ['cycle', 1000],
@@ -283,7 +285,7 @@ export const features = {
   lilypad2: {
     name: 'lilypad',
     tag: ['feature'],
-    trodOn: 'You bounce off the lilypad.',
+    trodOn: ['You bounce off the lilypad.'],
     sprite: {
       base: ['lilypad21', 'lilypad22'],
       animate: ['cycle', 1000],
@@ -293,7 +295,7 @@ export const features = {
   lilypad3: {
     name: 'lilypad',
     tag: ['feature'],
-    trodOn: 'You bounce off the lilypad.',
+    trodOn: ['You bounce off the lilypad.'],
     sprite: {
       base: ['lilypad31', 'lilypad32'],
       animate: ['cycle', 1000],
@@ -303,7 +305,7 @@ export const features = {
   lilypad4: {
     name: 'lilypad',
     tag: ['feature'],
-    trodOn: 'You bounce off the lilypad.',
+    trodOn: ['You bounce off the lilypad.'],
     sprite: {
       base: ['lilypad41', 'lilypad42'],
       animate: ['cycle', 1000],
@@ -312,7 +314,7 @@ export const features = {
 
   grassTuft: {
     name: 'tuft of grass',
-    tag: ['feature', 'pickTileEqually'],
+    tag: ['feature'],
     sprite: {
       base: ['grassTuft1', 'grassTuft2', 'grassTuft3', 'grassTuft4', 'grassTuft5'],
     },
@@ -372,7 +374,7 @@ export const features = {
 
   carpet: {
     name: 'carpet',
-    tag: ['feature', 'pickTile'],
+    tag: ['feature'],
     sprite: {
       base: ['carpet1'],
     },
@@ -406,7 +408,7 @@ export const features = {
   campfire: {
     name: 'campfire',
     tag: ['feature'],
-    trodOn: 'You feel a sense of urgency.',
+    trodOn: ['You feel a sense of urgency.'],
     sprite: {
       base: ['campfire1', 'campfire2'],
       animate: ['cycle', 350],
@@ -456,7 +458,7 @@ export const features = {
   bones: {
     name: 'bones',
     tag: ['feature'],
-    trodOn: 'You trample some musty old bones.',
+    trodOn: ['You trample some musty old bones.'],
     sprite: {
       base: ['bones1'],
     },
@@ -470,7 +472,6 @@ export const features = {
       base: ['sconce1'],
       animate: ['cycle', 400],
     },
-    emitLight: ['auto'],
   },
 
   sconceLower: {
@@ -563,4 +564,4 @@ export const features = {
       base: ['0'],
     },
   },
-} as const
+} satisfies Record<string, EntityTemplate>

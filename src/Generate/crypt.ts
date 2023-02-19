@@ -58,8 +58,8 @@ export function crypt(
       CSPVar.cornerCandles,
       // CSPVar.smallPitPlatform,
       pick([
-        CSPVar.goblinPack,
-        CSPVar.skeletonPack,
+        // CSPVar.goblinPack,
+        // CSPVar.skeletonPack,
         CSPVar.beholder,
         CSPVar.gelCube,
         CSPVar.spiderPack,

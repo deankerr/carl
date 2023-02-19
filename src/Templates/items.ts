@@ -1,4 +1,4 @@
-import { EntityKey } from '../Core'
+import { EntityKey, EntityTemplate } from '../Core'
 
 export const items = {
   book: {
@@ -200,6 +200,6 @@ export const items = {
       base: ['leatherBoot'],
     },
   },
-}
+} satisfies Record<string, EntityTemplate>
 
 export const itemKeys = Object.keys(items) as EntityKey[]

@@ -1,8 +1,20 @@
-import { ActionTypes } from './Action'
-import { Point } from '../lib/Shape/Point'
-import { EntityKey } from './Entity'
-import { SpriteConfig, SpriteManager } from './Sprite'
 import { Cardinal } from '../lib/direction'
+import { Point } from '../lib/Shape/Point'
+import { ActionTypes } from './Action'
+import { SpriteConfig, SpriteManager } from './Sprite'
+
+export type FoundryKey = keyof typeof ComponentFoundry
+export type FoundryParam = { [K in FoundryKey]: Parameters<typeof ComponentFoundry[K]> }
+type FoundryReturn = ReturnType<typeof ComponentFoundry[FoundryKey]>
+
+export type Component<K extends FoundryKey> = ReturnType<typeof ComponentFoundry[K]>
+export type Components = UnionToIntersection<FoundryReturn>
+
+type UnionToIntersection<U> = (U extends unknown ? (k: U) => void : never) extends (
+  k: infer I
+) => void
+  ? I
+  : never
 
 export const ComponentFoundry = {
   acting: (action: ActionTypes) => {
@@ -43,9 +55,8 @@ export const ComponentFoundry = {
     return { portal: { zone, level } }
   },
 
-  // todo better typing
-  sprite: (spriteMan: SpriteManager, spriteConfig: object) => {
-    return { sprite: spriteMan.register(spriteConfig as SpriteConfig) }
+  sprite: (spriteMan: SpriteManager, spriteConfig: SpriteConfig) => {
+    return { sprite: spriteMan.register(spriteConfig) }
   },
 
   facing: (dir: Cardinal) => {
@@ -85,16 +96,3 @@ export type Tag =
   | 'friendly'
   | 'item'
   | 'ledge'
-
-export type FoundryKey = keyof typeof ComponentFoundry
-export type FoundryParam = { [K in FoundryKey]: Parameters<typeof ComponentFoundry[K]> }
-type FoundryReturn = ReturnType<typeof ComponentFoundry[FoundryKey]>
-
-export type Component<K extends FoundryKey> = ReturnType<typeof ComponentFoundry[K]>
-export type Components = UnionToIntersection<FoundryReturn>
-
-type UnionToIntersection<U> = (U extends unknown ? (k: U) => void : never) extends (
-  k: infer I
-) => void
-  ? I
-  : never

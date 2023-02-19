@@ -1,9 +1,11 @@
+import { EntityTemplate } from '../Core'
+
 export const beings = {
   // Friendly
   player: {
     name: 'player',
     tag: ['playerControlled', 'actor', 'blocksMovement', 'being', 'signalUpdatePlayerFOV'],
-    fieldOfView: 16,
+    fieldOfView: [16],
     sprite: {
       build: 'warrior',
       animate: ['cycle', 750],
@@ -13,7 +15,7 @@ export const beings = {
   archer: {
     name: 'archer',
     tag: ['being', 'actor', 'blocksMovement', 'friendly'],
-    bumpMessage: 'Give me a target!',
+    bumpMessage: ['Give me a target!'],
     sprite: {
       build: 'archer',
       animate: ['cycle', 750],
@@ -23,7 +25,7 @@ export const beings = {
   sorceress: {
     name: 'sorceress',
     tag: ['being', 'actor', 'blocksMovement', 'friendly'],
-    bumpMessage: 'The flows of magic are whimsical today.',
+    bumpMessage: ['The flows of magic are whimsical today.'],
     sprite: {
       build: 'sorceress',
       animate: ['cycle', 750],
@@ -33,7 +35,7 @@ export const beings = {
   guy: {
     name: 'guy',
     tag: ['being', 'actor', 'blocksMovement', 'friendly'],
-    bumpMessage: 'More work?',
+    bumpMessage: ['More work?'],
     sprite: {
       build: 'guy',
       animate: ['cycle', 750],
@@ -43,7 +45,7 @@ export const beings = {
   girl: {
     name: 'girl',
     tag: ['being', 'actor', 'blocksMovement', 'friendly'],
-    bumpMessage: 'Welcome to our town, Glen Waverley.',
+    bumpMessage: ['Welcome to our town, Glen Waverley.'],
     sprite: {
       build: 'girl',
       animate: ['cycle', 750],
@@ -53,7 +55,7 @@ export const beings = {
   thief: {
     name: 'thief',
     tag: ['being', 'actor', 'blocksMovement', 'friendly'],
-    bumpMessage: "I've got what you need.",
+    bumpMessage: ["I've got what you need."],
     sprite: {
       build: 'thief',
       animate: ['cycle', 750],
@@ -63,7 +65,7 @@ export const beings = {
   catBrown: {
     name: 'cat',
     tag: ['being', 'actor', 'blocksMovement', 'friendly'],
-    bumpMessage: 'Meow!',
+    bumpMessage: ['Meow!'],
     sprite: {
       build: 'catBrown',
       animate: ['cycle', 750],
@@ -72,7 +74,7 @@ export const beings = {
   catTan: {
     name: 'cat',
     tag: ['being', 'actor', 'blocksMovement', 'friendly'],
-    bumpMessage: 'Mrow!',
+    bumpMessage: ['Mrow!'],
     sprite: {
       build: 'catTan',
       animate: ['cycle', 750],
@@ -82,7 +84,7 @@ export const beings = {
   horse: {
     name: 'horsey',
     tag: ['being', 'blocksMovement', 'friendly'],
-    bumpMessage: 'Hurumph!',
+    bumpMessage: ['Hurumph!'],
     sprite: {
       build: 'horse',
       animate: ['cycle', 750],
@@ -207,4 +209,4 @@ export const beings = {
       animate: ['cycle', 750],
     },
   },
-} as const
+} satisfies Record<string, EntityTemplate>

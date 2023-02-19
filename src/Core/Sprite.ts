@@ -1,10 +1,10 @@
-import { pick, Queue, rnd, shuffle } from '../lib/util'
 import { oryxTinyMap } from '../lib/tilemap'
+import { pick, Queue, rnd } from '../lib/util'
 import { Tag } from './Components'
 import { Engine } from './Engine'
 
 export type SpriteConfig = {
-  base: string[]
+  base?: string[]
   ledge?: string[]
   ledgeOverlay?: string[]
   build?: string
@@ -41,6 +41,7 @@ export class SpriteManager {
     const [animType, animSpeed] = config.animate ?? ['static', 0]
 
     if (config.build) return this.build(config.build, animType, animSpeed)
+    if (!config.base) throw new Error('Invalid sprite config')
 
     const base = this.sprite(config.base, animType, animSpeed)
     const sprites: Sprites = { base, type: animType, speed: animSpeed }
