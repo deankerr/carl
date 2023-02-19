@@ -92,28 +92,28 @@ export function renderRegion(engine: Engine) {
       stack.sort((a, b) => zLevel(a) - zLevel(b))
 
       // extract form data, applying lighting/fade if applicable
-      const renderStack = stack.map(e => {
-        const { base, ledge, trigger, exposed, noise } = e.sprite
-        const render = { char: e.sprite.base.tile, color: 'transparent', bgColor: 'transparent' }
+      const renderStack = stack.reduce((acc, e) => {
+        const { base, ledge, ledgeOverlay, trigger, exposed, noise } = e.sprite
+        let tile = e.sprite.base.tile
 
         // liquid
         if (ledge) {
           const tAbove = local.terrainAt(pt.north(1))
           if (tAbove.key !== e.key) {
-            render.char = ledge.tile
+            tile = ledge.tile
           }
         }
 
         // being
         if (e.facing && e.sprite[e.facing]) {
           const s = e.sprite[e.facing]?.tile
-          if (s) render.char = s
+          if (s) tile = s
         }
 
         // doors
         if (trigger && base) {
           trigger.forEach((trig, i) => {
-            if (trig in e) render.char = base.tiles[i]
+            if (trig in e) tile = base.tiles[i]
           })
         }
 
@@ -133,19 +133,27 @@ export function renderRegion(engine: Engine) {
 
             i = v <= noise[0] ? 0 : vMod
           }
-          render.char = sprite.tiles[i]
+          tile = sprite.tiles[i]
         }
 
-        return render
-      })
+        // return tile with shadow overlay
+        if (ledgeOverlay) {
+          const tAbove = local.terrainAt(pt.north(1))
+          if (tAbove.key !== e.key) {
+            return [...acc, tile, ledgeOverlay.tile]
+          }
+        }
+
+        return [...acc, tile]
+      }, [] as string[])
 
       // draw
       mainDisplay.draw(
         viewPt.x,
         viewPt.y,
-        renderStack.map(s => s.char),
-        renderStack.map(s => (s.color === '' ? 'transparent' : s.color)),
-        renderStack.map(s => (s.bgColor === '' ? 'transparent' : s.bgColor))
+        renderStack.map(s => s),
+        renderStack.map(_ => 'transparent'),
+        renderStack.map(_ => 'transparent')
       )
     }
   })

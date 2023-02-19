@@ -64,14 +64,14 @@ export function townDemo(
   const ddish = new CellDish(dRect.scale(1).translate(0, 1))
   ddish.edge = false
   ddish.addAlways(dRect.toPts())
-  ddish.randomize(40).current((pt, alive) => O3.add(pt, alive ? 'dirtFloorDetailed' : 'grassFloor'))
+  ddish.randomize(40).current((pt, alive) => O3.add(pt, alive ? 'dirtFloorOutdoor' : 'grassFloor'))
   O3.snap('d dirt')
 
   ddish.generation(
     4,
     5
   )((pt, alive) => {
-    O3.add(pt, alive ? 'dirtFloorDetailed' : 'grassFloor')
+    O3.add(pt, alive ? 'dirtFloorOutdoor' : 'grassFloor')
   })
   ddish.alive(pt => O3.clear(pt))
   O3.snap('d dirt')

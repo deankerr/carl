@@ -165,7 +165,7 @@ export const terrain = {
   },
 
   dirtFloor: {
-    name: 'floor',
+    name: 'dirt',
     tag: ['terrain', 'floor'],
     sprite: {
       base: ['dirtFloor1', 'dirtFloor2', 'dirtFloor3', 'dirtFloor4', 'dirtFloor5', 'dirtFloor6'],
@@ -173,11 +173,18 @@ export const terrain = {
     },
   },
 
-  dirtFloorDetailed: {
-    name: 'floor',
+  dirtFloorOutdoor: {
+    name: 'dirt',
     tag: ['terrain', 'floor'],
     sprite: {
-      base: ['dirtFloor2', 'dirtFloor3', 'dirtFloor4', 'dirtFloor5', 'dirtFloor6'],
+      base: [
+        'dirtFloorOutdoor2',
+        'dirtFloorOutdoor3',
+        'dirtFloorOutdoor4',
+        'dirtFloorOutdoor5',
+        'dirtFloorOutdoor6',
+      ],
+      ledgeOverlay: ['dirtLedge'],
       noise: [0],
     },
   },

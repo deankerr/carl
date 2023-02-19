@@ -315,7 +315,14 @@ export function createOryxTinyMap(size: number) {
       'pot',
     ],
     ['web1', 'web2', 'sand', 'sandLedge', 'cactus', 'dirtLedge', 'recalled'],
-    [],
+    [
+      'dirtFloorOutdoor1',
+      'dirtFloorOutdoor2',
+      'dirtFloorOutdoor3',
+      'dirtFloorOutdoor4',
+      'dirtFloorOutdoor5',
+      'dirtFloorOutdoor6',
+    ],
     [],
     [],
     [

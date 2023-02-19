@@ -6,6 +6,7 @@ import { Engine } from './Engine'
 export type SpriteConfig = {
   base: string[]
   ledge?: string[]
+  ledgeOverlay?: string[]
   build?: string
   animate?: [AnimType, number]
   trigger?: Tag[]
@@ -20,6 +21,7 @@ export type Sprites = {
   trigger?: Tag[]
   noise?: number[]
   ledge?: Sprite
+  ledgeOverlay?: Sprite
   north?: Sprite
   east?: Sprite
   south?: Sprite
@@ -44,6 +46,8 @@ export class SpriteManager {
     const sprites: Sprites = { base, type: animType, speed: animSpeed }
 
     if (config.ledge) sprites.ledge = this.sprite(config.ledge, animType, animSpeed)
+    if (config.ledgeOverlay)
+      sprites.ledgeOverlay = this.sprite(config.ledgeOverlay, animType, animSpeed)
     if (config.exposed) sprites.exposed = this.sprite(config.exposed, animType, animSpeed)
     if (config.trigger) sprites.trigger = config.trigger
     if (config.noise) sprites.noise = config.noise
