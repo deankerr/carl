@@ -399,7 +399,7 @@ export const features = {
     tag: ['feature'],
     sprite: {
       base: ['shrub1', 'shrub2'],
-      noise: [1],
+      noise: [-1],
     },
   },
 
@@ -534,7 +534,7 @@ export const features = {
   // Utility
   shadow: {
     name: 'shadow',
-    tag: ['feature'],
+    tag: ['feature', 'renderLevelHigh'],
     sprite: {
       base: ['lightShadow'],
     },

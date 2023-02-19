@@ -2,14 +2,9 @@ import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
 import { Entity, EntityWith } from '../Core'
 import { Engine } from '../Core/Engine'
-import { addLight, transformHSL } from '../lib/color'
 import { clamp, floor, half } from '../lib/util'
 import { point } from '../lib/Shape/Point'
 import { Rect } from '../lib/Shape/Rectangle'
-
-// record the time and type of the last light flicker update
-// let lastLightFlicker = 0
-// let flickerDimmed = false
 
 export function renderRegion(engine: Engine) {
   const { mainDisplay, local, textDisplay } = engine
@@ -132,11 +127,11 @@ export function renderRegion(engine: Engine) {
           }
 
           if (noise) {
-            const len = base.tiles.length - 1
+            const len = base.tiles.length
             const v = local.noise.get(pt.x, pt.y)
             const vMod = Math.round(((v + 1) * 255) / 2) % len
 
-            i = v <= 0 ? 0 : vMod
+            i = v <= noise[0] ? 0 : vMod
           }
           render.char = sprite.tiles[i]
         }
@@ -156,8 +151,6 @@ export function renderRegion(engine: Engine) {
   })
 }
 
-const recalledFade = { sat: { by: 0.8 }, lum: { by: 0.8 } }
-
 const zLevel = (e: Entity) => {
   if (e.renderLevelHigh) return 10
   if (e.being) return 7
@@ -165,9 +158,3 @@ const zLevel = (e: Entity) => {
   if (e.feature) return 3
   return 0
 }
-
-// background color cycle
-// if (options.bgColor !== '' && options.bgCycle && Date.now() - last > freq) {
-//   options.bgColor = transformHSL(options.bgColor, { hue: { add } })
-//   last = Date.now()
-// }

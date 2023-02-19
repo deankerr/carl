@@ -94,7 +94,9 @@ export class Overseer3 {
     }
 
     const [_terrain, ...entities] = this.region.at(pt)
-    entities.forEach(e => this.region.destroyEntity(e))
+    entities.forEach(e => {
+      if (e.key !== 'shadow') this.region.destroyEntity(e)
+    })
   }
 
   path(pt1: Point, pt2: Point, key: EntityKey, passAll = false) {
@@ -111,6 +113,7 @@ export class Overseer3 {
     this.clear(Rect.atC(pt, 3, 4))
     const pt1 = pt.add(0, -2)
     const pt2 = pt.add(0, -1)
+    const pt4 = pt.add(0, 1)
 
     this.add(pt1.west(1), 'buildingChimney')
     this.add(pt1, 'buildingRoof')
@@ -123,6 +126,10 @@ export class Overseer3 {
     this.add(pt.west(1), 'buildingWindow')
     this.add(pt, 'buildingEntry')
     this.add(pt.east(1), 'buildingWindow')
+
+    this.add(pt4.west(), 'shadow')
+    this.add(pt4, 'shadow')
+    this.add(pt4.east(), 'shadow')
 
     if (sign) {
       switch (sign) {

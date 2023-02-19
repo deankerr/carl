@@ -75,7 +75,7 @@ export const terrain = {
         'dungeonHorizontal3',
         'dungeonHorizontal4',
       ],
-      noise: [1],
+      noise: [0],
     },
   },
 
@@ -94,7 +94,7 @@ export const terrain = {
     sprite: {
       base: ['caveVertical1', 'caveVertical2', 'caveVertical3', 'caveVertical4'],
       exposed: ['caveHorizontal1', 'caveHorizontal2', 'caveHorizontal3', 'caveHorizontal4'],
-      noise: [1],
+      noise: [0],
     },
   },
 
@@ -114,7 +114,7 @@ export const terrain = {
     sprite: {
       base: ['cryptVertical1', 'cryptVertical2', 'cryptVertical3', 'cryptVertical4'],
       exposed: ['cryptHorizontal1', 'cryptHorizontal2', 'cryptHorizontal3', 'cryptHorizontal4'],
-      noise: [1],
+      noise: [0],
     },
   },
 
@@ -134,7 +134,7 @@ export const terrain = {
     sprite: {
       base: ['cavernVertical1', 'cavernVertical2', 'cavernVertical3', 'cavernVertical4'],
       exposed: ['cavernHorizontal1', 'cavernHorizontal2', 'cavernHorizontal3', 'cavernHorizontal4'],
-      noise: [1],
+      noise: [0],
     },
   },
 
@@ -160,7 +160,7 @@ export const terrain = {
         'stoneFloor5',
         'stoneFloor6',
       ],
-      noise: [1],
+      noise: [0],
     },
   },
 
@@ -169,7 +169,7 @@ export const terrain = {
     tag: ['terrain', 'floor'],
     sprite: {
       base: ['dirtFloor1', 'dirtFloor2', 'dirtFloor3', 'dirtFloor4', 'dirtFloor5', 'dirtFloor6'],
-      noise: [1],
+      noise: [0],
     },
   },
 
@@ -178,7 +178,7 @@ export const terrain = {
     tag: ['terrain', 'floor'],
     sprite: {
       base: ['dirtFloor2', 'dirtFloor3', 'dirtFloor4', 'dirtFloor5', 'dirtFloor6'],
-      noise: [1],
+      noise: [0],
     },
   },
 
@@ -187,7 +187,7 @@ export const terrain = {
     tag: ['terrain', 'pickTile'],
     sprite: {
       base: ['dirtTiles1', 'dirtTiles2', 'dirtTiles3'],
-      noise: [1],
+      noise: [0],
     },
   },
 
@@ -214,7 +214,7 @@ export const terrain = {
         'mossTileFloor4',
         'mossTileFloor5',
       ],
-      noise: [1, 1, 1, 1, 1, 1, 1, 1],
+      noise: [0],
     },
   },
 
@@ -229,16 +229,16 @@ export const terrain = {
         'stonePebbleFloor4',
         'stonePebbleFloor5',
       ],
-      noise: [1],
+      noise: [0],
     },
   },
 
   grassFloor: {
     name: 'grass',
-    tag: ['terrain', 'floor', 'pickTile'],
+    tag: ['terrain', 'floor'],
     sprite: {
       base: ['grass1', 'grass2', 'grass3', 'grass4', 'grass5', 'grass6'],
-      noise: [1, 1, 1, 1, 1, 1],
+      noise: [0],
     },
   },
 
@@ -247,7 +247,7 @@ export const terrain = {
     tag: ['terrain'],
     sprite: {
       base: ['grassTiles1', 'grassTiles2', 'grassTiles3'],
-      noise: [1],
+      noise: [0],
     },
   },
 
@@ -272,7 +272,7 @@ export const terrain = {
     tag: ['terrain', 'floor'],
     sprite: {
       base: ['woodenBoards1', 'woodenBoards2', 'woodenBoards3', 'woodenPanel'],
-      noise: [1],
+      noise: [0],
     },
   },
 
@@ -282,7 +282,7 @@ export const terrain = {
     tag: ['terrain', 'blocksMovement'],
     sprite: {
       base: ['buildingWindow1', 'buildingWindow2'],
-      noise: [1],
+      noise: [0],
     },
   },
 
@@ -299,7 +299,7 @@ export const terrain = {
     tag: ['terrain', 'blocksMovement'],
     sprite: {
       base: ['buildingRoofFront1', 'buildingRoofFront2'],
-      noise: [1],
+      noise: [0],
     },
   },
 

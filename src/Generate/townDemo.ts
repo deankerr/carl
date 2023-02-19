@@ -37,6 +37,7 @@ export function townDemo(
   const bridgeRect = Rect.atC(riverRect.center.east(4), 2, 3)
   O3.clear(bridgeRect.scale(1, 1))
   O3.add(bridgeRect, 'bridgeFloor')
+  O3.add(bridgeRect.scale(0, -1).translate(0, -1), 'shadow')
 
   const cPt = region.rect.center
   const bPt1 = cPt.add(-2, 0) // hut
