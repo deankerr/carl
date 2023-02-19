@@ -3,7 +3,7 @@ import { EntityKey } from '../Core'
 export const items = {
   book: {
     name: 'ancient thesaurus',
-    tag: ['feature', 'item'],
+    tag: ['item'],
     sprite: {
       base: ['bookBrown'],
     },
@@ -11,7 +11,7 @@ export const items = {
 
   skullBook: {
     name: 'scary book of goosebumps',
-    tag: ['feature', 'item'],
+    tag: ['item'],
     sprite: {
       base: ['bookBlack'],
     },
@@ -19,7 +19,7 @@ export const items = {
 
   greenBook: {
     name: "book of microsoft encarta '95",
-    tag: ['feature', 'item'],
+    tag: ['item'],
     sprite: {
       base: ['bookGreen'],
     },
@@ -27,7 +27,7 @@ export const items = {
 
   goldKey: {
     name: 'golden key',
-    tag: ['feature', 'item'],
+    tag: ['item'],
     sprite: {
       base: ['keyGold'],
     },
@@ -35,7 +35,7 @@ export const items = {
 
   scroll: {
     name: 'list of good places to eat around here',
-    tag: ['feature', 'item'],
+    tag: ['item'],
     sprite: {
       base: ['scroll'],
     },
@@ -43,7 +43,7 @@ export const items = {
 
   blueOrb: {
     name: 'orb of retrospection',
-    tag: ['feature', 'item'],
+    tag: ['item'],
     sprite: {
       base: ['orbBlue'],
     },
@@ -51,7 +51,7 @@ export const items = {
 
   goldSkull: {
     name: 'handsome golden skull',
-    tag: ['feature', 'item'],
+    tag: ['item'],
     sprite: {
       base: ['skullGold'],
     },
@@ -59,7 +59,7 @@ export const items = {
 
   meat: {
     name: 'succulent leg of roast pheasant',
-    tag: ['feature', 'item'],
+    tag: ['item'],
     sprite: {
       base: ['meat'],
     },
@@ -67,7 +67,7 @@ export const items = {
 
   bluePotion: {
     name: 'potion of blue powerade',
-    tag: ['feature', 'item'],
+    tag: ['item'],
     sprite: {
       base: ['potionBlue'],
     },
@@ -75,7 +75,7 @@ export const items = {
 
   redPotion: {
     name: 'potion of clotted blood',
-    tag: ['feature', 'item'],
+    tag: ['item'],
     sprite: {
       base: ['potionRed'],
     },
@@ -83,7 +83,7 @@ export const items = {
 
   goldPotion: {
     name: 'potion of lemon delight',
-    tag: ['feature', 'item'],
+    tag: ['item'],
     sprite: {
       base: ['potionGold'],
     },
@@ -91,7 +91,7 @@ export const items = {
 
   blackPotion: {
     name: 'potion of asphalt',
-    tag: ['feature', 'item'],
+    tag: ['item'],
     sprite: {
       base: ['potionBlack'],
     },
@@ -99,7 +99,7 @@ export const items = {
 
   pinkGem: {
     name: 'pink gem',
-    tag: ['feature', 'item'],
+    tag: ['item'],
     sprite: {
       base: ['gemPink'],
     },
@@ -107,7 +107,7 @@ export const items = {
 
   redGem: {
     name: 'red gem',
-    tag: ['feature', 'item'],
+    tag: ['item'],
     sprite: {
       base: ['gemRed'],
     },
@@ -115,7 +115,7 @@ export const items = {
 
   blueGem: {
     name: 'blue gem',
-    tag: ['feature', 'item'],
+    tag: ['item'],
     sprite: {
       base: ['gemBlue'],
     },
@@ -123,7 +123,7 @@ export const items = {
 
   greenGem: {
     name: 'green gem',
-    tag: ['feature', 'item'],
+    tag: ['item'],
     sprite: {
       base: ['gemGreen'],
     },
@@ -131,7 +131,7 @@ export const items = {
 
   goldGem: {
     name: 'gold gem',
-    tag: ['feature', 'item'],
+    tag: ['item'],
     sprite: {
       base: ['gemGold'],
     },
@@ -139,7 +139,7 @@ export const items = {
 
   copperPile: {
     name: 'pile of copper',
-    tag: ['feature', 'item'],
+    tag: ['item'],
     sprite: {
       base: ['copperPile'],
     },
@@ -147,7 +147,7 @@ export const items = {
 
   silverPile: {
     name: 'pile of silver',
-    tag: ['feature', 'item'],
+    tag: ['item'],
     sprite: {
       base: ['silverPile'],
     },
@@ -155,7 +155,7 @@ export const items = {
 
   goldPile: {
     name: 'pile of gold',
-    tag: ['feature', 'item'],
+    tag: ['item'],
     sprite: {
       base: ['goldPile'],
     },
@@ -163,7 +163,7 @@ export const items = {
 
   leatherHelm: {
     name: 'leather helm',
-    tag: ['feature', 'item'],
+    tag: ['item'],
     sprite: {
       base: ['leatherHelm'],
     },
@@ -171,7 +171,7 @@ export const items = {
 
   leatherArmor: {
     name: 'leather armor',
-    tag: ['feature', 'item'],
+    tag: ['item'],
     sprite: {
       base: ['leatherArmor'],
     },
@@ -179,7 +179,7 @@ export const items = {
 
   leatherGloves: {
     name: 'leather gloves',
-    tag: ['feature', 'item'],
+    tag: ['item'],
     sprite: {
       base: ['leatherGlove'],
     },
@@ -187,7 +187,7 @@ export const items = {
 
   leatherLeggings: {
     name: 'leather chaps',
-    tag: ['feature', 'item'],
+    tag: ['item'],
     sprite: {
       base: ['leatherLeggings'],
     },
@@ -195,7 +195,7 @@ export const items = {
 
   leatherBoots: {
     name: 'leather boots',
-    tag: ['feature', 'item'],
+    tag: ['item'],
     sprite: {
       base: ['leatherBoot'],
     },

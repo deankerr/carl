@@ -60,7 +60,7 @@ export function renderRegion(engine: Engine) {
 
   // Iterate through the visible set of points the size of the main display
   viewportRect.traverse(viewPt => {
-    // the region location to render here
+    // the cell to render here
     const pt = viewPt.add(-offsetX, -offsetY)
 
     const known = local.revealAll || local.recallAll || (areaKnown.get(pt) ?? false)
@@ -74,18 +74,21 @@ export function renderRegion(engine: Engine) {
       const stack: Entity[] = [nothing]
       const here = entities.filter(e => e.position === pt && !e.invisible)
 
-      const terrain = local.terrainMap.get(pt)
+      const terrain = local.terrainAt(pt)
       const features = here.filter(e => e.feature)
+      const items = here.filter(e => e.item)
 
       if (visible) {
         const beings = here.filter(e => e.being)
         if (terrain) stack.push(terrain)
-        if (features.length > 0) stack.push(...features)
+        stack.push(...features)
+        stack.push(...items)
         stack.push(...beings)
       } else {
         // area previously seen, render terrain and features
-        if (terrain) stack.push(terrain)
-        if (features) stack.push(...features)
+        stack.push(terrain)
+        stack.push(...features)
+        stack.push(...items)
       }
 
       // sort z-levels
@@ -103,11 +106,13 @@ export function renderRegion(engine: Engine) {
             render.char = ledge.tile
           }
         }
+
         // being
         if (e.facing && e.sprite[e.facing]) {
           const s = e.sprite[e.facing]?.tile
           if (s) render.char = s
         }
+
         // doors
         if (trigger && base) {
           trigger.forEach((trig, i) => {
@@ -132,22 +137,19 @@ export function renderRegion(engine: Engine) {
             i = v <= 0 ? 0 : vMod
           }
           render.char = sprite.tiles[i]
-          return render
         }
 
+        if (visible && lighting.has(pt)) {
+          // const light = lighting.get(pt) ?? [0, 0, 0]
+          // if (Date.now() - lastLightFlicker > CONFIG.lightFlickerFreq) {
+          //   flickerDimmed = !flickerDimmed
+          //   lastLightFlicker = Date.now()
+          // }
+          // render.color = addLight(render.color, light, flickerDimmed)
+        } else if (known && !visible) {
+          // render.color = transformHSL(render.color, recalledFade)
+        }
         return render
-
-        // if (visible && lighting.has(pt)) {
-        //   const light = lighting.get(pt) ?? [0, 0, 0]
-        //   if (Date.now() - lastLightFlicker > CONFIG.lightFlickerFreq) {
-        //     flickerDimmed = !flickerDimmed
-        //     lastLightFlicker = Date.now()
-        //   }
-        //   render.color = addLight(render.color, light, flickerDimmed)
-        // } else if (known && !visible) {
-        //   render.color = transformHSL(render.color, recalledFade)
-        // }
-        // return render
       })
 
       // draw
