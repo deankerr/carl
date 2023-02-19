@@ -44,7 +44,6 @@ export class Overseer3 {
   }
 
   snap(message = '') {
-    this.region.evaluateTerrainVariants()
     this.history.push(createSnapshot(this.region.terrainMap, this.region.entityList, message))
   }
 
@@ -152,7 +151,7 @@ export class Overseer3 {
     const pt = area instanceof Rect ? area.centerPoint() : area
     const d = this.pool.spawn('debug', pt)
     const char = debugChar.shift() ?? '?'
-    d.render = { ...d.render, char }
+    // d.render = { ...d.render, char }
     this.region.entityList.push(d)
   }
 
@@ -160,7 +159,7 @@ export class Overseer3 {
     const s = n.toString()
     s.split('').forEach((c, i) => {
       const d = this.pool.spawn('debug', i === 0 ? pt : pt.east(i))
-      d.render = { ...d.render, char: c, color, bgColor }
+      // d.render = { ...d.render, char: c, color, bgColor }
       this.debugSymbolList.push(d)
       this.region.entityList.push(d)
     })
@@ -171,7 +170,8 @@ export class Overseer3 {
 
     const createDebugPt = (pt: Point, n: number) => {
       const d = this.pool.spawn('debug', pt)
-      d.render = { ...d.render, char: symbols[n % 5] }
+      // d.render = { ...d.render, char: symbols[n % 5] }
+      // d.sprite = {...d.sprite, }
       this.debugSymbolList.push(d)
       this.region.entityList.push(d)
     }

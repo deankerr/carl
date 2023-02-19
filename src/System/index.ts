@@ -7,7 +7,6 @@ export * from './handlePickUp'
 
 export * from './processDeath'
 export * from './processFieldOfVision'
-export * from './processTileUpdate'
 export * from './processLighting'
 
 export * from './renderRegion'

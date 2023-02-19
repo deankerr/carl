@@ -7,7 +7,7 @@ import { SpriteConfig, SpriteManager } from './Sprite'
 const templates = { ...beings, ...features, ...terrain, ...items }
 
 export type eID = { eID: number; label: string; key: EntityKey }
-export type Entity = eID & Component<'name'> & Component<'render'> & Partial<Components>
+export type Entity = eID & Component<'name'> & Component<'sprite'> & Partial<Components>
 export type EntityWith<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 
 export type TerrainKey = keyof typeof terrain
@@ -30,17 +30,7 @@ export class EntityPool {
         label: key,
         key: key as EntityKey,
         ...this.C.name(t.name),
-        ...this.C.render('unknown'),
-      }
-
-      // ! dev
-      if ('sprite' in t) {
-        e = { ...e, ...this.C.sprite(this.sprites, t.sprite) }
-      }
-
-      if (t.tiles) {
-        e.render.char = t.tiles[0]
-        e = { ...e, ...this.C.tiles(...t.tiles) }
+        ...this.C.sprite(this.sprites, t.sprite),
       }
 
       if (t.tag) e = this.attach(e, 'tag', ...t.tag)
@@ -48,13 +38,6 @@ export class EntityPool {
       if ('bumpMessage' in t) e = { ...e, ...this.C.bumpMessage(t.bumpMessage) }
 
       if ('fieldOfView' in t) e = this.attach(e, 'fieldOfView', t.fieldOfView)
-
-      if ('tileTriggers' in t) e = this.attach(e, 'tileTriggers', ...t.tileTriggers)
-      if ('tilesAutoCycle' in t) e = this.attach(e, 'tilesAutoCycle', t.tilesAutoCycle)
-      if ('tilesAutoRandom' in t) e = this.attach(e, 'tilesAutoRandom', t.tilesAutoRandom)
-      if ('tilesVertical' in t) e = { ...e, ...this.C.tilesVertical(...t.tilesVertical) }
-      if ('tilesHorizontal' in t) e = { ...e, ...this.C.tilesHorizontal(...t.tilesHorizontal) }
-      if ('tilesLedge' in t) e = { ...e, ...this.C.tilesLedge(...t.tilesLedge) }
 
       if ('portal' in t) e = { ...e, ...this.attach(e, 'portal', t.portal[0], t.portal[1]) }
 

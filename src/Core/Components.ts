@@ -17,38 +17,6 @@ export const ComponentFoundry = {
     return { fieldOfView: { radius, visible } }
   },
 
-  render: (char: string, color = 'transparent', bgColor = 'transparent') => {
-    return { render: { char, color, bgColor } }
-  },
-
-  tiles: (...tiles: string[]) => {
-    return { tiles }
-  },
-
-  tilesAutoCycle: (frequency = 0, current = 0, lastUpdate = 0) => {
-    return { tilesAutoCycle: { frequency, current, lastUpdate } }
-  },
-
-  tilesAutoRandom: (frequency = 0, current = 0, lastUpdate = 0) => {
-    return { tilesAutoRandom: { frequency, current, lastUpdate } }
-  },
-
-  tileTriggers: (...tags: Tag[]) => {
-    return { tileTriggers: tags }
-  },
-
-  tilesVertical: (...tilesVertical: string[]) => {
-    return { tilesVertical }
-  },
-
-  tilesHorizontal: (...tilesHorizontal: string[]) => {
-    return { tilesHorizontal }
-  },
-
-  tilesLedge: (...tilesLedge: string[]) => {
-    return { tilesLedge }
-  },
-
   name: (name: string) => {
     return { name }
   },
@@ -71,29 +39,21 @@ export const ComponentFoundry = {
     return { bumpMessage: { msg } }
   },
 
-  tileVariant: (...keys: EntityKey[]) => {
-    return { tileVariant: keys }
-  },
-
-  baseVariant: (key: EntityKey) => {
-    return { baseVariant: key }
-  },
-
-  ledgeVariant: (key: EntityKey) => {
-    return { ledgeVariant: key }
-  },
-
   portal: (zone: string, level: 'down' | 'up' | number) => {
     return { portal: { zone, level } }
   },
 
-  // ! dev
+  // todo better typing
   sprite: (spriteMan: SpriteManager, spriteConfig: object) => {
     return { sprite: spriteMan.register(spriteConfig as SpriteConfig) }
   },
 
   facing: (dir: Cardinal) => {
     return { facing: dir }
+  },
+
+  tint: (color: string, bgColor = 'transparent') => {
+    return { color, bgColor }
   },
 }
 
@@ -134,10 +94,10 @@ export type Tag =
 
 export type FoundryKey = keyof typeof ComponentFoundry
 export type FoundryParam = { [K in FoundryKey]: Parameters<typeof ComponentFoundry[K]> }
-type FoundaryReturn = ReturnType<typeof ComponentFoundry[FoundryKey]>
+type FoundryReturn = ReturnType<typeof ComponentFoundry[FoundryKey]>
 
 export type Component<K extends FoundryKey> = ReturnType<typeof ComponentFoundry[K]>
-export type Components = UnionToIntersection<FoundaryReturn>
+export type Components = UnionToIntersection<FoundryReturn>
 
 type UnionToIntersection<U> = (U extends unknown ? (k: U) => void : never) extends (
   k: infer I

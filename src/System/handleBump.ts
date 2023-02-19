@@ -25,7 +25,7 @@ export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
     // TODO non-player bump reactions
     if (isPlayerTurn) {
       // * handle door
-      const door = local.has(eBumped, 'isClosed', 'tiles', 'tileTriggers')
+      const door = local.has(eBumped, 'isClosed')
       if (door) {
         local
           .entity(door)

@@ -50,12 +50,8 @@ export function renderRegion(engine: Engine) {
 
   // * ========== Rendering ========== *
 
-  // replace any void terrain with these locally colored ones
-  // const voidTerrain = local.voidTiles()
-
-  const ground = local.pool.symbolic('dirtFloor') as EntityWith<Entity, 'render'>
-  const unknown = local.pool.symbolic('unknown') as EntityWith<Entity, 'render'>
-  const nothing = local.pool.symbolic('nothing') as EntityWith<Entity, 'render'>
+  const unknown = local.pool.symbolic('unknown')
+  const nothing = local.pool.symbolic('nothing')
 
   const { areaKnown, areaVisible, lighting } = local
   const entities = local.get('position')
@@ -72,7 +68,7 @@ export function renderRegion(engine: Engine) {
 
     if (!known) {
       // unrevealed area
-      mainDisplay.draw(viewPt.x, viewPt.y, unknown.render.char, 'transparent', 'transparent')
+      mainDisplay.draw(viewPt.x, viewPt.y, unknown.sprite.base.tile, 'transparent', 'transparent')
     } else {
       // currently visible
       const stack: Entity[] = [nothing]
@@ -97,53 +93,50 @@ export function renderRegion(engine: Engine) {
 
       // extract form data, applying lighting/fade if applicable
       const renderStack = stack.map(e => {
-        if (e.sprite) {
-          const { base, ledge, trigger, exposed, noise } = e.sprite
-          const render = { ...nothing.render, char: e.sprite.base.tile }
+        const { base, ledge, trigger, exposed, noise } = e.sprite
+        const render = { char: e.sprite.base.tile, color: 'transparent', bgColor: 'transparent' }
 
-          // liquid
-          if (ledge) {
-            const tAbove = local.terrainAt(pt.north(1))
-            if (tAbove.key !== e.key) {
-              render.char = ledge.tile
-            }
+        // liquid
+        if (ledge) {
+          const tAbove = local.terrainAt(pt.north(1))
+          if (tAbove.key !== e.key) {
+            render.char = ledge.tile
           }
-          // being
-          else if (e.facing && e.sprite[e.facing]) {
-            const s = e.sprite[e.facing]?.tile
-            if (s) render.char = s
-          }
-          // doors
-          else if (trigger && base) {
-            trigger.forEach((trig, i) => {
-              if (trig in e) render.char = base.tiles[i]
-            })
-          }
+        }
+        // being
+        if (e.facing && e.sprite[e.facing]) {
+          const s = e.sprite[e.facing]?.tile
+          if (s) render.char = s
+        }
+        // doors
+        if (trigger && base) {
+          trigger.forEach((trig, i) => {
+            if (trig in e) render.char = base.tiles[i]
+          })
+        }
 
-          // wall/floor/noise decoration
-          else {
-            let sprite = base
-            let i = 0
-            if (exposed) {
-              const tBelow = local.terrainAt(pt.south(1))
-              if (!tBelow.wall) sprite = exposed
-            }
-
-            if (noise) {
-              const len = base.tiles.length - 1
-              const v = local.noise.get(pt.x, pt.y)
-              const vMod = Math.round(((v + 1) * 255) / 2) % len
-
-              i = v <= 0 ? 0 : vMod
-            }
-
-            render.char = sprite.tiles[i]
+        // wall/floor/noise decoration
+        if (exposed || noise) {
+          let sprite = base
+          let i = 0
+          if (exposed) {
+            const tBelow = local.terrainAt(pt.south(1))
+            if (!tBelow.wall) sprite = exposed
           }
 
+          if (noise) {
+            const len = base.tiles.length - 1
+            const v = local.noise.get(pt.x, pt.y)
+            const vMod = Math.round(((v + 1) * 255) / 2) % len
+
+            i = v <= 0 ? 0 : vMod
+          }
+          render.char = sprite.tiles[i]
           return render
         }
 
-        const render = { ...nothing.render, ...e.render }
+        return render
+
         // if (visible && lighting.has(pt)) {
         //   const light = lighting.get(pt) ?? [0, 0, 0]
         //   if (Date.now() - lastLightFlicker > CONFIG.lightFlickerFreq) {
@@ -154,7 +147,7 @@ export function renderRegion(engine: Engine) {
         // } else if (known && !visible) {
         //   render.color = transformHSL(render.color, recalledFade)
         // }
-        return render
+        // return render
       })
 
       // draw
