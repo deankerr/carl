@@ -53,16 +53,20 @@ export class Point {
     return point(this.x + pt.x, this.y + pt.y)
   }
 
+  addPt(pt: Point) {
+    return point(this.x + pt.x, this.y + pt.y)
+  }
+
   mul(by: number) {
     return point(this.x * by, this.y * by)
   }
 
   neighbours4() {
-    return neighbours4.map(n => this.add(n))
+    return neighbours4.map(n => this.addPt(n))
   }
 
   neighbours8() {
-    return neighbours8.map(n => this.add(n))
+    return neighbours8.map(n => this.addPt(n))
   }
 
   north(n = 1) {
@@ -77,6 +81,10 @@ export class Point {
   }
   west(n = 1) {
     return this.add(-n, 0)
+  }
+
+  neigh8(callback: (npt: Point) => unknown) {
+    neighbours8.forEach(npt => callback(this.addPt(npt)))
   }
 }
 

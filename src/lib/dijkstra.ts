@@ -1,67 +1,53 @@
 import { Point } from './Shape/Point'
-import { Rect } from './Shape/Rectangle'
 
 export class DijkstraMap {
-  map = new Map<Point, number>()
-  time: number[] = []
+  limit = 99
+  domain: Set<Point>
 
-  each(callback: ResultFn) {
-    for (const [pt, val] of this.map) {
-      callback(pt, val)
-    }
+  map = new Map<Point, number>()
+  next = new Set<Point>()
+
+  constructor(...initDomain: Point[]) {
+    this.domain = new Set(initDomain)
   }
 
-  initRect(rect: Rect, value: number) {
-    rect.traverse(pt => this.map.set(pt, value))
+  start(...start: Point[]) {
+    const t = Date.now()
+    console.log('Start D2', start)
+
+    for (const pt of start) {
+      this.map.set(pt, 0)
+      pt.neigh8(npt => this.queue(npt))
+    }
+
+    for (const pt of this.next) {
+      const lowest = this.neighbours(pt)
+      const val = lowest < this.limit ? lowest + 1 : this.limit
+      this.map.set(pt, val)
+    }
+
+    console.log('D2 Complete:', Date.now() - t, 'ms')
   }
 
   get(pt: Point) {
-    const val = this.map.get(pt)
-    return val ?? 999999
+    return this.map.get(pt) ?? this.limit
   }
 
-  getN4(pt: Point) {
-    return pt.neighbours4().map(npt => this.get(npt))
-  }
-
-  calculate(callback?: ResultFn) {
-    const t = Date.now()
-    const next = new Map<Point, number>()
-    let changed = false
-
-    for (const [pt, val] of this.map) {
-      const [n] = this.getN4(pt).sort((a, b) => a - b)
-      if (val - n > 1) {
-        next.set(pt, n + 1)
-        changed = true
-        callback ? callback(pt, n + 1) : ''
-      } else {
-        next.set(pt, val)
-        callback ? callback(pt, val) : ''
-      }
+  neighbours(pt: Point) {
+    let lowest = this.limit
+    for (const npt of pt.neighbours8()) {
+      if (this.map.has(npt)) {
+        const nVal = this.get(npt)
+        if (nVal < lowest) lowest = nVal
+      } else this.queue(npt)
     }
 
-    this.map = next
-    this.time.push(Date.now() - t)
-
-    if (!changed) {
-      const total = this.time.reduce((a, c) => a + c)
-      const avg = total / this.time.length
-      console.log(
-        'Dijkstra map complete - Avg:',
-        avg.toFixed(2) + 'ms',
-        'Total:',
-        total + 'ms',
-        'Loops:',
-        this.time.length
-      )
-    }
-    return changed
+    return lowest
   }
 
-  run(callback?: ResultFn) {
-    if (this.calculate(callback)) this.run()
+  queue(pt: Point) {
+    if (this.domain.has(pt)) this.next.add(pt)
   }
 }
 
-type ResultFn = (pt: Point, val: number) => unknown
+// type ResultFn = (pt: Point, val: number) => unknown

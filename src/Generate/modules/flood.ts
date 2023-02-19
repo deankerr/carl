@@ -40,6 +40,45 @@ import { Rect } from '../../lib/Shape/Rectangle'
 //   return results
 // }
 
+// take a list of points, flood from a selected point
+export function floodCore(
+  points: Point[],
+  start: Point | Point[],
+  topology: 4 | 8,
+  callback: (pt: Point) => unknown
+) {
+  const domain = new Set(points)
+
+  let neighbours = Array.isArray(start) ? [...start] : [start]
+  let nextRing: Point[] = []
+  const visited = new Set<Point>()
+
+  const flood = () => {
+    for (const pt of neighbours) {
+      if (visited.has(pt) || !domain.has(pt)) continue
+
+      visited.add(pt)
+      if (callback(pt) === false) {
+        console.log('flood abort!')
+        return
+      }
+
+      const neighPts = topology === 4 ? pt.neighbours4() : pt.neighbours8()
+      neighPts.forEach(npt => {
+        if (!visited.has(npt) && domain.has(pt)) nextRing.push(npt)
+      })
+    }
+
+    if (nextRing.length === 0) return
+
+    neighbours = nextRing
+    nextRing = []
+    flood()
+  }
+
+  flood()
+}
+
 export function floodFindRegions(rect: Rect, predicate: (pt: Point) => boolean) {
   let count = 0
   const regions = new Map<Point, number>()

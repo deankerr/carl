@@ -1,7 +1,7 @@
 // const PROD = import.meta.env.PROD
 
 const appInitial = 'game'
-const seed = 3625
+const seed = 2225
 // const seed = null
 
 const mainDisplayWidth = 37

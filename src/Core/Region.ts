@@ -183,4 +183,13 @@ export class Region {
     console.error('Failed to get random point')
     return point(rnd(0, this.width - 1), rnd(0, this.height - 1))
   }
+
+  walkable() {
+    const walkable: Point[] = []
+    this.rect.traverse(pt => {
+      if (!this.terrainAt(pt).blocksMovement) walkable.push(pt)
+    })
+
+    return walkable
+  }
 }
