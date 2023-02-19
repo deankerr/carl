@@ -88,8 +88,8 @@ export const ComponentFoundry = {
   },
 
   // ! dev
-  sprite: (spriteMan: SpriteManager, spriteConfig: any) => {
-    return { sprite: spriteMan.register(spriteConfig) }
+  sprite: (spriteMan: SpriteManager, spriteConfig: object) => {
+    return { sprite: spriteMan.register(spriteConfig as SpriteConfig) }
   },
 
   facing: (dir: Cardinal) => {

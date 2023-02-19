@@ -1,3 +1,4 @@
+import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
 import { Entity, EntityWith } from '../Core'
 import { Engine } from '../Core/Engine'
@@ -11,7 +12,7 @@ import { Rect } from '../lib/Shape/Rectangle'
 // let flickerDimmed = false
 
 export function renderRegion(engine: Engine) {
-  const { mainDisplay, local } = engine
+  const { mainDisplay, local, textDisplay } = engine
   // if (!local.hasChanged) return
 
   // * ========== Viewport ========== *
@@ -61,7 +62,6 @@ export function renderRegion(engine: Engine) {
 
   mainDisplay.clear()
 
-  const debugNCount: Record<number, number> = {}
   // Iterate through the visible set of points the size of the main display
   viewportRect.traverse(viewPt => {
     // the region location to render here
@@ -101,43 +101,43 @@ export function renderRegion(engine: Engine) {
           const { base, ledge, trigger, exposed, noise } = e.sprite
           const render = { ...nothing.render, char: e.sprite.base.tile }
 
+          // liquid
           if (ledge) {
             const tAbove = local.terrainAt(pt.north(1))
             if (tAbove.key !== e.key) {
               render.char = ledge.tile
             }
           }
-
-          if (e.facing && e.sprite[e.facing]) {
+          // being
+          else if (e.facing && e.sprite[e.facing]) {
             const s = e.sprite[e.facing]?.tile
             if (s) render.char = s
           }
-
-          if (trigger && base) {
+          // doors
+          else if (trigger && base) {
             trigger.forEach((trig, i) => {
               if (trig in e) render.char = base.tiles[i]
             })
           }
 
-          if (exposed) {
-            const tBelow = local.terrainAt(pt.south(1))
-            if (!tBelow.wall) render.char = exposed.tile
-          }
-
-          if (noise) {
-            // const v = Math.round((local.noise.get(pt.x, pt.y) + 1) * 50)
-            // render.char = base.tiles[v % base.tiles.length]
-            const v = local.noise.get(pt.x, pt.y)
-
-            if (v <= 0) render.char = base.tiles[0]
-            else {
-              const v2 = Math.round(v * (base.tiles.length - 1))
-              render.char = base.tiles[v2]
-              if (render.char === undefined) console.log(v2)
-
-              if (debugNCount[v2]) debugNCount[v2]++
-              else debugNCount[v2] = 1
+          // wall/floor/noise decoration
+          else {
+            let sprite = base
+            let i = 0
+            if (exposed) {
+              const tBelow = local.terrainAt(pt.south(1))
+              if (!tBelow.wall) sprite = exposed
             }
+
+            if (noise) {
+              const len = base.tiles.length - 1
+              const v = local.noise.get(pt.x, pt.y)
+              const vMod = Math.round(((v + 1) * 255) / 2) % len
+
+              i = v <= 0 ? 0 : vMod
+            }
+
+            render.char = sprite.tiles[i]
           }
 
           return render
@@ -167,8 +167,6 @@ export function renderRegion(engine: Engine) {
       )
     }
   })
-
-  console.log('debugNCount:', debugNCount)
 }
 
 const recalledFade = { sat: { by: 0.8 }, lum: { by: 0.8 } }

@@ -10,7 +10,7 @@ export function gen5(
   const region = new Region(width, height, 'gen5')
   const O3 = new Overseer3(region)
   O3.theme.wall = 'dungeonWall'
-  O3.theme.floor = 'stoneTileFloor2'
+  O3.theme.floor = 'stoneTileFloor'
   O3.theme.door = 'woodenDoor'
   O3.room(region.rect)
 
