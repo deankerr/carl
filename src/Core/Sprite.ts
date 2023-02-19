@@ -1,6 +1,7 @@
 import { pick, Queue, rnd, shuffle } from '../lib/util'
 import { oryxTinyMap } from '../lib/tilemap'
 import { Tag } from './Components'
+import { Engine } from './Engine'
 
 export type SpriteConfig = {
   base: string[]
@@ -30,6 +31,9 @@ type AnimType = 'static' | 'cycle' | 'random'
 
 export class SpriteManager {
   all = new Map<string, Sprite>()
+  animated = new Map<number, Sprite[]>()
+
+  constructor(readonly engine: Engine) {}
 
   register(config: SpriteConfig): Sprites {
     const [animType, animSpeed] = config.animate ?? ['static', 0]
@@ -74,7 +78,28 @@ export class SpriteManager {
 
     const sprite = new Sprite(tiles, animType, animSpeed)
     this.all.set(hash, sprite)
+
+    if (animType !== 'static') {
+      const list = this.animated.get(animSpeed) ?? []
+      list.push(sprite)
+      this.animated.set(animSpeed, list)
+
+      if (list.length === 1) {
+        this.animate(animSpeed)
+      }
+    }
+
     return sprite
+  }
+
+  animate(animSpeed: number) {
+    const list = this.animated.get(animSpeed)
+    if (!list) return
+
+    list.forEach(s => s.next())
+    if (this.engine.local) this.engine.local.hasChanged = true
+
+    setTimeout(this.animate.bind(this), animSpeed, animSpeed)
   }
 }
 
@@ -105,16 +130,15 @@ export class Sprite {
     if (!next) return
 
     this.tile = next
-    setTimeout(this.cycle.bind(this), this.speed)
   }
 
   random() {
     const next = rnd(this.tiles.length - 1)
     this.tile = this.tiles[next]
-    setTimeout(this.random.bind(this), this.speed)
   }
 
-  clone() {
-    return new Sprite(this.tiles, this.type, this.speed)
+  next() {
+    if (this.type === 'cycle') this.cycle()
+    if (this.type === 'random') this.random()
   }
 }

@@ -26,7 +26,7 @@ export class Engine {
   context: GameContext = 'game'
   attached: Visualizer | undefined
 
-  sprites = new SpriteManager()
+  sprites = new SpriteManager(this)
   component = ComponentFoundry
   pool = new EntityPool(this.sprites)
   system = new System(this)

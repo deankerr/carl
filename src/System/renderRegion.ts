@@ -13,7 +13,7 @@ import { Rect } from '../lib/Shape/Rectangle'
 
 export function renderRegion(engine: Engine) {
   const { mainDisplay, local, textDisplay } = engine
-  // if (!local.hasChanged) return
+  if (!local.hasChanged) return
 
   // * ========== Viewport ========== *
   const { width, height } = mainDisplay.getOptions()

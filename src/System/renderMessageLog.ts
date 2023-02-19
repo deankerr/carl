@@ -4,7 +4,7 @@ import { Engine, Message } from '../Core/Engine'
 import { half, loop, range } from '../lib/util'
 
 export function renderMessageLog(engine: Engine) {
-  // if (!engine.local.hasChanged) return
+  if (!engine.local.hasChanged) return
 
   const { messageDisplayHeight, messageBufferDisplaySize } = CONFIG
   const { local, mainDisplay, msgDisplay, messageLog, playerTurns, options } = engine
