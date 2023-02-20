@@ -10,7 +10,6 @@ export function UI(engine: Engine, ui: string) {
       console.log(engine)
       console.log('Local entities', local.entityList)
       console.log('Local', local)
-      window.logger.info()
       msg = `The world...`
       break
     case 'logTile':

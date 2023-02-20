@@ -1,11 +1,9 @@
 import * as ROT from 'rot-js'
 import { Engine } from '../Core/Engine'
-import { logger } from '../lib/logger'
 
 import { point, Point } from '../lib/Shape/Point'
 
 export const processFieldOfVision = (engine: Engine) => {
-  const log = logger('sys', 'turn', 'processFieldOfVision')
   const { local } = engine
 
   const entities = local
@@ -41,6 +39,4 @@ export const processFieldOfVision = (engine: Engine) => {
       }
     }
   }
-
-  log.end()
 }

@@ -69,28 +69,12 @@ export class Region {
     }
   }
 
-  createEntity(pt: Point, key: EntityKey) {
-    if (key.includes('Door')) return this.createDoor(pt, key)
-
-    const entity = this.pool.spawn(key, pt)
-    this.entityList.push(entity)
-
-    this.hasChanged = true
-    return entity
-  }
-
-  createTerrain(pt: Point, key: EntityKey) {
-    const terrain = this.pool.spawn(key, pt)
-    this.terrainMap.set(pt, terrain)
-    this.hasChanged = true
-  }
-
   modify(entity: Entity) {
     this.hasChanged = true
     return this.pool.modify(entity)
   }
 
-  destroyEntity(entity: Entity) {
+  destroy(entity: Entity) {
     this.entityList = this.entityList.filter(e => e.eID !== entity.eID)
 
     // turn queue
@@ -215,7 +199,7 @@ export class Region {
     if (typeof tile === 'number') tile = nAlpha(tile)
     if (typeof color === 'number') color = heatMapColor(color)
 
-    const d = this.pool.spawn('debug', pt)
+    const d = this.debugSymbolMap.get(pt) ?? this.pool.spawn('debug', pt)
     this.pool
       .modify(d)
       .sprite({ base: [tile] })
@@ -227,11 +211,11 @@ export class Region {
 
 // debug helpers
 function nAlpha(n: number) {
-  if (n < 0 && n > -6) return symbols[Math.abs(n) - 1]
+  if (n < 0 && n > -6) return nSymbols[Math.abs(n) - 1]
   if (n < 0) return '?'
   if (n > 35) return '!'
   const map = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
   return map[n]
 }
 
-const symbols = ['auraHoly', 'auraBlue', 'auraRed', 'auraGreen', 'auraPurple']
+const nSymbols = ['auraHoly', 'auraBlue', 'auraRed', 'auraGreen', 'auraPurple']

@@ -7,7 +7,7 @@ export function renderMessageLog(engine: Engine) {
   if (!engine.local.hasChanged) return
 
   const { messageDisplayHeight, messageBufferDisplaySize } = CONFIG
-  const { local, mainDisplay, msgDisplay, messageLog, playerTurns, options } = engine
+  const { local, msgDisplay, messageLog, playerTurns, options } = engine
 
   const displayOptions = msgDisplay.getOptions()
   const { width, height } = displayOptions
@@ -24,23 +24,6 @@ export function renderMessageLog(engine: Engine) {
   // game message buffer
   const msgStack = messageLog.slice(-messageBufferDisplaySize).reverse()
   const msgBufferY = height - messageBufferDisplaySize
-
-  // * draw on main display
-  // loop(messageDisplayHeight, i => {
-  //   const msg = msgStack[i]
-  //   if (msg && playerTurns - msg.turn < 10) {
-  //     const x = center.x - half(msg.text.length)
-  //     const y = msgBufferY + i
-
-  //     textToTile(msg, (xi, char, color) => {
-  //       mainDisplay.draw(x + xi, y, char, color, local.palette.unknown)
-  //     })
-
-  //     // padding
-  //     mainDisplay.draw(x - 1, y, 'solid', local.palette.unknown, null) // left
-  //     mainDisplay.draw(x + msg.text.length, y, 'solid', local.palette.unknown, null) // right
-  //   }
-  // })
 
   loop(messageDisplayHeight, i => {
     const msg = msgStack[i]
@@ -131,7 +114,7 @@ function fps() {
 }
 
 function getLogTimes() {
-  const turn = window.logger.logGroups.get('sys.runTurns')?.avg.toFixed(0) ?? ''
-  const render = window.logger.logGroups.get('sys.runRender')?.avg.toFixed(0) ?? ''
-  return `T:${turn}ms R:${render}ms`
+  // const turn = window.logger.logGroups.get('sys.runTurns')?.avg.toFixed(0) ?? ''
+  // const render = window.logger.logGroups.get('sys.runRender')?.avg.toFixed(0) ?? ''
+  // return `T:${turn}ms R:${render}ms`
 }

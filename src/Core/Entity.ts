@@ -78,6 +78,7 @@ export class EntityPool {
     return this.thaw(key)
   }
 
+  // apply a component by name
   private attachName<T extends FoundryKey>(e: Entity, name: T, ...p: FoundryParam[T]): Entity {
     if (!this.C[name]) throw new Error('Invalid component name')
     const c = Reflect.apply(this.C[name], undefined, p) as Component<T>
@@ -85,6 +86,7 @@ export class EntityPool {
     return e2
   }
 
+  // attach a component object
   private attach<T extends Partial<Components>>(e: Entity, ...com: T[]) {
     Object.assign(e, ...com)
   }

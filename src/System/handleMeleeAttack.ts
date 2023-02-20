@@ -1,8 +1,6 @@
 import { Engine } from '../Core/Engine'
-import { logger } from '../lib/logger'
 
 export const handleMeleeAttack = (engine: Engine, isPlayerTurn: boolean) => {
-  const log = logger('sys', 'handleMeleeAttack')
   const { local } = engine
   const [currentEntity] = local.get('acting')
   if (!currentEntity) return
@@ -10,15 +8,12 @@ export const handleMeleeAttack = (engine: Engine, isPlayerTurn: boolean) => {
 
   if (!('meleeAttack' in action)) return //log.msg('handleMeleeAttack: not a meleeAttack action')
 
-  log.msg('handleMeleeAttack: ', currentEntity.label)
-
   // get target
   const [targetEntity] = local.get('meleeAttackTarget')
 
   // hardcoded responses for now
   if (isPlayerTurn) {
     // kill target
-    log.msg(`handleMeleeAttack: player killed ${targetEntity.label}`)
     local.modify(targetEntity).define('tag', 'dead')
     engine.message(`You obliterate the ${targetEntity.name} with your mind!`, targetEntity)
   } else {
@@ -33,6 +28,5 @@ export const handleMeleeAttack = (engine: Engine, isPlayerTurn: boolean) => {
   const taggedEntities = local.get('meleeAttackTarget')
   for (const entity of taggedEntities) {
     local.modify(entity).remove('meleeAttackTarget')
-    log.msg(`handleMeleeAttack: cleanup - removed tagMeleeAttackTarget from ${entity.label}`)
   }
 }

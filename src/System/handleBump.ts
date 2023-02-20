@@ -1,9 +1,7 @@
 import * as Action from '../Core/Action'
 import { Engine } from '../Core/Engine'
-import { logger } from '../lib/logger'
 
 export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
-  const log = logger('sys', 'handleBump')
   const { local } = engine
   const [currentEntity] = local.get('acting', 'position')
   if (!currentEntity) return
@@ -14,12 +12,9 @@ export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
   const bumped = local.at(action.bump).filter(e => !e.acting && e.blocksMovement)
 
   if (bumped.some(e => e.terrain)) {
-    log.msg('handleBump: result - terrain bump')
     if (isPlayerTurn) engine.message(`You bounce off the ${bumped[0].name}.`, bumped[0])
   } else {
     // entities
-    log.msg('handleBump: entity bump')
-
     // ? assuming there can only be one entity here
     const [eBumped] = bumped
     // TODO non-player bump reactions
@@ -47,7 +42,6 @@ export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
         }
 
         engine.message('Knock knock!!!', door)
-        return log.end()
       }
 
       // * hostile - attack
@@ -56,7 +50,6 @@ export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
 
         // update acting component
         local.modify(currentEntity).define('acting', Action.MeleeAttack(action.bump))
-        log.msg(`handleBump: action - MeleeAttack ${eBumped.label}`)
       }
 
       // * friendly msg
@@ -70,5 +63,4 @@ export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
       }
     }
   }
-  log.end()
 }

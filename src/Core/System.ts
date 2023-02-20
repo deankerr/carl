@@ -1,5 +1,4 @@
 import { CONFIG } from '../config'
-import { logger } from '../lib/logger'
 import {
   handleBump,
   handleLocationChange,
@@ -31,6 +30,7 @@ export class System {
     processFieldOfVision,
     processHeatMap,
   ]
+  turnTimeHistory: number[] = []
 
   regionChangeProcess = [
     handleLocationChange,
@@ -40,19 +40,17 @@ export class System {
   ]
 
   renderProcess = [renderRegion, renderMessageLog]
+  renderTimeHistory: number[] = []
 
   constructor(readonly engine: Engine) {}
 
   run(engine: Engine, playerAction: ActionTypes) {
-    const log = logger('sys', 'runTurns')
     const { local } = engine
 
     let e = local.player() as Entity
 
     let maxLoops = 500
     while (maxLoops-- > 0) {
-      log.msg('Start turn:', e.label)
-
       const action = e.playerControlled ? playerAction : Action.__randomMove()
       local.modify(e).define('acting', action)
 
@@ -61,8 +59,7 @@ export class System {
       local.modify(local.get('acting')[0]).remove('acting')
 
       e = this.next(local)
-
-      if (e.playerControlled) return log.end('Sys: Player Input Required')
+      if (e.playerControlled) return
     }
 
     if (maxLoops < 1) throw new Error('Sys loop maximum exceeded')
@@ -75,9 +72,7 @@ export class System {
   }
 
   render(engine: Engine) {
-    const log = logger('sys', 'runRender')
     this.renderProcess.forEach(sys => sys(engine))
-    log.end()
   }
 
   init() {

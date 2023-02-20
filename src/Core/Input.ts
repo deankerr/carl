@@ -1,7 +1,6 @@
 // * Translate key code into Action
 
 import { GameContext } from '.'
-import { logger } from '../lib/logger'
 import {
   ActionTypes,
   ChangeRegion,
@@ -83,7 +82,6 @@ export function handle(event: KeyboardEvent, context: GameContext): ActionTypes 
   if (context === 'visualizer' && visKeys[k]) return visKeys[k]
 
   console.log(`'${code}' ??`)
-  logger('input').msg(`Key '${code}' not recognised`)
   return
 }
 

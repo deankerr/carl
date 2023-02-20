@@ -14,7 +14,7 @@ export const handlePickUp = (engine: Engine, isPlayerTurn: boolean) => {
     // handle first item on the stack
     const [item] = itemsHere
     engine.message(`You stuff the ${item.name} into your bulging pantaloons.`, item)
-    local.destroyEntity(item)
+    local.destroy(item)
   } else {
     engine.message('You grasp at the air.', eActing)
   }

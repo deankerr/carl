@@ -99,7 +99,7 @@ export class Overseer3 {
 
     const [_terrain, ...entities] = this.region.at(pt)
     entities.forEach(e => {
-      if (e.key !== 'shadow') this.region.destroyEntity(e)
+      if (e.key !== 'shadow') this.region.destroy(e)
     })
   }
 

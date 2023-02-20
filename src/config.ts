@@ -14,7 +14,7 @@ const messageBufferDisplaySize = 5
 const textDisplayWidth = 40
 const textDisplayHeight = 30
 
-const generateWidth = 37 // approx 1.5 times graphical display size
+const generateWidth = 37
 const generateHeight = 19
 
 const setMainToMapSize = false
@@ -26,7 +26,6 @@ const messageBackgroundColor = 'transparent'
 const htmlBackgroundColor = '#000000'
 
 const frameLimit = 0
-const lightFlickerFreq = 120
 const recallAll = false
 const revealAll = localStorage.getItem('revealAll') === 'true'
 
@@ -52,7 +51,6 @@ const CONFIG = {
   messageBackgroundColor,
   htmlBackgroundColor,
   frameLimit,
-  lightFlickerFreq,
   recallAll,
   revealAll,
   initialZone,

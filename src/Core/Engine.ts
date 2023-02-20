@@ -2,7 +2,6 @@ import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
 
 import { createGameDisplay } from '../lib/display'
-import { logger } from '../lib/logger'
 import {
   ActionTypes,
   Atlas,
@@ -96,12 +95,10 @@ export class Engine {
 
   // TODO message handler
   message(text: string, entity: Entity) {
-    logger('engine', 'message').msg(text)
     if (this.local.player().acting) this.messageLog.push(this.createMessage(text, entity))
   }
 
   uiMessage(text: string) {
-    logger('engine', 'uiMessage').msg(text)
     this.uiMessageLog.push(this.createMessage(text))
   }
 
