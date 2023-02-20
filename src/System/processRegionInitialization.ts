@@ -18,4 +18,6 @@ export function processRegionInitialization(engine: Engine) {
 
   if (CONFIG.setMainToMapSize)
     engine.mainDisplay.setOptions({ width: local.width, height: local.height })
+
+  local.revealAll = engine.options.revealAll
 }

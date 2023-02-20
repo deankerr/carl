@@ -41,7 +41,8 @@ export class Engine {
 
   options = {
     debugMode: false,
-    showHeatMap: true,
+    revealAll: false,
+    showHeatMap: false,
   }
 
   constructor() {

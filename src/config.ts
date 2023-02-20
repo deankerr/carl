@@ -17,7 +17,7 @@ const textDisplayHeight = 30
 const generateWidth = 37 // approx 1.5 times graphical display size
 const generateHeight = 19
 
-const setMainToMapSize = true
+const setMainToMapSize = false
 
 // '#111a0e'
 const mainBackgroundColor = '#000000'

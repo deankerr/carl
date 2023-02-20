@@ -185,10 +185,3 @@ declare global {
     O3Debug: Overseer3
   }
 }
-
-function nAlpha(n: number) {
-  if (n < 0) return '?'
-  if (n > 35) return '!'
-  const map = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-  return map[n]
-}

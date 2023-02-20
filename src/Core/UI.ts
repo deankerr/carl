@@ -13,15 +13,14 @@ export function UI(engine: Engine, ui: string) {
       window.logger.info()
       msg = `The world...`
       break
+    case 'logTile':
+      msg = logTile(engine)
+      break
     case 'revealAll':
+      engine.options.revealAll = !engine.options.revealAll
       local.revealAll = !local.revealAll
       localStorage.setItem('revealAll', `${local.revealAll}`)
       msg = `revealAll: ${local.revealAll}`
-      break
-    case 'animation':
-      options.formUpdate = !options.formUpdate
-      options.lightingUpdate = !options.lightingUpdate
-      msg = `animation: ${options.formUpdate}`
       break
     case 'displayZoomIn':
       msg = main(engine, 1)
@@ -37,10 +36,12 @@ export function UI(engine: Engine, ui: string) {
       break
     case 'debugMode':
       options.debugMode = !options.debugMode
-      msg = options.debugMode ? 'Welcome to Debug' : 'Bugs crushed'
+      msg = options.debugMode ? 'Welcome to Debug' : 'Bugs defeated'
       break
-    case 'logTile':
-      msg = logTile(engine)
+    case 'toggleHeatMap':
+      options.showHeatMap = !options.showHeatMap
+      engine.local.debugSymbolMap.clear()
+      msg = 'Heat Map'
   }
 
   msg ? engine.uiMessage(msg) : engine.uiMessage(`UI:${ui} unhandled`)
@@ -68,11 +69,6 @@ function logTile(engine: Engine) {
   console.log(p.position.s, engine.local.at(p.position))
   return `Entities at ${p.position.s}`
 }
-
-// if (ui === 'bgCycle') {
-//   options.bgCycle = !options.bgCycle
-//   engine.uiMessage(`cycleBg: ${options.bgCycle}`)
-// }
 
 // if (ui === 'localRecallAll') {
 //   local.recallAll = !local.recallAll

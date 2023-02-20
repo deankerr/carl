@@ -4,13 +4,13 @@ import { GameContext } from '.'
 import { logger } from '../lib/logger'
 import {
   ActionTypes,
-  Move,
-  MetaUI,
   ChangeRegion,
   ChangeZone,
-  Visualize,
-  UsePortal,
+  MetaUI,
+  Move,
   PickUp,
+  UsePortal,
+  Visualize,
 } from './Action'
 
 type KeyMap = Record<string, ActionTypes>
@@ -61,14 +61,14 @@ export function handle(event: KeyboardEvent, context: GameContext): ActionTypes 
     'shift Digit8': ChangeZone(7),
     'shift Digit9': ChangeZone(8),
     'shift KeyR': MetaUI('revealAll'),
-    'shift KeyL': MetaUI('animation'),
+    'shift KeyM': MetaUI('toggleHeatMap'),
     'shift KeyQ': MetaUI('logWorld'),
+    'shift Backquote': MetaUI('logTile'),
     Digit9: MetaUI('displayRegion'),
     Digit0: MetaUI('displayDefault'),
     Minus: MetaUI('displayZoomOut'),
     Equal: MetaUI('displayZoomIn'),
     Backquote: MetaUI('debugMode'),
-    'shift Backquote': MetaUI('logTile'),
   }
   if (context === 'game' && gameKeys[k]) return gameKeys[k]
 
