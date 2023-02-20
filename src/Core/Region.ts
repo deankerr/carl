@@ -1,5 +1,6 @@
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
+import { heatMapColor } from '../lib/color'
 import { Point, point } from '../lib/Shape/Point'
 import { Rect } from '../lib/Shape/Rectangle'
 import { Queue, rnd } from '../lib/util'
@@ -28,6 +29,7 @@ export class Region {
   hasChanged = true
 
   visualizer: Visualizer | undefined
+  debugSymbolMap = new Map<Point, Entity>()
 
   constructor(readonly width: number, readonly height: number, public name = 'Somewhere') {
     this.rect = Rect.at(point(0, 0), this.width, this.height)
@@ -192,4 +194,38 @@ export class Region {
 
     return walkable
   }
+
+  debugSymbol(
+    pt: Point | Rect,
+    tile: string | number,
+    color: number | string = 'transparent',
+    bgColor = 'transparent'
+  ) {
+    if (pt instanceof Rect) {
+      pt.traverse(ppt => this.debugSymbol(pt, tile, color, bgColor))
+      return
+    }
+
+    if (typeof tile === 'number') tile = nAlpha(tile)
+    if (typeof color === 'number') color = heatMapColor(color)
+
+    const d = this.pool.spawn('debug', pt)
+    this.pool
+      .modify(d)
+      .sprite({ base: [tile] })
+      .define('color', color, bgColor)
+
+    this.debugSymbolMap.set(pt, d)
+  }
 }
+
+// debug helpers
+function nAlpha(n: number) {
+  if (n < 0 && n > -6) return symbols[Math.abs(n) - 1]
+  if (n < 0) return '?'
+  if (n > 35) return '!'
+  const map = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  return map[n]
+}
+
+const symbols = ['auraHoly', 'auraBlue', 'auraRed', 'auraGreen', 'auraPurple']

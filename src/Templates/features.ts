@@ -560,16 +560,8 @@ export const features = {
     name: 'debug',
     tag: ['feature', 'debug'],
     sprite: {
-      base: ['0'],
-    },
-  },
-
-  debugColor: {
-    name: 'debug',
-    tag: ['feature', 'debug'],
-    sprite: {
       base: ['*'],
     },
-    color: ['blue', 'blue'],
+    color: ['transparent', 'transparent'],
   },
 } satisfies Record<string, EntityTemplate>

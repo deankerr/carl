@@ -1,7 +1,7 @@
 import { Region } from '../../Core'
-import { pick, shuffle } from '../../lib/util'
 import { point, Point } from '../../lib/Shape/Point'
 import { Rect } from '../../lib/Shape/Rectangle'
+import { pick, shuffle } from '../../lib/util'
 import { Overseer3, RegionTheme } from '../Overseer3'
 
 export class Rooms {
@@ -119,7 +119,7 @@ export class Rooms {
   }
 
   debugNumberRooms() {
-    this.each(r => this.O3.debugSymbolN(r.rect.centerPoint(), r.rID))
+    this.each(r => this.O3.debug(r.rect.centerPoint(), r.rID))
   }
 }
 

@@ -4,7 +4,7 @@ import { DijkstraMap } from '../lib/dijkstra'
 import { CellDish } from './modules/cellular'
 import { Overseer3 } from './Overseer3'
 
-const mapScale = 1
+const mapScale = 3
 
 export function cave(
   isTopLevel: boolean,
@@ -32,8 +32,8 @@ export function cave(
   const regionWalkable = region.walkable()
 
   const dijk = new DijkstraMap(...regionWalkable)
-  dijk.start(player.position, bb.position)
-  dijk.map.forEach((val, pt) => O3.debugCN(pt, val, val / 100))
+  dijk.start(player.position)
+  dijk.map.forEach((val, pt) => O3.debug(pt, val, val))
 
   // //* lake
   // const lakeSeed = rndCluster(5, O3.module())

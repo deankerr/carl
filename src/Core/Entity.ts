@@ -108,7 +108,13 @@ export class EntityPool {
       return options
     }
 
-    const options = { attach, define, remove, entity }
+    const sprite = (spriteConfig: SpriteConfig) => {
+      const sprite = this.C.sprite(this.sprites, spriteConfig)
+      attach(entity, sprite)
+      return options
+    }
+
+    const options = { attach, define, remove, sprite, entity }
     return options
   }
 }

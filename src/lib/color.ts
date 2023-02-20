@@ -60,3 +60,9 @@ export function addLight(color: string, light: Color, dim: boolean) {
   const c = ROT.Color.add(rgb, light)
   return ROT.Color.toHex(c)
 }
+
+export function heatMapColor(hue: number) {
+  const heat = hue / 100 + 0.833 // pink
+
+  return HSLToHex([heat, 1, 0.5])
+}

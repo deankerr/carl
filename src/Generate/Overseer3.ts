@@ -1,7 +1,6 @@
 import * as ROT from 'rot-js'
 import { Entity, EntityKey, EntityPool, Region } from '../Core'
 import { Visualizer } from '../Core/Visualizer'
-import { HSLToHex } from '../lib/color'
 import { point, Point } from '../lib/Shape/Point'
 import { Rect } from '../lib/Shape/Rectangle'
 import { rnd } from '../lib/util'
@@ -160,65 +159,13 @@ export class Overseer3 {
     tPortal.portal = { zone, level }
   }
 
-  debugSymbolN(pt: Point, n: number, color = 'transparent', bgColor = 'transparent') {
-    const s = n.toString()
-    s.split('').forEach((c, i) => {
-      const d = this.pool.spawn('debug', i === 0 ? pt : pt.east(i))
-      this.pool.attach(d, this.pool.C.sprite(this.pool.sprites, { base: [c] }))
-
-      this.debugSymbolList.push(d)
-      this.region.entityList.push(d)
-    })
-  }
-
-  debugSymbol(area: Point | Rect, n: number) {
-    const symbols = ['auraHoly', 'auraBlue', 'auraRed', 'auraGreen', 'auraPurple']
-
-    const createDebugPt = (pt: Point, n: number) => {
-      const d = this.pool.spawn('debug', pt)
-      this.pool.attach(d, this.pool.C.sprite(this.pool.sprites, { base: [symbols[n % 5]] }))
-
-      this.debugSymbolList.push(d)
-      this.region.entityList.push(d)
-    }
-
-    if (area instanceof Point) {
-      createDebugPt(area, n)
-      return
-    }
-
-    area.traverse(pt => {
-      createDebugPt(pt, n)
-    })
-  }
-
-  debugCN(
-    area: Point | Rect,
-    n: number,
-    color: 'transparent' | number = 'transparent',
-    bgColor: 'transparent' | number = 'transparent'
+  debug(
+    pt: Point | Rect,
+    tile: string | number,
+    color: number | string = 'transparent',
+    bgColor = 'transparent'
   ) {
-    if (area instanceof Rect) {
-      area.traverse(pt => this.debugCN(pt, n, color, bgColor))
-      return
-    }
-
-    const pt = area
-
-    const d = this.region.create(pt, 'debugColor')
-    if (!d) return
-
-    const fg = typeof color === 'number' ? HSLToHex([color, 1, 0.5]) : color
-    const bg = typeof bgColor === 'number' ? HSLToHex([bgColor, 0.5, 0.5]) : bgColor
-
-    this.region
-      .modify(d)
-      .define('color', fg, bg)
-      .define('sprite', this.pool.sprites, { base: [nAlpha(n)] })
-
-    const prev = this.debugCNMap.get(pt)
-    if (prev) this.region.destroyEntity(prev)
-    this.debugCNMap.set(pt, d)
+    this.region.debugSymbol(pt, tile, color, bgColor)
   }
 
   finalize() {
