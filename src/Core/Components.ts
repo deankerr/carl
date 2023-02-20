@@ -78,6 +78,7 @@ export type Tag =
   | 'signalLightPathUpdated'
   | 'signalModified'
   | 'signalUpdatePlayerFOV'
+  | 'signalPlayerMoved'
   | 'terrain'
   | 'door'
   | 'renderLevelHigh'

@@ -1,6 +1,7 @@
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
 import { heatMapColor } from '../lib/color'
+import { DijkstraMap } from '../lib/dijkstra'
 import { Point, point } from '../lib/Shape/Point'
 import { Rect } from '../lib/Shape/Rectangle'
 import { Queue, rnd } from '../lib/util'
@@ -10,12 +11,12 @@ import { Visualizer } from './Visualizer'
 export class Region {
   rect: Rect
   noise = new ROT.Noise.Simplex()
+  heatMap = new DijkstraMap()
 
   pool = window.game.pool
 
   terrainMap = new Map<Point, Entity>()
   entityList: Entity[] = []
-
   turnQueue = new Queue<number>()
 
   // rendering relevant data

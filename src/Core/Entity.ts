@@ -78,14 +78,14 @@ export class EntityPool {
     return this.thaw(key)
   }
 
-  attachName<T extends FoundryKey>(e: Entity, name: T, ...p: FoundryParam[T]): Entity {
+  private attachName<T extends FoundryKey>(e: Entity, name: T, ...p: FoundryParam[T]): Entity {
     if (!this.C[name]) throw new Error('Invalid component name')
     const c = Reflect.apply(this.C[name], undefined, p) as Component<T>
     const e2 = Object.assign(e, c)
     return e2
   }
 
-  attach<T extends Partial<Components>>(e: Entity, ...com: T[]) {
+  private attach<T extends Partial<Components>>(e: Entity, ...com: T[]) {
     Object.assign(e, ...com)
   }
 
@@ -94,17 +94,20 @@ export class EntityPool {
     const entity = e
 
     const attach = <T extends Partial<Components>>(e: Entity, ...com: T[]) => {
+      // signal(entity, )
       Object.assign(e, ...com)
       return options
     }
 
     const define = <T extends FoundryKey>(comName: T, ...p: FoundryParam[T]) => {
       this.attachName(entity, comName, ...p)
+      this.signal(entity, comName)
       return options
     }
 
     const remove = <T extends keyof Components>(comName: T) => {
       Reflect.deleteProperty(entity, comName)
+      this.signal(entity, comName)
       return options
     }
 
@@ -116,5 +119,12 @@ export class EntityPool {
 
     const options = { attach, define, remove, sprite, entity }
     return options
+  }
+
+  // triggers for when specific entity components change, listened to by systems
+  signal(entity: Entity, ...component: string[]) {
+    if (component.includes('position') && entity.playerControlled) {
+      this.attachName(entity, 'tag', 'signalPlayerMoved')
+    }
   }
 }

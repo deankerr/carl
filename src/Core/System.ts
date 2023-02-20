@@ -9,6 +9,7 @@ import {
   handleTread,
   processDeath,
   processFieldOfVision,
+  processHeatMap,
   processRegionInitialization,
   renderMessageLog,
   renderRegion,
@@ -28,9 +29,15 @@ export class System {
     handleMeleeAttack,
     processDeath,
     processFieldOfVision,
+    processHeatMap,
   ]
 
-  regionChangeProcess = [handleLocationChange, processRegionInitialization, processFieldOfVision]
+  regionChangeProcess = [
+    handleLocationChange,
+    processRegionInitialization,
+    processFieldOfVision,
+    processHeatMap,
+  ]
 
   renderProcess = [renderRegion, renderMessageLog]
 

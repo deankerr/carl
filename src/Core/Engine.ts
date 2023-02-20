@@ -4,15 +4,15 @@ import { CONFIG } from '../config'
 import { createGameDisplay } from '../lib/display'
 import { logger } from '../lib/logger'
 import {
+  ActionTypes,
+  Atlas,
   ComponentFoundry,
+  Entity,
   EntityPool,
-  UI,
   handle,
   listen,
   System,
-  Atlas,
-  Entity,
-  ActionTypes,
+  UI,
   Visualize,
 } from './'
 import { SpriteManager } from './Sprite'
@@ -40,10 +40,8 @@ export class Engine {
   playerTurns = 0
 
   options = {
-    playerLight: true,
-    formUpdate: true,
-    lightingUpdate: true,
     debugMode: false,
+    showHeatMap: true,
   }
 
   constructor() {

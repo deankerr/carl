@@ -1,10 +1,9 @@
 import { CONFIG } from '../config'
-import { Entity, EntityWith, Region } from '../Core'
-import { DijkstraMap } from '../lib/dijkstra'
+import { Region } from '../Core'
 import { CellDish } from './modules/cellular'
 import { Overseer3 } from './Overseer3'
 
-const mapScale = 3
+const mapScale = 2
 
 export function cave(
   isTopLevel: boolean,
@@ -19,21 +18,14 @@ export function cave(
   const floor = 'dirtFloor'
   const caveDish = new CellDish(region.rect)
   caveDish.addAlways(region.rect.edgePoints())
-  caveDish.randomize(40).current((pt, alive) => O3.add(pt, alive ? wall : floor))
+  caveDish.randomize(45).current((pt, alive) => O3.add(pt, alive ? wall : floor))
   caveDish.generation(4, 5)((pt, alive) => O3.add(pt, alive ? wall : floor))
   caveDish.generation(4, 5)((pt, alive) => O3.add(pt, alive ? wall : floor))
   caveDish.generation(4, 5)((pt, alive) => O3.add(pt, alive ? wall : floor))
   caveDish.generation(4, 5)((pt, alive) => O3.add(pt, alive ? wall : floor))
   //
 
-  const player = region.createPlayer() as EntityWith<Entity, 'position'>
-  const bb = region.create(region.rect.center, 'archer') as EntityWith<Entity, 'position'>
-
   const regionWalkable = region.walkable()
-
-  const dijk = new DijkstraMap(...regionWalkable)
-  dijk.start(player.position)
-  dijk.map.forEach((val, pt) => O3.debug(pt, val, val))
 
   // //* lake
   // const lakeSeed = rndCluster(5, O3.module())

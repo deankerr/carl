@@ -1,21 +1,33 @@
 import { Point } from './Shape/Point'
 
 export class DijkstraMap {
-  limit = 99
-  domain: Set<Point>
+  limit = 50
+  domain = new Set<Point>()
 
   map = new Map<Point, number>()
   next = new Set<Point>()
 
-  constructor(...initDomain: Point[]) {
-    this.domain = new Set(initDomain)
+  constructor(initDomain?: Point[]) {
+    if (initDomain) this.domain = new Set(initDomain)
   }
 
-  start(...start: Point[]) {
-    const t = Date.now()
-    console.log('Start D2', start)
+  initialize(initDomain: Point[]) {
+    this.domain = new Set(initDomain)
+    this.map = new Map<Point, number>()
+  }
 
-    for (const pt of start) {
+  calculate(...goal: Point[]) {
+    if (this.domain.size === 0 || goal.length === 0) {
+      console.error('No domain/goal set for Dijkstra map')
+      return
+    }
+
+    const t = Date.now()
+
+    this.map = new Map<Point, number>()
+    this.next = new Set<Point>()
+
+    for (const pt of goal) {
       this.map.set(pt, 0)
       pt.neigh8(npt => this.queue(npt))
     }
@@ -26,11 +38,7 @@ export class DijkstraMap {
       this.map.set(pt, val)
     }
 
-    console.log('D2 Complete:', Date.now() - t, 'ms')
-  }
-
-  get(pt: Point) {
-    return this.map.get(pt) ?? this.limit
+    console.log('Dijkstra Map:', Date.now() - t, 'ms')
   }
 
   neighbours(pt: Point) {
@@ -48,6 +56,26 @@ export class DijkstraMap {
   queue(pt: Point) {
     if (this.domain.has(pt)) this.next.add(pt)
   }
+
+  get(pt: Point) {
+    return this.map.get(pt) ?? this.limit
+  }
+
+  each(callback: ResultFn) {
+    for (const [pt, val] of this.map) {
+      callback(pt, val)
+    }
+  }
+
+  debugPos(pt: Point) {
+    console.log('debug heatmap pos', pt)
+    for (let yi = -2; yi < 2; yi++) {
+      for (let xi = -2; xi < 2; xi++) {
+        const pt2 = pt.add(xi, yi)
+        console.log(pt2, this.map.get(pt2))
+      }
+    }
+  }
 }
 
-// type ResultFn = (pt: Point, val: number) => unknown
+type ResultFn = (pt: Point, val: number) => unknown

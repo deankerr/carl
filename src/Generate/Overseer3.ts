@@ -169,9 +169,12 @@ export class Overseer3 {
   }
 
   finalize() {
+    const { region, history } = this
     this.snap('Complete')
 
-    this.region.visualizer = new Visualizer(this.region, this.history)
+    region.visualizer = new Visualizer(region, history)
+    this.region.heatMap.initialize(region.walkable())
+
     this.timeEnd = Date.now()
     console.log(`O3: ${this.timeEnd - this.timeStart}ms`, this)
   }
