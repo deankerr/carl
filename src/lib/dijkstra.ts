@@ -38,7 +38,7 @@ export class DijkstraMap {
       this.map.set(pt, val)
     }
 
-    console.log('Dijkstra Map:', Date.now() - t, 'ms')
+    // console.log('Dijkstra Map:', Date.now() - t, 'ms')
   }
 
   neighbours(pt: Point) {

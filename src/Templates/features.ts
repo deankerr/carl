@@ -4,7 +4,7 @@ export const features = {
   // Stairs
   dungeonStairsDown: {
     name: 'stairs',
-    tag: ['feature'],
+    tag: ['feature', 'stairs', 'down'],
     portal: ['here', 'down'],
     sprite: {
       base: ['dungeonStairsDown'],
@@ -13,7 +13,7 @@ export const features = {
 
   dungeonStairsUp: {
     name: 'stairs',
-    tag: ['feature'],
+    tag: ['feature', 'stairs', 'up'],
     portal: ['here', 'up'],
     sprite: {
       base: ['dungeonStairsUp'],
@@ -22,7 +22,7 @@ export const features = {
 
   caveStairsDown: {
     name: 'stairs',
-    tag: ['feature'],
+    tag: ['feature', 'stairs', 'down'],
     portal: ['here', 'down'],
     sprite: {
       base: ['caveStairsDown'],
@@ -31,7 +31,7 @@ export const features = {
 
   caveStairsUp: {
     name: 'stairs',
-    tag: ['feature'],
+    tag: ['feature', 'stairs', 'up'],
     portal: ['here', 'up'],
     sprite: {
       base: ['caveStairsUp'],
@@ -40,7 +40,7 @@ export const features = {
 
   cryptStairsDown: {
     name: 'stairs',
-    tag: ['feature'],
+    tag: ['feature', 'stairs', 'down'],
     portal: ['here', 'down'],
     sprite: {
       base: ['cryptStairsDown'],
@@ -49,7 +49,7 @@ export const features = {
 
   cryptStairsUp: {
     name: 'stairs',
-    tag: ['feature'],
+    tag: ['feature', 'stairs', 'up'],
     portal: ['here', 'up'],
     sprite: {
       base: ['cryptStairsUp'],
@@ -58,7 +58,7 @@ export const features = {
 
   cavernStairsDown: {
     name: 'stairs',
-    tag: ['feature'],
+    tag: ['feature', 'stairs', 'down'],
     portal: ['here', 'down'],
     sprite: {
       base: ['cavernStairsDown'],
@@ -67,7 +67,7 @@ export const features = {
 
   cavernStairsUp: {
     name: 'stairs',
-    tag: ['feature'],
+    tag: ['feature', 'stairs', 'up'],
     portal: ['here', 'up'],
     sprite: {
       base: ['cavernStairsUp'],

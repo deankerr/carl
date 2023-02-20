@@ -149,7 +149,7 @@ export class Region {
 
   createPlayer(ePlayer?: Entity) {
     console.log('createPlayer')
-    const player = ePlayer ?? this.pool.spawn('player', this.rndWalkable())
+    const player = ePlayer ?? this.pool.spawn('player', this.stairsUpPoint() ?? this.rndWalkable())
     this.entityList.push(player)
     this.turnQueue.add(player.eID, true)
     return player
@@ -194,6 +194,11 @@ export class Region {
     })
 
     return walkable
+  }
+
+  stairsUpPoint() {
+    const [stairs] = this.get('stairs', 'up')
+    return stairs?.position
   }
 
   debugSymbol(
