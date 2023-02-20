@@ -1,7 +1,7 @@
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
 import { heatMapColor } from '../lib/color'
-import { DijkstraMap } from '../lib/dijkstra'
+import { DijkstraMap } from '../lib/Dijkstra'
 import { Point, point } from '../lib/Shape/Point'
 import { Rect } from '../lib/Shape/Rectangle'
 import { Queue, rnd } from '../lib/util'
@@ -9,31 +9,39 @@ import { Entity, EntityKey, EntityWith } from './Entity'
 import { Visualizer } from './Visualizer'
 
 export class Region {
+  // structural
   rect: Rect
+  visibility: VisibilityTheme
   noise = new ROT.Noise.Simplex()
   heatMap = new DijkstraMap()
 
-  pool = window.game.pool
+  visualizer: Visualizer | undefined
 
+  // entity
+  pool = window.game.pool
   terrainMap = new Map<Point, Entity>()
   entityList: Entity[] = []
   turnQueue = new Queue<number>()
+  debugSymbolMap = new Map<Point, Entity>()
 
-  // rendering relevant data
-  areaVisible = new Map<Point, boolean>()
-  areaKnown = new Map<Point, boolean>()
-  areaTransparentCache = new Map<Point, boolean>()
-
+  // config
   recallAll = CONFIG.recallAll
   revealAll = CONFIG.revealAll
 
+  // render data cache
+  areaVisible = new Map<Point, boolean>()
+  areaKnown = new Map<Point, boolean>()
+  areaTransparentCache = new Map<Point, boolean>()
   hasChanged = true
 
-  visualizer: Visualizer | undefined
-  debugSymbolMap = new Map<Point, Entity>()
-
-  constructor(readonly width: number, readonly height: number, public name = 'Somewhere') {
+  constructor(
+    readonly width: number,
+    readonly height: number,
+    public name = 'Somewhere',
+    visibility: keyof typeof visibilityTheme = 'dark'
+  ) {
     this.rect = Rect.at(point(0, 0), this.width, this.height)
+    this.visibility = visibilityTheme[visibility]
   }
 
   //  * Entity Management
@@ -208,6 +216,23 @@ export class Region {
     this.debugSymbolMap.set(pt, d)
   }
 }
+
+type FogLevel = Extract<EntityKey, 'nothing' | 'fogLight' | 'fogMedium' | 'fogHeavy' | 'abyss'>
+type VisibilityState = 'visible' | 'shrouded' | 'unrevealed'
+type VisibilityTheme = Record<VisibilityState, FogLevel>
+
+const visibilityTheme = {
+  bright: {
+    visible: 'nothing',
+    shrouded: 'fogLight',
+    unrevealed: 'fogLight',
+  },
+  dark: {
+    visible: 'nothing',
+    shrouded: 'fogMedium',
+    unrevealed: 'fogHeavy',
+  },
+} satisfies Record<string, VisibilityTheme>
 
 // debug helpers
 function nAlpha(n: number) {

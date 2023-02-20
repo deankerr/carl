@@ -1,4 +1,4 @@
-import { Tag, EntityTemplate } from '../Core'
+import { EntityTemplate, Tag } from '../Core'
 
 const wallTags: Tag[] = ['terrain', 'blocksLight', 'blocksMovement', 'wall']
 
@@ -339,7 +339,7 @@ export const terrain = {
     name: 'unknown',
     tag: ['terrain'],
     sprite: {
-      base: ['unknown'],
+      base: ['abyss'],
     },
   },
 
@@ -347,7 +347,7 @@ export const terrain = {
     name: 'endless void',
     tag: ['blocksLight', 'blocksMovement', 'terrain'],
     sprite: {
-      base: ['unknown'],
+      base: ['abyss'],
     },
   },
 } satisfies Record<string, EntityTemplate>

@@ -40,7 +40,7 @@ export class Engine {
 
   options = {
     debugMode: false,
-    revealAll: false,
+    revealAll: CONFIG.revealAll,
     showHeatMap: false,
   }
 

@@ -45,6 +45,7 @@ export class System {
   constructor(readonly engine: Engine) {}
 
   run(engine: Engine, playerAction: ActionTypes) {
+    const t = performance.now()
     const { local } = engine
 
     let e = local.player() as Entity
@@ -59,7 +60,10 @@ export class System {
       local.modify(local.get('acting')[0]).remove('acting')
 
       e = this.next(local)
-      if (e.playerControlled) return
+      if (e.playerControlled) {
+        this.turnTimeHistory.push(performance.now() - t)
+        return
+      }
     }
 
     if (maxLoops < 1) throw new Error('Sys loop maximum exceeded')
@@ -72,7 +76,10 @@ export class System {
   }
 
   render(engine: Engine) {
+    if (!engine.local.hasChanged) return
+    const t = performance.now()
     this.renderProcess.forEach(sys => sys(engine))
+    this.renderTimeHistory.push(performance.now() - t)
   }
 
   init() {

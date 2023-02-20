@@ -5,7 +5,7 @@ export const beings = {
   player: {
     name: 'player',
     tag: ['playerControlled', 'actor', 'blocksMovement', 'being', 'signalUpdatePlayerFOV'],
-    fieldOfView: [16],
+    fieldOfView: [8],
     sprite: {
       build: 'warrior',
       animate: ['cycle', 750],

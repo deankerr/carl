@@ -100,7 +100,7 @@ export function createOryxTinyMap(size: number) {
       'grassPit',
     ],
     [
-      'unknown',
+      'abyss',
       'stoneTileFloor1',
       'stoneTileFloor2',
       'stoneTileFloor3',
@@ -314,7 +314,17 @@ export function createOryxTinyMap(size: number) {
       'pots2',
       'pot',
     ],
-    ['web1', 'web2', 'sand', 'sandLedge', 'cactus', 'dirtLedge', 'recalled'],
+    [
+      'web1',
+      'web2',
+      'sand',
+      'sandLedge',
+      'cactus',
+      'dirtLedge',
+      'fogLight',
+      'fogMedium',
+      'fogHeavy',
+    ],
     [
       'dirtFloorOutdoor1',
       'dirtFloorOutdoor2',

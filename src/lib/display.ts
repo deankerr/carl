@@ -23,27 +23,6 @@ export const createTile2Display = (
   return display
 }
 
-const mainTileSize = 32
-export const createTileDisplay = (
-  width = CONFIG.mainDisplayWidth,
-  height = CONFIG.mainDisplayHeight
-) => {
-  const display = new ROT.Display({
-    layout: 'tile-gl',
-    width,
-    height,
-    fg: CONFIG.messageColor,
-    bg: CONFIG.mainBackgroundColor,
-    tileWidth: mainTileSize,
-    tileHeight: mainTileSize,
-    tileSet: window.tileSet32,
-    tileColorize: true,
-    tileMap: tileMapOryxMain,
-  })
-
-  return display
-}
-
 const msgTileSize = 32
 export const createMessageDisplay = () => {
   const display = new ROT.Display({
@@ -135,8 +114,8 @@ export const createGameDisplay = () => {
   textC.style.position = 'absolute'
 
   wrapper.appendChild(textC)
-  wrapper.appendChild(msg)
   wrapper.appendChild(main)
+  wrapper.appendChild(msg)
 
   document.body.appendChild(wrapper)
   return [msgDisplay, mainDisplay, textDisplay]

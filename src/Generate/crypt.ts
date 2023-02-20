@@ -1,15 +1,16 @@
 import { CONFIG } from '../config'
 import { EntityKey, Region } from '../Core'
 import { Rect } from '../lib/Shape/Rectangle'
-import { loop, pick, rnd, shuffle } from '../lib/util'
+import { loop, pick, rnd } from '../lib/util'
+import { itemKeys } from '../Templates'
 import { BinarySpacePartition, CSPSolver, CSPVar, Rooms } from './modules'
 import { Overseer3 } from './Overseer3'
-import { itemKeys } from '../Templates'
 
+const scale = 2
 export function crypt(
   isTopLevel: boolean,
-  width = CONFIG.generateWidth,
-  height = CONFIG.generateHeight
+  width = CONFIG.generateWidth * scale,
+  height = CONFIG.generateHeight * scale
 ) {
   const region = new Region(width, height, 'crypt')
 
@@ -36,7 +37,7 @@ export function crypt(
   const liquidKey = pick(['sludge', 'blood', 'oil', 'slime', 'acid']) as EntityKey
   BSP.rectGaps.forEach(g => O3.add(g.rect, liquidKey, 'river'))
 
-  BSP.splitN(rnd(3, 6))
+  BSP.splitN(48)
   const roomRects: Rect[] = []
   BSP.leaves(r => {
     O3.room(r, 'Room')

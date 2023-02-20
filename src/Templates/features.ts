@@ -540,11 +540,27 @@ export const features = {
     },
   },
 
-  recalled: {
-    name: 'recalled',
+  fogLight: {
+    name: 'fog of war',
     tag: ['feature', 'renderLevelHigh'],
     sprite: {
-      base: ['recalled'],
+      base: ['fogLight'],
+    },
+  },
+
+  fogMedium: {
+    name: 'fog of war',
+    tag: ['feature', 'renderLevelHigh'],
+    sprite: {
+      base: ['fogMedium'],
+    },
+  },
+
+  fogHeavy: {
+    name: 'fog of war',
+    tag: ['feature', 'renderLevelHigh'],
+    sprite: {
+      base: ['fogHeavy'],
     },
   },
 

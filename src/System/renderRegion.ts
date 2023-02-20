@@ -5,7 +5,7 @@ import { Rect } from '../lib/Shape/Rectangle'
 import { clamp, floor, half } from '../lib/util'
 
 export function renderRegion(engine: Engine) {
-  const { mainDisplay, local, textDisplay } = engine
+  const { mainDisplay, local } = engine
   if (!local.hasChanged) return
 
   // * ========== Viewport ========== *
@@ -45,7 +45,7 @@ export function renderRegion(engine: Engine) {
 
   const unknown = local.pool.symbolic('unknown')
   const nothing = local.pool.symbolic('nothing')
-  const recalled = local.pool.symbolic('recalled')
+  const recalled = local.pool.symbolic('fogMedium')
 
   const { areaKnown, areaVisible } = local
   const entities = local.get('position')
@@ -163,7 +163,7 @@ export function renderRegion(engine: Engine) {
         renderStack.map(s => s[2])
       )
     }
-  })
+  }) // end viewport traverse
 }
 
 const zLevel = (e: Entity) => {

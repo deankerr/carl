@@ -11,7 +11,11 @@ export function townDemo(
   height = CONFIG.generateHeight
 ) {
   const region = new Region(width, height, 'town demo')
-  region.recallAll = true
+  region.visibility = {
+    visible: 'nothing',
+    shrouded: 'nothing',
+    unrevealed: 'fogLight',
+  }
   const O3 = new Overseer3(region)
   O3.theme.wall = 'cryptWall'
   O3.theme.floor = 'grassFloor'
