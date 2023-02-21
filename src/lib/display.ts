@@ -3,16 +3,11 @@ import { CONFIG } from '../config'
 import { oryxTinyFontMap, oryxTinyMap, tileMapOryxMain } from './tilemap'
 
 const tinySize = 48
-export const createTile2Display = (
-  width = CONFIG.mainDisplayWidth,
-  height = CONFIG.mainDisplayHeight
-) => {
+export const createTile2Display = () => {
   const display = new ROT.Display({
     layout: 'tile-gl',
-    width,
-    height,
-    fg: CONFIG.messageColor,
-    bg: CONFIG.mainBackgroundColor,
+    width: CONFIG.mainDisplayWidth,
+    height: CONFIG.mainDisplayHeight,
     tileWidth: tinySize,
     tileHeight: tinySize,
     tileSet: window.oryxTiny,
@@ -29,13 +24,18 @@ export const createMessageDisplay = () => {
     layout: 'tile-gl',
     width: CONFIG.messageDisplayWidth,
     height: CONFIG.messageDisplayHeight,
-    fg: CONFIG.messageColor,
-    bg: CONFIG.messageBackgroundColor,
+    bg: 'transparent',
     tileWidth: msgTileSize,
     tileHeight: msgTileSize,
     tileSet: window.tileSet32,
     tileMap: tileMapOryxMain,
   })
+
+  // debug
+  // for (let i = 0; i < CONFIG.messageDisplayHeight; i++) {
+  //   display.drawText(0, i, 'JELLY')
+  //   display.drawText(CONFIG.messageDisplayWidth - 5, i, 'JELLY')
+  // }
 
   return display
 }
@@ -45,7 +45,6 @@ export const createTextDisplay = () => {
     layout: 'tile-gl',
     width: CONFIG.textDisplayWidth,
     height: CONFIG.textDisplayHeight,
-    fg: 'transparent',
     bg: 'transparent',
     tileWidth: 24,
     tileHeight: 28,
@@ -55,7 +54,8 @@ export const createTextDisplay = () => {
   })
 
   // debug
-  // for (let i = 0; i < 33; i++) {
+  // for (let i = 0; i < CONFIG.textDisplayHeight; i++) {
+  //   display.drawText(CONFIG.textDisplayWidth - 5, i, 'HELLO')
   //   display.drawText(0, i, 'HELLO')
   // }
 
@@ -70,40 +70,35 @@ export const createHTMLWrapper = () => {
   body.style.height = '100vh'
   body.style.boxSizing = 'border-box'
   body.style.display = 'flex'
-  body.style.flexDirection = 'column'
   body.style.justifyContent = 'center'
   body.style.alignItems = 'center'
 
   const wrapper = document.createElement('div')
   wrapper.id = 'wrapper'
   wrapper.style.display = 'flex'
-  wrapper.style.flexDirection = 'column'
   wrapper.style.justifyContent = 'center'
   wrapper.style.alignItems = 'center'
-  // wrapper.style.backgroundColor = '#008888'
-
+  document.body.appendChild(wrapper)
   return wrapper
 }
 
 export const createGameDisplay = () => {
   const wrapper = createHTMLWrapper()
 
-  // message display canvas
-  const msgDisplay = createMessageDisplay()
-  const msg = msgDisplay.getContainer()
-  if (!msg) throw new Error('Unable to get msgDisplay container')
-
-  msg.style.maxWidth = '99vw'
-  msg.style.maxHeight = '99vh'
-  msg.style.position = 'absolute'
-
   // main game display canvas
   const mainDisplay = createTile2Display()
   const main = mainDisplay.getContainer()
   if (!main) throw new Error('Unable to get mainDisplay container')
-
   main.style.maxWidth = '99vw'
   main.style.maxHeight = '99vh'
+
+  // message display canvas
+  const msgDisplay = createMessageDisplay()
+  const msg = msgDisplay.getContainer()
+  if (!msg) throw new Error('Unable to get msgDisplay container')
+  msg.style.maxWidth = '99vw'
+  msg.style.maxHeight = '99vh'
+  msg.style.position = 'absolute'
 
   // text display canvas
   const textDisplay = createTextDisplay()
@@ -114,10 +109,9 @@ export const createGameDisplay = () => {
   textC.style.position = 'absolute'
 
   wrapper.appendChild(textC)
-  wrapper.appendChild(main)
   wrapper.appendChild(msg)
+  wrapper.appendChild(main)
 
-  document.body.appendChild(wrapper)
   return [msgDisplay, mainDisplay, textDisplay]
 }
 

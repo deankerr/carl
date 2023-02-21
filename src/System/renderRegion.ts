@@ -6,7 +6,6 @@ import { clamp, floor, half } from '../lib/util'
 
 export function renderRegion(engine: Engine) {
   const { mainDisplay, local } = engine
-  if (!local.hasChanged) return
 
   // * ========== Viewport ========== *
   const { width, height } = mainDisplay.getOptions()

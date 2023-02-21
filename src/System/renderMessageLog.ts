@@ -5,8 +5,6 @@ import { half, loop } from '../lib/util'
 const { messageDisplayHeight, messageBufferDisplaySize } = CONFIG
 
 export function renderMessageLog(engine: Engine) {
-  if (!engine.local.hasChanged) return
-
   const { local, msgDisplay, textDisplay, messageLog, playerTurns, options } = engine
 
   const displayOptions = msgDisplay.getOptions()
@@ -35,9 +33,6 @@ export function renderMessageLog(engine: Engine) {
     }
   })
 
-  // * this important flag should probably be handled better
-  local.hasChanged = false
-
   // ui messages
   const timeOnScreen = 2 * 1000
   const { uiMessageLog: uiLog } = engine
@@ -48,12 +43,11 @@ export function renderMessageLog(engine: Engine) {
 
   // render spinner
   const { height: textHeight } = textDisplay.getOptions()
-  textDisplay.drawText(
-    0,
-    textHeight - 1,
-    `${spinner.next()} While some see a curiosity, I see the future.`
-  )
+  textDisplay.drawText(0, textHeight - 1, `${spinner.next()}`)
   if (options.debugMode) debugInfo(engine)
+
+  // * this critical to the game rendering *
+  local.hasChanged = false
 }
 
 function debugInfo(engine: Engine) {
@@ -67,7 +61,6 @@ function debugInfo(engine: Engine) {
   msgDisplay.drawText(0, 2, renderTime)
   msgDisplay.drawText(0, 3, `E:${engine.local.entityList.length}`)
   msgDisplay.drawText(0, 4, `P:${playerPos?.s ?? '??'}`)
-  // msgDisplay.drawText(0, 4, `${t.label} ${t.tile.color} ${t.tile.bgColor}`)
 }
 
 function getLogTimes(engine: Engine) {

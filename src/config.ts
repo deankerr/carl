@@ -1,29 +1,25 @@
 // const PROD = import.meta.env.PROD
 
+const htmlBackgroundColor = '#000000'
 const appInitial = 'game'
+
 // const seed = 2225
 const seed = null
 
 const mainDisplayWidth = 37
 const mainDisplayHeight = 19
 
-const messageDisplayWidth = 69
-const messageDisplayHeight = 35
+const messageDisplayWidth = 55
+const messageDisplayHeight = 28
 const messageBufferDisplaySize = 5
 
-const textDisplayWidth = 74
-const textDisplayHeight = 33
+const textDisplayWidth = 73
+const textDisplayHeight = 32
 
 const generateWidth = 37
 const generateHeight = 19
 
 const setMainToMapSize = false
-
-// '#111a0e'
-const mainBackgroundColor = '#000000'
-const messageColor = '#FFF'
-const messageBackgroundColor = 'transparent'
-const htmlBackgroundColor = '#000000'
 
 const frameLimit = 0
 const recallAll = false
@@ -46,9 +42,6 @@ const CONFIG = {
   generateWidth,
   generateHeight,
   setMainToMapSize,
-  mainBackgroundColor,
-  messageColor,
-  messageBackgroundColor,
   htmlBackgroundColor,
   frameLimit,
   recallAll,

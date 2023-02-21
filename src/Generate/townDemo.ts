@@ -10,12 +10,8 @@ export function townDemo(
   width = CONFIG.generateWidth,
   height = CONFIG.generateHeight
 ) {
-  const region = new Region(width, height, 'town demo')
-  region.visibility = {
-    visible: 'nothing',
-    shrouded: 'nothing',
-    unrevealed: 'fogLight',
-  }
+  const region = new Region(width, height, 'town prefab', 'bright')
+
   const O3 = new Overseer3(region)
   O3.theme.wall = 'cryptWall'
   O3.theme.floor = 'grassFloor'

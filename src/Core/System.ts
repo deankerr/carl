@@ -77,6 +77,7 @@ export class System {
 
   render(engine: Engine) {
     if (!engine.local.hasChanged) return
+
     const t = performance.now()
     this.renderProcess.forEach(sys => sys(engine))
     this.renderTimeHistory.push(performance.now() - t)
