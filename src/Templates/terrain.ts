@@ -335,8 +335,8 @@ export const terrain = {
     },
   },
 
-  unknown: {
-    name: 'unknown',
+  unrevealed: {
+    name: 'unrevealed',
     tag: ['terrain'],
     sprite: {
       base: ['abyss'],

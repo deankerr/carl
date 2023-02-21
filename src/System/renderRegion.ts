@@ -42,9 +42,9 @@ export function renderRegion(engine: Engine) {
 
   // * ========== Rendering ========== *
 
-  const unknown = local.pool.symbolic('unknown')
   const nothing = local.pool.symbolic('nothing')
-  const recalled = local.pool.symbolic('fogMedium')
+  const shrouded = local.pool.symbolic(local.visibility.shrouded)
+  const unrevealed = local.pool.symbolic(local.visibility.unrevealed)
 
   const { areaKnown, areaVisible } = local
   const entities = local.get('position')
@@ -61,7 +61,13 @@ export function renderRegion(engine: Engine) {
 
     if (!known) {
       // unrevealed area
-      mainDisplay.draw(viewPt.x, viewPt.y, unknown.sprite.base.tile, 'transparent', 'transparent')
+      mainDisplay.draw(
+        viewPt.x,
+        viewPt.y,
+        unrevealed.sprite.base.tile,
+        'transparent',
+        'transparent'
+      )
     } else {
       // currently visible
       const stack: Entity[] = [nothing]
@@ -85,7 +91,7 @@ export function renderRegion(engine: Engine) {
         stack.push(...features)
         if (debug) stack.push(debug)
         stack.push(...items)
-        stack.push(recalled)
+        stack.push(shrouded)
       }
 
       // sort z-levels
