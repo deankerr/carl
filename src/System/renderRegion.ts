@@ -43,8 +43,8 @@ export function renderRegion(engine: Engine) {
   // * ========== Rendering ========== *
 
   const nothing = local.pool.symbolic('nothing')
-  const shrouded = local.pool.symbolic(local.visibility.shrouded)
-  const unrevealed = local.pool.symbolic(local.visibility.unrevealed)
+  const shroudedFog = local.pool.symbolic(local.visibility.shrouded)
+  const unrevealedFog = local.pool.symbolic(local.visibility.unrevealed)
 
   const { areaKnown, areaVisible } = local
   const entities = local.get('position')
@@ -56,118 +56,116 @@ export function renderRegion(engine: Engine) {
     // the cell to render here
     const pt = viewPt.add(-offsetX, -offsetY)
 
-    const known = local.revealAll || local.recallAll || (areaKnown.get(pt) ?? false)
     const visible = local.revealAll || (areaVisible.get(pt) ?? false)
+    const shrouded = local.revealAll || local.recallAll || (areaKnown.get(pt) ?? false)
 
-    if (!known) {
-      // unrevealed area
-      mainDisplay.draw(
-        viewPt.x,
-        viewPt.y,
-        unrevealed.sprite.base.tile,
-        'transparent',
-        'transparent'
-      )
+    const stack: Entity[] = [nothing]
+    const here = entities.filter(e => e.position === pt && !e.invisible)
+
+    const terrain = local.terrainAt(pt)
+    const debug = local.debugSymbolMap.get(pt)
+    const features = here.filter(e => e.feature)
+    const items = here.filter(e => e.item)
+
+    if (visible) {
+      const beings = here.filter(e => e.being)
+      if (terrain) stack.push(terrain)
+      if (debug) stack.push(debug)
+      stack.push(...features)
+      stack.push(...items)
+      stack.push(...beings)
+    } else if (shrouded) {
+      // area previously seen, render terrain and features
+      stack.push(terrain)
+      stack.push(...features)
+      if (debug) stack.push(debug)
+      stack.push(...items)
+      stack.push(shroudedFog)
     } else {
-      // currently visible
-      const stack: Entity[] = [nothing]
-      const here = entities.filter(e => e.position === pt && !e.invisible)
+      // unrevealed area
+      stack.push(terrain)
+      if (debug) stack.push(debug)
+      stack.push(unrevealedFog)
+    }
 
-      const terrain = local.terrainAt(pt)
-      const debug = local.debugSymbolMap.get(pt)
-      const features = here.filter(e => e.feature)
-      const items = here.filter(e => e.item)
+    // sort z-levels
+    stack.sort((a, b) => zLevel(a) - zLevel(b))
 
-      if (visible) {
-        const beings = here.filter(e => e.being)
-        if (terrain) stack.push(terrain)
-        if (debug) stack.push(debug)
-        stack.push(...features)
-        stack.push(...items)
-        stack.push(...beings)
-      } else {
-        // area previously seen, render terrain and features
-        stack.push(terrain)
-        stack.push(...features)
-        if (debug) stack.push(debug)
-        stack.push(...items)
-        stack.push(shrouded)
+    // extract relevant sprite, finding specific variants if applicable
+    const renderStack: [string, string, string][] = stack.reduce((acc, e) => {
+      const { base, ledge, ledgeOverlay, trigger, exposed, noise } = e.sprite
+      let tile = e.sprite.base.tile
+      let color = 'transparent'
+      let bgColor = 'transparent'
+
+      // liquid ledge tiles (top edge)
+      if (ledge) {
+        const tAbove = local.terrainAt(pt.north(1))
+        if (tAbove.key !== e.key) {
+          tile = ledge.tile
+        }
       }
 
-      // sort z-levels
-      stack.sort((a, b) => zLevel(a) - zLevel(b))
+      // beings facing direction
+      if (e.facing && e.sprite[e.facing]) {
+        const s = e.sprite[e.facing]?.tile
+        if (s) tile = s
+      }
 
-      // extract form data, applying lighting/fade if applicable
-      const renderStack: [string, string, string][] = stack.reduce((acc, e) => {
-        const { base, ledge, ledgeOverlay, trigger, exposed, noise } = e.sprite
-        let tile = e.sprite.base.tile
-        let color = 'transparent'
-        let bgColor = 'transparent'
+      // tag triggers (doors)
+      if (trigger && base) {
+        trigger.forEach((trig, i) => {
+          if (trig in e) tile = base.tiles[i]
+        })
+      }
 
-        // liquid
-        if (ledge) {
-          const tAbove = local.terrainAt(pt.north(1))
-          if (tAbove.key !== e.key) {
-            tile = ledge.tile
-          }
+      // wall/floor/noise variants
+      if (exposed || noise) {
+        let sprite = base
+        let i = 0
+        if (exposed) {
+          const tBelow = local.terrainAt(pt.south(1))
+          if (!tBelow.wall) sprite = exposed
         }
 
-        // being
-        if (e.facing && e.sprite[e.facing]) {
-          const s = e.sprite[e.facing]?.tile
-          if (s) tile = s
+        if (noise) {
+          const len = base.tiles.length
+          const v = local.noise.get(pt.x, pt.y)
+          const vMod = Math.round(((v + 1) * 255) / 2) % len
+
+          i = v <= noise[0] ? 0 : vMod
         }
+        tile = sprite.tiles[i]
+      }
 
-        // doors
-        if (trigger && base) {
-          trigger.forEach((trig, i) => {
-            if (trig in e) tile = base.tiles[i]
-          })
+      // render basic version of floor if unrevealed
+      if (e.floor && !visible && !shrouded) {
+        tile = base.tiles[0]
+      }
+
+      // return tile with shadow overlay
+      if (ledgeOverlay) {
+        const tAbove = local.terrainAt(pt.north(1))
+        if (tAbove.key !== e.key) {
+          return [...acc, [tile, color, bgColor], [ledgeOverlay.tile, color, bgColor]]
         }
+      }
 
-        // wall/floor/noise decoration
-        if (exposed || noise) {
-          let sprite = base
-          let i = 0
-          if (exposed) {
-            const tBelow = local.terrainAt(pt.south(1))
-            if (!tBelow.wall) sprite = exposed
-          }
+      // colors
+      if (e.color) color = e.color
+      if (e.bgColor) bgColor = e.bgColor
 
-          if (noise) {
-            const len = base.tiles.length
-            const v = local.noise.get(pt.x, pt.y)
-            const vMod = Math.round(((v + 1) * 255) / 2) % len
+      return [...acc, [tile, color, bgColor]]
+    }, [] as [string, string, string][])
 
-            i = v <= noise[0] ? 0 : vMod
-          }
-          tile = sprite.tiles[i]
-        }
-
-        // return tile with shadow overlay
-        if (ledgeOverlay) {
-          const tAbove = local.terrainAt(pt.north(1))
-          if (tAbove.key !== e.key) {
-            return [...acc, [tile, color, bgColor], [ledgeOverlay.tile, color, bgColor]]
-          }
-        }
-
-        // colors
-        if (e.color) color = e.color
-        if (e.bgColor) bgColor = e.bgColor
-
-        return [...acc, [tile, color, bgColor]]
-      }, [] as [string, string, string][])
-
-      // draw
-      mainDisplay.draw(
-        viewPt.x,
-        viewPt.y,
-        renderStack.map(s => s[0]),
-        renderStack.map(s => s[1]),
-        renderStack.map(s => s[2])
-      )
-    }
+    // draw
+    mainDisplay.draw(
+      viewPt.x,
+      viewPt.y,
+      renderStack.map(s => s[0]),
+      renderStack.map(s => s[1]),
+      renderStack.map(s => s[2])
+    )
   }) // end viewport traverse
 }
 

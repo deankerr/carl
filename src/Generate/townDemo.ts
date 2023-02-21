@@ -11,6 +11,7 @@ export function townDemo(
   height = CONFIG.generateHeight
 ) {
   const region = new Region(width, height, 'town prefab', 'bright')
+  region.recallAll = true
 
   const O3 = new Overseer3(region)
   O3.theme.wall = 'cryptWall'
