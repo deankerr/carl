@@ -63,7 +63,7 @@ export function floodCore(
         return
       }
 
-      const neighPts = topology === 4 ? pt.neighbours4() : pt.neighbours8()
+      const neighPts = topology === 4 ? pt.neighbours4() : pt.neighbours()
       neighPts.forEach(npt => {
         if (!visited.has(npt) && domain.has(pt)) nextRing.push(npt)
       })
@@ -90,7 +90,7 @@ export function floodFindRegions(rect: Rect, predicate: (pt: Point) => boolean) 
         regions.set(pt, count)
         neighbours = []
 
-        pt.neighbours8().forEach(npt => {
+        pt.neighbours().forEach(npt => {
           if (!regions.has(npt)) neighbours.push(npt)
         })
 
@@ -99,7 +99,7 @@ export function floodFindRegions(rect: Rect, predicate: (pt: Point) => boolean) 
           if (!npt) return
           if (predicate(npt)) {
             regions.set(npt, count)
-            npt.neighbours8().forEach(nnpt => {
+            npt.neighbours().forEach(nnpt => {
               if (!regions.has(nnpt)) neighbours.push(nnpt)
             })
           } else regions.set(npt, -1)

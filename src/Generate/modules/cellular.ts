@@ -1,6 +1,6 @@
-import { rnd } from '../../lib/util'
 import { Point } from '../../lib/Shape/Point'
 import { Rect } from '../../lib/Shape/Rectangle'
+import { rnd } from '../../lib/util'
 
 type StatusFn = (pt: Point, alive: boolean) => unknown
 
@@ -116,7 +116,7 @@ export class CellDish {
   // * Utility *
   countNeighbours(pt: Point, required: number) {
     let count = 0
-    for (const npt of pt.neighbours8()) {
+    for (const npt of pt.neighbours()) {
       // never = true attracts cells to walls
       if (this.neverCells.has(pt) || this.inspectPrev(npt)) {
         count++

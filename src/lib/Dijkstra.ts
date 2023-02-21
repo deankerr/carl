@@ -29,7 +29,7 @@ export class DijkstraMap {
 
     for (const pt of goal) {
       this.map.set(pt, 0)
-      pt.neigh8(npt => this.queue(npt))
+      pt.neighbours().forEach(npt => this.queue(npt))
     }
 
     for (const pt of this.next) {
@@ -43,7 +43,7 @@ export class DijkstraMap {
 
   neighbours(pt: Point) {
     let lowest = this.limit
-    for (const npt of pt.neighbours8()) {
+    for (const npt of pt.neighbours()) {
       if (this.map.has(npt)) {
         const nVal = this.get(npt)
         if (nVal < lowest) lowest = nVal
