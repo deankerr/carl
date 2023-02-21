@@ -1,6 +1,7 @@
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
 
+import { benchmark } from '../lib/benchmark'
 import { createGameDisplay } from '../lib/display'
 import {
   ActionTypes,
@@ -56,6 +57,8 @@ export class Engine {
     listen(this.update.bind(this))
     console.log(this)
     if (CONFIG.autoStartVisualizer) this.visualizer(Visualize('init'))
+
+    setTimeout((e: Engine) => benchmark(e), 1000, this)
   }
 
   update(event: KeyboardEvent) {
