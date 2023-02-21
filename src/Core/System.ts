@@ -87,7 +87,7 @@ export class System {
     this.change(Action.ChangeZone(CONFIG.initialZone))
   }
 
-  change(change: ActionTypes) {
+  change(change?: ActionTypes) {
     this.regionChangeProcess.forEach(sys => sys(this.engine, true, change))
   }
 }

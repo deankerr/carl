@@ -6,6 +6,7 @@ export function UI(engine: Engine, ui: string) {
   const { local, options } = engine
   let msg
 
+  // testing/debug
   if (ui === 'doSomething') {
     msg = "I'm doing... something"
     engine.textDisplay._options.tileMap = { ...engine.textDisplay._options.tileMap, W: [528, 112] }
@@ -47,6 +48,7 @@ export function UI(engine: Engine, ui: string) {
   if (ui === 'toggleHeatMap') {
     options.showHeatMap = !options.showHeatMap
     engine.local.debugSymbolMap.clear()
+    engine.system.change()
     msg = 'Heat Map'
   }
 

@@ -3,8 +3,6 @@ import { Engine } from '../Core/Engine'
 export const processHeatMap = (engine: Engine, isPlayerTurn: boolean) => {
   const { local } = engine
 
-  if (!isPlayerTurn) return
-
   const player = local.player()
   if (!player.signalPlayerMoved) return
 

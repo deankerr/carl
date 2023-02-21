@@ -3,7 +3,8 @@ import { ActionTypes, Engine } from '../Core'
 export function handleLocationChange(engine: Engine, isPlayerTurn: boolean, force?: ActionTypes) {
   if (!isPlayerTurn) return
 
-  const action = force ? force : engine.local?.get('acting')[0].acting
+  const action = force ? force : engine.local?.get('acting')[0]?.acting
+  if (!action) return console.log('handleLocationChange: no action')
 
   if ('changeLocation' in action) {
     console.log('change Location')
