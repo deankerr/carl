@@ -64,9 +64,10 @@ export class Visualizer {
   }
 
   next() {
-    const { terrainMap, entityList, message } = this.history[this.index]
-    this.mirror.name = `(${this.index}) ${message}`
+    const { terrainMap, debugSymbolMap, entityList, message } = this.history[this.index]
+    this.mirror.name = `${this.index} ${message}`
     this.mirror.terrainMap = terrainMap
+    this.mirror.debugSymbolMap = debugSymbolMap
     this.mirror.entityList = entityList
     this.mirror.hasChanged = true
   }

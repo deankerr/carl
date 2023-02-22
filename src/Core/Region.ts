@@ -194,13 +194,18 @@ export class Region {
   }
 
   debugSymbol(
-    pt: Point | Rect,
+    pt: Point | Point[] | Rect,
     tile: string | number,
     color: number | string = 'transparent',
     bgColor = 'transparent'
   ) {
     if (pt instanceof Rect) {
       pt.traverse(ppt => this.debugSymbol(ppt, tile, color, bgColor))
+      return
+    }
+
+    if (Array.isArray(pt)) {
+      pt.forEach(pt2 => this.debugSymbol(pt2, tile, color, bgColor))
       return
     }
 

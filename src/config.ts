@@ -3,8 +3,8 @@
 const htmlBackgroundColor = '#000000'
 const appInitial = 'game'
 
-// const seed = 2225
-const seed = null
+const seed = 2225
+// const seed = null
 
 const mainDisplayWidth = 37
 const mainDisplayHeight = 19

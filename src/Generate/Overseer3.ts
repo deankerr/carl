@@ -7,16 +7,23 @@ import { rnd } from '../lib/util'
 
 export type Snapshot = {
   terrainMap: Map<Point, Entity>
+  debugSymbolMap: Map<Point, Entity>
   entityList: Entity[]
   message: string
 }
 
 function createSnapshot(
   terrainMap: Map<Point, Entity>,
+  debugSymbolMap: Map<Point, Entity>,
   entityList: Entity[],
   message = ''
 ): Snapshot {
-  return { terrainMap: new Map([...terrainMap]), entityList: [...entityList], message }
+  return {
+    terrainMap: new Map([...terrainMap]),
+    debugSymbolMap: new Map([...debugSymbolMap]),
+    entityList: [...entityList],
+    message,
+  }
 }
 
 export type RegionTheme = {
@@ -37,7 +44,6 @@ export class Overseer3 {
   theme: RegionTheme = { wall: 'dungeonWall', floor: 'dirtFloor', door: 'woodenDoor' }
 
   debugSymbolList: Entity[] = []
-  debugCNMap = new Map<Point, Entity>()
 
   constructor(readonly region: Region) {
     this.rect = region.rect
@@ -49,7 +55,14 @@ export class Overseer3 {
   }
 
   snap(message = '') {
-    this.history.push(createSnapshot(this.region.terrainMap, this.region.entityList, message))
+    this.history.push(
+      createSnapshot(
+        this.region.terrainMap,
+        this.region.debugSymbolMap,
+        this.region.entityList,
+        message
+      )
+    )
   }
 
   wall(pt: Point) {
@@ -160,12 +173,22 @@ export class Overseer3 {
   }
 
   debug(
-    pt: Point | Rect,
+    pt: Point | Point[] | Rect,
     tile: string | number,
     color: number | string = 'transparent',
     bgColor = 'transparent'
   ) {
     this.region.debugSymbol(pt, tile, color, bgColor)
+  }
+
+  clearDebug(at: Point | Point[]) {
+    if (!at) {
+      this.region.debugSymbolMap.clear()
+      return
+    }
+    if (Array.isArray(at)) {
+      for (const pt of at) this.region.debugSymbolMap.delete(pt)
+    } else this.region.debugSymbolMap.delete(at)
   }
 
   finalize() {

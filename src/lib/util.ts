@@ -92,6 +92,15 @@ export function* range(n: number, max?: number, step = 1) {
   }
 }
 
+export function ltimer(name = 'anonymous timer') {
+  const t = Date.now()
+  return {
+    stop: () => {
+      console.log(`${name}: ${Date.now() - t}ms`)
+    },
+  }
+}
+
 export class Queue<T> {
   queue: T[] = []
   repeat: T[] = []
