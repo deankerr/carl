@@ -200,7 +200,7 @@ export class Region {
     bgColor = 'transparent'
   ) {
     if (pt instanceof Rect) {
-      pt.traverse(ppt => this.debugSymbol(pt, tile, color, bgColor))
+      pt.traverse(ppt => this.debugSymbol(ppt, tile, color, bgColor))
       return
     }
 

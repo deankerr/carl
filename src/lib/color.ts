@@ -1,6 +1,6 @@
 import * as ROT from 'rot-js'
 import { Color } from 'rot-js/lib/color'
-import { floor, min } from './util'
+import { floor, min, shuffle } from './util'
 
 // ? #bb6244 desert sunset
 
@@ -63,6 +63,15 @@ export function addLight(color: string, light: Color, dim: boolean) {
 
 export function heatMapColor(hue: number) {
   const heat = hue / 100 + 0.833 // pink
-
   return HSLToHex([heat, 1, 0.5])
+}
+
+export function hueRange(n: number, max: number) {
+  const hue = n / (max + 1)
+  return HSLToHex([hue, 1, 0.5])
+}
+
+export function createHues(max: number) {
+  const hues = [...Array(max)].map((_, i) => i / max)
+  return shuffle(hues.map(h => HSLToHex([h * 0.9, 1, 0.5])))
 }
