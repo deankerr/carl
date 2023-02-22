@@ -53,6 +53,14 @@ export class Rect {
     }
   }
 
+  *each() {
+    for (let yi = this.y; yi <= this.y2; yi++) {
+      for (let xi = this.x; xi <= this.x2; xi++) {
+        yield point(xi, yi)
+      }
+    }
+  }
+
   intersectionPoints(rect: Rect) {
     if (this === rect)
       console.warn('Did you mean to check if a rect intersects itself?', this, rect)
