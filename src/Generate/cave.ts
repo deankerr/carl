@@ -1,6 +1,7 @@
 import { CONFIG } from '../config'
 import { Region } from '../Core'
 import { createHues } from '../lib/color'
+import { range } from '../lib/util'
 import { connectSectors, findSectors } from './modules'
 import { CellDish } from './modules/cellular'
 import { Overseer3 } from './Overseer3'
@@ -17,19 +18,17 @@ export function cave(
   O3.theme.wall = 'caveWall'
   O3.theme.floor = 'dirtFloor'
 
+  O3.floor(region.rect, 'begin')
+
   // * cave generation
   const caveDish = new CellDish(region.rect)
   caveDish.addAlways(region.rect.edgePoints())
   caveDish.randomize(49).current((pt, alive) => (alive ? O3.wall(pt) : O3.floor(pt)))
   O3.snap()
-  caveDish.generation(4, 5)((pt, alive) => (alive ? O3.wall(pt) : O3.floor(pt)))
-  O3.snap()
-  caveDish.generation(4, 5)((pt, alive) => (alive ? O3.wall(pt) : O3.floor(pt)))
-  O3.snap()
-  caveDish.generation(4, 5)((pt, alive) => (alive ? O3.wall(pt) : O3.floor(pt)))
-  O3.snap()
-  caveDish.generation(4, 5)((pt, alive) => (alive ? O3.wall(pt) : O3.floor(pt)))
-  O3.snap()
+  for (const _ of range(4)) {
+    caveDish.generation(4, 5)((pt, alive) => (alive ? O3.wall(pt) : O3.floor(pt)))
+    O3.snap()
+  }
 
   const sectors = findSectors(region.rect, pt => !region.terrainAt(pt).blocksMovement)
   const secColors = createHues(sectors.length)

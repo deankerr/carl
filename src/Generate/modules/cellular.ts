@@ -19,8 +19,6 @@ export class CellDish {
       this.cellsPrev.set(pt, false)
       this.cellsCurrent.set(pt, false)
     })
-    console.log('*** Dish created ***')
-    this.debug('init')
   }
 
   // * status of each prev/current cell *

@@ -65,13 +65,15 @@ export class Overseer3 {
     )
   }
 
-  wall(pt: Point) {
+  wall(pt: Point, snapMsg?: string) {
     if (!this.region.terrainAt(pt).wall) {
       this.region.create(pt, this.theme.wall)
     }
+
+    if (snapMsg) this.snap(snapMsg)
   }
 
-  floor(area: Point | Rect) {
+  floor(area: Point | Rect, snapMsg?: string) {
     if (area instanceof Rect) {
       area.traverse(pt => {
         if (!this.region.terrainAt(pt).floor) this.region.create(pt, this.theme.floor)
@@ -79,6 +81,8 @@ export class Overseer3 {
     } else {
       if (!this.region.terrainAt(area).floor) this.region.create(area, this.theme.floor)
     }
+
+    if (snapMsg) this.snap(snapMsg)
   }
 
   door(pt: Point) {
