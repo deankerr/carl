@@ -3,8 +3,8 @@
 const htmlBackgroundColor = '#000000'
 const appInitial = 'game'
 
-const seed = 2225
-// const seed = null
+// const seed = 2235
+const seed = null
 
 const mainDisplayWidth = 37
 const mainDisplayHeight = 19
@@ -19,7 +19,7 @@ const textDisplayHeight = 32
 const generateWidth = 37
 const generateHeight = 19
 
-const setMainToMapSize = true
+const setMainToMapSize = false
 
 const frameLimit = 0
 const recallAll = false

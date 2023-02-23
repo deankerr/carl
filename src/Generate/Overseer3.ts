@@ -181,7 +181,7 @@ export class Overseer3 {
     this.region.debugSymbol(pt, tile, color, bgColor)
   }
 
-  clearDebug(at: Point | Point[]) {
+  clearDebug(at?: Point | Point[]) {
     if (!at) {
       this.region.debugSymbolMap.clear()
       return

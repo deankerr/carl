@@ -92,11 +92,12 @@ export function* range(n: number, max?: number, step = 1) {
   }
 }
 
-export function ltimer(name = 'anonymous timer') {
+let anonTimerCount = 0
+export function timer(name = `Timer ${anonTimerCount++}`) {
   const t = Date.now()
   return {
-    stop: () => {
-      console.log(`${name}: ${Date.now() - t}ms`)
+    stop: (data?: unknown) => {
+      console.log(`${name}: ${Date.now() - t}ms`, data ?? '')
     },
   }
 }

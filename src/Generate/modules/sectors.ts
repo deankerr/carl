@@ -1,9 +1,11 @@
 import { Point } from '../../lib/Shape/Point'
 import { Rect } from '../../lib/Shape/Rectangle'
-import { ltimer } from '../../lib/util'
+import { timer } from '../../lib/util'
 
+// sweep a rect, finding each region that matches the predicate function
+// ie. individual open cave sections
 export function findSectors(rect: Rect, predicateFn: (pt: Point) => boolean) {
-  const t = Date.now()
+  const t = timer('find sectors')
   const checked = new Set<Point>()
   const sectors: Set<Point>[] = []
 
@@ -26,16 +28,45 @@ export function findSectors(rect: Rect, predicateFn: (pt: Point) => boolean) {
     sectors.push(sector)
   }
 
-  console.log(`findSectors: ${Date.now() - t}ms`)
+  t.stop(sectors.map((s, i) => `${i}: ${s.size}`))
   return sectors
 }
 
+// call the connect function for every point along the closest path between each sector
+// (excluding the largest), which should connect all of them
+export function connectSectors(
+  rect: Rect,
+  sectors: Set<Point>[],
+  predicateFn: (pt: Point) => boolean,
+  connectFn: (pt: Point) => unknown
+) {
+  const t = timer('connect sectors')
+  const sorted = [...sectors].slice(0, sectors.length - 1).sort((a, b) => a.size - b.size)
+
+  for (const sector of sorted) {
+    const [pt, path] = findPathToClosest(rect, sector, predicateFn)
+    const owner = sectors.find(s => s.has(pt))
+
+    for (const pt of path) {
+      connectFn(pt)
+      owner?.add(pt)
+    }
+
+    for (const pt of sector) owner?.add(pt)
+
+    sector.clear()
+  }
+
+  t.stop()
+}
+
+// find the closest path between a set of points and a point where the predicate function returns
+// true (ie. a cave section to another open area)
 export function findPathToClosest(
   rect: Rect,
   start: Set<Point>,
   predicateFn: (pt: Point) => boolean
 ): [Point, Set<Point>] {
-  const t = ltimer('find path')
   const from = new Map<Point, Point>()
   const frontier = new Set<Point>([...start])
   let found: Point | undefined
@@ -57,11 +88,11 @@ export function findPathToClosest(
 
   if (!found) throw new Error('Failed to find goal.')
 
-  const goalPath = new Set<Point>([found])
-  for (const pt of goalPath) {
+  const path = new Set<Point>([found])
+  for (const pt of path) {
     const next = from.get(pt)
-    if (next) goalPath.add(next)
+    if (next) path.add(next)
   }
-  t.stop()
-  return [found, goalPath]
+
+  return [found, path]
 }
