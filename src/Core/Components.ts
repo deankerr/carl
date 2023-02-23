@@ -96,3 +96,4 @@ export type Tag =
   | 'friendly'
   | 'item'
   | 'ledge'
+  | 'outOfBounds'

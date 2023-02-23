@@ -345,7 +345,7 @@ export const terrain = {
 
   endlessVoid: {
     name: 'endless void',
-    tag: ['blocksLight', 'blocksMovement', 'terrain'],
+    tag: ['terrain', 'outOfBounds', 'blocksLight', 'blocksMovement'],
     sprite: {
       base: ['abyss'],
     },

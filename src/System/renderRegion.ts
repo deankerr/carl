@@ -98,6 +98,12 @@ export function renderRegion(engine: Engine) {
       let color = 'transparent'
       let bgColor = 'transparent'
 
+      // skip walls that are completely surrounded by other walls
+      if (e.wall) {
+        const neighbours = pt.neighbours().map(npt => local.terrainAt(npt))
+        if (neighbours.filter(n => n.wall || n.outOfBounds).length === 8) return acc
+      }
+
       // liquid ledge tiles (top edge)
       if (ledge) {
         const tAbove = local.terrainAt(pt.north(1))
