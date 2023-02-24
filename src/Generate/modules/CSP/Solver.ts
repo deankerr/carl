@@ -26,23 +26,22 @@ export class Solver {
       let satisfies = false
       // for an origin point
       for (const originPt of domain) {
-        // test all points in the entity grid
+        // create relative pt map of entity grid to test
         const grid = variableKeyGrid(varKey, originPt)
-        console.log('grid:', grid)
+
         for (const relPt of grid.keys()) {
           if (!this.domain.has(relPt)) break
 
           const domainData = { region: this.region, pt: relPt, domain: this.domain }
-
-          for (const constraint of constraints) {
-            satisfies = Constraints[constraint](domainData)
+          for (const key of constraints) {
+            satisfies = Constraints[key](domainData)
             if (!satisfies) break
           }
           if (!satisfies) break
         }
-
         if (!satisfies) continue
 
+        // * success, place grid
         console.log('success:', originPt.s)
         for (const [relPt, gridKeys] of grid) {
           gridKeys.forEach(key => this.region.create(relPt, pick(keys[key])))

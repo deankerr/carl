@@ -8,11 +8,16 @@ export const Constraints = {
   walkable: function (d: DomainData) {
     return d.region.at(d.pt).filter(e => e.blocksMovement).length === 0
   },
-  isBlocked: function (d: DomainData) {
-    return d.region.at(d.pt).filter(e => e.blocksMovement).length > 0
-  },
-  isWall: function (d: DomainData) {
+  wall: function (d: DomainData) {
     return d.region.at(d.pt).filter(e => e.wall).length > 0
+  },
+  top: function (d: DomainData) {
+    const [yMin] = [...d.domain].sort((a, b) => a.y - b.y)
+    return d.pt.y === yMin.y
+  },
+  exposed: function (d: DomainData) {
+    const tBelow = d.region.terrainAt(d.pt.south())
+    return !tBelow.wall
   },
 } satisfies Record<string, Constraint>
 

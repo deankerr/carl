@@ -64,16 +64,16 @@ export class Rooms {
       search(westPts, point(-1, 0))
     }
 
-    console.groupCollapsed('Edge map')
-    this.rooms.forEach(r =>
-      console.log(
-        'Room',
-        r.rID,
-        '->',
-        [...r.roomEdges.keys()].map(r2 => r2.rID)
-      )
-    )
-    console.groupEnd()
+    // console.groupCollapsed('Edge map')
+    // this.rooms.forEach(r =>
+    //   console.log(
+    //     'Room',
+    //     r.rID,
+    //     '->',
+    //     [...r.roomEdges.keys()].map(r2 => r2.rID)
+    //   )
+    // )
+    // console.groupEnd()
 
     const start = pick(this.rooms)
     const connected = [start]
@@ -111,7 +111,7 @@ export class Rooms {
       }
     }
 
-    console.warn('Success?')
+    // console.warn('Success?')
   }
 
   each(callback: RoomCallback) {
