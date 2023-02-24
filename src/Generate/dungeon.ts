@@ -1,8 +1,8 @@
 import { CONFIG } from '../config'
-import { EntityKey, Region } from '../Core'
+import { Region } from '../Core'
 import { Rect } from '../lib/Shape/Rectangle'
-import { pick, rnd } from '../lib/util'
 import { BinarySpacePartition } from './modules'
+import { CSPSolve } from './modules/CSP'
 import { Overseer3 } from './Overseer3'
 
 export function dungeon(
@@ -18,45 +18,19 @@ export function dungeon(
   O3.room(region.rect)
   O3.snap('Initial room')
 
-  // const BSP = new BinarySpacePartition(region.rect)
+  const BSP = new BinarySpacePartition(region.rect)
+  BSP.splitN(6)
+  const rooms: Rect[] = []
+  BSP.leaves(rect => {
+    O3.room(rect)
+    rooms.push(rect)
+  })
 
-  // // split region with rivers
-  // const riverKey: EntityKey = 'water'
-  // const dir = !rnd(1)
-  // if (dir) {
-  //   BSP.splitLargest('vertical', rnd(1, 9), 2)
-  //   BSP.splitLargest('horizontal', rnd(1, 2), 1)
-  //   BSP.splitLargest('best', 1, 1)
-  // } else {
-  //   BSP.splitLargest('horizontal', rnd(2), 2)
-  //   BSP.splitLargest('vertical', rnd(3, 7), 1)
-  //   BSP.splitLargest('best', 1, 1)
-  // }
+  const csp = new CSPSolve(region, rooms[0])
+  // for (const [pt, status] of csp.full) O3.debug(pt, status ? -2 : -1)
 
-  // BSP.rectGaps.forEach(g => {
-  //   O3.add(g.rect, riverKey)
-  //   O3.snap('river')
-  // })
-  // const ptC = region.rect.center
-  // O3.add(ptC.west(), 'water')
-  // O3.add(ptC.west().south(), 'water')
-
-  // O3.add(ptC, 'bookshelf')
-  // O3.add(ptC.north(), 'bookshelf')
-
-  // O3.add(ptC.east(), 'campfire')
-  // O3.add(ptC.east().south(), 'campfire')
-
-  // O3.add(ptC.north(2), 'rat')
-  // O3.add(ptC.north(3), 'rat')
-
-  // for (const e of region.get('position')) {
-  //   console.log(e.key, e)
-  // }
-
-  // for (const e of region.at(ptC.west())) {
-  //   if (e.key === 'water') console.log(e.key, e)
-  // }
+  csp.solve(['statueAltar', 'statueAltar', 'mushrooms', 'statue'])
+  // csp.solve(['tAltar'])
 
   O3.finalize()
   return region
