@@ -73,5 +73,5 @@ export function hueRange(n: number, max: number) {
 
 export function createHues(max: number) {
   const hues = [...Array(max)].map((_, i) => i / max)
-  return shuffle(hues.map(h => HSLToHex([h * 0.9, 1, 0.5])))
+  return shuffle(hues.map(h => HSLToHex([h * 0.9, 0.5, 0.5])))
 }
