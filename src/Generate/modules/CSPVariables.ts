@@ -1,4 +1,4 @@
-export const CSPVar = {
+export const CSPVarOLD = {
   // hostile
   goblinPack: {
     constraints: {

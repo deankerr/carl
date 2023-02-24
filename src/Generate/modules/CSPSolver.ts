@@ -1,18 +1,18 @@
-import { Entity, EntityKey, Region } from '../../Core'
-import { CSPConstraints } from './CSPConstraints'
-import { CSPVar } from './CSPVariables'
-import { pick, shuffle } from '../../lib/util'
+import { EntityKey, Region } from '../../Core'
 import { Point } from '../../lib/Shape/Point'
 import { Rect } from '../../lib/Shape/Rectangle'
+import { pick, shuffle } from '../../lib/util'
+import { CSPConstraintsOLD } from './CSPConstraints'
+import { CSPVarOLD } from './CSPVariables'
 
-export class CSPSolver {
+export class CSPSolverOLD {
   domain: Point[] = []
   constructor(readonly region: Region) {}
   initializeRect(rect: Rect) {
     rect.traverse(pt => this.domain.push(pt))
   }
 
-  solve<K extends keyof typeof CSPVar>(variables: typeof CSPVar[K][]) {
+  solve<K extends keyof typeof CSPVarOLD>(variables: typeof CSPVarOLD[K][]) {
     if (this.domain.length === 0) throw new Error('CSP: Domain is empty')
     for (const variable of variables) {
       const { constraints, key, object } = variable
@@ -27,7 +27,7 @@ export class CSPSolver {
         if ('all' in constraints) {
           for (const c of constraints.all) {
             //console.log('(all) try', c)
-            satisfies = CSPConstraints[c](this.region, pt, this.domain)
+            satisfies = CSPConstraintsOLD[c](this.region, pt, this.domain)
             //console.log('satisfies:', satisfies)
             if (!satisfies) break
           }
@@ -37,7 +37,7 @@ export class CSPSolver {
         if ('root' in constraints && isRoot) {
           for (const c of constraints.root) {
             //console.log('(root) try', c)
-            satisfies = CSPConstraints[c](this.region, pt, this.domain)
+            satisfies = CSPConstraintsOLD[c](this.region, pt, this.domain)
             isRoot = false
             //console.log('satisfies:', satisfies)
             if (!satisfies) break
@@ -48,7 +48,7 @@ export class CSPSolver {
         if ('other' in constraints && !isRoot) {
           for (const c of constraints.other) {
             //console.log('(other) try', c)
-            satisfies = CSPConstraints[c](this.region, pt, this.domain)
+            satisfies = CSPConstraintsOLD[c](this.region, pt, this.domain)
             //console.log('satisfies:', satisfies)
             if (!satisfies) break
           }

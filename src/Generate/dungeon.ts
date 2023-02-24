@@ -2,7 +2,7 @@ import { CONFIG } from '../config'
 import { Region } from '../Core'
 import { Rect } from '../lib/Shape/Rectangle'
 import { BinarySpacePartition } from './modules'
-import { CSPSolve } from './modules/CSP'
+import { Solver } from './modules/CSP/Solver'
 import { Overseer3 } from './Overseer3'
 
 export function dungeon(
@@ -26,10 +26,11 @@ export function dungeon(
     rooms.push(rect)
   })
 
-  const csp = new CSPSolve(region, rooms[0])
+  const csp = new Solver(region, rooms[0])
   // for (const [pt, status] of csp.full) O3.debug(pt, status ? -2 : -1)
 
-  csp.solve(['statueAltar', 'statueAltar', 'mushrooms', 'statue'])
+  // csp.solve(['statueAltar', 'statueAltar', 'mushrooms', 'statue'])
+  csp.solve(['statueAltar'])
   // csp.solve(['tAltar'])
 
   O3.finalize()

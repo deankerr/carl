@@ -1,7 +1,7 @@
 import { Region } from '../../Core'
 import { Point } from '../../lib/Shape/Point'
 
-export const CSPConstraints = {
+export const CSPConstraintsOLD = {
   isEmpty: function (region: Region, pt: Point) {
     return region.at(pt).length <= 1 // ???
   },

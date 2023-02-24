@@ -3,7 +3,7 @@ import { EntityKey, Region } from '../Core'
 import { Rect } from '../lib/Shape/Rectangle'
 import { loop, pick, rnd } from '../lib/util'
 import { itemKeys } from '../Templates'
-import { BinarySpacePartition, CSPSolver, CSPVar, Rooms } from './modules'
+import { BinarySpacePartition, CSPSolverOLD, CSPVarOLD, Rooms } from './modules'
 import { Overseer3 } from './Overseer3'
 
 const scale = 2
@@ -49,21 +49,21 @@ export function crypt(
 
   rooms.each(room => {
     // if (room.rID > 0) return
-    const s = new CSPSolver(region)
+    const s = new CSPSolverOLD(region)
     s.initializeRect(room.rect)
 
     s.solve([
-      CSPVar.sconce,
-      CSPVar.sconce,
-      CSPVar.cornerCandles,
-      CSPVar.cornerCandles,
+      CSPVarOLD.sconce,
+      CSPVarOLD.sconce,
+      CSPVarOLD.cornerCandles,
+      CSPVarOLD.cornerCandles,
       // CSPVar.smallPitPlatform,
       pick([
         // CSPVar.goblinPack,
         // CSPVar.skeletonPack,
-        CSPVar.beholder,
-        CSPVar.gelCube,
-        CSPVar.spiderPack,
+        CSPVarOLD.beholder,
+        CSPVarOLD.gelCube,
+        CSPVarOLD.spiderPack,
       ]),
     ])
 
