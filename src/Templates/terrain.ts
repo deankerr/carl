@@ -343,6 +343,14 @@ export const terrain = {
     },
   },
 
+  abyss: {
+    name: 'abyss',
+    tag: ['terrain', 'blocksLight', 'blocksMovement'],
+    sprite: {
+      base: ['abyss'],
+    },
+  },
+
   endlessVoid: {
     name: 'endless void',
     tag: ['terrain', 'outOfBounds', 'blocksLight', 'blocksMovement'],

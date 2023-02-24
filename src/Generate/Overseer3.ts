@@ -73,11 +73,13 @@ export class Overseer3 {
     if (snapMsg) this.snap(snapMsg)
   }
 
-  floor(area: Point | Rect, snapMsg?: string) {
+  floor(area: Point | Point[] | Rect, snapMsg?: string) {
     if (area instanceof Rect) {
       area.traverse(pt => {
         if (!this.region.terrainAt(pt).floor) this.region.create(pt, this.theme.floor)
       })
+    } else if (Array.isArray(area)) {
+      area.forEach(pt => this.floor(pt))
     } else {
       if (!this.region.terrainAt(area).floor) this.region.create(area, this.theme.floor)
     }
@@ -97,11 +99,13 @@ export class Overseer3 {
     if (snapMsg) this.snap(snapMsg)
   }
 
-  add(area: Point | Rect, key: EntityKey, snapMsg?: string) {
+  add(area: Point | Point[] | Rect, key: EntityKey, snapMsg?: string) {
     if (area instanceof Rect) {
       area.traverse(pt => {
         this.region.create(pt, key)
       })
+    } else if (Array.isArray(area)) {
+      area.forEach(pt => this.add(pt, key))
     } else {
       this.region.create(area, key)
     }

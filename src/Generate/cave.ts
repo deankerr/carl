@@ -1,7 +1,7 @@
 import { CONFIG } from '../config'
 import { Region } from '../Core'
 import { createHues } from '../lib/color'
-import { range } from '../lib/util'
+import { range, timer } from '../lib/util'
 import { connectSectors, findSectors } from './modules'
 import { CellDish } from './modules/cellular'
 import { Overseer3 } from './Overseer3'
@@ -21,15 +21,18 @@ export function cave(
   O3.floor(region.rect, 'begin')
 
   // * cave generation
+  const tCell = timer('cave gen')
   const caveDish = new CellDish(region.rect)
   caveDish.addAlways(region.rect.edgePoints())
   caveDish.randomize(49).current((pt, alive) => (alive ? O3.wall(pt) : O3.floor(pt)))
   O3.snap()
-  for (const _ of range(4)) {
+  for (const _ of range(5)) {
     caveDish.generation(4, 5)((pt, alive) => (alive ? O3.wall(pt) : O3.floor(pt)))
     O3.snap()
   }
+  tCell.stop()
 
+  // * connect caves
   const sectors = findSectors(region.rect, pt => !region.terrainAt(pt).blocksMovement)
   const secColors = createHues(sectors.length)
   sectors.forEach((sec, i) => O3.debug([...sec], i, secColors[i]))
@@ -41,8 +44,20 @@ export function cave(
     pt => !region.terrainAt(pt).blocksMovement,
     pt => O3.floor(pt)
   )
-
   O3.snap('Caves connected')
+
+  // * remove inner walls
+  const inner = findSectors(region.rect, pt => {
+    if (region.terrainAt(pt).blocksMovement) {
+      const walls = pt
+        .neighbours()
+        .map(npt => region.terrainAt(npt))
+        .filter(n => n.wall || n.outOfBounds)
+      return walls.length === 8
+    } else return false
+  })
+  inner.forEach(wal => O3.add([...wal], 'abyss'))
+  O3.snap('remove inner')
 
   O3.clearDebug()
   O3.finalize()
