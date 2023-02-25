@@ -42,7 +42,6 @@ export function renderRegion(engine: Engine) {
 
   // * ========== Rendering ========== *
 
-  const nothing = local.pool.symbolic('nothing')
   const shroudedFog = local.pool.symbolic(local.visibility.shrouded)
   const unrevealedFog = local.pool.symbolic(local.visibility.unrevealed)
 
@@ -59,7 +58,7 @@ export function renderRegion(engine: Engine) {
     const visible = local.revealAll || (areaVisible.get(pt) ?? false)
     const shrouded = local.revealAll || local.recallAll || (areaKnown.get(pt) ?? false)
 
-    const stack: Entity[] = [nothing]
+    const stack: Entity[] = []
     const here = entities.filter(e => e.position === pt && !e.invisible)
 
     const terrain = local.terrainAt(pt)
@@ -160,19 +159,22 @@ export function renderRegion(engine: Engine) {
       return [...acc, [tile, color, bgColor]]
     }, [] as [string, string, string][])
 
-    const debugSym = local.debugSymbolMap.get(pt)
-    if (debugSym) {
-      renderStack.push(debugSym)
+    // add debug symbol if there are any here
+    const debugSymbol = local.debugSymbolMap.get(pt)
+    if (debugSymbol) {
+      renderStack.push(debugSymbol)
     }
 
-    // draw
-    mainDisplay.draw(
-      viewPt.x,
-      viewPt.y,
-      renderStack.map(s => s[0]),
-      renderStack.map(s => s[1]),
-      renderStack.map(s => s[2])
-    )
+    if (renderStack.length > 0) {
+      // draw
+      mainDisplay.draw(
+        viewPt.x,
+        viewPt.y,
+        renderStack.map(s => s[0]),
+        renderStack.map(s => s[1]),
+        renderStack.map(s => s[2])
+      )
+    }
   }) // end viewport traverse
 }
 
