@@ -18,7 +18,7 @@ export function cave(
   O3.theme.wall = 'caveWall'
   O3.theme.floor = 'dirtFloor'
 
-  O3.floor(region.rect, 'begin')
+  O3.floor(region.rect)
 
   // * cave generation
   const tCell = timer('cave gen')

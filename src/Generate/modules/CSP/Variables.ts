@@ -80,7 +80,7 @@ export const Variables = {
   },
 
   statueAltar: {
-    keys: [['carpet'], ['statueDragon'], ['dungeonWall']],
+    keys: [['carpet'], ['statueDragon'], ['wall']],
     map: [
       ['      ', '      '],
       [' 0000 ', ' 1  1 '],

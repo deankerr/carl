@@ -2,6 +2,7 @@ import { EntityKey, Region } from '../../../Core'
 import { Point } from '../../../lib/Shape/Point'
 import { Rect } from '../../../lib/Shape/Rectangle'
 import { pick, shuffle } from '../../../lib/util'
+import { Overseer3 } from '../../Overseer3'
 import { ConstraintKey, Constraints } from './Constraints'
 import { VariableKey, Variables } from './Variables'
 
@@ -9,7 +10,11 @@ export class Solver {
   domain = new Set<Point>()
   full = new Map<Point, boolean>()
 
-  constructor(readonly region: Region, domain: Point[] | Set<Point> | Rect) {
+  constructor(
+    readonly region: Region,
+    domain: Point[] | Set<Point> | Rect,
+    readonly O3: Overseer3
+  ) {
     if (Array.isArray(domain)) domain.forEach(pt => this.domain.add(pt))
     else if (domain instanceof Rect) [...domain.each()].forEach(pt => this.domain.add(pt))
     else [...domain.values()].forEach(pt => this.domain.add(pt))
@@ -43,7 +48,7 @@ export class Solver {
       // success, place object
       console.log('success:', vKey, validObject.originPt.s)
       for (const [relPt, entityKeys] of validObject.map) {
-        entityKeys.forEach(key => this.region.create(relPt, key))
+        entityKeys.forEach(key => this.O3.add(relPt, key))
       }
     }
   }

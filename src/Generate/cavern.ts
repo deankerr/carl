@@ -1,7 +1,7 @@
 import { CONFIG } from '../config'
-import { EntityKey, FeatureKey, Region } from '../Core'
-import { loop, pick, rnd } from '../lib/util'
+import { EntityKey, Region } from '../Core'
 import { Rect } from '../lib/Shape/Rectangle'
+import { pick, rnd } from '../lib/util'
 import { BinarySpacePartition } from './modules'
 import { Rooms } from './modules/Rooms'
 import { Overseer3 } from './Overseer3'
@@ -34,12 +34,12 @@ export function cavern(
     BSP.splitLargest('vertical', rnd(3, 5), 1)
     BSP.splitLargest('best', 1, 1)
   }
-  BSP.rectGaps.forEach(g => O3.add(g.rect, liquidKey, 'river'))
+  BSP.rectGaps.forEach(g => O3.add(g.rect, liquidKey))
 
   BSP.splitN(48)
   const roomRects: Rect[] = []
   BSP.leaves(r => {
-    O3.room(r, 'Room')
+    O3.room(r)
     roomRects.push(r)
   })
 

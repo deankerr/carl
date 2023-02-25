@@ -1,6 +1,5 @@
 import { CONFIG } from '../config'
 import { EntityKey, Region } from '../Core'
-import { point } from '../lib/Shape/Point'
 import { Rect } from '../lib/Shape/Rectangle'
 import { loop, pick, rnd } from '../lib/util'
 import { BinarySpacePartition, Rooms } from './modules'
@@ -19,7 +18,7 @@ export function crypt(
   O3.theme.wall = 'cryptWall'
   O3.theme.floor = 'stoneTileFloor'
   O3.theme.door = 'woodenDoor'
-  O3.room(region.rect, 'Theme')
+  O3.room(region.rect)
 
   // ! dev
   window.O3Debug = O3
@@ -36,9 +35,9 @@ export function crypt(
   }
 
   const liquidKey = pick(['sludge', 'blood', 'oil', 'slime', 'acid']) as EntityKey
-  BSP.rectGaps.forEach(g => O3.add(g.rect, liquidKey, 'river'))
+  BSP.rectGaps.forEach(g => O3.add(g.rect, liquidKey))
 
-  BSP.splitN(rnd(5, 8))
+  BSP.splitN(rnd(4, 7))
   const roomRects: Rect[] = []
   BSP.leaves(r => {
     O3.room(r)
@@ -51,7 +50,7 @@ export function crypt(
   // const upStairRoom = rnd(rooms.rooms.length)
   console.groupCollapsed('CSP')
   rooms.each(room => {
-    const csp = new Solver(region, room.rect)
+    const csp = new Solver(region, room.rect, O3)
     csp.solve([
       'cornerWebNorthWest',
       'cornerWebSouthWest',
@@ -86,7 +85,6 @@ export function crypt(
   )
   O3.portal(rooms.rooms[1].rect.center.east(), 'cryptStairsDown', 'here', 'down')
 
-  O3.add(point(3, 3), 'wall')
   O3.finalize()
   return region
 }

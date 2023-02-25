@@ -74,63 +74,59 @@ export class Overseer3 {
     )
   }
 
-  wall(pt: Point, snapMsg?: string) {
+  wall(pt: Point) {
     if (!this.region.terrainAt(pt).wall) {
       this.region.create(pt, this.theme.wall)
     }
-
-    if (snapMsg) this.snap(snapMsg)
   }
 
-  floor(area: Point | Point[] | Rect, snapMsg?: string) {
-    if (area instanceof Rect) {
-      area.traverse(pt => {
-        if (!this.region.terrainAt(pt).floor) this.region.create(pt, this.theme.floor)
-      })
-    } else if (Array.isArray(area)) {
-      area.forEach(pt => this.floor(pt))
-    } else {
+  floor(area: Point | Point[] | Rect) {
+    if (area instanceof Rect) [...area.each()].forEach(pt => this.floor(pt))
+    else if (Array.isArray(area)) area.forEach(pt => this.floor(pt))
+    else {
       if (!this.region.terrainAt(area).floor) this.region.create(area, this.theme.floor)
     }
-
-    if (snapMsg) this.snap(snapMsg)
   }
 
   door(pt: Point) {
     if (this.region.at(pt).filter(e => e.door).length === 0) this.region.create(pt, this.theme.door)
   }
 
-  room(rect: Rect, snapMsg?: string) {
+  stairsUp(pt: Point) {
+    this.region.create(pt, this.theme.stairsUp)
+  }
+
+  stairsDown(pt: Point) {
+    this.region.create(pt, this.theme.stairsDown)
+  }
+
+  room(rect: Rect) {
     rect.traverse((pt, edge) => {
       edge ? this.wall(pt) : this.floor(pt)
     })
-
-    if (snapMsg) this.snap(snapMsg)
   }
 
-  add(area: Point | Point[] | Rect, key: EntityKey, snapMsg?: string) {
-    if (area instanceof Rect) {
-      area.traverse(pt => {
-        this.region.create(pt, key)
+  add(area: Point | Point[] | Rect, key: EntityKey) {
+    if (area instanceof Rect) [...area.each()].forEach(pt => this.add(pt, key))
+    else if (Array.isArray(area)) area.forEach(pt => this.add(pt, key))
+    else {
+      const pt = area
+      if (key === 'wall') this.wall(pt)
+      else if (key === 'floor') this.floor(pt)
+      else if (key === 'stairsDown') this.stairsDown(pt)
+      else if (key === 'stairsUp') this.stairsUp(pt)
+      else this.region.create(area, key)
+    }
+  }
+
+  clear(area: Point | Rect) {
+    if (area instanceof Rect) [...area.each()].forEach(pt => this.clear(pt))
+    else {
+      const [_terrain, ...entities] = this.region.at(area)
+      entities.forEach(e => {
+        if (e.key !== 'shadow') this.region.destroy(e)
       })
-    } else if (Array.isArray(area)) {
-      area.forEach(pt => this.add(pt, key))
-    } else {
-      this.region.create(area, key)
     }
-    if (snapMsg) this.snap(snapMsg)
-  }
-
-  clear(pt: Point | Rect) {
-    if (pt instanceof Rect) {
-      pt.traverse(pt => this.clear(pt))
-      return
-    }
-
-    const [_terrain, ...entities] = this.region.at(pt)
-    entities.forEach(e => {
-      if (e.key !== 'shadow') this.region.destroy(e)
-    })
   }
 
   path(pt1: Point, pt2: Point, key: EntityKey, customPassFn?: (x: number, y: number) => boolean) {
