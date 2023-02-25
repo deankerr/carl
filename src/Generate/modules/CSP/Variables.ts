@@ -29,7 +29,7 @@ export const Variables = {
   },
 
   statueAltar: {
-    keys: [['carpet'], ['statueDragon', 'statueMonster', 'statueWarrior'], ['dungeonWall']],
+    keys: [['carpet'], ['statueDragon'], ['dungeonWall']],
     map: [
       ['      ', '      '],
       [' 0000 ', ' 1  1 '],

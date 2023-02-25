@@ -2,7 +2,7 @@ import { EntityKey, Region } from '../../../Core'
 import { Point } from '../../../lib/Shape/Point'
 import { Rect } from '../../../lib/Shape/Rectangle'
 import { pick, shuffle } from '../../../lib/util'
-import { Constraints } from './Constraints'
+import { ConstraintKey, Constraints } from './Constraints'
 import { VariableKey, Variables } from './Variables'
 
 export class Solver {
@@ -15,7 +15,6 @@ export class Solver {
     else [...domain.values()].forEach(pt => this.domain.add(pt))
 
     this.domain.forEach(pt => this.full.set(pt, false))
-    console.log('this.domain:', this.domain)
   }
 
   solve(varKeys: VariableKey[]) {
@@ -23,63 +22,52 @@ export class Solver {
       const { constraints } = Variables[varKey]
       const domain = shuffle([...this.domain])
 
-      let satisfies = false
       // for an origin point
       for (const originPt of domain) {
-        // create relative pt map of entity grid to test
-        const { object, width, height } = this.createObject(varKey, originPt)
+        // create a relative object mapping, satisfy constraints
+        const object = this.createObject(varKey, originPt)
+        if (!this.satisfies(object, constraints)) continue
 
-        for (const relPt of object.keys()) {
-          if (!this.domain.has(relPt)) break
-
-          const domainData = {
-            region: this.region,
-            pt: relPt,
-            domain: this.domain,
-            object,
-            width,
-            height,
-          }
-
-          for (const key of constraints) {
-            satisfies = Constraints[key](domainData)
-            if (!satisfies) break
-          }
-          if (!satisfies) break
-        }
-        if (!satisfies) continue
-
-        // * success, place grid
+        // * success, place object
         console.log('success:', originPt.s)
-        for (const [relPt, gridKeys] of object) {
-          gridKeys.forEach(key => this.region.create(relPt, key))
+        for (const [relPt, entityKeys] of object.map) {
+          entityKeys.forEach(key => this.region.create(relPt, key))
         }
         break
-      }
-
-      if (!satisfies) {
-        console.error('CSP failed:', varKey)
-        continue
       }
     }
   }
 
-  satisfies(originPt: Point, domain: Set<Point>, varKey: VariableKey) {
-    //
+  // determine if a problem object satisfies a criteria
+  private satisfies(object: ProblemObject, constraints: ConstraintKey[]) {
+    for (const relPt of object.map.keys()) {
+      if (!this.domain.has(relPt)) return false
+
+      for (const key of constraints) {
+        const problem = {
+          region: this.region,
+          domain: this.domain,
+          object,
+          pt: relPt,
+        }
+        if (!Constraints[key](problem)) return false
+      }
+    }
+    return true
   }
 
   // parse a map entry in a variable definition, converting it into a Map of Points -> EntityKeys
   // relative to the origin point
-  createObject(varKey: VariableKey, originPt: Point) {
+  private createObject(varKey: VariableKey, originPt: Point) {
     const { keys, map } = Variables[varKey]
-    const object = new Map<Point, EntityKey[]>()
+    const relMap = new Map<Point, EntityKey[]>()
     let xMax = 0
     let yMax = 0
     map.forEach((row, y) => {
       row.forEach(layer => {
         layer.split('').forEach((keyCell, x) => {
           const relPt = originPt.add(x, y)
-          const objectCell = object.get(relPt) ?? []
+          const objectCell = relMap.get(relPt) ?? []
 
           if (keyCell !== ' ') {
             const n = parseInt(keyCell)
@@ -87,7 +75,7 @@ export class Solver {
             objectCell.push(pick(keys[n]))
           }
 
-          object.set(relPt, objectCell)
+          relMap.set(relPt, objectCell)
           if (x > xMax) xMax = x
         })
       })
@@ -96,6 +84,19 @@ export class Solver {
     const width = xMax - 1
     const height = yMax - 1
 
-    return { object, width, height }
+    return { map: relMap, width, height }
   }
+}
+
+export type Problem = {
+  region: Region
+  pt: Point
+  domain: Set<Point>
+  object: ProblemObject
+}
+
+type ProblemObject = {
+  map: Map<Point, EntityKey[]>
+  width: number
+  height: number
 }
