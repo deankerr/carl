@@ -15,7 +15,7 @@ export const beings = {
   archer: {
     name: 'archer',
     tag: ['being', 'actor', 'blocksMovement', 'friendly'],
-    bumpMessage: ['Give me a target!'],
+    bumpMessage: ["You can't change the 2nd amendment."],
     sprite: {
       build: 'archer',
       animate: ['cycle', 750],
@@ -35,7 +35,7 @@ export const beings = {
   guy: {
     name: 'guy',
     tag: ['being', 'actor', 'blocksMovement', 'friendly'],
-    bumpMessage: ['More work?'],
+    bumpMessage: ['Why, allo allo allo!'],
     sprite: {
       build: 'guy',
       animate: ['cycle', 750],
@@ -45,7 +45,7 @@ export const beings = {
   girl: {
     name: 'girl',
     tag: ['being', 'actor', 'blocksMovement', 'friendly'],
-    bumpMessage: ['Welcome to our town, Glen Waverley.'],
+    bumpMessage: ['Welcome to me town travla!'],
     sprite: {
       build: 'girl',
       animate: ['cycle', 750],

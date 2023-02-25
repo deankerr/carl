@@ -12,7 +12,7 @@ export function crypt(
   width = CONFIG.generateWidth * scale,
   height = CONFIG.generateHeight * scale
 ) {
-  const region = new Region(width, height, 'crypt')
+  const region = new Region(width, height, 'crypt hideout')
 
   const O3 = new Overseer3(region)
   O3.theme.wall = 'cryptWall'
@@ -40,7 +40,7 @@ export function crypt(
   BSP.splitN(48)
   const roomRects: Rect[] = []
   BSP.leaves(r => {
-    O3.room(r, 'Room')
+    O3.room(r)
     roomRects.push(r)
   })
 

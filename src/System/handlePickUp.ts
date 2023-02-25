@@ -16,6 +16,6 @@ export const handlePickUp = (engine: Engine, isPlayerTurn: boolean) => {
     engine.message(`You stuff the ${item.name} into your bulging pantaloons.`, item)
     local.destroy(item)
   } else {
-    engine.message('You grasp at the air.', eActing)
+    engine.message('You grasp stupidly at the air.', eActing)
   }
 }

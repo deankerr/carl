@@ -13,7 +13,7 @@ export function cave(
   width = CONFIG.generateWidth * mapScale,
   height = CONFIG.generateHeight * mapScale
 ) {
-  const region = new Region(width, height, 'cave')
+  const region = new Region(width, height, 'caverns of carl')
   const O3 = new Overseer3(region)
   O3.theme.wall = 'caveWall'
   O3.theme.floor = 'dirtFloor'
