@@ -476,7 +476,7 @@ export const features = {
 
   sconceLower: {
     name: 'sconce',
-    tag: ['feature'],
+    tag: ['feature', 'renderLevelLow'],
     sprite: {
       base: ['sconceLower2', 'sconceLower1'],
       animate: ['cycle', 400],

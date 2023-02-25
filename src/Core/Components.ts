@@ -86,6 +86,7 @@ export type Tag =
   | 'terrain'
   | 'door'
   | 'renderLevelHigh'
+  | 'renderLevelLow'
   | 'wall'
   | 'floor'
   | 'stairs'

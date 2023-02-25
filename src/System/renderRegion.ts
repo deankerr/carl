@@ -177,6 +177,7 @@ export function renderRegion(engine: Engine) {
 
 const zLevel = (e: Entity) => {
   if (e.renderLevelHigh) return 10
+  if (e.renderLevelLow) return 1
   if (e.being) return 7
   if (e.item) return 5
   if (e.feature) return 3
