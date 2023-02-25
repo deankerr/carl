@@ -16,7 +16,7 @@ export function renderMessageLog(engine: Engine) {
   msgDisplay.clear()
 
   // region name
-  const name = local.name + ' ' + engine.atlas.zone.regionIndex
+  const name = local.name
   msgDisplay.drawText(center.x - half(name.length), 0, name)
 
   // game message buffer
