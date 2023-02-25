@@ -1,9 +1,9 @@
 import { CONFIG } from '../config'
 import { EntityKey, Region } from '../Core'
 import { Rect } from '../lib/Shape/Rectangle'
-import { loop, pick, rnd } from '../lib/util'
-import { itemKeys } from '../Templates'
-import { BinarySpacePartition, CSPSolverOLD, CSPVarOLD, Rooms } from './modules'
+import { pick, rnd } from '../lib/util'
+import { BinarySpacePartition, Rooms } from './modules'
+import { Solver } from './modules/CSP/Solver'
 import { Overseer3 } from './Overseer3'
 
 const scale = 2
@@ -46,28 +46,25 @@ export function crypt(
 
   const rooms = new Rooms(region, O3, roomRects, O3.theme)
   // rooms.debugNumberRooms()
-
+  // const upStairRoom = rnd(rooms.rooms.length)
   rooms.each(room => {
-    // if (room.rID > 0) return
-    const s = new CSPSolverOLD(region)
-    s.initializeRect(room.rect)
-
-    s.solve([
-      CSPVarOLD.sconce,
-      CSPVarOLD.sconce,
-      CSPVarOLD.cornerCandles,
-      CSPVarOLD.cornerCandles,
-      // CSPVar.smallPitPlatform,
+    const csp = new Solver(region, room.rect)
+    csp.solve([
+      'cornerWebNorthWest',
+      'cornerWebSouthWest',
+      'cornerWebSouthEast',
+      'cornerWebNorthEast',
+      'smallStonePitPlatformItem',
       pick([
-        // CSPVar.goblinPack,
-        // CSPVar.skeletonPack,
-        CSPVarOLD.beholder,
-        CSPVarOLD.gelCube,
-        CSPVarOLD.spiderPack,
+        'goblinPackWeak',
+        'goblinPackStrong',
+        'skeletonPackWeak',
+        'skeletonPackStrong',
+        'spiderPack',
+        'gelCube',
+        'beholder',
       ]),
     ])
-
-    loop(5, () => O3.add(room.rect.scale(-1).rndPt(), pick(itemKeys)))
   })
 
   O3.portal(
