@@ -1,8 +1,9 @@
 import { CONFIG } from '../config'
 import { Engine } from '../Core/Engine'
-import { half, loop } from '../lib/util'
+import { half } from '../lib/util'
 
-const { messageDisplayHeight, messageBufferDisplaySize } = CONFIG
+const { messageDisplayHeight, messageBufferDisplaySize, textDisplayWidth, textDisplayHeight } =
+  CONFIG
 
 export function renderMessageLog(engine: Engine) {
   const { local, msgDisplay, textDisplay, messageLog, playerTurns, options } = engine
@@ -14,24 +15,37 @@ export function renderMessageLog(engine: Engine) {
   const center = { x: half(width), y: half(height) }
 
   msgDisplay.clear()
+  textDisplay.clear()
 
   // region name
   const name = local.name
-  msgDisplay.drawText(center.x - half(name.length), 0, name)
+  // msgDisplay.drawText(center.x - half(name.length), 0, name)
+  textDisplay.drawText(half(textDisplayWidth) - half(name.length), 0, name)
 
+  // * multi message display
   // game message buffer
-  const msgStack = messageLog.slice(-messageBufferDisplaySize).reverse()
-  const msgBufferY = height - messageBufferDisplaySize
+  // const msgStack = messageLog.slice(-messageBufferDisplaySize).reverse()
+  // const msgBufferY = height - messageBufferDisplaySize
 
-  loop(messageDisplayHeight, i => {
-    const msg = msgStack[i]
-    if (msg && playerTurns - msg.turn < 10) {
-      const x = center.x - half(msg.text.length)
-      const y = msgBufferY + i
+  // loop(messageDisplayHeight, i => {
+  //   const msg = msgStack[i]
+  //   if (msg && playerTurns - msg.turn < 10) {
+  //     const x = center.x - half(msg.text.length)
+  //     const y = msgBufferY + i
 
-      msgDisplay.drawText(x, y, msg.text)
-    }
-  })
+  //     msgDisplay.drawText(x, y, msg.text)
+  //   }
+  // })
+
+  // * single message
+  const latestMsg = messageLog.at(-1)
+  if (latestMsg && playerTurns - latestMsg.turn < 5) {
+    textDisplay.drawText(
+      half(textDisplayWidth) - half(latestMsg.text.length),
+      textDisplayHeight - 2,
+      '~' + latestMsg.text + '~'
+    )
+  }
 
   // ui messages
   const timeOnScreen = 2 * 1000
@@ -42,8 +56,7 @@ export function renderMessageLog(engine: Engine) {
   }
 
   // render spinner
-  const { height: textHeight } = textDisplay.getOptions()
-  textDisplay.drawText(0, textHeight - 1, `${spinner.next()}`)
+  textDisplay.drawText(0, 0, `${spinner.next()}`)
   if (options.debugMode) debugInfo(engine)
 
   // * this critical to the game rendering *
@@ -56,7 +69,7 @@ function debugInfo(engine: Engine) {
   const playerPos = local.player()?.position
   const [turnTime, renderTime] = getLogTimes(engine)
 
-  msgDisplay.drawText(0, 0, `${fps()}`)
+  msgDisplay.drawText(0, 0, ` ${fps()}`)
   msgDisplay.drawText(0, 1, turnTime)
   msgDisplay.drawText(0, 2, renderTime)
   msgDisplay.drawText(0, 3, `E:${engine.local.entityList.length}`)

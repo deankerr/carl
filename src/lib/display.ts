@@ -49,7 +49,6 @@ export const createTextDisplay = () => {
     tileWidth: 24,
     tileHeight: 28,
     tileSet: window.oryxTinyFont24,
-    tileColorize: true,
     tileMap: oryxTinyFontMap(24, 28),
   })
 

@@ -11,7 +11,7 @@ const mainDisplayHeight = 19
 
 const messageDisplayWidth = 55
 const messageDisplayHeight = 28
-const messageBufferDisplaySize = 5
+const messageBufferDisplaySize = 2
 
 const textDisplayWidth = 73
 const textDisplayHeight = 32
