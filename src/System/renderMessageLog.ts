@@ -1,50 +1,26 @@
+import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
 import { Engine } from '../Core/Engine'
+import { point } from '../lib/Shape/Point'
 import { half } from '../lib/util'
 
-const { messageDisplayHeight, messageBufferDisplaySize, textDisplayWidth, textDisplayHeight } =
-  CONFIG
+const { textDisplayWidth: dWidth, textDisplayHeight: dHeight } = CONFIG
 
 export function renderMessageLog(engine: Engine) {
-  const { local, msgDisplay, textDisplay, messageLog, playerTurns, options } = engine
+  const { local, textDisplay, messageLog, playerTurns, options } = engine
 
-  const displayOptions = msgDisplay.getOptions()
-  const { width, height } = displayOptions
+  const center = { x: half(dWidth), y: half(dHeight) }
 
-  // const lastY = height - 1
-  const center = { x: half(width), y: half(height) }
-
-  msgDisplay.clear()
   textDisplay.clear()
-
-  // region name
-  const name = local.name
-  // msgDisplay.drawText(center.x - half(name.length), 0, name)
-  textDisplay.drawText(half(textDisplayWidth) - half(name.length), 0, name)
-
-  // * multi message display
-  // game message buffer
-  // const msgStack = messageLog.slice(-messageBufferDisplaySize).reverse()
-  // const msgBufferY = height - messageBufferDisplaySize
-
-  // loop(messageDisplayHeight, i => {
-  //   const msg = msgStack[i]
-  //   if (msg && playerTurns - msg.turn < 10) {
-  //     const x = center.x - half(msg.text.length)
-  //     const y = msgBufferY + i
-
-  //     msgDisplay.drawText(x, y, msg.text)
-  //   }
-  // })
 
   // * single message
   const latestMsg = messageLog.at(-1)
   if (latestMsg && playerTurns - latestMsg.turn < 5) {
-    textDisplay.drawText(
-      half(textDisplayWidth) - half(latestMsg.text.length),
-      textDisplayHeight - 2,
-      '~' + latestMsg.text + '~'
-    )
+    const text = '~' + latestMsg.text + '~'
+    const isLongMsg = ROT.Text.measure(text, dWidth).height > 1
+    const x = isLongMsg ? 0 : center.x - half(latestMsg.text.length)
+
+    textDisplay.drawText(x, dHeight - 2, text)
   }
 
   // ui messages
@@ -52,11 +28,10 @@ export function renderMessageLog(engine: Engine) {
   const { uiMessageLog: uiLog } = engine
   const uiI = engine.uiMessageLog.length - 1
   if (uiLog[uiI] && Date.now() - uiLog[uiI].time < timeOnScreen) {
-    msgDisplay.drawText(center.x - half(uiLog[uiI].text.length), height - 6, uiLog[uiI].text)
+    textDisplay.drawText(center.x - half(uiLog[uiI].text.length), dHeight - 6, uiLog[uiI].text)
   }
 
-  // render spinner
-  textDisplay.drawText(0, 0, `${spinner.next()}`)
+  // debug
   if (options.debugMode) debugInfo(engine)
 
   // * this critical to the game rendering *
@@ -64,16 +39,17 @@ export function renderMessageLog(engine: Engine) {
 }
 
 function debugInfo(engine: Engine) {
-  const { msgDisplay, local } = engine
+  const { textDisplay, local } = engine
 
-  const playerPos = local.player()?.position
+  const playerPos = local.player()?.position ?? point(0, 0)
   const [turnTime, renderTime] = getLogTimes(engine)
 
-  msgDisplay.drawText(0, 0, ` ${fps()}`)
-  msgDisplay.drawText(0, 1, turnTime)
-  msgDisplay.drawText(0, 2, renderTime)
-  msgDisplay.drawText(0, 3, `E:${engine.local.entityList.length}`)
-  msgDisplay.drawText(0, 4, `P:${playerPos?.s ?? '??'}`)
+  textDisplay.drawText(0, 0, `${spinner.next()} ${fps()}`)
+  textDisplay.drawText(0, 1, turnTime)
+  textDisplay.drawText(0, 2, renderTime)
+  textDisplay.drawText(0, 3, `E:${engine.local.entityList.length}`)
+  textDisplay.drawText(0, 4, `P:${playerPos?.s ?? '??'}`)
+  textDisplay.drawText(0, 4, `${local.name} ${engine.atlas.zone.regionIndex}`)
 }
 
 function getLogTimes(engine: Engine) {
@@ -116,24 +92,3 @@ const createSpinner = () => {
   return { next }
 }
 const spinner = createSpinner()
-
-// ROT.JS text color code format
-// function fg(color?: string) {
-//   return `%c{${color ?? ''}}`
-// }
-// fg('')
-
-// function bg(color: string) {
-//   return `%b{${color}}`
-// }
-
-// function textToTile(msg: Message, callback: (xi: number, char: string, color: string) => unknown) {
-//   if (msg.text.length === 0) return
-//   const start = msg.text.indexOf(msg.highlight)
-//   const end = start + msg.highlight.length
-
-//   for (const i of range(0, msg.text.length - 1)) {
-//     if (start >= 0 && i >= start && i <= end) callback(i, msg.text[i], msg.color)
-//     else callback(i, msg.text[i], CONFIG.messageColor)
-//   }
-// }

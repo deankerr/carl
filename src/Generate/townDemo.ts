@@ -10,7 +10,7 @@ export function townDemo(
   width = CONFIG.generateWidth,
   height = CONFIG.generateHeight
 ) {
-  const region = new Region(width, height, 'New Carl City', 'bright')
+  const region = new Region(width, height, 'Town Prefab', 'bright')
   region.recallAll = true
 
   const O3 = new Overseer3(region)

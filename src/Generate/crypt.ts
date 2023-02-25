@@ -12,7 +12,7 @@ export function crypt(
   width = CONFIG.generateWidth * scale,
   height = CONFIG.generateHeight * scale
 ) {
-  const region = new Region(width, height, 'crypt hideout')
+  const region = new Region(width, height, 'crypt')
 
   const O3 = new Overseer3(region)
   O3.theme.wall = 'cryptWall'
@@ -37,7 +37,7 @@ export function crypt(
   const liquidKey = pick(['sludge', 'blood', 'oil', 'slime', 'acid']) as EntityKey
   BSP.rectGaps.forEach(g => O3.add(g.rect, liquidKey, 'river'))
 
-  BSP.splitN(48)
+  BSP.splitN(rnd(5, 8))
   const roomRects: Rect[] = []
   BSP.leaves(r => {
     O3.room(r)
@@ -47,6 +47,7 @@ export function crypt(
   const rooms = new Rooms(region, O3, roomRects, O3.theme)
   // rooms.debugNumberRooms()
   // const upStairRoom = rnd(rooms.rooms.length)
+  console.groupCollapsed('CSP')
   rooms.each(room => {
     const csp = new Solver(region, room.rect)
     csp.solve([
@@ -73,6 +74,7 @@ export function crypt(
     const itemN = rnd(4)
     loop(itemN, () => csp.solve(['randomItem']))
   })
+  console.groupEnd()
 
   O3.portal(
     rooms.rooms[0].rect.center.west(),
