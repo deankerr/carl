@@ -53,6 +53,14 @@ export class Region {
     if (entity.terrain) this.terrainMap.set(pt, entity)
     else this.entityList.push(entity)
 
+    if (entity.children) {
+      const { north, east, south, west } = entity.children
+      if (north) this.create(pt.north(), north as EntityKey)
+      if (east) this.create(pt.east(), east as EntityKey)
+      if (south) this.create(pt.south(), south as EntityKey)
+      if (west) this.create(pt.west(), west as EntityKey)
+    }
+
     this.hasChanged = true
     return entity
   }
@@ -91,6 +99,27 @@ export class Region {
     }
 
     this.pool.live.delete(entity)
+
+    if (entity.children && entity.position) {
+      const { north, east, south, west } = entity.children
+      const { position } = entity
+      if (north) {
+        const [child] = this.at(position.north()).filter(e => e.key === north)
+        if (child) this.destroy(child)
+      }
+      if (east) {
+        const [child] = this.at(position.east()).filter(e => e.key === east)
+        if (child) this.destroy(child)
+      }
+      if (south) {
+        const [child] = this.at(position.south()).filter(e => e.key === south)
+        if (child) this.destroy(child)
+      }
+      if (west) {
+        const [child] = this.at(position.west()).filter(e => e.key === west)
+        if (child) this.destroy(child)
+      }
+    }
   }
 
   // * Entity Queries

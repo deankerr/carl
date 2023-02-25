@@ -45,6 +45,7 @@ export class EntityPool {
       if ('fieldOfView' in t) e = { ...e, ...C.fieldOfView(...t.fieldOfView) }
       if ('portal' in t) e = { ...e, ...C.portal(t.portal[0], t.portal[1]) }
       if ('color' in t) e = { ...e, ...C.color(...t.color) }
+      if ('children' in t) e = { ...e, ...C.children(...t.children) }
 
       this.pool.set(key, e)
     }

@@ -21,6 +21,22 @@ export const ComponentFoundry = {
     return { acting: action }
   },
 
+  bumpMessage: (msg: string) => {
+    return { bumpMessage: { msg } }
+  },
+
+  children: (north: string, east: string, south: string, west: string) => {
+    return { children: { north, east, south, west } }
+  },
+
+  color: (color: string, bgColor: string) => {
+    return { color, bgColor }
+  },
+
+  facing: (dir: Cardinal) => {
+    return { facing: dir }
+  },
+
   fieldOfView: (radius: number, visible = new Set<Point>()) => {
     return { fieldOfView: { radius, visible } }
   },
@@ -29,8 +45,16 @@ export const ComponentFoundry = {
     return { name }
   },
 
+  portal: (zone: string, level: 'down' | 'up' | number) => {
+    return { portal: { zone, level } }
+  },
+
   position: (position: Point) => {
     return { position }
+  },
+
+  sprite: (spriteMan: SpriteManager, spriteConfig: SpriteConfig) => {
+    return { sprite: spriteMan.register(spriteConfig) }
   },
 
   tag: (...tags: Tag[]) => {
@@ -41,26 +65,6 @@ export const ComponentFoundry = {
 
   trodOn: (msg: string) => {
     return { trodOn: { msg } }
-  },
-
-  bumpMessage: (msg: string) => {
-    return { bumpMessage: { msg } }
-  },
-
-  portal: (zone: string, level: 'down' | 'up' | number) => {
-    return { portal: { zone, level } }
-  },
-
-  sprite: (spriteMan: SpriteManager, spriteConfig: SpriteConfig) => {
-    return { sprite: spriteMan.register(spriteConfig) }
-  },
-
-  facing: (dir: Cardinal) => {
-    return { facing: dir }
-  },
-
-  color: (color: string, bgColor: string) => {
-    return { color, bgColor }
   },
 }
 

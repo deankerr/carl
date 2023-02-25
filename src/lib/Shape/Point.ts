@@ -75,6 +75,7 @@ const neighbours8 = [
   point(-1, -1),
 ]
 
+// north east south west
 export const neighbours4 = [point(0, -1), point(1, 0), point(0, 1), point(-1, 0)]
 
 declare global {

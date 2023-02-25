@@ -468,16 +468,17 @@ export const features = {
     name: 'sconce',
     tag: ['feature'],
     sprite: {
-      base: ['sconce1'],
+      base: ['sconce1', 'sconce2'],
       animate: ['cycle', 400],
     },
+    children: ['', '', 'sconceLower', ''],
   },
 
   sconceLower: {
     name: 'sconce',
     tag: ['feature'],
     sprite: {
-      base: ['sconceLower1'],
+      base: ['sconceLower2', 'sconceLower1'],
       animate: ['cycle', 400],
     },
   },
