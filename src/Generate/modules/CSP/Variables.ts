@@ -136,6 +136,18 @@ export const Variables = {
     constraints: ['walkable'],
   },
 
+  ratPack: {
+    keys: ['rat'],
+    map: [['00'], ['00']],
+    constraints: ['walkable'],
+  },
+
+  batPack: {
+    keys: ['bat'],
+    map: [['00'], ['00']],
+    constraints: ['walkable'],
+  },
+
   gelCube: {
     keys: ['gelCube'],
     map: [['0']],

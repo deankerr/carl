@@ -6,7 +6,7 @@ import { BinarySpacePartition, Rooms } from './modules'
 import { Solver } from './modules/CSP/Solver'
 import { Overseer3 } from './Overseer3'
 
-const scale = 2
+const scale = 1
 export function crypt(
   isTopLevel: boolean,
   width = CONFIG.generateWidth * scale,
@@ -63,6 +63,8 @@ export function crypt(
         'skeletonPackWeak',
         'skeletonPackStrong',
         'spiderPack',
+        'batPack',
+        'ratPack',
         'gelCube',
         'beholder',
       ]),
