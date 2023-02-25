@@ -82,7 +82,12 @@ export class Solver {
           if (keyCell !== ' ') {
             const n = parseInt(keyCell)
             if (isNaN(n)) throw new Error(`CSP keyRef is NaN: ${keyCell}`)
-            objectCell.push(pick(keys[n]))
+            const entityKeys = keys[n]
+            if (Array.isArray(entityKeys)) {
+              objectCell.push(pick(entityKeys))
+            } else {
+              objectCell.push(entityKeys)
+            }
           }
 
           relMap.set(relPt, objectCell)

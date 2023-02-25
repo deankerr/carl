@@ -121,7 +121,7 @@ export const beings = {
   },
 
   bigGoblin: {
-    name: 'goblino',
+    name: 'king goblino',
     tag: ['being', 'actor', 'blocksMovement', 'hostile'],
     sprite: {
       build: 'bigGoblin',
@@ -166,7 +166,7 @@ export const beings = {
   },
 
   beholder: {
-    name: 'beholder',
+    name: 'eye of beseeinya',
     tag: ['being', 'actor', 'blocksMovement', 'hostile'],
     sprite: {
       build: 'beholder',

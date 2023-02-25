@@ -2,7 +2,7 @@ import { EntityKey } from '../../../Core'
 import { ConstraintKey } from './Constraints'
 
 type Variable = {
-  keys: EntityKey[][]
+  keys: (EntityKey | EntityKey[])[]
   map: string[][]
   constraints: ConstraintKey[]
 }
@@ -10,6 +10,7 @@ type Variable = {
 export type VariableKey = keyof typeof Variables
 
 export const Variables = {
+  // * decoration
   cornerCandle: {
     keys: [['candles', 'candlesNE', 'candlesSE']],
     map: [['0']],
@@ -17,7 +18,7 @@ export const Variables = {
   },
 
   cornerWebNorthWest: {
-    keys: [['webNW']],
+    keys: ['webNW'],
     map: [['0']],
     constraints: ['empty', 'walkable', 'cornerNorthWest'],
   },
@@ -52,6 +53,7 @@ export const Variables = {
     constraints: ['empty', 'wall', 'top', 'exposed'],
   },
 
+  // * blocking decoration
   statue: {
     keys: [['statueDragon', 'statueMonster', 'statueWarrior']],
     map: [['   '], [' 0 '], ['   ']],
@@ -89,5 +91,48 @@ export const Variables = {
     ],
     map: [['       '], [' 00000 '], [' 1  21 '], [' 10001 '], ['       ']],
     constraints: ['empty', 'walkable'],
+  },
+
+  // * npcs
+  goblinPackWeak: {
+    keys: ['goblinSword', 'goblinSpear'],
+    map: [['01'], ['10']],
+    constraints: ['walkable'],
+  },
+
+  goblinPackStrong: {
+    keys: ['goblinSword', 'goblinSpear', 'goblinShaman', 'bigGoblin'],
+    map: [['01'], ['23']],
+    constraints: ['walkable'],
+  },
+
+  skeletonPackWeak: {
+    keys: ['skeleton', 'skeletonWarrior'],
+    map: [['01'], ['00']],
+    constraints: ['walkable'],
+  },
+
+  skeletonPackStrong: {
+    keys: ['skeleton', 'skeletonWarrior'],
+    map: [['01'], ['00']],
+    constraints: ['walkable'],
+  },
+
+  spiderPack: {
+    keys: ['spider'],
+    map: [['00'], ['00']],
+    constraints: ['walkable'],
+  },
+
+  gelCube: {
+    keys: ['gelCube'],
+    map: [['0']],
+    constraints: ['walkable'],
+  },
+
+  beholder: {
+    keys: ['beholder'],
+    map: [['0']],
+    constraints: ['walkable'],
   },
 } satisfies Record<string, Variable>

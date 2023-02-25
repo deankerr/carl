@@ -1,6 +1,7 @@
 import { CONFIG } from '../config'
 import { Region } from '../Core'
 import { Rect } from '../lib/Shape/Rectangle'
+import { pick } from '../lib/util'
 import { BinarySpacePartition, Rooms } from './modules'
 import { Solver } from './modules/CSP/Solver'
 import { Overseer3 } from './Overseer3'
@@ -36,6 +37,15 @@ export function dungeon(
       'cornerWebSouthEast',
       'cornerWebNorthEast',
       'smallStonePitPlatformItem',
+      pick([
+        'goblinPackWeak',
+        'goblinPackStrong',
+        'skeletonPackWeak',
+        'skeletonPackStrong',
+        'spiderPack',
+        'gelCube',
+        'beholder',
+      ]),
     ])
   }
 
