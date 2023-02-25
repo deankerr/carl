@@ -1,9 +1,9 @@
 import { Point } from '../lib/Shape/Point'
-import { beings, features, items, terrain } from '../Templates'
+import { beings, features, items, terrain, utility } from '../Templates'
 import { Component, ComponentFoundry, Components, FoundryKey, FoundryParam } from './Components'
 import { SpriteConfig, SpriteManager } from './Sprite'
 
-const templates = { ...beings, ...features, ...terrain, ...items }
+const templates = { ...beings, ...features, ...terrain, ...items, ...utility }
 
 export type eID = { eID: number; label: string; key: EntityKey }
 export type Entity = eID & Component<'name'> & Component<'sprite'> & Partial<Components>
@@ -13,7 +13,8 @@ export type TerrainKey = keyof typeof terrain
 export type FeatureKey = keyof typeof features
 export type BeingKey = keyof typeof beings
 export type ItemKey = keyof typeof items
-export type EntityKey = TerrainKey | FeatureKey | BeingKey | ItemKey
+export type UtilityKey = keyof typeof utility
+export type EntityKey = TerrainKey | FeatureKey | BeingKey | ItemKey | UtilityKey
 
 export type EntityTemplate = {
   name: string

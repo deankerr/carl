@@ -31,6 +31,8 @@ export type RegionTheme = {
   wall: EntityKey
   floor: EntityKey
   door: EntityKey
+  stairsUp: EntityKey
+  stairsDown: EntityKey
 }
 
 export class Overseer3 {
@@ -42,7 +44,13 @@ export class Overseer3 {
 
   history: Snapshot[] = []
 
-  theme: RegionTheme = { wall: 'dungeonWall', floor: 'dirtFloor', door: 'woodenDoor' }
+  theme: RegionTheme = {
+    wall: 'dungeonWall',
+    floor: 'dirtFloor',
+    door: 'woodenDoor',
+    stairsUp: 'dungeonStairsUp',
+    stairsDown: 'dungeonStairsDown',
+  }
 
   debugSymbolList: Entity[] = []
 

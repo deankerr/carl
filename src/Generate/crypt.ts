@@ -1,5 +1,6 @@
 import { CONFIG } from '../config'
 import { EntityKey, Region } from '../Core'
+import { point } from '../lib/Shape/Point'
 import { Rect } from '../lib/Shape/Rectangle'
 import { loop, pick, rnd } from '../lib/util'
 import { BinarySpacePartition, Rooms } from './modules'
@@ -85,6 +86,7 @@ export function crypt(
   )
   O3.portal(rooms.rooms[1].rect.center.east(), 'cryptStairsDown', 'here', 'down')
 
+  O3.add(point(3, 3), 'wall')
   O3.finalize()
   return region
 }
