@@ -53,6 +53,18 @@ export const Variables = {
     constraints: ['empty', 'wall', 'top', 'exposed'],
   },
 
+  smallSludgePond: {
+    keys: ['sludge'],
+    map: [['    '], [' 00 '], [' 00 '], ['    ']],
+    constraints: ['empty', 'walkable'],
+  },
+
+  smallWaterPond: {
+    keys: ['water'],
+    map: [['    '], [' 00 '], [' 00 '], ['    ']],
+    constraints: ['empty', 'walkable'],
+  },
+
   // * blocking decoration
   statue: {
     keys: [['statueDragon', 'statueMonster', 'statueWarrior']],

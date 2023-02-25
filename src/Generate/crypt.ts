@@ -54,7 +54,9 @@ export function crypt(
       'cornerWebSouthWest',
       'cornerWebSouthEast',
       'cornerWebNorthEast',
-      'smallStonePitPlatformItem',
+      'sconce',
+      'sconce',
+      pick(['smallStonePitPlatformItem', 'smallSludgePond', 'smallWaterPond', 'statueAltar']),
       pick([
         'goblinPackWeak',
         'goblinPackStrong',
