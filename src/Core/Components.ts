@@ -25,8 +25,8 @@ export const ComponentFoundry = {
     return { bumpMessage: { msg } }
   },
 
-  children: (north: string, east: string, south: string, west: string) => {
-    return { children: { north, east, south, west } }
+  children: (directions: string[]) => {
+    return { children: directions }
   },
 
   color: (color: string, bgColor: string) => {

@@ -471,7 +471,7 @@ export const features = {
       base: ['sconce1', 'sconce2'],
       animate: ['cycle', 400],
     },
-    children: ['', '', 'sconceLower', ''],
+    children: [['', '', 'sconceLower', '']],
   },
 
   sconceLower: {

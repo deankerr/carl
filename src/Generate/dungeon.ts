@@ -30,7 +30,7 @@ export function dungeon(
 
   for (const room of rooms) {
     const csp = new Solver(region, room)
-    csp.solve(['statueAltar', 'sconce', 'mushrooms', 'statue'])
+    csp.solve(['statueAltar', 'sconce'])
   }
 
   O3.finalize()

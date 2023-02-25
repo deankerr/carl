@@ -14,7 +14,9 @@ export function UI(engine: Engine, ui: string) {
 
   if (ui === 'uDoSomething') {
     msg = 'U do something'
-    engine.mainDisplay._options.transpose = false
+    // test - destroy entities with children
+    const sc = engine.local.get('children')
+    sc.forEach(e => engine.local.destroy(e))
   }
 
   if (ui === 'logWorld') {
