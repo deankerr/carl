@@ -397,7 +397,7 @@ export const features = {
 
   shrub: {
     name: 'shrub',
-    tag: ['feature'],
+    tag: ['feature', 'blocksMovement'],
     sprite: {
       base: ['shrub1', 'shrub2'],
       noise: [-1],
@@ -416,7 +416,7 @@ export const features = {
 
   signBlank: {
     name: 'sign',
-    tag: ['feature'],
+    tag: ['feature', 'blocksMovement'],
     sprite: {
       base: ['signBlank'],
     },
@@ -424,7 +424,7 @@ export const features = {
 
   signWeapon: {
     name: 'sign',
-    tag: ['feature'],
+    tag: ['feature', 'blocksMovement'],
     sprite: {
       base: ['signWeapon'],
     },
@@ -432,7 +432,7 @@ export const features = {
 
   signPotion: {
     name: 'sign',
-    tag: ['feature'],
+    tag: ['feature', 'blocksMovement'],
     sprite: {
       base: ['signPotion'],
     },
@@ -440,7 +440,7 @@ export const features = {
 
   signInn: {
     name: 'sign',
-    tag: ['feature'],
+    tag: ['feature', 'blocksMovement'],
     sprite: {
       base: ['signInn'],
     },
@@ -448,7 +448,7 @@ export const features = {
 
   dirtLedge: {
     name: 'dirtLedge',
-    tag: ['feature'],
+    tag: ['feature', 'blocksMovement'],
     sprite: {
       base: ['dirtLedge'],
     },

@@ -10,7 +10,7 @@ export function townDemo(
   width = CONFIG.generateWidth,
   height = CONFIG.generateHeight
 ) {
-  const region = new Region(width, height, 'New CARLTOWN', 'bright')
+  const region = new Region(width, height, 'New Carl City', 'bright')
   region.recallAll = true
 
   const O3 = new Overseer3(region)
@@ -26,6 +26,8 @@ export function townDemo(
   O3.snap('cell 1')
   dish.generation(4, 5)((pt, alive) => (alive ? O3.add(pt, 'shrub') : O3.clear(pt)))
   O3.snap('cell 2')
+  dish.generation(4, 5)((pt, alive) => (alive ? O3.add(pt, 'shrub') : O3.clear(pt)))
+  O3.snap('cell 3')
 
   O3.floor(region.rect)
   O3.snap('grass')
@@ -61,12 +63,12 @@ export function townDemo(
   const dPt = cPt.add(2, -6)
   const dRect = Rect.atC(dPt, 5, 3)
   O3.clear(dRect)
-  O3.snap('d dirt')
+  O3.snap('dirt 1')
   const ddish = new CellDish(dRect.scale(1).translate(0, 1))
   ddish.edge = false
   ddish.addAlways(dRect.toPts())
   ddish.randomize(40).current((pt, alive) => O3.add(pt, alive ? 'dirtFloorOutdoor' : 'grassFloor'))
-  O3.snap('d dirt')
+  O3.snap('dirt 2')
 
   ddish.generation(
     4,
@@ -75,7 +77,7 @@ export function townDemo(
     O3.add(pt, alive ? 'dirtFloorOutdoor' : 'grassFloor')
   })
   ddish.alive(pt => O3.clear(pt))
-  O3.snap('d dirt')
+  O3.snap('dirt 3')
 
   // O3.add(dRect, 'dirtFloorDetailed')
   // O3.path(dRect.p1, dRect.p1.east(4), 'dirtLedge')
@@ -91,14 +93,17 @@ export function townDemo(
 
   O3.add(bPt1.add(-1, 1), 'catTan')
   O3.add(bPt1.add(2, 1), 'thief')
-  O3.add(bPt1.east(5), 'cavePool')
+
+  const wellPt = bPt1.east(5)
+  O3.clear(Rect.atC(wellPt, 3, 3))
+  O3.add(wellPt, 'cavePool')
 
   O3.add(bPt2.add(-1, 1), 'guy')
 
   O3.add(bPt3.add(0, 1), 'girl')
 
   O3.add(bPt4.add(-1, 1), 'sorceress')
-  O3.add(bPt4.add(1, 1), 'catBrown')
+  O3.add(bPt4.add(1, 1), 'dog')
 
   const cfPt = cPt.add(-12, 0)
   O3.add(cfPt, 'campfire')

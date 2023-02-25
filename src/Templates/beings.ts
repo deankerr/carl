@@ -35,7 +35,7 @@ export const beings = {
   guy: {
     name: 'guy',
     tag: ['being', 'actor', 'blocksMovement', 'friendly'],
-    bumpMessage: ['Why, allo allo allo!'],
+    bumpMessage: ['Why allo allo allo!'],
     sprite: {
       build: 'guy',
       animate: ['cycle', 750],
@@ -62,15 +62,16 @@ export const beings = {
     },
   },
 
-  catBrown: {
-    name: 'cat',
+  dog: {
+    name: 'lil pupper',
     tag: ['being', 'actor', 'blocksMovement', 'friendly'],
-    bumpMessage: ['Meow!'],
+    bumpMessage: ['Woff!'],
     sprite: {
-      build: 'catBrown',
+      build: 'dog',
       animate: ['cycle', 750],
     },
   },
+
   catTan: {
     name: 'cat',
     tag: ['being', 'actor', 'blocksMovement', 'friendly'],
