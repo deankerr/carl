@@ -80,6 +80,7 @@ export function createOryxTinyMap(size: number) {
       'stoneFloor5',
       'stoneFloor6',
       'stoneFloorHole',
+      'stoneFloorPit',
     ],
     [
       'dirtFloor1',

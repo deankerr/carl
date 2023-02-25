@@ -199,7 +199,7 @@ export const terrain = {
   },
 
   dirtFloorPit: {
-    name: 'hole',
+    name: 'pit',
     tag: ['terrain', 'blocksMovement'],
     sprite: {
       base: ['dirtFloorPit'],
@@ -237,6 +237,14 @@ export const terrain = {
         'stonePebbleFloor5',
       ],
       noise: [0],
+    },
+  },
+
+  stoneFloorPit: {
+    name: 'pit',
+    tag: ['terrain', 'blocksMovement'],
+    sprite: {
+      base: ['stoneFloorPit'],
     },
   },
 

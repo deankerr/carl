@@ -40,7 +40,7 @@ export const Variables = {
     constraints: ['empty', 'walkable', 'cornerSouthWest'],
   },
 
-  mushrooms: {
+  mushroom: {
     keys: [['redMushrooms', 'purpleMushrooms', 'yellowMushrooms']],
     map: [['0']],
     constraints: ['empty', 'walkable'],
@@ -68,6 +68,26 @@ export const Variables = {
       [' 0000 ', ' 1  1 '],
       ['      ', '      '],
     ],
+    constraints: ['empty', 'walkable'],
+  },
+
+  smallDirtPitPlatformItem: {
+    keys: [
+      ['dirtFloorPit'],
+      ['abyss'],
+      ['skullBook', 'blueOrb', 'goldSkull', 'goldKey', 'pinkGem'],
+    ],
+    map: [['       '], [' 00000 '], [' 1  21 '], [' 10001 '], ['       ']],
+    constraints: ['empty', 'walkable'],
+  },
+
+  smallStonePitPlatformItem: {
+    keys: [
+      ['stoneFloorPit'],
+      ['abyss'],
+      ['skullBook', 'blueOrb', 'goldSkull', 'goldKey', 'pinkGem'],
+    ],
+    map: [['       '], [' 00000 '], [' 1  21 '], [' 10001 '], ['       ']],
     constraints: ['empty', 'walkable'],
   },
 } satisfies Record<string, Variable>

@@ -17,16 +17,16 @@ export class Solver {
     this.domain.forEach(pt => this.full.set(pt, false))
   }
 
-  solve(varKeys: VariableKey[]) {
-    for (const varKey of varKeys) {
-      const { constraints } = Variables[varKey]
+  solve(vKeys: VariableKey[]) {
+    for (const vKey of vKeys) {
+      const { constraints } = Variables[vKey]
       const domain = shuffle([...this.domain])
 
       // for each origin point in the domain
       let validObject: ProblemObject | undefined
       for (const originPt of domain) {
         // create a relative object mapping
-        const object = this.createObject(varKey, originPt)
+        const object = this.createObject(vKey, originPt)
 
         // check constraints for each object point
         if (this.satisfies(object, constraints)) {
@@ -36,12 +36,12 @@ export class Solver {
       }
 
       if (!validObject) {
-        console.error(`Unable to satisfy: ${varKey}`)
+        console.error(`Unable to satisfy: ${vKey}`)
         continue // todo switch to break when backtracking added
       }
 
       // success, place object
-      console.log('success:', varKey, validObject.originPt.s)
+      console.log('success:', vKey, validObject.originPt.s)
       for (const [relPt, entityKeys] of validObject.map) {
         entityKeys.forEach(key => this.region.create(relPt, key))
       }
