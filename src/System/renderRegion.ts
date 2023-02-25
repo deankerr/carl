@@ -63,14 +63,12 @@ export function renderRegion(engine: Engine) {
     const here = entities.filter(e => e.position === pt && !e.invisible)
 
     const terrain = local.terrainAt(pt)
-    const debug = local.debugSymbolMap.get(pt)
     const features = here.filter(e => e.feature)
     const items = here.filter(e => e.item)
 
     if (visible) {
       const beings = here.filter(e => e.being)
       if (terrain) stack.push(terrain)
-      if (debug) stack.push(debug)
       stack.push(...features)
       stack.push(...items)
       stack.push(...beings)
@@ -78,13 +76,11 @@ export function renderRegion(engine: Engine) {
       // area previously seen, render terrain and features
       stack.push(terrain)
       stack.push(...features)
-      if (debug) stack.push(debug)
       stack.push(...items)
       stack.push(shroudedFog)
     } else {
       // unrevealed area
       stack.push(terrain)
-      if (debug) stack.push(debug)
       stack.push(unrevealedFog)
     }
 
@@ -163,6 +159,11 @@ export function renderRegion(engine: Engine) {
 
       return [...acc, [tile, color, bgColor]]
     }, [] as [string, string, string][])
+
+    const debugSym = local.debugSymbolMap.get(pt)
+    if (debugSym) {
+      renderStack.push(debugSym)
+    }
 
     // draw
     mainDisplay.draw(

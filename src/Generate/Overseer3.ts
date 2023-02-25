@@ -1,20 +1,21 @@
 import * as ROT from 'rot-js'
 import { Entity, EntityKey, EntityPool, Region } from '../Core'
 import { Visualizer } from '../Core/Visualizer'
+import { heatMapColor } from '../lib/color'
 import { point, Point } from '../lib/Shape/Point'
 import { Rect } from '../lib/Shape/Rectangle'
-import { rnd } from '../lib/util'
+import { nAlpha, rnd } from '../lib/util'
 
 export type Snapshot = {
   terrainMap: Map<Point, Entity>
-  debugSymbolMap: Map<Point, Entity>
+  debugSymbolMap: Map<Point, [string, string, string]>
   entityList: Entity[]
   message: string
 }
 
 function createSnapshot(
   terrainMap: Map<Point, Entity>,
-  debugSymbolMap: Map<Point, Entity>,
+  debugSymbolMap: Map<Point, [string, string, string]>,
   entityList: Entity[],
   message = ''
 ): Snapshot {
@@ -186,7 +187,20 @@ export class Overseer3 {
     color: number | string = 'transparent',
     bgColor = 'transparent'
   ) {
-    this.region.debugSymbol(pt, tile, color, bgColor)
+    if (pt instanceof Rect) {
+      pt.traverse(pti => this.debug(pti, tile, color, bgColor))
+      return
+    }
+
+    if (Array.isArray(pt)) {
+      pt.forEach(pt2 => this.debug(pt2, tile, color, bgColor))
+      return
+    }
+
+    if (typeof tile === 'number') tile = nAlpha(tile)
+    if (typeof color === 'number') color = heatMapColor(color)
+
+    this.region.debugSymbolMap.set(pt, [tile, color, bgColor])
   }
 
   clearDebug(at?: Point | Point[]) {
@@ -211,6 +225,7 @@ export class Overseer3 {
   }
 }
 
+// ! dev
 declare global {
   interface Window {
     O3Debug: Overseer3

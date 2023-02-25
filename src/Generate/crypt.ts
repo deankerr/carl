@@ -46,6 +46,7 @@ export function crypt(
 
   const rooms = new Rooms(region, O3, roomRects, O3.theme)
   // rooms.debugNumberRooms()
+
   // const upStairRoom = rnd(rooms.rooms.length)
   console.groupCollapsed('CSP')
   rooms.each(room => {

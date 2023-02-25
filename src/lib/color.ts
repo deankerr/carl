@@ -62,6 +62,7 @@ export function addLight(color: string, light: Color, dim: boolean) {
 }
 
 export function heatMapColor(hue: number) {
+  if (hue === 0) return '#FFFFFF'
   const heat = hue / 100 + 0.833 // pink
   return HSLToHex([heat, 1, 0.5])
 }

@@ -83,6 +83,17 @@ export function timer(name = `Timer ${anonTimerCount++}`) {
   }
 }
 
+// debug helper - convert number to symbol
+export function nAlpha(n: number) {
+  const nSymbols = ['auraHoly', 'auraBlue', 'auraRed', 'auraGreen', 'auraPurple']
+
+  if (n < 0 && n > -6) return nSymbols[Math.abs(n) - 1]
+  if (n < 0) return '?'
+  if (n > 35) return '!'
+  const map = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  return map[n]
+}
+
 export class Queue<T> {
   queue: T[] = []
   repeat: T[] = []

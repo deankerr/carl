@@ -1,6 +1,5 @@
 import * as ROT from 'rot-js'
 import { CONFIG } from '../config'
-import { heatMapColor } from '../lib/color'
 import { DijkstraMap } from '../lib/Dijkstra'
 import { Point, point } from '../lib/Shape/Point'
 import { Rect } from '../lib/Shape/Rectangle'
@@ -16,13 +15,13 @@ export class Region {
   heatMap = new DijkstraMap()
 
   visualizer: Visualizer | undefined
+  debugSymbolMap = new Map<Point, [string, string, string]>()
 
   // entity
   pool = window.game.pool
   terrainMap = new Map<Point, Entity>()
   entityList: Entity[] = []
   turnQueue = new Queue<number>()
-  debugSymbolMap = new Map<Point, Entity>()
 
   // config
   recallAll = CONFIG.recallAll
@@ -209,34 +208,6 @@ export class Region {
     const [stairs] = this.get('stairs', 'up')
     return stairs?.position
   }
-
-  debugSymbol(
-    pt: Point | Point[] | Rect,
-    tile: string | number,
-    color: number | string = 'transparent',
-    bgColor = 'transparent'
-  ) {
-    if (pt instanceof Rect) {
-      pt.traverse(ppt => this.debugSymbol(ppt, tile, color, bgColor))
-      return
-    }
-
-    if (Array.isArray(pt)) {
-      pt.forEach(pt2 => this.debugSymbol(pt2, tile, color, bgColor))
-      return
-    }
-
-    if (typeof tile === 'number') tile = nAlpha(tile)
-    if (typeof color === 'number') color = heatMapColor(color)
-
-    const d = this.debugSymbolMap.get(pt) ?? this.pool.spawn('debug', pt)
-    this.pool
-      .modify(d)
-      .sprite({ base: [tile] })
-      .define('color', color, bgColor)
-
-    this.debugSymbolMap.set(pt, d)
-  }
 }
 
 type FogLevel = Extract<EntityKey, 'nothing' | 'fogLight' | 'fogMedium' | 'fogHeavy' | 'abyss'>
@@ -255,14 +226,3 @@ const visibilityTheme = {
     unrevealed: 'fogHeavy',
   },
 } satisfies Record<string, VisibilityTheme>
-
-// debug helpers
-function nAlpha(n: number) {
-  if (n < 0 && n > -6) return nSymbols[Math.abs(n) - 1]
-  if (n < 0) return '?'
-  if (n > 35) return '!'
-  const map = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-  return map[n]
-}
-
-const nSymbols = ['auraHoly', 'auraBlue', 'auraRed', 'auraGreen', 'auraPurple']
