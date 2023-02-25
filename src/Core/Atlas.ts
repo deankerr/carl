@@ -8,7 +8,6 @@ export class Atlas {
     { label: 'cave', generator: Generate.cave, regions: [], regionIndex: 0 },
     { label: 'dungeon', generator: Generate.dungeon, regions: [], regionIndex: 0 },
     { label: 'cavern', generator: Generate.cavern, regions: [], regionIndex: 0 },
-    { label: 'gen5', generator: Generate.gen5, regions: [], regionIndex: 0 },
   ]
 
   zone = this.zones[0]
