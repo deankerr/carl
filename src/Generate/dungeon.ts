@@ -28,10 +28,19 @@ export function dungeon(
 
   const crooms = new Rooms(region, O3, rooms, O3.theme)
 
-  for (const room of rooms) {
-    const csp = new Solver(region, room)
-    csp.solve(['statueAltar', 'sconce'])
-  }
+  // for (const room of rooms) {
+  //   const csp = new Solver(region, room)
+  //   csp.solve(['statueAltar', 'sconce'])
+  // }
+
+  const csp = new Solver(region, rooms[0])
+  // csp.solve(['cornerCandle', 'cornerCandle', 'cornerCandle', 'cornerCandle'])
+  csp.solve([
+    'cornerWebNorthWest',
+    'cornerWebSouthWest',
+    'cornerWebSouthEast',
+    'cornerWebNorthEast',
+  ])
 
   O3.finalize()
   return region

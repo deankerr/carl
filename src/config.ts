@@ -19,7 +19,7 @@ const textDisplayHeight = 32
 const generateWidth = 37
 const generateHeight = 19
 
-const setMainToMapSize = true
+const setMainToMapSize = false
 
 const frameLimit = 0
 const recallAll = false

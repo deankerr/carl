@@ -23,18 +23,22 @@ export class Solver {
       const domain = shuffle([...this.domain])
 
       // for an origin point
+      let success = false
       for (const originPt of domain) {
         // create a relative object mapping, satisfy constraints
         const object = this.createObject(varKey, originPt)
         if (!this.satisfies(object, constraints)) continue
 
         // * success, place object
-        console.log('success:', originPt.s)
+        console.log('success:', varKey, originPt.s)
+        success = true
         for (const [relPt, entityKeys] of object.map) {
           entityKeys.forEach(key => this.region.create(relPt, key))
         }
         break
       }
+
+      if (!success) console.error(`Unable to satisfy: ${varKey}`)
     }
   }
 
@@ -100,3 +104,15 @@ type ProblemObject = {
   width: number
   height: number
 }
+
+/* 
+  CSP History playback
+
+  - Actual objects need to be placed to compute following objects
+  - Store invalid placements with negative filter (red alpha overlay?)
+  - then disappears for next attempt
+  - valid placements with positive filter, then no filter for next attempt
+
+    internal Snapshot-like system ?
+    or debug success/fail symbols
+*/

@@ -64,14 +64,15 @@ export class Point {
   }
 }
 
+// N E S W NE SE SW NW
 const neighbours8 = [
   point(0, -1),
-  point(1, -1),
   point(1, 0),
-  point(1, 1),
   point(0, 1),
-  point(-1, 1),
   point(-1, 0),
+  point(1, -1),
+  point(1, 1),
+  point(-1, 1),
   point(-1, -1),
 ]
 

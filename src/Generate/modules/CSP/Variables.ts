@@ -10,16 +10,46 @@ type Variable = {
 export type VariableKey = keyof typeof Variables
 
 export const Variables = {
-  sconce: {
-    keys: [['sconce']],
+  cornerCandle: {
+    keys: [['candles', 'candlesNE', 'candlesSE']],
     map: [['0']],
-    constraints: ['empty', 'wall', 'top', 'exposed'],
+    constraints: ['empty', 'walkable', 'corner'],
+  },
+
+  cornerWebNorthWest: {
+    keys: [['webNW']],
+    map: [['0']],
+    constraints: ['empty', 'walkable', 'cornerNorthWest'],
+  },
+
+  cornerWebNorthEast: {
+    keys: [['webNE']],
+    map: [['0']],
+    constraints: ['empty', 'walkable', 'cornerNorthEast'],
+  },
+
+  cornerWebSouthEast: {
+    keys: [['webSE']],
+    map: [['0']],
+    constraints: ['empty', 'walkable', 'cornerSouthEast'],
+  },
+
+  cornerWebSouthWest: {
+    keys: [['webSW']],
+    map: [['0']],
+    constraints: ['empty', 'walkable', 'cornerSouthWest'],
   },
 
   mushrooms: {
     keys: [['redMushrooms', 'purpleMushrooms', 'yellowMushrooms']],
     map: [['0']],
     constraints: ['empty', 'walkable'],
+  },
+
+  sconce: {
+    keys: [['sconce']],
+    map: [['0']],
+    constraints: ['empty', 'wall', 'top', 'exposed'],
   },
 
   statue: {
