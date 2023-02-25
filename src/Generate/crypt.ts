@@ -2,7 +2,6 @@ import { CONFIG } from '../config'
 import { EntityKey, Region } from '../Core'
 import { Rect } from '../lib/Shape/Rectangle'
 import { loop, pick, rnd } from '../lib/util'
-import { itemKeys } from '../Templates'
 import { BinarySpacePartition, Rooms } from './modules'
 import { Solver } from './modules/CSP/Solver'
 import { Overseer3 } from './Overseer3'
@@ -71,7 +70,8 @@ export function crypt(
       ]),
     ])
 
-    loop(5, () => O3.add(room.rect.rndPt(), pick(itemKeys)))
+    const itemN = rnd(4)
+    loop(itemN, () => csp.solve(['randomItem']))
   })
 
   O3.portal(

@@ -1,4 +1,5 @@
 import { EntityKey } from '../../../Core'
+import { itemKeys } from '../../../Templates'
 import { ConstraintKey } from './Constraints'
 
 type Variable = {
@@ -10,6 +11,12 @@ type Variable = {
 export type VariableKey = keyof typeof Variables
 
 export const Variables = {
+  randomItem: {
+    keys: [[...itemKeys]],
+    map: [['0']],
+    constraints: ['empty', 'walkable'],
+  },
+
   // * decoration
   cornerCandle: {
     keys: [['candles', 'candlesNE', 'candlesSE']],
