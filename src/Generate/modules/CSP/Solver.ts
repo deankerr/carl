@@ -22,23 +22,29 @@ export class Solver {
       const { constraints } = Variables[varKey]
       const domain = shuffle([...this.domain])
 
-      // for an origin point
-      let success = false
+      // for each origin point in the domain
+      let validObject: ProblemObject | undefined
       for (const originPt of domain) {
-        // create a relative object mapping, satisfy constraints
+        // create a relative object mapping
         const object = this.createObject(varKey, originPt)
-        if (!this.satisfies(object, constraints)) continue
 
-        // * success, place object
-        console.log('success:', varKey, originPt.s)
-        success = true
-        for (const [relPt, entityKeys] of object.map) {
-          entityKeys.forEach(key => this.region.create(relPt, key))
+        // check constraints for each object point
+        if (this.satisfies(object, constraints)) {
+          validObject = object
+          break
         }
-        break
       }
 
-      if (!success) console.error(`Unable to satisfy: ${varKey}`)
+      if (!validObject) {
+        console.error(`Unable to satisfy: ${varKey}`)
+        continue // todo switch to break when backtracking added
+      }
+
+      // success, place object
+      console.log('success:', varKey, validObject.originPt.s)
+      for (const [relPt, entityKeys] of validObject.map) {
+        entityKeys.forEach(key => this.region.create(relPt, key))
+      }
     }
   }
 
@@ -88,7 +94,7 @@ export class Solver {
     const width = xMax - 1
     const height = yMax - 1
 
-    return { map: relMap, width, height }
+    return { map: relMap, originPt, width, height }
   }
 }
 
@@ -101,6 +107,7 @@ export type Problem = {
 
 type ProblemObject = {
   map: Map<Point, EntityKey[]>
+  originPt: Point
   width: number
   height: number
 }
