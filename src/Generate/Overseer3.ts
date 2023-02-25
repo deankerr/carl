@@ -124,9 +124,9 @@ export class Overseer3 {
     })
   }
 
-  path(pt1: Point, pt2: Point, key: EntityKey, passAll = false) {
-    const passFn = passAll ? () => true : this.region.ROTisPassable.bind(this.region)
-    const pathFn = new ROT.Path.AStar(pt2.x, pt2.y, passFn, { topology: rnd(1) ? 4 : 8 })
+  path(pt1: Point, pt2: Point, key: EntityKey, customPassFn?: (x: number, y: number) => boolean) {
+    const passFn = customPassFn?.bind(this.region) ?? this.region.ROTisPassable.bind(this.region)
+    const pathFn = new ROT.Path.AStar(pt2.x, pt2.y, passFn, { topology: rnd(2) ? 8 : 4 })
     pathFn.compute(pt1.x, pt1.y, (x, y) => {
       const pPt = point(x, y)
       this.clear(pPt)
@@ -135,7 +135,7 @@ export class Overseer3 {
   }
 
   building(pt: Point, sign?: 'blank' | 'weapon' | 'potion' | 'inn') {
-    this.clear(Rect.atC(pt, 3, 4))
+    this.clear(Rect.atC(pt, 5, 4))
     const pt1 = pt.add(0, -2)
     const pt2 = pt.add(0, -1)
     const pt4 = pt.add(0, 1)

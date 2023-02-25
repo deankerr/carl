@@ -56,9 +56,14 @@ export function townDemo(
   O3.building(bPt4, 'inn')
 
   // paths
-  O3.path(bPt2.south(1), bPt1.south(1), 'grassPath')
-  O3.path(bPt1.south(), bPt3.south(), 'grassPath')
-  O3.path(bPt1.south(), bPt4.south(), 'grassPath')
+  const passFn = (x: number, y: number) => {
+    const pt = point(x, y)
+    const here = region.at(pt)
+    return here.some(e => e.key === 'shrub') || !here.some(e => e.blocksMovement)
+  }
+  O3.path(bPt2.south(), bPt1.south(), 'grassPath', passFn)
+  O3.path(bPt1.south(), bPt3.south(), 'grassPath', passFn)
+  O3.path(bPt1.south(), bPt4.south(), 'grassPath', passFn)
 
   const dPt = cPt.add(2, -6)
   const dRect = Rect.atC(dPt, 5, 3)
@@ -110,6 +115,7 @@ export function townDemo(
   O3.add(cfPt.west(2), 'horse')
   O3.add(cfPt.east(2), 'archer')
 
+  O3.add(bridgeRect.p2, 'player')
   O3.finalize()
   return region
 }
