@@ -49,7 +49,7 @@ function debugInfo(engine: Engine) {
   textDisplay.drawText(0, 2, renderTime)
   textDisplay.drawText(0, 3, `E:${engine.local.entityList.length}`)
   textDisplay.drawText(0, 4, `P:${playerPos?.s ?? '??'}`)
-  textDisplay.drawText(0, 4, `${local.name} ${engine.atlas.zone.regionIndex}`)
+  textDisplay.drawText(0, 6, `${local.name} ${engine.atlas.zone.regionIndex}`)
 }
 
 function getLogTimes(engine: Engine) {
