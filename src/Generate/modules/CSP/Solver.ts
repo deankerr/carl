@@ -1,9 +1,9 @@
-import { Region } from '../../../Core'
+import { EntityKey, Region } from '../../../Core'
 import { Point } from '../../../lib/Shape/Point'
 import { Rect } from '../../../lib/Shape/Rectangle'
 import { pick, shuffle } from '../../../lib/util'
 import { Constraints } from './Constraints'
-import { VariableKey, variableKeyGrid, Variables } from './Variables'
+import { VariableKey, Variables } from './Variables'
 
 export class Solver {
   domain = new Set<Point>()
@@ -20,19 +20,27 @@ export class Solver {
 
   solve(varKeys: VariableKey[]) {
     for (const varKey of varKeys) {
-      const { keys, constraints } = Variables[varKey]
+      const { constraints } = Variables[varKey]
       const domain = shuffle([...this.domain])
 
       let satisfies = false
       // for an origin point
       for (const originPt of domain) {
         // create relative pt map of entity grid to test
-        const grid = variableKeyGrid(varKey, originPt)
+        const { object, width, height } = this.createObject(varKey, originPt)
 
-        for (const relPt of grid.keys()) {
+        for (const relPt of object.keys()) {
           if (!this.domain.has(relPt)) break
 
-          const domainData = { region: this.region, pt: relPt, domain: this.domain }
+          const domainData = {
+            region: this.region,
+            pt: relPt,
+            domain: this.domain,
+            object,
+            width,
+            height,
+          }
+
           for (const key of constraints) {
             satisfies = Constraints[key](domainData)
             if (!satisfies) break
@@ -43,8 +51,8 @@ export class Solver {
 
         // * success, place grid
         console.log('success:', originPt.s)
-        for (const [relPt, gridKeys] of grid) {
-          gridKeys.forEach(key => this.region.create(relPt, pick(keys[key])))
+        for (const [relPt, gridKeys] of object) {
+          gridKeys.forEach(key => this.region.create(relPt, key))
         }
         break
       }
@@ -54,5 +62,40 @@ export class Solver {
         continue
       }
     }
+  }
+
+  satisfies(originPt: Point, domain: Set<Point>, varKey: VariableKey) {
+    //
+  }
+
+  // parse a map entry in a variable definition, converting it into a Map of Points -> EntityKeys
+  // relative to the origin point
+  createObject(varKey: VariableKey, originPt: Point) {
+    const { keys, map } = Variables[varKey]
+    const object = new Map<Point, EntityKey[]>()
+    let xMax = 0
+    let yMax = 0
+    map.forEach((row, y) => {
+      row.forEach(layer => {
+        layer.split('').forEach((keyCell, x) => {
+          const relPt = originPt.add(x, y)
+          const objectCell = object.get(relPt) ?? []
+
+          if (keyCell !== ' ') {
+            const n = parseInt(keyCell)
+            if (isNaN(n)) throw new Error(`CSP keyRef is NaN: ${keyCell}`)
+            objectCell.push(pick(keys[n]))
+          }
+
+          object.set(relPt, objectCell)
+          if (x > xMax) xMax = x
+        })
+      })
+      if (y > yMax) yMax = y
+    })
+    const width = xMax - 1
+    const height = yMax - 1
+
+    return { object, width, height }
   }
 }

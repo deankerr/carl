@@ -1,4 +1,4 @@
-import { Region } from '../../../Core'
+import { EntityKey, Region } from '../../../Core'
 import { Point } from '../../../lib/Shape/Point'
 
 export const Constraints = {
@@ -29,4 +29,7 @@ export type DomainData = {
   region: Region
   pt: Point
   domain: Set<Point>
+  object: Map<Point, EntityKey[]>
+  width: number
+  height: number
 }
