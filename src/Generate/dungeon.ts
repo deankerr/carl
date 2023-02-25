@@ -14,7 +14,7 @@ export function dungeon(
   const region = new Region(width, height)
   region.name = 'dungeon'
   const O3 = new Overseer3(region)
-  O3.theme.floor = 'stoneTileFloor'
+  O3.theme.floor = 'stoneFloor'
 
   O3.room(region.rect)
   O3.snap('Initial room')

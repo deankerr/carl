@@ -16,7 +16,7 @@ export function cavern(
 
   const O3 = new Overseer3(region)
   O3.theme.wall = 'cavernWall'
-  O3.theme.floor = 'dirtFloor'
+  O3.theme.floor = 'stonePebbleFloor'
 
   const drawRoom = (rect: Rect) => {
     O3.room(rect)

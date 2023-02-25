@@ -44,21 +44,14 @@ export class Overseer3 {
 
   history: Snapshot[] = []
 
-  theme: RegionTheme = {
-    wall: 'dungeonWall',
-    floor: 'dirtFloor',
-    door: 'woodenDoor',
-    stairsUp: 'dungeonStairsUp',
-    stairsDown: 'dungeonStairsDown',
-  }
+  theme: RegionTheme
 
-  debugSymbolList: Entity[] = []
-
-  constructor(readonly region: Region) {
+  constructor(readonly region: Region, theme: ThemeKey = 'dungeon') {
     this.rect = region.rect
     this.pool = region.pool
+    this.theme = this.createTheme(theme)
     console.log(
-      `%c  O3: ${region.name} - Area: ${region.width * region.height} `,
+      `%c  O3: ${region.name} - Theme: ${theme}, Area: ${region.width * region.height} `,
       'font-weight: bold; background-color: orange;'
     )
   }
@@ -227,7 +220,26 @@ export class Overseer3 {
     this.timeEnd = Date.now()
     console.log(`O3: ${this.timeEnd - this.timeStart}ms`, this)
   }
+
+  createTheme(wall: ThemeKey, floor?: EntityKey, door: EntityKey = 'woodenDoor'): RegionTheme {
+    const themes: Record<ThemeKey, EntityKey[]> = {
+      dungeon: ['dungeonWall', 'stoneFloor', 'dungeonStairsUp', 'dungeonStairsDown'],
+      crypt: ['cryptWall', 'stoneTileFloor', 'cryptStairsUp', 'cryptStairsDown'],
+      cave: ['caveWall', 'dirtFloor', 'caveStairsUp', 'caveStairsDown'],
+      cavern: ['cavernWall', 'dirtFloor', 'cavernStairsUp', 'cavernStairsDown'],
+    }
+
+    return {
+      wall: themes[wall][0],
+      floor: floor ?? themes[wall][1],
+      door,
+      stairsUp: themes[wall][2],
+      stairsDown: themes[wall][3],
+    }
+  }
 }
+
+type ThemeKey = 'dungeon' | 'crypt' | 'cave' | 'cavern'
 
 // ! dev
 declare global {

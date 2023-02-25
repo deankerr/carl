@@ -14,10 +14,7 @@ export function crypt(
 ) {
   const region = new Region(width, height, 'crypt')
 
-  const O3 = new Overseer3(region)
-  O3.theme.wall = 'cryptWall'
-  O3.theme.floor = 'stoneTileFloor'
-  O3.theme.door = 'woodenDoor'
+  const O3 = new Overseer3(region, 'crypt')
   O3.room(region.rect)
 
   // ! dev
