@@ -1,8 +1,9 @@
 import { CONFIG } from '../config'
 import { EntityKey, Region } from '../Core'
+import { createHues } from '../lib/color'
 import { Rect } from '../lib/Shape/Rectangle'
 import { pick, rnd } from '../lib/util'
-import { BinarySpacePartition, Rooms } from './modules'
+import { BinarySpacePartition, connectSectors, findSectors } from './modules'
 import { Solver } from './modules/CSP/Solver'
 import { Overseer3 } from './Overseer3'
 
@@ -17,16 +18,13 @@ export function crypt(
   const O3 = new Overseer3(region, 'crypt')
   O3.room(region.rect)
 
-  // ! dev
-  window.O3Debug = O3
-
   const BSP = new BinarySpacePartition(region.rect)
   if (rnd(1)) {
     BSP.splitLargest('vertical', rnd(3, 7), rnd(1, 2))
-    BSP.splitLargest('horizontal', rnd(1, 3), 1)
+    BSP.splitLargest('horizontal', rnd(1), 1)
     BSP.splitLargest('best', 1, 1)
   } else {
-    BSP.splitLargest('horizontal', rnd(1, 3), 2)
+    BSP.splitLargest('horizontal', rnd(1), 2)
     BSP.splitLargest('vertical', rnd(3, 5), 1)
     BSP.splitLargest('best', 1, 1)
   }
@@ -34,26 +32,46 @@ export function crypt(
   const liquidKey = pick(['sludge', 'blood', 'oil', 'slime', 'acid']) as EntityKey
   BSP.rectGaps.forEach(g => O3.add(g.rect, liquidKey))
 
-  BSP.splitN(rnd(4, 7))
+  BSP.splitN(rnd(3, 7))
   const roomRects: Rect[] = []
   BSP.leaves(r => {
     O3.room(r)
     roomRects.push(r)
   })
 
-  const rooms = new Rooms(region, O3, roomRects, O3.theme)
+  // const rooms = new Rooms(region, O3, roomRects, O3.theme)
   // rooms.debugNumberRooms()
+  const rooms = roomRects
+  const sectors = findSectors(region.rect, pt => region.terrainAt(pt).floor == true)
+  const sectorColors = createHues(sectors.length)
+  sectors.forEach((sec, i) => O3.debug([...sec], i, sectorColors[i]))
+  O3.snap('sectors')
 
-  const stairsUpRoom = rnd(rooms.rooms.length - 1)
-  let stairsDownRoom = rnd(rooms.rooms.length - 1)
-  while (rooms.rooms.length > 1 && stairsUpRoom === stairsDownRoom)
-    stairsDownRoom = rnd(rooms.rooms.length - 1)
+  connectSectors(
+    region.rect,
+    sectors,
+    // rooms.map(r => new Set(r.each())),
+    pt => region.terrainAt(pt).floor === true,
+    pt => {
+      const here = region.terrainAt(pt)
+      if (here.wall) {
+        O3.floor(pt)
+        O3.door(pt)
+      } else if (here.liquid) O3.add(pt, 'bridgeFloor')
+      else O3.floor(pt)
+    }
+  )
+  O3.snap('Caves connected')
+
+  const stairsUpRoom = rnd(rooms.length - 1)
+  let stairsDownRoom = rnd(rooms.length - 1)
+  while (rooms.length > 1 && stairsUpRoom === stairsDownRoom) stairsDownRoom = rnd(rooms.length - 1)
 
   console.groupCollapsed('CSP')
-  rooms.each(room => {
-    const csp = new Solver(region, room.rect, O3)
-    if (room.rID === stairsUpRoom) csp.solve(['stairsUp']) // todo portals
-    if (room.rID === stairsDownRoom) csp.solve(['stairsDown'])
+  rooms.forEach((room, i) => {
+    const csp = new Solver(region, room, O3)
+    if (i === stairsUpRoom) csp.solve(['stairsUp']) // todo portals
+    if (i === stairsDownRoom) csp.solve(['stairsDown'])
 
     csp.solve([
       'cornerWebNorthWest',
@@ -88,7 +106,7 @@ export function crypt(
   //   isTopLevel ? 0 : 'up'
   // )
   // O3.portal(rooms.rooms[1].rect.center.east(), 'cryptStairsDown', 'here', 'down')
-
+  O3.clearDebug()
   O3.finalize()
   return region
 }

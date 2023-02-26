@@ -43,6 +43,9 @@ export class Overseer3 {
       `%c  O3: ${region.name} - Theme: ${theme}, Area: ${region.width * region.height} `,
       'font-weight: bold; background-color: orange;'
     )
+
+    // ! dev
+    window.O3Debug = this
   }
 
   snap(message = '') {

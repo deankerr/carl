@@ -1,6 +1,6 @@
 import { Point } from '../../lib/Shape/Point'
 import { Rect } from '../../lib/Shape/Rectangle'
-import { timer } from '../../lib/util'
+import { shuffle, timer } from '../../lib/util'
 
 // sweep a rect, finding each region that matches the predicate function
 // ie. individual open cave sections
@@ -46,7 +46,7 @@ export function connectSectors(
   for (const sector of sorted) {
     const [pt, path] = findPathToClosest(rect, sector, predicateFn)
     const owner = sectors.find(s => s.has(pt))
-
+    console.log('PATH:', path)
     for (const pt of path) {
       connectFn(pt)
       owner?.add(pt)
@@ -68,9 +68,10 @@ export function findPathToClosest(
   predicateFn: (pt: Point) => boolean
 ): [Point, Set<Point>] {
   const from = new Map<Point, Point>()
-  const frontier = new Set<Point>([...start])
+  const frontier = new Set<Point>([...shuffle([...start])])
   let found: Point | undefined
-
+  const O3 = window.O3Debug
+  O3.clearDebug()
   const invalid = (pt: Point) => from.has(pt) || start.has(pt) || !rect.pointIntersects(pt)
 
   for (const pt of frontier) {
@@ -82,6 +83,8 @@ export function findPathToClosest(
         break
       }
       frontier.add(npt)
+      O3.debug(pt, 'S')
+      O3.snap()
     }
     if (found) break
   }
