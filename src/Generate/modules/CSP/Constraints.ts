@@ -1,29 +1,29 @@
-import { Problem } from './Solver'
+import { CProblem } from './Solver'
 
 export const Constraints = {
-  empty: function (p: Problem) {
+  empty: function (p: CProblem) {
     return p.region.at(p.pt).length <= 1
   },
 
-  walkable: function (p: Problem) {
+  walkable: function (p: CProblem) {
     return p.region.at(p.pt).filter(e => e.blocksMovement).length === 0
   },
 
-  wall: function (p: Problem) {
+  wall: function (p: CProblem) {
     return p.region.at(p.pt).filter(e => e.wall).length > 0
   },
 
-  top: function (p: Problem) {
+  top: function (p: CProblem) {
     const [yMin] = [...p.domain].sort((a, b) => a.y - b.y)
     return p.pt.y === yMin.y
   },
 
-  exposed: function (p: Problem) {
+  exposed: function (p: CProblem) {
     const tBelow = p.region.terrainAt(p.pt.south())
     return !tBelow.wall
   },
 
-  corner: function (p: Problem) {
+  corner: function (p: CProblem) {
     const wall = p.pt
       .neighbours()
       .map(npt => p.region.terrainAt(npt).wall)
@@ -32,28 +32,28 @@ export const Constraints = {
     return wall.filter(n => n).length === 5
   },
 
-  cornerNorthWest: function (p: Problem) {
+  cornerNorthWest: function (p: CProblem) {
     const neighbours = p.pt.neighbours().map(npt => p.region.terrainAt(npt).wall === true)
     return neighbours.every((n, i) => n === cornerMask.NW[i])
   },
 
-  cornerNorthEast: function (p: Problem) {
+  cornerNorthEast: function (p: CProblem) {
     const neighbours = p.pt.neighbours().map(npt => p.region.terrainAt(npt).wall === true)
     return neighbours.every((n, i) => n === cornerMask.NE[i])
   },
 
-  cornerSouthWest: function (p: Problem) {
+  cornerSouthWest: function (p: CProblem) {
     const neighbours = p.pt.neighbours().map(npt => p.region.terrainAt(npt).wall === true)
     return neighbours.every((n, i) => n === cornerMask.SW[i])
   },
 
-  cornerSouthEast: function (p: Problem) {
+  cornerSouthEast: function (p: CProblem) {
     const neighbours = p.pt.neighbours().map(npt => p.region.terrainAt(npt).wall === true)
     return neighbours.every((n, i) => n === cornerMask.SE[i])
   },
 } satisfies Record<string, Constraint>
 
-export type Constraint = (d: Problem) => boolean
+export type Constraint = (d: CProblem) => boolean
 
 export type ConstraintKey = keyof typeof Constraints
 

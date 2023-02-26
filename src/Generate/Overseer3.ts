@@ -105,16 +105,17 @@ export class Overseer3 {
     this.ghostMap.set(pt, keys)
   }
 
-  addObjectRevertible(map: Map<Point, EntityKey[]>) {
+  addObjectRevertible(pt: Point, map: Map<Point, EntityKey[]>) {
     const revertTerrain = new Map<Point, Entity>()
     const revertEntities: Entity[] = []
 
-    for (const [pt, keys] of map) {
-      const currentTerrain = this.region.terrainAt(pt)
+    for (const [zeroPt, keys] of map) {
+      const relPt = zeroPt.add(pt)
+      const currentTerrain = this.region.terrainAt(relPt)
       for (const key of keys) {
-        const newEntity = this.region.create(pt, this.themed(key))
+        const newEntity = this.region.create(relPt, this.themed(key))
         if (!newEntity) continue
-        if (newEntity.terrain) revertTerrain.set(pt, currentTerrain)
+        if (newEntity.terrain) revertTerrain.set(relPt, currentTerrain)
         revertEntities.push(newEntity)
       }
     }

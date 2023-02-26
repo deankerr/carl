@@ -21,18 +21,18 @@ export function tinyCrypt(
 
   const CSP = new Solver(region, room, O3)
   const t = timer('Timer CSP')
-  CSP.solveAll([
-    'bookshelf',
-    'bookshelf',
-    'bookshelf',
-    'bookshelf',
+  CSP.solve([
+    'cornerCandle',
+    'cornerCandle',
     'statueAltar',
-    // 'cornerCandle',
-    // 'cornerCandle',
-    // 'cornerCandle',
+    'bookshelf',
+    'bookshelf',
+    'bookshelf',
+    'bookshelf',
+    'cornerCandle',
+    'bigDesk',
     // 'cornerCandle',
     // 'bookshelfEmpty',
-    // 'bigDesk',
   ])
   t.stop()
   O3.finalize()
