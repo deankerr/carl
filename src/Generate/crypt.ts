@@ -1,6 +1,5 @@
 import { CONFIG } from '../config'
 import { EntityKey, Region } from '../Core'
-import { createHues } from '../lib/color'
 import { Rect } from '../lib/Shape/Rectangle'
 import { pick, rnd } from '../lib/util'
 import { BinarySpacePartition, connectSectors, findSectors } from './modules'
@@ -43,9 +42,9 @@ export function crypt(
   // rooms.debugNumberRooms()
   const rooms = roomRects
   const sectors = findSectors(region.rect, pt => region.terrainAt(pt).floor == true)
-  const sectorColors = createHues(sectors.length)
-  sectors.forEach((sec, i) => O3.debug([...sec], i, sectorColors[i]))
-  O3.snap('sectors')
+  // const sectorColors = createHues(sectors.length)
+  // sectors.forEach((sec, i) => O3.debug([...sec], i, sectorColors[i]))
+  // O3.snap('sectors')
 
   connectSectors(
     region.rect,
@@ -74,10 +73,10 @@ export function crypt(
     if (i === stairsDownRoom) csp.solve(['stairsDown'])
 
     csp.solve([
-      'cornerWebNorthWest',
-      'cornerWebSouthWest',
-      'cornerWebSouthEast',
-      'cornerWebNorthEast',
+      // 'cornerWebNorthWest',
+      // 'cornerWebSouthWest',
+      // 'cornerWebSouthEast',
+      // 'cornerWebNorthEast',
       'sconce',
       'sconce',
       // pick(['smallStonePitPlatformItem', 'smallSludgePond', 'smallWaterPond', 'statueAltar']),

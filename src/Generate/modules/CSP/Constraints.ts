@@ -64,6 +64,11 @@ export const Constraints = {
     const north = p.region.terrainAt(p.pt.north())
     return north.wall === true
   },
+
+  noAdjacentWall: function (p: CProblem) {
+    const neighbours = p.pt.neighbours().map(npt => p.region.terrainAt(npt))
+    return !neighbours.some(e => e.wall)
+  },
 } satisfies Record<string, Constraint>
 
 export type Constraint = (d: CProblem) => boolean

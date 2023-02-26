@@ -60,8 +60,10 @@ export class Solver {
     if (!this.solveNext(problems)) {
       if (Date.now() - this.timer > this.timeout) {
         console.error('CSP Failed - Timeout')
+        console.error(vKeys)
       } else {
         console.error('CSP Failed')
+        console.error(vKeys)
       }
     }
   }

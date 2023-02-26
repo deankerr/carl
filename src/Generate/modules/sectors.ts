@@ -70,8 +70,7 @@ export function findPathToClosest(
   const from = new Map<Point, Point>()
   const frontier = new Set<Point>([...shuffle([...start])])
   let found: Point | undefined
-  const O3 = window.O3Debug
-  O3.clearDebug()
+
   const invalid = (pt: Point) => from.has(pt) || start.has(pt) || !rect.pointIntersects(pt)
 
   for (const pt of frontier) {
@@ -83,8 +82,6 @@ export function findPathToClosest(
         break
       }
       frontier.add(npt)
-      O3.debug(pt, 'S')
-      O3.snap()
     }
     if (found) break
   }

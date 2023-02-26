@@ -32,7 +32,7 @@ export const Variables = {
 
   stairsUp: {
     keys: ['stairsUp'],
-    map: [['  '], [' 0 '], ['  ']],
+    map: [['   '], [' 0 '], ['   ']],
     constraints: {
       domain: ['walkable'],
       cells: ['empty'],
@@ -41,7 +41,7 @@ export const Variables = {
 
   stairsDown: {
     keys: ['stairsDown'],
-    map: [['0']],
+    map: [['   '], [' 0 '], ['   ']],
     constraints: {
       domain: ['walkable'],
       cells: ['empty'],
