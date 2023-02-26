@@ -52,22 +52,50 @@ export class Solver {
     this.O3.snap('success')
   }
 
-  // private createObject(object: ProblemObject, filter: Extract<EntityKey, 'fogRed' | 'fogGreen'>) {
-  //   for (const [relPt, entityKeys] of object.map) {
-  //     entityKeys.forEach(key => this.O3.add(relPt, key))
-  //     if (filter) this.O3.add(relPt, filter)
-  //   }
-  // }
+  solveAll(vKeys: VariableKey[], i = 0) {
+    if (i >= vKeys.length) {
+      // all solved
+      return true
+    }
+    const vKey = vKeys[i]
+    const { constraints } = Variables[vKey]
+    const domain = shuffle([...this.domain])
 
-  // private createGhostObject(
-  //   object: ProblemObject,
-  //   filter: Extract<EntityKey, 'fogRed' | 'fogGreen'>
-  // ) {
-  //   for (const [pt, keys] of object.map) {
-  //     const k = filter ? [...keys, filter] : keys
-  //     this.O3.addGhost(pt, k)
-  //   }
-  // }
+    let validObject: ProblemObject | undefined
+    for (const originPt of domain) {
+      // create a relative object mapping
+      const object = this.buildObjectMap(vKey, originPt)
+
+      // check constraints for each object point
+      if (!this.satisfies(object, constraints)) {
+        // * failed, try next point
+        this.O3.addObjectGhost(object.map, 'fogRed')
+        this.O3.snap('CSP - Invalid')
+        continue
+      }
+
+      // * success
+      // add green ghost
+      this.O3.addObjectGhost(object.map, 'fogGreen')
+      // add revertible
+      const revert = this.O3.addObjectRevertible(object.map)
+      this.O3.snap('success')
+
+      // solve recursively
+      if (this.solveAll(vKeys, i + 1)) return true
+      else {
+        // child failed, revert current object and keep trying
+        console.warn(`revert ${vKey}`)
+        this.O3.revertObject(revert)
+      }
+    }
+
+    if (i === 0) {
+      // * critical fail
+      console.error(`critical fail: ${vKey}`)
+      return false
+    } else return false
+  }
 
   solve(vKeys: VariableKey[]) {
     for (const vKey of vKeys) {

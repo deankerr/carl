@@ -73,6 +73,24 @@ export const Variables = {
   },
 
   // * blocking decoration
+  bookshelf: {
+    keys: ['bookshelf'],
+    map: [['0'], [' ']],
+    constraints: ['empty', 'walkable'],
+  },
+
+  bookshelfEmpty: {
+    keys: ['bookshelfEmpty'],
+    map: [['0'], [' ']],
+    constraints: ['empty', 'walkable'],
+  },
+
+  bigDesk: {
+    keys: ['bigDeskLeft', 'bigDeskMiddle', 'bigDeskRight'],
+    map: [['012'], ['   ']],
+    constraints: ['empty', 'walkable'],
+  },
+
   statue: {
     keys: [['statueDragon', 'statueMonster', 'statueWarrior']],
     map: [['   '], [' 0 '], ['   ']],

@@ -58,7 +58,8 @@ export class Visualizer {
     this.index++
     this.next()
 
-    this.timeout = setTimeout(this.play.bind(this), this.speed)
+    const speed = this.mirror.name.includes('CSP - Invalid') ? 50 : this.speed
+    this.timeout = setTimeout(this.play.bind(this), speed)
   }
 
   next() {

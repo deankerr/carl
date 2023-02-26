@@ -96,8 +96,6 @@ export class Region {
       this.turnQueue.remove(entity.eID)
     }
 
-    this.pool.live.delete(entity)
-
     if (entity.children && entity.position) {
       const neighbourPts = entity.position.neighbours4()
       entity.children.forEach((c, i) => {

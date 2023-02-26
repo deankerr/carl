@@ -16,9 +16,15 @@
   // 	"description": "Log output to console"
   // }
 
-  "Template": {
-    "prefix": "ttemplate",
-    "body": ["${1:KEY}: {", " name: '${2:NAME}',", " tiles: [''],", " tag: ['${3:TYPETAG}'],", "}"],
+  "Entity Template": {
+    "prefix": "newtemplate",
+    "body": [
+      "${1:KEY}: {",
+      " name: '${2:NAME}',",
+      " sprite: { base: ['${3:SPRITE}']},",
+      " tag: ['${4:TYPETAG}'],",
+      "},"
+    ],
     "description": "CARL Template"
   },
 
@@ -61,6 +67,18 @@
       "}"
     ],
     "description": "CARL generator template"
+  },
+
+  "Variable Template": {
+    "prefix": "newvar",
+    "body": [
+      "${1:NAME}: {",
+      "  keys: ['${2:KEY}'],",
+      "  map: [['0']],",
+      "  constraints: ['empty', 'walkable'],",
+      "},"
+    ],
+    "description": "CARL variable template"
   },
 
   "X/Y Arguments": {

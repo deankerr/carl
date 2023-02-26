@@ -1,6 +1,8 @@
 import { EntityTemplate } from '../Core'
+import { furniture } from './furniture'
 
 export const features = {
+  ...furniture,
   // Stairs
   dungeonStairsDown: {
     name: 'stairs',
@@ -522,14 +524,6 @@ export const features = {
     sprite: {
       base: ['dirtBoulder'],
     },
-  },
-
-  bookshelf: {
-    name: 'bookshelf',
-    sprite: {
-      base: ['bookshelf'],
-    },
-    tag: ['feature', 'blocksMovement'],
   },
 
   // Utility

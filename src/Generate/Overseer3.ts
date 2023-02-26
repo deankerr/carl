@@ -105,14 +105,14 @@ export class Overseer3 {
     this.ghostMap.set(pt, keys)
   }
 
-  addObjectRevertable(map: Map<Point, EntityKey[]>) {
+  addObjectRevertible(map: Map<Point, EntityKey[]>) {
     const revertTerrain = new Map<Point, Entity>()
     const revertEntities: Entity[] = []
 
     for (const [pt, keys] of map) {
       const currentTerrain = this.region.terrainAt(pt)
       for (const key of keys) {
-        const newEntity = this.region.create(pt, key)
+        const newEntity = this.region.create(pt, this.themed(key))
         if (!newEntity) continue
         if (newEntity.terrain) revertTerrain.set(pt, currentTerrain)
         revertEntities.push(newEntity)
@@ -120,6 +120,12 @@ export class Overseer3 {
     }
 
     return { revertTerrain, revertEntities }
+  }
+
+  revertObject(revert: { revertTerrain: Map<Point, Entity>; revertEntities: Entity[] }) {
+    const { revertTerrain, revertEntities } = revert
+    for (const [pt, Entity] of revertTerrain) this.region.terrainMap.set(pt, Entity)
+    revertEntities.forEach(e => this.region.destroy(e))
   }
 
   addObjectGhost(map: Map<Point, EntityKey[]>, filter: Extract<EntityKey, 'fogRed' | 'fogGreen'>) {
@@ -252,6 +258,15 @@ export class Overseer3 {
       stairsUp: themes[wall][2],
       stairsDown: themes[wall][3],
     }
+  }
+
+  themed(key: EntityKey) {
+    if (key === 'wall') return this.theme.wall
+    if (key === 'floor') return this.theme.floor
+    if (key === 'stairsUp') return this.theme.stairsUp
+    if (key === 'stairsDown') return this.theme.stairsDown
+    if (key === 'door') return this.theme.door
+    return key
   }
 }
 

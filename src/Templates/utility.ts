@@ -38,6 +38,15 @@ export const utility = {
     color: ['pink', 'transparent'],
   },
 
+  door: {
+    name: 'themed door',
+    tag: ['feature'],
+    sprite: {
+      base: ['?'],
+    },
+    color: ['pink', 'transparent'],
+  },
+
   // fog
   fogLight: {
     name: 'fog of war',

@@ -14,12 +14,23 @@ export function tinyCrypt(
   O3.room(region.rect)
   O3.snap('Begin')
 
-  const room = Rect.atC(region.rect.center, 6, 6)
+  const room = Rect.atC(region.rect.center, 9, 9)
   O3.room(room)
   O3.snap('a room')
 
   const CSP = new Solver(region, room, O3)
-  CSP.solveOne('cornerCandle')
+  CSP.solveAll([
+    'bookshelf',
+    'bookshelf',
+    'statueAltar',
+    'bookshelf',
+    'bookshelf',
+    'bookshelfEmpty',
+    'cornerCandle',
+    'cornerCandle',
+    'cornerCandle',
+    'bigDesk',
+  ])
 
   O3.finalize()
   console.log(O3.history)
