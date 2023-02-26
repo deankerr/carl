@@ -4,7 +4,7 @@ import { Rect } from '../../../lib/Shape/Rectangle'
 import { pick, shuffle } from '../../../lib/util'
 import { Overseer3 } from '../../Overseer3'
 import { ConstraintKey, Constraints } from './Constraints'
-import { VariableKey, Variables } from './Variables'
+import { Variable, VariableKey, Variables } from './Variables'
 
 export class Solver {
   domain = new Set<Point>()
@@ -31,17 +31,18 @@ export class Solver {
     const problems: Problem[] = []
 
     for (const vKey of vKeys) {
-      const { constraints } = Variables[vKey]
+      const variable = Variables[vKey] as Variable
+      const { constraints } = variable
       const object = this.buildObject(vKey)
 
-      const origins = originPtCache.get(vKey) ?? this.buildOriginPtSet(object, constraints)
+      const origins = originPtCache.get(vKey) ?? this.buildOriginPtSet(object, constraints.domain)
       originPtCache.set(vKey, origins)
 
       const problem: Problem = {
         region: this.region,
         domain: this.domain,
         key: vKey,
-        constraints,
+        constraints: constraints.cells,
         object,
         origins,
       }
@@ -127,7 +128,7 @@ export class Solver {
 
       // check constraints for origin/last point
       for (const cKey of constraints) {
-        if (!Constraints[cKey]({ ...problem, pt }) || !Constraints[cKey]({ ...problem, pt: pt2 })) {
+        if (!Constraints[cKey]({ ...problem, pt })) {
           origins.delete(pt)
           break
         }

@@ -5,12 +5,20 @@ export const Constraints = {
     return p.region.at(p.pt).length <= 1
   },
 
+  vacant: function (p: CProblem) {
+    return !p.region.at(p.pt).some(e => e.being)
+  },
+
   walkable: function (p: CProblem) {
     return p.region.at(p.pt).filter(e => e.blocksMovement).length === 0
   },
 
   wall: function (p: CProblem) {
     return p.region.at(p.pt).filter(e => e.wall).length > 0
+  },
+
+  floor: function (p: CProblem) {
+    return p.region.at(p.pt).filter(e => e.floor).length > 0
   },
 
   top: function (p: CProblem) {
@@ -50,6 +58,11 @@ export const Constraints = {
   cornerSouthEast: function (p: CProblem) {
     const neighbours = p.pt.neighbours().map(npt => p.region.terrainAt(npt).wall === true)
     return neighbours.every((n, i) => n === cornerMask.SE[i])
+  },
+
+  hasWallNorth: function (p: CProblem) {
+    const north = p.region.terrainAt(p.pt.north())
+    return north.wall === true
   },
 } satisfies Record<string, Constraint>
 

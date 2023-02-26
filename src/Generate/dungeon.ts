@@ -31,7 +31,7 @@ export function dungeon(
 
   for (const room of rooms) {
     const csp = new Solver(region, room, O3)
-    csp.solveNaive([
+    csp.solve([
       'cornerWebNorthWest',
       'cornerWebSouthWest',
       'cornerWebSouthEast',

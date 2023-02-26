@@ -1,7 +1,7 @@
 import { CONFIG } from '../config'
 import { Region } from '../Core'
 import { Rect } from '../lib/Shape/Rectangle'
-import { timer } from '../lib/util'
+import { range, timer } from '../lib/util'
 import { Solver } from './modules/CSP/Solver'
 import { Overseer3 } from './Overseer3'
 
@@ -15,24 +15,46 @@ export function tinyCrypt(
   O3.room(region.rect)
   O3.snap('Begin')
 
-  const room = Rect.atC(region.rect.center, 9, 9)
+  const room = Rect.atC(region.rect.center, 33, 15)
   O3.room(room)
+  const xStart = region.rect.center.add(-5, 0)
+  for (const i of range(8)) {
+    O3.wall(xStart.add(i, 1))
+    O3.wall(region.rect.center.add(0, i))
+  }
   O3.snap('a room')
 
   const CSP = new Solver(region, room, O3)
   const t = timer('Timer CSP')
   CSP.solve([
-    'cornerCandle',
-    'cornerCandle',
-    'statueAltar',
-    'bookshelf',
-    'bookshelf',
-    'bookshelf',
-    'bookshelf',
-    'cornerCandle',
-    'bigDesk',
+    // 'statueAltar',
     // 'cornerCandle',
+    // 'bigDesk',
     // 'bookshelfEmpty',
+    // 'bookshelf',
+    // 'cornerWebNorthEast',
+    // 'cornerWebNorthWest',
+    // 'cornerWebSouthEast',
+    // 'cornerWebSouthWest',
+    'mushroom',
+    'sconce',
+
+    'smallSludgePond',
+    'smallWaterPond',
+    'bigDesk',
+    'statue',
+    'statueAltar',
+    'smallDirtPitPlatformItem',
+    'smallStonePitPlatformItem',
+    'goblinPackWeak',
+    'goblinPackStrong',
+    'skeletonPackWeak',
+    'skeletonPackStrong',
+    'spiderPack',
+    'ratPack',
+    'batPack',
+    'beholder',
+    'gelCube',
   ])
   t.stop()
   O3.finalize()
