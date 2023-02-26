@@ -7,11 +7,16 @@ import { half } from '../lib/util'
 const { textDisplayWidth: dWidth, textDisplayHeight: dHeight } = CONFIG
 
 export function renderMessageLog(engine: Engine) {
-  const { local, textDisplay, messageLog, playerTurns, options } = engine
+  const { local, textDisplay, messageLog, playerTurns, options, context } = engine
 
   const center = { x: half(dWidth), y: half(dHeight) }
 
   textDisplay.clear()
+
+  if (context === 'visualizer') {
+    const visMsg = local.name
+    textDisplay.drawText(center.x - half(visMsg.length), 0, visMsg)
+  }
 
   // * single message
   const latestMsg = messageLog.at(-1)

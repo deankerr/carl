@@ -37,4 +37,54 @@ export const utility = {
     },
     color: ['pink', 'transparent'],
   },
+
+  // fog
+  fogLight: {
+    name: 'fog of war',
+    tag: ['feature', 'renderLevelHigh'],
+    sprite: {
+      base: ['fogLight'],
+    },
+  },
+
+  fogMedium: {
+    name: 'fog of war',
+    tag: ['feature', 'renderLevelHigh'],
+    sprite: {
+      base: ['fogMedium'],
+    },
+  },
+
+  fogHeavy: {
+    name: 'fog of war',
+    tag: ['feature', 'renderLevelHigh'],
+    sprite: {
+      base: ['fogHeavy'],
+    },
+  },
+
+  fogRed: {
+    name: 'fog of war',
+    tag: ['feature', 'renderLevelHigh'],
+    sprite: {
+      base: ['fogRed'],
+    },
+  },
+
+  fogGreen: {
+    name: 'fog of war',
+    tag: ['feature', 'renderLevelHigh'],
+    sprite: {
+      base: ['fogGreen'],
+    },
+  },
+
+  debug: {
+    name: 'debug',
+    tag: ['feature', 'debug'],
+    sprite: {
+      base: ['*'],
+    },
+    color: ['transparent', 'transparent'],
+  },
 } satisfies Record<string, EntityTemplate>

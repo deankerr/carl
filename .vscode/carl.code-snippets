@@ -16,17 +16,6 @@
   // 	"description": "Log output to console"
   // }
 
-  // "CARL Component": {
-  //   "prefix": "ccomp",
-  //   "body": [
-  //     "export type ${1:TYPE} = { ${2:PROPERTY}: ${3:PROPTYPE} }",
-  //     "export const ${2:PROPERTY} = (${2:PROPERTY}: ${3:PROPTYPE}): ${1:TYPE} => {",
-  //     "  return { ${2:PROPERTY} }",
-  //     "}"
-  //   ],
-  //   "description": "CARL! Component Template"
-  // },
-
   "Template": {
     "prefix": "ttemplate",
     "body": ["${1:KEY}: {", " name: '${2:NAME}',", " tiles: [''],", " tag: ['${3:TYPETAG}'],", "}"],
@@ -59,13 +48,11 @@
       "import { Region } from '../Core'",
       "import { Overseer3 } from './Overseer3'",
       "",
-      "export function ${1:NAME}(isTopLevel: boolean, width = CONFIG.mainDisplayWidth, height = CONFIG.mainDisplayHeight) {",
-      " const region = new Region(width, height, 'crypt')",
-      " const O3 = new Overseer3(region)",
-      " O3.theme.wall = 'cryptWall'",
-      " O3.theme.floor = 'stoneTileFloor'",
-      " O3.theme.door = 'woodenDoor'",
-      " O3.room(region.rect, 'Theme')",
+      "export function ${1:NAME}(isTopLevel: boolean, width = CONFIG.generateWidth, height = CONFIG.generateHeight) {",
+      " const region = new Region(width, height, '$1')",
+      " const O3 = new Overseer3(region, '${2:THEME}')",
+      " O3.room(region.rect)",
+      " O3.snap('Begin')",
       "",
       " // generator",
       "",

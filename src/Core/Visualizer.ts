@@ -1,4 +1,4 @@
-import { ActionTypes, Region } from '.'
+import { ActionTypes, Entity, Region } from '.'
 import { CONFIG } from '../config'
 import { Snapshot } from '../Generate/Overseer3'
 import { half } from '../lib/util'
@@ -52,8 +52,6 @@ export class Visualizer {
   play() {
     if (this.index + 1 >= this.history.length) {
       this.stop()
-      this.mirror.name = 'Complete'
-      this.mirror.hasChanged = true
       return
     }
     this.playing = true
@@ -64,11 +62,17 @@ export class Visualizer {
   }
 
   next() {
-    const { terrainMap, debugSymbolMap, entityList, message } = this.history[this.index]
+    const { terrainMap, debugSymbolMap, entityList, message, ghostMap } = this.history[this.index]
+
+    const ghosts: Entity[] = []
+    for (const [pt, keys] of ghostMap) {
+      keys.forEach(key => ghosts.push(this.mirror.pool.spawn(key, pt)))
+    }
+
     this.mirror.name = `${this.index} ${message}`
     this.mirror.terrainMap = terrainMap
     this.mirror.debugSymbolMap = debugSymbolMap
-    this.mirror.entityList = entityList
+    this.mirror.entityList = [...entityList, ...ghosts]
     this.mirror.hasChanged = true
   }
 

@@ -11,20 +11,7 @@ export type Snapshot = {
   debugSymbolMap: Map<Point, [string, string, string]>
   entityList: Entity[]
   message: string
-}
-
-function createSnapshot(
-  terrainMap: Map<Point, Entity>,
-  debugSymbolMap: Map<Point, [string, string, string]>,
-  entityList: Entity[],
-  message = ''
-): Snapshot {
-  return {
-    terrainMap: new Map([...terrainMap]),
-    debugSymbolMap: new Map([...debugSymbolMap]),
-    entityList: [...entityList],
-    message,
-  }
+  ghostMap: Map<Point, EntityKey[]>
 }
 
 export type RegionTheme = {
@@ -46,6 +33,8 @@ export class Overseer3 {
 
   theme: RegionTheme
 
+  ghostMap = new Map<Point, EntityKey[]>()
+
   constructor(readonly region: Region, theme: ThemeKey = 'dungeon') {
     this.rect = region.rect
     this.pool = region.pool
@@ -57,14 +46,14 @@ export class Overseer3 {
   }
 
   snap(message = '') {
-    this.history.push(
-      createSnapshot(
-        this.region.terrainMap,
-        this.region.debugSymbolMap,
-        this.region.entityList,
-        message
-      )
-    )
+    this.history.push({
+      terrainMap: new Map([...this.region.terrainMap]),
+      debugSymbolMap: new Map([...this.region.debugSymbolMap]),
+      entityList: [...this.region.entityList],
+      message: message,
+      ghostMap: this.ghostMap,
+    })
+    this.ghostMap = new Map<Point, EntityKey[]>()
   }
 
   wall(pt: Point) {
@@ -109,6 +98,33 @@ export class Overseer3 {
       else if (key === 'stairsDown') this.stairsDown(pt)
       else if (key === 'stairsUp') this.stairsUp(pt)
       else this.region.create(area, key)
+    }
+  }
+
+  addGhost(pt: Point, keys: EntityKey[]) {
+    this.ghostMap.set(pt, keys)
+  }
+
+  addObjectRevertable(map: Map<Point, EntityKey[]>) {
+    const revertTerrain = new Map<Point, Entity>()
+    const revertEntities: Entity[] = []
+
+    for (const [pt, keys] of map) {
+      const currentTerrain = this.region.terrainAt(pt)
+      for (const key of keys) {
+        const newEntity = this.region.create(pt, key)
+        if (!newEntity) continue
+        if (newEntity.terrain) revertTerrain.set(pt, currentTerrain)
+        revertEntities.push(newEntity)
+      }
+    }
+
+    return { revertTerrain, revertEntities }
+  }
+
+  addObjectGhost(map: Map<Point, EntityKey[]>, filter: Extract<EntityKey, 'fogRed' | 'fogGreen'>) {
+    for (const [pt, keys] of map) {
+      this.ghostMap.set(pt, [...keys, filter])
     }
   }
 

@@ -325,6 +325,8 @@ export function createOryxTinyMap(size: number) {
       'fogLight',
       'fogMedium',
       'fogHeavy',
+      'fogRed',
+      'fogGreen',
     ],
     [
       'dirtFloorOutdoor1',

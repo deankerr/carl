@@ -8,7 +8,7 @@ import { VariableKey, Variables } from './Variables'
 
 export class Solver {
   domain = new Set<Point>()
-  full = new Map<Point, boolean>()
+  // history =
 
   constructor(
     readonly region: Region,
@@ -18,9 +18,56 @@ export class Solver {
     if (Array.isArray(domain)) domain.forEach(pt => this.domain.add(pt))
     else if (domain instanceof Rect) [...domain.each()].forEach(pt => this.domain.add(pt))
     else [...domain.values()].forEach(pt => this.domain.add(pt))
-
-    this.domain.forEach(pt => this.full.set(pt, false))
   }
+
+  solveOne(vKey: VariableKey) {
+    const { constraints } = Variables[vKey]
+    const domain = shuffle([...this.domain])
+
+    let validObject: ProblemObject | undefined
+    for (const originPt of domain) {
+      // create a relative object mapping
+      const object = this.buildObjectMap(vKey, originPt)
+
+      // check constraints for each object point
+      if (this.satisfies(object, constraints)) {
+        validObject = object
+        break
+      }
+
+      // * attempt failed, red object
+      this.O3.addObjectGhost(object.map, 'fogRed')
+      this.O3.snap('invalid')
+    }
+
+    // * fail, create temp red filter version
+    if (!validObject) {
+      console.error('i cant')
+      return
+    }
+
+    // * success, create green filter version
+
+    this.O3.addObjectGhost(validObject.map, 'fogGreen')
+    this.O3.snap('success')
+  }
+
+  // private createObject(object: ProblemObject, filter: Extract<EntityKey, 'fogRed' | 'fogGreen'>) {
+  //   for (const [relPt, entityKeys] of object.map) {
+  //     entityKeys.forEach(key => this.O3.add(relPt, key))
+  //     if (filter) this.O3.add(relPt, filter)
+  //   }
+  // }
+
+  // private createGhostObject(
+  //   object: ProblemObject,
+  //   filter: Extract<EntityKey, 'fogRed' | 'fogGreen'>
+  // ) {
+  //   for (const [pt, keys] of object.map) {
+  //     const k = filter ? [...keys, filter] : keys
+  //     this.O3.addGhost(pt, k)
+  //   }
+  // }
 
   solve(vKeys: VariableKey[]) {
     for (const vKey of vKeys) {
@@ -31,7 +78,7 @@ export class Solver {
       let validObject: ProblemObject | undefined
       for (const originPt of domain) {
         // create a relative object mapping
-        const object = this.createObject(vKey, originPt)
+        const object = this.buildObjectMap(vKey, originPt)
 
         // check constraints for each object point
         if (this.satisfies(object, constraints)) {
@@ -73,7 +120,7 @@ export class Solver {
 
   // parse a map entry in a variable definition, converting it into a Map of Points -> EntityKeys
   // relative to the origin point
-  private createObject(varKey: VariableKey, originPt: Point) {
+  private buildObjectMap(varKey: VariableKey, originPt: Point) {
     const { keys, map } = Variables[varKey]
     const relMap = new Map<Point, EntityKey[]>()
     let xMax = 0
@@ -132,4 +179,8 @@ type ProblemObject = {
 
     internal Snapshot-like system ?
     or debug success/fail symbols
+
+    history = [
+    
+    ]
 */

@@ -541,44 +541,11 @@ export const features = {
     },
   },
 
-  fogLight: {
-    name: 'fog of war',
-    tag: ['feature', 'renderLevelHigh'],
-    sprite: {
-      base: ['fogLight'],
-    },
-  },
-
-  fogMedium: {
-    name: 'fog of war',
-    tag: ['feature', 'renderLevelHigh'],
-    sprite: {
-      base: ['fogMedium'],
-    },
-  },
-
-  fogHeavy: {
-    name: 'fog of war',
-    tag: ['feature', 'renderLevelHigh'],
-    sprite: {
-      base: ['fogHeavy'],
-    },
-  },
-
   invisibleBlock: {
     name: 'invisible Block',
     tag: ['feature', 'invisible', 'blocksMovement'],
     sprite: {
       base: ['stoneBoulder'],
     },
-  },
-
-  debug: {
-    name: 'debug',
-    tag: ['feature', 'debug'],
-    sprite: {
-      base: ['*'],
-    },
-    color: ['transparent', 'transparent'],
   },
 } satisfies Record<string, EntityTemplate>

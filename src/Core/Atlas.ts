@@ -7,6 +7,7 @@ export class Atlas {
     { label: 'crypt', generator: Generate.crypt, regions: [], regionIndex: 0 },
     { label: 'cave', generator: Generate.cave, regions: [], regionIndex: 0 },
     { label: 'dungeon', generator: Generate.dungeon, regions: [], regionIndex: 0 },
+    { label: 'tinycrypt', generator: Generate.tinyCrypt, regions: [], regionIndex: 0 },
     { label: 'cavern', generator: Generate.cavern, regions: [], regionIndex: 0 },
   ]
 
