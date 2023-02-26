@@ -70,12 +70,15 @@
   },
 
   "Variable Template": {
-    "prefix": "newvar",
+    "prefix": "newvariable",
     "body": [
       "${1:NAME}: {",
       "  keys: ['${2:KEY}'],",
       "  map: [['0']],",
-      "  constraints: ['empty', 'walkable'],",
+      "  constraints: {",
+      "    domain: ['walkable'],",
+      "    cells: ['empty'],",
+      "   },",
       "},"
     ],
     "description": "CARL variable template"

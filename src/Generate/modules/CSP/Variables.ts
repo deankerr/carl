@@ -1,6 +1,9 @@
 import { EntityKey } from '../../../Core'
 import { itemKeys } from '../../../Templates'
 import { ConstraintKey } from './Constraints'
+import { decoration } from './Variables/decoration'
+import { enemy } from './Variables/enemy'
+import { furniture } from './Variables/furniture'
 
 export type Variable = {
   keys: (EntityKey | EntityKey[])[]
@@ -14,57 +17,33 @@ export type Variable = {
 export type VariableKey = keyof typeof Variables
 
 export const Variables = {
+  ...decoration,
+  ...furniture,
+  ...enemy,
+
   randomItem: {
     keys: [[...itemKeys]],
-    map: [['0']],
+    map: [['  '], [' 0 '], ['  ']],
     constraints: {
       domain: ['walkable'],
       cells: ['empty'],
     },
   },
 
-  // * decoration
-  cornerCandle: {
-    keys: [['candles', 'candlesNE', 'candlesSE']],
-    map: [['0']],
+  stairsUp: {
+    keys: ['stairsUp'],
+    map: [['  '], [' 0 '], ['  ']],
     constraints: {
-      domain: ['corner', 'walkable'],
+      domain: ['walkable'],
       cells: ['empty'],
     },
   },
 
-  cornerWebNorthWest: {
-    keys: ['webNW'],
+  stairsDown: {
+    keys: ['stairsDown'],
     map: [['0']],
     constraints: {
-      domain: ['cornerNorthWest', 'walkable'],
-      cells: ['empty'],
-    },
-  },
-
-  cornerWebNorthEast: {
-    keys: [['webNE']],
-    map: [['0']],
-    constraints: {
-      domain: ['cornerNorthEast', 'walkable'],
-      cells: ['empty'],
-    },
-  },
-
-  cornerWebSouthEast: {
-    keys: [['webSE']],
-    map: [['0']],
-    constraints: {
-      domain: ['cornerSouthEast', 'walkable'],
-      cells: ['empty'],
-    },
-  },
-
-  cornerWebSouthWest: {
-    keys: [['webSW']],
-    map: [['0']],
-    constraints: {
-      domain: ['cornerSouthWest', 'walkable'],
+      domain: ['walkable'],
       cells: ['empty'],
     },
   },
@@ -102,43 +81,6 @@ export const Variables = {
     constraints: {
       domain: ['walkable'],
       cells: ['empty', 'floor'],
-    },
-  },
-
-  // * blocking decoration
-  bookshelf: {
-    keys: ['bookshelf'],
-    map: [['0'], [' ']],
-    constraints: {
-      domain: ['walkable', 'hasWallNorth'],
-      cells: ['empty'],
-    },
-  },
-
-  bookshelfEmpty: {
-    keys: ['bookshelfEmpty'],
-    map: [['0'], [' ']],
-    constraints: {
-      domain: ['walkable', 'hasWallNorth'],
-      cells: ['empty'],
-    },
-  },
-
-  bigDesk: {
-    keys: ['bigDeskLeft', 'bigDeskMiddle', 'bigDeskRight'],
-    map: [['     '], [' 012 '], ['     ']],
-    constraints: {
-      domain: ['walkable'],
-      cells: ['empty', 'walkable'],
-    },
-  },
-
-  statue: {
-    keys: [['statueDragon', 'statueMonster', 'statueWarrior']],
-    map: [['   '], [' 0 '], ['   ']],
-    constraints: {
-      domain: ['walkable'],
-      cells: ['empty'],
     },
   },
 
@@ -185,95 +127,4 @@ export const Variables = {
   },
 
   // * npcs
-  goblinPackWeak: {
-    keys: ['goblinSword', 'goblinSpear'],
-    map: [['01'], ['10']],
-    constraints: {
-      domain: ['walkable'],
-      cells: ['vacant', 'walkable'],
-    },
-  },
-
-  goblinPackStrong: {
-    keys: ['goblinSword', 'goblinSpear', 'goblinShaman', 'bigGoblin'],
-    map: [['01'], ['23']],
-    constraints: {
-      domain: ['walkable'],
-      cells: ['vacant', 'walkable'],
-    },
-  },
-
-  skeletonPackWeak: {
-    keys: ['skeleton', 'skeletonWarrior'],
-    map: [['01'], ['00']],
-    constraints: {
-      domain: ['walkable'],
-      cells: ['vacant', 'walkable'],
-    },
-  },
-
-  skeletonPackStrong: {
-    keys: ['skeleton', 'skeletonWarrior'],
-    map: [['01'], ['00']],
-    constraints: {
-      domain: ['walkable'],
-      cells: ['vacant', 'walkable'],
-    },
-  },
-
-  spiderPack: {
-    keys: ['spider'],
-    map: [['00'], ['00']],
-    constraints: {
-      domain: ['walkable'],
-      cells: ['vacant', 'walkable'],
-    },
-  },
-
-  ratPack: {
-    keys: ['rat'],
-    map: [['00'], ['00']],
-    constraints: {
-      domain: ['walkable'],
-      cells: ['vacant', 'walkable'],
-    },
-  },
-
-  batPack: {
-    keys: ['bat'],
-    map: [['00'], ['00']],
-    constraints: {
-      domain: ['walkable'],
-      cells: ['vacant', 'walkable'],
-    },
-  },
-
-  gelCube: {
-    keys: ['gelCube'],
-    map: [['0']],
-    constraints: {
-      domain: ['walkable'],
-      cells: ['vacant', 'walkable'],
-    },
-  },
-
-  beholder: {
-    keys: ['beholder'],
-    map: [['0']],
-    constraints: {
-      domain: ['walkable'],
-      cells: ['vacant', 'walkable'],
-    },
-  },
 } satisfies Record<string, Variable>
-
-// const books = {
-// space = add keepEmpty placeholder entity
-// must be and stay walkable, not empty
-//   bookshelf3: {
-//     keys: ['bookshelf'],
-//     map: [['0'], [' ']],
-//     constraints: ['empty', 'walkable'],
-//     domain: ['wall'], // used for originPt selection only
-//   },
-// }

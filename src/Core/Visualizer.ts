@@ -70,7 +70,7 @@ export class Visualizer {
       keys.forEach(key => ghosts.push(this.mirror.pool.spawn(key, pt)))
     }
 
-    this.mirror.name = `[${this.index}/${this.history.length}] ${message}`
+    this.mirror.name = `[${this.index}/${this.history.length - 1}] ${message}`
     this.mirror.terrainMap = terrainMap
     this.mirror.debugSymbolMap = debugSymbolMap
     this.mirror.entityList = [...entityList, ...ghosts]

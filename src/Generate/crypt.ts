@@ -1,7 +1,7 @@
 import { CONFIG } from '../config'
 import { EntityKey, Region } from '../Core'
 import { Rect } from '../lib/Shape/Rectangle'
-import { loop, pick, rnd } from '../lib/util'
+import { pick, rnd } from '../lib/util'
 import { BinarySpacePartition, Rooms } from './modules'
 import { Solver } from './modules/CSP/Solver'
 import { Overseer3 } from './Overseer3'
@@ -44,10 +44,17 @@ export function crypt(
   const rooms = new Rooms(region, O3, roomRects, O3.theme)
   // rooms.debugNumberRooms()
 
-  // const upStairRoom = rnd(rooms.rooms.length)
+  const stairsUpRoom = rnd(rooms.rooms.length - 1)
+  let stairsDownRoom = rnd(rooms.rooms.length - 1)
+  while (rooms.rooms.length > 1 && stairsUpRoom === stairsDownRoom)
+    stairsDownRoom = rnd(rooms.rooms.length - 1)
+
   console.groupCollapsed('CSP')
   rooms.each(room => {
     const csp = new Solver(region, room.rect, O3)
+    if (room.rID === stairsUpRoom) csp.solve(['stairsUp']) // todo portals
+    if (room.rID === stairsDownRoom) csp.solve(['stairsDown'])
+
     csp.solve([
       'cornerWebNorthWest',
       'cornerWebSouthWest',
@@ -55,32 +62,32 @@ export function crypt(
       'cornerWebNorthEast',
       'sconce',
       'sconce',
-      pick(['smallStonePitPlatformItem', 'smallSludgePond', 'smallWaterPond', 'statueAltar']),
-      pick([
-        'goblinPackWeak',
-        'goblinPackStrong',
-        'skeletonPackWeak',
-        'skeletonPackStrong',
-        'spiderPack',
-        'batPack',
-        'ratPack',
-        'gelCube',
-        'beholder',
-      ]),
+      // pick(['smallStonePitPlatformItem', 'smallSludgePond', 'smallWaterPond', 'statueAltar']),
+      // pick([
+      //   'goblinPackWeak',
+      //   'goblinPackStrong',
+      //   'skeletonPackWeak',
+      //   'skeletonPackStrong',
+      //   'spiderPack',
+      //   'batPack',
+      //   'ratPack',
+      //   'gelCube',
+      //   'beholder',
+      // ]),
     ])
 
-    const itemN = rnd(4)
-    loop(itemN, () => csp.solve(['randomItem']))
+    // const itemN = rnd(4)
+    // loop(itemN, () => csp.solve(['randomItem']))
   })
   console.groupEnd()
 
-  O3.portal(
-    rooms.rooms[0].rect.center.west(),
-    'cryptStairsUp',
-    isTopLevel ? 'town' : 'here',
-    isTopLevel ? 0 : 'up'
-  )
-  O3.portal(rooms.rooms[1].rect.center.east(), 'cryptStairsDown', 'here', 'down')
+  // O3.portal(
+  //   rooms.rooms[0].rect.center.west(),
+  //   'cryptStairsUp',
+  //   isTopLevel ? 'town' : 'here',
+  //   isTopLevel ? 0 : 'up'
+  // )
+  // O3.portal(rooms.rooms[1].rect.center.east(), 'cryptStairsDown', 'here', 'down')
 
   O3.finalize()
   return region
