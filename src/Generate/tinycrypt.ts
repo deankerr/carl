@@ -1,6 +1,7 @@
 import { CONFIG } from '../config'
 import { Region } from '../Core'
 import { Rect } from '../lib/Shape/Rectangle'
+import { timer } from '../lib/util'
 import { Solver } from './modules/CSP/Solver'
 import { Overseer3 } from './Overseer3'
 
@@ -19,20 +20,22 @@ export function tinyCrypt(
   O3.snap('a room')
 
   const CSP = new Solver(region, room, O3)
+  const t = timer('Timer CSP')
   CSP.solveAll([
     'bookshelf',
     'bookshelf',
+    'bookshelf',
+    'bookshelf',
     'statueAltar',
-    'bookshelf',
-    'bookshelf',
-    'bookshelfEmpty',
-    'cornerCandle',
-    'cornerCandle',
-    'cornerCandle',
-    'bigDesk',
+    // 'cornerCandle',
+    // 'cornerCandle',
+    // 'cornerCandle',
+    // 'cornerCandle',
+    // 'bookshelfEmpty',
+    // 'bigDesk',
   ])
-
+  t.stop()
   O3.finalize()
-  console.log(O3.history)
+  // console.log(O3.history)
   return region
 }

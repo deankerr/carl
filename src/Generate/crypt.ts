@@ -48,7 +48,7 @@ export function crypt(
   console.groupCollapsed('CSP')
   rooms.each(room => {
     const csp = new Solver(region, room.rect, O3)
-    csp.solve([
+    csp.solveNaive([
       'cornerWebNorthWest',
       'cornerWebSouthWest',
       'cornerWebSouthEast',
@@ -70,7 +70,7 @@ export function crypt(
     ])
 
     const itemN = rnd(4)
-    loop(itemN, () => csp.solve(['randomItem']))
+    loop(itemN, () => csp.solveNaive(['randomItem']))
   })
   console.groupEnd()
 

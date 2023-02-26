@@ -7,7 +7,7 @@ export class Visualizer {
   engine = window.game
   mirror: Region
 
-  speed = 550
+  speed = 750
   index = 0
   playing = false
   timeout = 0
@@ -70,7 +70,7 @@ export class Visualizer {
       keys.forEach(key => ghosts.push(this.mirror.pool.spawn(key, pt)))
     }
 
-    this.mirror.name = `${this.index} ${message}`
+    this.mirror.name = `[${this.index}/${this.history.length}] ${message}`
     this.mirror.terrainMap = terrainMap
     this.mirror.debugSymbolMap = debugSymbolMap
     this.mirror.entityList = [...entityList, ...ghosts]
