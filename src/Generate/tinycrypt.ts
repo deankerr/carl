@@ -15,7 +15,8 @@ export function tinyCrypt(
   O3.room(region.rect)
   O3.snap('Begin')
 
-  const room = Rect.atC(region.rect.center, 33, 15)
+  // const room = Rect.atC(region.rect.center, 33, 15)
+  const room = Rect.atC(region.rect.center, 20, 15)
   O3.room(room)
   const xStart = region.rect.center.add(-5, 0)
   for (const i of range(8)) {
@@ -36,16 +37,15 @@ export function tinyCrypt(
     // 'cornerWebNorthWest',
     // 'cornerWebSouthEast',
     // 'cornerWebSouthWest',
+    'statueAltar',
+    'smallDirtPitPlatformItem',
+    'smallSludgePond',
+    'smallWaterPond',
     'mushroom',
     'sconce',
 
-    'smallSludgePond',
-    'smallWaterPond',
     'bigDesk',
     'statue',
-    'statueAltar',
-    'smallDirtPitPlatformItem',
-    'smallStonePitPlatformItem',
     'goblinPackWeak',
     'goblinPackStrong',
     'skeletonPackWeak',

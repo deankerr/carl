@@ -105,17 +105,22 @@ export class Overseer3 {
     this.ghostMap.set(pt, keys)
   }
 
-  addObjectRevertible(pt: Point, map: Map<Point, EntityKey[]>) {
+  addObjectGhost(map: Map<Point, EntityKey[]>, filter: Extract<EntityKey, 'fogRed' | 'fogGreen'>) {
+    for (const [pt, keys] of map) {
+      this.ghostMap.set(pt, [...keys, filter])
+    }
+  }
+
+  addObjectRevertible(map: Map<Point, EntityKey[]>) {
     const revertTerrain = new Map<Point, Entity>()
     const revertEntities: Entity[] = []
 
-    for (const [zeroPt, keys] of map) {
-      const relPt = zeroPt.add(pt)
-      const currentTerrain = this.region.terrainAt(relPt)
+    for (const [pt, keys] of map) {
+      const currentTerrain = this.region.terrainAt(pt)
       for (const key of keys) {
-        const newEntity = this.region.create(relPt, this.themed(key))
+        const newEntity = this.region.create(pt, this.themed(key))
         if (!newEntity) continue
-        if (newEntity.terrain) revertTerrain.set(relPt, currentTerrain)
+        if (newEntity.terrain) revertTerrain.set(pt, currentTerrain)
         revertEntities.push(newEntity)
       }
     }
@@ -127,12 +132,6 @@ export class Overseer3 {
     const { revertTerrain, revertEntities } = revert
     for (const [pt, Entity] of revertTerrain) this.region.terrainMap.set(pt, Entity)
     revertEntities.forEach(e => this.region.destroy(e))
-  }
-
-  addObjectGhost(map: Map<Point, EntityKey[]>, filter: Extract<EntityKey, 'fogRed' | 'fogGreen'>) {
-    for (const [pt, keys] of map) {
-      this.ghostMap.set(pt, [...keys, filter])
-    }
   }
 
   clear(area: Point | Rect) {

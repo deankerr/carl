@@ -126,7 +126,7 @@ export const Variables = {
 
   bigDesk: {
     keys: ['bigDeskLeft', 'bigDeskMiddle', 'bigDeskRight'],
-    map: [['012'], ['   ']],
+    map: [['     '], [' 012 '], ['     ']],
     constraints: {
       domain: ['walkable'],
       cells: ['empty', 'walkable'],
