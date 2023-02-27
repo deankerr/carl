@@ -86,7 +86,7 @@ export class Solver {
     const origins = this.findOriginPts(problem)
 
     for (const originPt of origins) {
-      const relMap = this.localizeObjectMap(originPt, problem.object.map)
+      const relMap = this.localizeObjectMap(originPt, problem.object)
       const relPts = [...relMap.keys()]
 
       if (!this.satisfies(problem, relMap)) {
@@ -138,6 +138,7 @@ export class Solver {
         constraints: { ...variable.constraints, space: ['floor', 'walkable'] },
         object: this.buildObjectMap(key),
       }
+      console.log('problem.object:', problem.object)
       problems.push(problem)
     }
 
@@ -187,26 +188,27 @@ export class Solver {
 
   private buildObjectMap(vKey: VariableKey) {
     const { keys, map } = Variables[vKey]
-    const zeroMap = new Map<Point, EntityKey[]>()
+    const zeroMap = new Map<Point, number[]>()
     let xMax = 0
     let yMax = 0
 
     map.forEach((row, y) => {
       row.forEach(layer => {
-        layer.split('').forEach((keyCell, x) => {
+        layer.split('').forEach((cell, x) => {
           const zeroPt = point(x, y)
           const objectCell = zeroMap.get(zeroPt) ?? []
 
-          if (keyCell !== ' ') {
-            const n = parseInt(keyCell)
-            if (isNaN(n)) throw new Error(`CSP keyRef is NaN: ${keyCell}`)
-            const entityKeys = keys[n]
+          if (cell !== ' ') {
+            const n = parseInt(cell)
+            if (isNaN(n)) throw new Error(`CSP keyRef is NaN: ${cell}`)
+            // const entityKeys = keys[n]
 
-            if (Array.isArray(entityKeys)) {
-              objectCell.push(pick(entityKeys))
-            } else {
-              objectCell.push(entityKeys)
-            }
+            // if (Array.isArray(entityKeys)) {
+            //   objectCell.push(pick(entityKeys))
+            // } else {
+            //   objectCell.push(entityKeys)
+            // }
+            objectCell.push(n)
           }
 
           zeroMap.set(zeroPt, objectCell)
@@ -218,13 +220,16 @@ export class Solver {
     const width = xMax + 1
     const height = yMax + 1
 
-    return { map: zeroMap, width, height }
+    const arrayedKeys = keys.map(k => (Array.isArray(k) ? k : [k]))
+
+    return { keys: arrayedKeys, map: zeroMap, width, height }
   }
 
-  private localizeObjectMap(pt: Point, map: Map<Point, EntityKey[]>) {
+  private localizeObjectMap(pt: Point, object: ProblemObject) {
     const localMap = new Map<Point, EntityKey[]>()
-    for (const [zeroPt, keys] of map) {
-      localMap.set(zeroPt.add(pt), keys)
+    for (const [zeroPt, keys] of object.map) {
+      const entityKeys = keys.map(k => pick(object.keys[k]))
+      localMap.set(zeroPt.add(pt), entityKeys)
     }
     return localMap
   }
@@ -244,7 +249,8 @@ export type Problem = {
 }
 
 export type ProblemObject = {
-  map: Map<Point, EntityKey[]>
+  keys: EntityKey[][]
+  map: Map<Point, number[]>
   width: number
   height: number
 }

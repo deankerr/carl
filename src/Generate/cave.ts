@@ -7,7 +7,7 @@ import { CellDish } from './modules/cellular'
 import { Solver } from './modules/CSP/Solver'
 import { Overseer3 } from './Overseer3'
 
-const mapScale = 1
+const mapScale = 3
 
 export function cave(
   isTopLevel: boolean,
@@ -25,7 +25,9 @@ export function cave(
   const tCell = logTimer('cave gen')
   const caveDish = new CellDish(region.rect)
   caveDish.addAlways(region.rect.edgePoints())
-  caveDish.randomize(50).current((pt, alive) => (alive ? O3.wall(pt) : O3.floor(pt)))
+  caveDish
+    .randomize(45 + 2 * (mapScale - 1))
+    .current((pt, alive) => (alive ? O3.wall(pt) : O3.floor(pt)))
   O3.snap()
   for (const _ of range(5)) {
     caveDish.generation(4, 5)((pt, alive) => (alive ? O3.wall(pt) : O3.floor(pt)))
@@ -63,20 +65,18 @@ export function cave(
 
   // console.log('sectors:', sectors)
   const CSP = new Solver(region, region.rect, O3)
-  CSP.fill(['mushroom'], 0.2)
+  CSP.fill(
+    ['cornerWebNorthEast', 'cornerWebNorthWest', 'cornerWebSouthEast', 'cornerWebSouthWest'],
+    0.1
+  )
+
+  CSP.fill(['mushroom'], 0.01)
   // CSP.solveOptional([
   //   'cornerCandle',
-  //   'cornerWebNorthEast',
-  //   'cornerWebNorthWest',
-  //   'cornerWebSouthEast',
-  //   'cornerWebSouthWest',
+
   // ])
 
   CSP.solve([
-    // 'mushroom',
-    // 'mushroom',
-    // 'mushroom',
-    // 'mushroom',
     // 'sconceOpen',
     // 'sconceOpen',
     // 'sconceOpen',
@@ -85,7 +85,7 @@ export function cave(
     // 'beholder',
     // 'bigDesk',
     // 'gelCube',
-    // 'goblinPackStrong',
+    'goblinPackStrong',
     // 'ratPack',
     // 'smallDirtPitPlatformItem',
   ])
