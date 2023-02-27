@@ -60,6 +60,12 @@ export const terrain = {
     },
   },
 
+  cryptWallTomb: {
+    name: 'wall',
+    tag: [...wallTags],
+    sprite: { base: ['cryptHorizontal5'] },
+  },
+
   cryptWell: {
     name: 'well',
     tag: ['terrain', 'blocksMovement'],
@@ -111,6 +117,12 @@ export const terrain = {
       base: ['dirtFloor1', 'dirtFloor2', 'dirtFloor3', 'dirtFloor4', 'dirtFloor5', 'dirtFloor6'],
       noise: [0],
     },
+  },
+
+  dirtFloorHole: {
+    name: 'hole',
+    tag: ['terrain', 'floor'],
+    sprite: { base: ['dirtFloorHole'] },
   },
 
   dirtFloorOutdoor: {
@@ -186,6 +198,12 @@ export const terrain = {
     sprite: {
       base: ['stoneFloorPit'],
     },
+  },
+
+  stoneFloorGrate: {
+    name: 'grate',
+    tag: ['terrain', 'floor'],
+    sprite: { base: ['stoneFloorGrate'] },
   },
 
   grassFloor: {

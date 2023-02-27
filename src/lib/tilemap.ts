@@ -16,7 +16,7 @@ export function createOryxTinyMap(size: number) {
       'dungeonStairsDown',
       'dungeonStairsUp',
       'dungeonWell',
-      'dungeonGrate',
+      'dungeonWellEmpty',
     ],
     [
       'caveHorizontal1',
@@ -34,7 +34,7 @@ export function createOryxTinyMap(size: number) {
       'caveStairsDown',
       'caveStairsUp',
       'caveWell',
-      'caveGrate',
+      'caveWellEmpty',
     ],
     [
       'cryptHorizontal1',
@@ -52,7 +52,7 @@ export function createOryxTinyMap(size: number) {
       'cryptStairsDown',
       'cryptStairsUp',
       'cryptWell',
-      'cryptGrate',
+      'cryptWellEmpty',
     ],
     [
       'cavernHorizontal1',
@@ -70,7 +70,7 @@ export function createOryxTinyMap(size: number) {
       'cavernStairsDown',
       'cavernStairsUp',
       'cavernWell',
-      'cavernGrate',
+      'cavernWellEmpty',
     ],
     [
       'stoneFloor1',
@@ -79,7 +79,7 @@ export function createOryxTinyMap(size: number) {
       'stoneFloor4',
       'stoneFloor5',
       'stoneFloor6',
-      'stoneFloorHole',
+      'stoneFloorGrate',
       'stoneFloorPit',
     ],
     [

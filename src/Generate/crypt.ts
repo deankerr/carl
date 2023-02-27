@@ -73,6 +73,7 @@ export function crypt(
     if (i === stairsDownRoom) CSP.solve(['stairsDown'])
 
     CSP.solveOptional([
+      'cryptWallTomb',
       'cornerCandle',
       'cornerWebNorthEast',
       'cornerWebNorthWest',
@@ -85,8 +86,16 @@ export function crypt(
     CSP.solveOptional([
       'sconceTop',
       'sconceTop',
-      pick(['smallStonePitPlatformItem', 'smallSludgePond', 'smallWaterPond', 'statueAltar']),
+      pick([
+        'smallStonePitPlatformItem',
+        'smallSludgePond',
+        'smallWaterPond',
+        'statueAltar',
+        'dirtFloorHoleSquare',
+      ]),
       'randomItem',
+      'pots',
+      'trap',
       pick([
         'goblinPackWeak',
         'goblinPackStrong',

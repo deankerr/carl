@@ -36,4 +36,22 @@ export const furniture = {
       cells: ['empty'],
     },
   },
+
+  pots: {
+    keys: [['pot', 'pots1', 'pots2']],
+    map: [['0']],
+    constraints: {
+      domain: ['walkable'],
+      cells: ['empty', 'floor'],
+    },
+  },
+
+  trap: {
+    keys: ['trap'],
+    map: [['0']],
+    constraints: {
+      domain: ['walkable'],
+      cells: ['empty', 'floor'],
+    },
+  },
 } satisfies Record<string, Variable>

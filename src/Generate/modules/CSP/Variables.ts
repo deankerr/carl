@@ -57,24 +57,6 @@ export const Variables = {
     },
   },
 
-  sconceTop: {
-    keys: [['sconce']],
-    map: [['0']],
-    constraints: {
-      domain: ['wall', 'top', 'exposed'],
-      cells: ['empty'],
-    },
-  },
-
-  sconceOpen: {
-    keys: [['sconce']],
-    map: [['0']],
-    constraints: {
-      domain: ['wall', 'exposed'],
-      cells: ['empty'],
-    },
-  },
-
   smallSludgePond: {
     keys: ['sludge'],
     map: [['    '], [' 00 '], [' 00 '], ['    ']],
@@ -111,15 +93,24 @@ export const Variables = {
     },
   },
 
+  dirtFloorHoleSquare: {
+    keys: [['dirtFloor'], ['dirtFloorHole']],
+    map: [['000'], ['010'], ['000']],
+    constraints: {
+      domain: ['walkable'],
+      cells: ['empty', 'floor'],
+    },
+  },
+
   statueAltar: {
-    keys: [['carpet'], ['statueDragon'], ['wall']],
+    keys: [['carpet'], ['statueDragon'], ['wall'], ['candles']],
     map: [
-      ['      ', '      '],
-      [' 0000 ', ' 1  1 '],
-      [' 0  0 ', '  22  '],
-      [' 0  0 ', '  22  '],
-      [' 0000 ', ' 1  1 '],
-      ['      ', '      '],
+      ['      ', '      ', '      '],
+      [' 0000 ', ' 1  1 ', '      '],
+      [' 0  0 ', '  22  ', '   3  '],
+      [' 0  0 ', '  22  ', '      '],
+      [' 0000 ', ' 1  1 ', '      '],
+      ['      ', '      ', '      '],
     ],
     constraints: {
       domain: ['walkable'],

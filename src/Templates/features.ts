@@ -1,5 +1,6 @@
 import { EntityTemplate } from '../Core'
 import { doors } from './doors'
+import { effect } from './effect'
 import { furniture } from './furniture'
 import { plant } from './plant'
 import { stairs } from './stairs'
@@ -9,6 +10,7 @@ export const features = {
   ...stairs,
   ...doors,
   ...plant,
+  ...effect,
 
   crate: {
     name: 'crate',
