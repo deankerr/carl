@@ -72,31 +72,33 @@ export function crypt(
     if (i === stairsUpRoom) CSP.solve(['stairsUp']) // todo portals
     if (i === stairsDownRoom) CSP.solve(['stairsDown'])
 
-    CSP.solveOptional([
-      'cornerCandle',
-      'cornerWebNorthEast',
-      'cornerWebNorthWest',
-      'cornerWebSouthEast',
-      'cornerWebSouthWest',
-    ])
+    // CSP.solveOptional([
+    //   'cornerCandle',
+    //   'cornerWebNorthEast',
+    //   'cornerWebNorthWest',
+    //   'cornerWebSouthEast',
+    //   'cornerWebSouthWest',
+    // ])
 
-    CSP.solveOptional([
-      'sconceTop',
-      'sconceTop',
-      pick(['smallStonePitPlatformItem', 'smallSludgePond', 'smallWaterPond', 'statueAltar']),
-      'randomItem',
-      pick([
-        'goblinPackWeak',
-        'goblinPackStrong',
-        'skeletonPackWeak',
-        'skeletonPackStrong',
-        'spiderPack',
-        'batPack',
-        'ratPack',
-        'gelCube',
-        'beholder',
-      ]),
-    ])
+    CSP.fill(['mushroom'], 0.5)
+
+    // CSP.solveOptional([
+    //   'sconceTop',
+    //   'sconceTop',
+    //   pick(['smallStonePitPlatformItem', 'smallSludgePond', 'smallWaterPond', 'statueAltar']),
+    //   'randomItem',
+    //   pick([
+    //     'goblinPackWeak',
+    //     'goblinPackStrong',
+    //     'skeletonPackWeak',
+    //     'skeletonPackStrong',
+    //     'spiderPack',
+    //     'batPack',
+    //     'ratPack',
+    //     'gelCube',
+    //     'beholder',
+    //   ]),
+    // ])
 
     // const itemN = rnd(4)
     // loop(itemN, () => csp.solve(['randomItem']))

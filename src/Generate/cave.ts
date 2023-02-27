@@ -63,13 +63,14 @@ export function cave(
 
   // console.log('sectors:', sectors)
   const CSP = new Solver(region, region.rect, O3)
-  CSP.solveOptional([
-    'cornerCandle',
-    'cornerWebNorthEast',
-    'cornerWebNorthWest',
-    'cornerWebSouthEast',
-    'cornerWebSouthWest',
-  ])
+  CSP.fill(['mushroom'], 0.2)
+  // CSP.solveOptional([
+  //   'cornerCandle',
+  //   'cornerWebNorthEast',
+  //   'cornerWebNorthWest',
+  //   'cornerWebSouthEast',
+  //   'cornerWebSouthWest',
+  // ])
 
   CSP.solve([
     // 'mushroom',

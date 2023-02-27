@@ -23,7 +23,7 @@ export const Variables = {
 
   randomItem: {
     keys: [[...itemKeys]],
-    map: [['  '], [' 0 '], ['  ']],
+    map: [['0']],
     constraints: {
       domain: ['walkable'],
       cells: ['empty'],

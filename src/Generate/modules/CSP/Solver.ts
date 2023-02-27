@@ -9,7 +9,7 @@ import { Variable, VariableKey, Variables } from './Variables'
 export class Solver {
   domain = new Set<Point>()
   timer = 0
-  readonly timeout = 1000
+  readonly maxTime = 1000
 
   originPtCache = new Map<VariableKey, Point[]>()
 
@@ -34,7 +34,7 @@ export class Solver {
     const problems = this.buildProblems(keys)
 
     if (!this.solveNext(problems)) {
-      if (Date.now() - this.timer > this.timeout) {
+      if (this.timeout()) {
         console.error('CSP Failed - Timeout')
         console.error(keys)
       } else {
@@ -54,10 +54,32 @@ export class Solver {
     for (const problem of shuffle(problems)) {
       this.solveNext([problem])
     }
+
+    if (this.timeout()) {
+      console.error('CSP Failed - Timeout')
+      console.error(keys)
+    }
+  }
+
+  fill(keys: VariableKey[], percent = 1) {
+    if (percent < 0 || percent > 1) throw new Error('percent must be between 0 to 1')
+    this.timer = Date.now()
+
+    const problems = this.buildProblems(keys)
+
+    for (const problem of shuffle(problems)) {
+      const possible = this.findOriginPts(problem).length
+      const target = possible * percent
+      let count = 0
+
+      while (count < target && count < possible && !this.timeout()) {
+        if (this.solveNext([problem])) count++
+      }
+    }
   }
 
   private solveNext(problems: Problem[], n = 0) {
-    if (Date.now() - this.timer > this.timeout) return false
+    if (this.timeout()) return false
     if (n >= problems.length) return true
 
     const problem = problems[n]
@@ -205,6 +227,11 @@ export class Solver {
       localMap.set(zeroPt.add(pt), keys)
     }
     return localMap
+  }
+
+  private timeout() {
+    if (Date.now() - this.timer > this.maxTime) console.error('timeout')
+    return Date.now() - this.timer > this.maxTime
   }
 }
 
