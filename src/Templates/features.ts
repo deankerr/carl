@@ -1,232 +1,43 @@
 import { EntityTemplate } from '../Core'
+import { doors } from './doors'
 import { furniture } from './furniture'
+import { plant } from './plant'
+import { stairs } from './stairs'
 
 export const features = {
   ...furniture,
-  // Stairs
-  dungeonStairsDown: {
-    name: 'stairs',
-    tag: ['feature', 'stairs', 'down'],
-    portal: ['here', 'down'],
-    sprite: {
-      base: ['dungeonStairsDown'],
-    },
+  ...stairs,
+  ...doors,
+  ...plant,
+
+  crate: {
+    name: 'crate',
+    sprite: { base: ['crate'] },
+    tag: ['feature', 'blocksMovement'],
   },
 
-  dungeonStairsUp: {
-    name: 'stairs',
-    tag: ['feature', 'stairs', 'up'],
-    portal: ['here', 'up'],
-    sprite: {
-      base: ['dungeonStairsUp'],
-    },
+  chest: {
+    name: 'chest',
+    sprite: { base: ['chest'] },
+    tag: ['feature', 'blocksMovement'],
   },
 
-  caveStairsDown: {
-    name: 'stairs',
-    tag: ['feature', 'stairs', 'down'],
-    portal: ['here', 'down'],
-    sprite: {
-      base: ['caveStairsDown'],
-    },
+  tombstone1: {
+    name: 'tombstone1',
+    sprite: { base: ['tombstone1'] },
+    tag: ['feature', 'blocksMovement'],
   },
 
-  caveStairsUp: {
-    name: 'stairs',
-    tag: ['feature', 'stairs', 'up'],
-    portal: ['here', 'up'],
-    sprite: {
-      base: ['caveStairsUp'],
-    },
+  tombstone2: {
+    name: 'tombstone2',
+    sprite: { base: ['tombstone2'] },
+    tag: ['feature', 'blocksMovement'],
   },
 
-  cryptStairsDown: {
-    name: 'stairs',
-    tag: ['feature', 'stairs', 'down'],
-    portal: ['here', 'down'],
-    sprite: {
-      base: ['cryptStairsDown'],
-    },
-  },
-
-  cryptStairsUp: {
-    name: 'stairs',
-    tag: ['feature', 'stairs', 'up'],
-    portal: ['here', 'up'],
-    sprite: {
-      base: ['cryptStairsUp'],
-    },
-  },
-
-  cavernStairsDown: {
-    name: 'stairs',
-    tag: ['feature', 'stairs', 'down'],
-    portal: ['here', 'down'],
-    sprite: {
-      base: ['cavernStairsDown'],
-    },
-  },
-
-  cavernStairsUp: {
-    name: 'stairs',
-    tag: ['feature', 'stairs', 'up'],
-    portal: ['here', 'up'],
-    sprite: {
-      base: ['cavernStairsUp'],
-    },
-  },
-
-  // Doors
-  woodenDoor: {
-    name: 'door',
-    tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door'],
-    trodOn: ['You carefully backflip through the door.'],
-    sprite: {
-      base: ['woodenDoorClosed', 'woodenDoorOpen'],
-      trigger: ['isClosed', 'isOpen'],
-    },
-  },
-
-  woodenDoorVertical: {
-    name: 'door',
-    tag: [
-      'feature',
-      'blocksLight',
-      'blocksMovement',
-      'isClosed',
-      'door',
-      'isVertical',
-      'renderLevelHigh',
-    ],
-    trodOn: ['You carefully backflip through the door.'],
-    sprite: {
-      base: ['woodenDoorVerticalClosed', 'woodenDoorVerticalOpen'],
-      trigger: ['isClosed', 'isOpen'],
-    },
-  },
-
-  woodenDoorVerticalTop: {
-    name: 'door',
-    tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door', 'isVertical'],
-    trodOn: ['You carefully backflip through the door.'],
-    sprite: {
-      base: ['woodenDoorVerticalClosedTop', 'woodenDoorVerticalOpenTop'],
-      trigger: ['isClosed', 'isOpen'],
-    },
-  },
-
-  stoneDoor: {
-    name: 'door',
-    tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door', 'renderLevelHigh'],
-    trodOn: ['You carefully backflip through the door.'],
-    sprite: {
-      base: ['stoneDoorClosed', 'stoneDoorOpen'],
-      trigger: ['isClosed', 'isOpen'],
-    },
-  },
-
-  stoneDoorVertical: {
-    name: 'door',
-    tag: [
-      'feature',
-      'blocksLight',
-      'blocksMovement',
-      'isClosed',
-      'door',
-      'isVertical',
-      'renderLevelHigh',
-    ],
-    trodOn: ['You carefully backflip through the door.'],
-    sprite: {
-      base: ['stoneDoorVerticalClosed', 'stoneDoorVerticalOpen'],
-      trigger: ['isClosed', 'isOpen'],
-    },
-  },
-
-  stoneDoorVerticalTop: {
-    name: 'door',
-    tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door', 'isVertical'],
-    trodOn: ['You carefully backflip through the door.'],
-    sprite: {
-      base: ['stoneDoorVerticalClosedTop', 'stoneDoorVerticalOpenTop'],
-      trigger: ['isClosed', 'isOpen'],
-    },
-  },
-
-  jailDoor: {
-    name: 'door',
-    tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door'],
-    trodOn: ['You carefully backflip through the door.'],
-    sprite: {
-      base: ['jailDoorClosed', 'jailDoorOpen'],
-      trigger: ['isClosed', 'isOpen'],
-    },
-  },
-
-  jailDoorVertical: {
-    name: 'door',
-    tag: [
-      'feature',
-      'blocksLight',
-      'blocksMovement',
-      'isClosed',
-      'door',
-      'isVertical',
-      'renderLevelHigh',
-    ],
-    trodOn: ['You carefully backflip through the door.'],
-    sprite: {
-      base: ['jailDoorVerticalClosed', 'jailDoorVerticalOpen'],
-      trigger: ['isClosed', 'isOpen'],
-    },
-  },
-
-  jailDoorVerticalTop: {
-    name: 'door',
-    tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door', 'isVertical'],
-    trodOn: ['You carefully backflip through the door.'],
-    sprite: {
-      base: ['jailDoorVerticalClosedTop', 'jailDoorVerticalOpenTop'],
-      trigger: ['isClosed', 'isOpen'],
-    },
-  },
-
-  redDoor: {
-    name: 'door',
-    tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door'],
-    trodOn: ['You carefully backflip through the door.'],
-    sprite: {
-      base: ['redDoorClosed', 'redDoorOpen'],
-      trigger: ['isClosed', 'isOpen'],
-    },
-  },
-
-  redDoorVertical: {
-    name: 'door',
-    tag: [
-      'feature',
-      'blocksLight',
-      'blocksMovement',
-      'isClosed',
-      'door',
-      'isVertical',
-      'renderLevelHigh',
-    ],
-    trodOn: ['You carefully backflip through the door.'],
-    sprite: {
-      base: ['redDoorVerticalClosed', 'redDoorVerticalOpen'],
-      trigger: ['isClosed', 'isOpen'],
-    },
-  },
-
-  redDoorVerticalTop: {
-    name: 'door',
-    tag: ['feature', 'blocksLight', 'blocksMovement', 'isClosed', 'door', 'isVertical'],
-    trodOn: ['You carefully backflip through the door.'],
-    sprite: {
-      base: ['redDoorVerticalClosedTop', 'redDoorVerticalOpenTop'],
-      trigger: ['isClosed', 'isOpen'],
-    },
+  trap: {
+    name: 'trap',
+    sprite: { base: ['bearTrap'] },
+    tag: ['feature'],
   },
 
   // Floor decoration
@@ -266,86 +77,6 @@ export const features = {
     },
   },
 
-  cactus: {
-    name: 'cactus',
-    tag: ['feature'],
-    sprite: {
-      base: ['cactus'],
-    },
-  },
-
-  lilypad1: {
-    name: 'lilypad',
-    tag: ['feature'],
-    trodOn: ['You bounce off the lilypad.'],
-    sprite: {
-      base: ['lilypad11', 'lilypad12'],
-      animate: ['cycle', 1000],
-    },
-  },
-
-  lilypad2: {
-    name: 'lilypad',
-    tag: ['feature'],
-    trodOn: ['You bounce off the lilypad.'],
-    sprite: {
-      base: ['lilypad21', 'lilypad22'],
-      animate: ['cycle', 1000],
-    },
-  },
-
-  lilypad3: {
-    name: 'lilypad',
-    tag: ['feature'],
-    trodOn: ['You bounce off the lilypad.'],
-    sprite: {
-      base: ['lilypad31', 'lilypad32'],
-      animate: ['cycle', 1000],
-    },
-  },
-
-  lilypad4: {
-    name: 'lilypad',
-    tag: ['feature'],
-    trodOn: ['You bounce off the lilypad.'],
-    sprite: {
-      base: ['lilypad41', 'lilypad42'],
-      animate: ['cycle', 1000],
-    },
-  },
-
-  grassTuft: {
-    name: 'tuft of grass',
-    tag: ['feature'],
-    sprite: {
-      base: ['grassTuft1', 'grassTuft2', 'grassTuft3', 'grassTuft4', 'grassTuft5'],
-    },
-  },
-
-  redMushrooms: {
-    name: 'red mushrooms',
-    tag: ['feature'],
-    sprite: {
-      base: ['redMushrooms'],
-    },
-  },
-
-  purpleMushrooms: {
-    name: 'purple mushrooms',
-    tag: ['feature'],
-    sprite: {
-      base: ['purpleMushrooms'],
-    },
-  },
-
-  yellowMushrooms: {
-    name: 'yellow mushrooms',
-    tag: ['feature'],
-    sprite: {
-      base: ['yellowMushrooms'],
-    },
-  },
-
   candles: {
     name: 'candles',
     tag: ['feature'],
@@ -370,30 +101,6 @@ export const features = {
     sprite: {
       base: ['candlesSE1', 'candlesSE2'],
       animate: ['cycle', 200],
-    },
-  },
-
-  carpet: {
-    name: 'carpet',
-    tag: ['feature'],
-    sprite: {
-      base: ['carpet1'],
-    },
-  },
-
-  carpetEmblem1: {
-    name: 'carpetEmblem1',
-    tag: ['feature'],
-    sprite: {
-      base: ['carpetEmblem1'],
-    },
-  },
-
-  carpetEmblem2: {
-    name: 'carpet',
-    tag: ['feature'],
-    sprite: {
-      base: ['carpetEmblem2'],
     },
   },
 
@@ -456,12 +163,30 @@ export const features = {
     },
   },
 
-  bones: {
+  bones1: {
     name: 'bones',
     tag: ['feature'],
     trodOn: ['You trample some musty old bones.'],
     sprite: {
       base: ['bones1'],
+    },
+  },
+
+  bones2: {
+    name: 'bones',
+    tag: ['feature'],
+    trodOn: ['You trample some musty old bones.'],
+    sprite: {
+      base: ['bones2'],
+    },
+  },
+
+  bones3: {
+    name: 'bones',
+    tag: ['feature'],
+    trodOn: ['You trample some musty old bones.'],
+    sprite: {
+      base: ['bones3'],
     },
   },
 
@@ -485,31 +210,6 @@ export const features = {
     },
   },
 
-  // Solid decoration
-  statueWarrior: {
-    name: 'warrior statue',
-    tag: ['feature', 'blocksMovement'],
-    sprite: {
-      base: ['statueWarrior'],
-    },
-  },
-
-  statueDragon: {
-    name: 'warrior statue',
-    tag: ['feature', 'blocksMovement'],
-    sprite: {
-      base: ['statueDragon'],
-    },
-  },
-
-  statueMonster: {
-    name: 'warrior statue',
-    tag: ['feature', 'blocksMovement'],
-    sprite: {
-      base: ['statueMonster'],
-    },
-  },
-
   stoneBoulder: {
     name: 'boulder',
     tag: ['feature', 'blocksMovement'],
@@ -523,23 +223,6 @@ export const features = {
     tag: ['feature', 'blocksMovement'],
     sprite: {
       base: ['dirtBoulder'],
-    },
-  },
-
-  // Utility
-  shadow: {
-    name: 'shadow',
-    tag: ['feature', 'renderLevelHigh'],
-    sprite: {
-      base: ['lightShadow'],
-    },
-  },
-
-  invisibleBlock: {
-    name: 'invisible Block',
-    tag: ['feature', 'invisible', 'blocksMovement'],
-    sprite: {
-      base: ['stoneBoulder'],
     },
   },
 } satisfies Record<string, EntityTemplate>

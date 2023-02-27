@@ -7,7 +7,7 @@ import { CellDish } from './modules/cellular'
 import { Solver } from './modules/CSP/Solver'
 import { Overseer3 } from './Overseer3'
 
-const mapScale = 3
+const mapScale = 2
 
 export function cave(
   isTopLevel: boolean,
@@ -71,22 +71,17 @@ export function cave(
   )
 
   CSP.fill(['mushroom'], 0.01)
-  // CSP.solveOptional([
-  //   'cornerCandle',
-
-  // ])
+  CSP.fill(['dirtBoulder'], 0.01)
+  CSP.fill(['stoneBoulder'], 0.01)
+  CSP.fill(['sconceOpen'], 0.1)
 
   CSP.solve([
-    // 'sconceOpen',
-    // 'sconceOpen',
-    // 'sconceOpen',
-    // 'sconceOpen',
-    // 'batPack',
-    // 'beholder',
+    'batPack',
+    'beholder',
     // 'bigDesk',
-    // 'gelCube',
+    'gelCube',
     'goblinPackStrong',
-    // 'ratPack',
+    'ratPack',
     // 'smallDirtPitPlatformItem',
   ])
 

@@ -13,7 +13,7 @@ export class Solver {
 
   originPtCache = new Map<VariableKey, Point[]>()
 
-  debugShowOrigins = false
+  debugShowOrigins = true
   debugSuccessSnapSpeed = 'normal'
   debugFailSnapSpeed = 'fast'
 
@@ -51,6 +51,7 @@ export class Solver {
 
   solveOptional(keys: VariableKey[]) {
     this.timer = Date.now()
+    const timer = logTimer('solve optional')
     this.debugSuccessSnapSpeed = 'normal'
 
     const problems = this.buildProblems(keys)
@@ -63,11 +64,14 @@ export class Solver {
       console.error('CSP Failed - Timeout')
       console.error(keys)
     }
+
+    timer.stop()
   }
 
   fill(keys: VariableKey[], percent = 1) {
     if (percent < 0 || percent > 1) throw new Error('percent must be between 0 to 1')
     this.timer = Date.now()
+    const timer = logTimer('fill')
     this.debugSuccessSnapSpeed = 'fast'
 
     const problems = this.buildProblems(keys)
@@ -81,6 +85,8 @@ export class Solver {
         if (this.solveNext([problem])) count++
       }
     }
+
+    timer.stop()
   }
 
   private solveNext(problems: Problem[], n = 0) {
@@ -143,7 +149,7 @@ export class Solver {
         constraints: { ...variable.constraints, space: ['floor', 'walkable'] },
         object: this.buildObjectMap(key),
       }
-      console.log('problem.object:', problem.object)
+
       problems.push(problem)
     }
 
@@ -181,13 +187,13 @@ export class Solver {
       for (const pt of originSet) {
         this.O3.addGhost(pt, ['horse'])
       }
-      this.O3.snap('Origins - ' + problem.key)
+      this.O3.snap('Origins: ' + problem.key, this.debugSuccessSnapSpeed)
     }
 
     const origins = [...originSet]
     this.originPtCache.set(problem.key, origins)
 
-    timer.stop()
+    timer.stop(origins.length)
     return shuffle(origins)
   }
 

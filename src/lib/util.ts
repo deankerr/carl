@@ -85,7 +85,7 @@ export function logTimer(name = `Timer ${anonTimerCount++}`) {
 
 // debug helper - convert number to symbol
 export function nAlpha(n: number) {
-  const nSymbols = ['auraHoly', 'auraBlue', 'auraRed', 'auraGreen', 'auraPurple']
+  const nSymbols = ['auraWhite', 'auraBlue', 'auraRed', 'auraGreen', 'auraPurple']
 
   if (n < 0 && n > -6) return nSymbols[Math.abs(n) - 1]
   if (n < 0) return '?'

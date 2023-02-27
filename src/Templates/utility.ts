@@ -96,4 +96,52 @@ export const utility = {
     },
     color: ['transparent', 'transparent'],
   },
+
+  shadow: {
+    name: 'shadow',
+    tag: ['feature', 'renderLevelHigh'],
+    sprite: {
+      base: ['lightShadow'],
+    },
+  },
+
+  invisibleBlock: {
+    name: 'invisible Block',
+    tag: ['feature', 'invisible', 'blocksMovement'],
+    sprite: {
+      base: ['stoneBoulder'],
+    },
+  },
+
+  nothing: {
+    name: 'nothing',
+    tag: ['terrain'],
+    sprite: {
+      base: ['nothing'],
+    },
+  },
+
+  unrevealed: {
+    name: 'unrevealed',
+    tag: ['terrain'],
+    sprite: {
+      base: ['abyss'],
+    },
+  },
+
+  abyss: {
+    name: 'abyss',
+    tag: ['terrain', 'blocksLight', 'blocksMovement'],
+    sprite: {
+      base: ['abyss'],
+    },
+  },
+
+  endlessVoid: {
+    name: 'endless void',
+    tag: ['terrain', 'outOfBounds', 'blocksLight', 'blocksMovement'],
+    sprite: {
+      base: ['abyss'],
+    },
+  },
 } satisfies Record<string, EntityTemplate>

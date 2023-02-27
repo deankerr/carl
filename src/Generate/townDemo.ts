@@ -91,8 +91,8 @@ export function townDemo(
   O3.add(dRect.p1.south(1), 'dirtBoulder')
   O3.add(dRect.p1.east(4), 'stoneBoulder')
 
-  O3.add(dRect.p2.north(1), 'bones')
-  O3.add(dRect.p2.west(1), 'bones')
+  O3.add(dRect.p2.north(1), 'bones3')
+  O3.add(dRect.p2.west(1), 'bones2')
 
   O3.portal(dPt, 'cryptStairsDown', 'crypt', 0)
 

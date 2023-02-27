@@ -93,6 +93,24 @@ export const Variables = {
     },
   },
 
+  dirtBoulder: {
+    keys: [['dirtBoulder']],
+    map: [['0']],
+    constraints: {
+      domain: ['walkable'],
+      cells: ['empty'],
+    },
+  },
+
+  stoneBoulder: {
+    keys: [['stoneBoulder']],
+    map: [['0']],
+    constraints: {
+      domain: ['walkable'],
+      cells: ['empty'],
+    },
+  },
+
   statueAltar: {
     keys: [['carpet'], ['statueDragon'], ['wall']],
     map: [
