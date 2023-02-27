@@ -57,11 +57,20 @@ export const Variables = {
     },
   },
 
-  sconce: {
+  sconceTop: {
     keys: [['sconce']],
     map: [['0']],
     constraints: {
       domain: ['wall', 'top', 'exposed'],
+      cells: ['empty'],
+    },
+  },
+
+  sconceOpen: {
+    keys: [['sconce']],
+    map: [['0']],
+    constraints: {
+      domain: ['wall', 'exposed'],
       cells: ['empty'],
     },
   },

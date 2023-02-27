@@ -74,7 +74,7 @@ export function* range(n: number, max?: number, step = 1) {
 
 // console.log timer
 let anonTimerCount = 0
-export function timer(name = `Timer ${anonTimerCount++}`) {
+export function logTimer(name = `Timer ${anonTimerCount++}`) {
   const t = Date.now()
   return {
     stop: (data?: unknown) => {

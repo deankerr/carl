@@ -1,11 +1,11 @@
 import { Point } from '../../lib/Shape/Point'
 import { Rect } from '../../lib/Shape/Rectangle'
-import { shuffle, timer } from '../../lib/util'
+import { logTimer, shuffle } from '../../lib/util'
 
 // sweep a rect, finding each region that matches the predicate function
 // ie. individual open cave sections
 export function findSectors(rect: Rect, predicateFn: (pt: Point) => boolean) {
-  const t = timer('find sectors')
+  const t = logTimer('find sectors')
   const checked = new Set<Point>()
   const sectors: Set<Point>[] = []
 
@@ -40,13 +40,13 @@ export function connectSectors(
   predicateFn: (pt: Point) => boolean,
   connectFn: (pt: Point) => unknown
 ) {
-  const t = timer('connect sectors')
+  const t = logTimer('connect sectors')
   const sorted = [...sectors].slice(0, sectors.length - 1).sort((a, b) => a.size - b.size)
 
   for (const sector of sorted) {
     const [pt, path] = findPathToClosest(rect, sector, predicateFn)
     const owner = sectors.find(s => s.has(pt))
-    console.log('PATH:', path)
+
     for (const pt of path) {
       connectFn(pt)
       owner?.add(pt)

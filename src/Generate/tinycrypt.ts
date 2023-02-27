@@ -1,7 +1,7 @@
 import { CONFIG } from '../config'
 import { Region } from '../Core'
 import { Rect } from '../lib/Shape/Rectangle'
-import { range, timer } from '../lib/util'
+import { logTimer, range } from '../lib/util'
 import { Solver } from './modules/CSP/Solver'
 import { Overseer3 } from './Overseer3'
 
@@ -26,7 +26,7 @@ export function tinyCrypt(
   O3.snap('a room')
 
   const CSP = new Solver(region, room, O3)
-  const t = timer('Timer CSP')
+  const t = logTimer('Timer CSP')
   CSP.solve([
     // 'statueAltar',
     // 'cornerCandle',
@@ -42,7 +42,6 @@ export function tinyCrypt(
     'smallSludgePond',
     'smallWaterPond',
     'mushroom',
-    'sconce',
 
     'bigDesk',
     'statue',

@@ -1,7 +1,7 @@
 import { EntityKey, Region } from '../../../Core'
 import { point, Point } from '../../../lib/Shape/Point'
 import { Rect } from '../../../lib/Shape/Rectangle'
-import { pick, shuffle } from '../../../lib/util'
+import { logTimer, pick, shuffle } from '../../../lib/util'
 import { Overseer3 } from '../../Overseer3'
 import { ConstraintKey, Constraints } from './Constraints'
 import { Variable, VariableKey, Variables } from './Variables'
@@ -11,7 +11,7 @@ const spaceConstraints: ConstraintKey[] = ['floor', 'walkable']
 export class Solver {
   domain = new Set<Point>()
   timer = 0
-  readonly timeout = 2000
+  readonly timeout = 1000
 
   originPtCache = new Map<VariableKey, Set<Point>>()
 
@@ -29,9 +29,11 @@ export class Solver {
 
   solve(vKeys: VariableKey[]) {
     this.timer = Date.now()
+    const t = logTimer('solve')
     const originPtCache = new Map<VariableKey, Set<Point>>()
     const problems: Problem[] = []
 
+    const tPre = logTimer('build domain cache')
     for (const vKey of vKeys) {
       const variable = Variables[vKey] as Variable
       const { constraints } = variable
@@ -50,12 +52,13 @@ export class Solver {
       }
       problems.push(problem)
     }
+    tPre.stop()
 
     // debug - display origin pts in visualizer
-    // for (const [key, pts] of originPtCache) {
-    //   pts.forEach(pt => this.O3.addGhost(pt, ['horse']))
-    //   this.O3.snap(key)
-    // }
+    for (const [key, pts] of originPtCache) {
+      pts.forEach(pt => this.O3.addGhost(pt, ['horse']))
+      this.O3.snap(key)
+    }
 
     if (!this.solveNext(problems)) {
       if (Date.now() - this.timer > this.timeout) {
@@ -66,6 +69,7 @@ export class Solver {
         console.error(vKeys)
       }
     }
+    t.stop()
   }
 
   private solveNext(problems: Problem[], n = 0) {
@@ -89,7 +93,7 @@ export class Solver {
       // success
       const revert = this.O3.addObjectRevertible(relMap)
       relPts.forEach(pt => this.O3.addGhost(pt, ['fogGreen']))
-      this.O3.snap('success')
+      this.O3.snap(`Success - ${problem.key}`)
 
       // next
       if (this.solveNext(problems, n + 1)) return true
@@ -101,6 +105,7 @@ export class Solver {
       }
     }
 
+    console.error('Unable to place', problem.key)
     return false
   }
 
