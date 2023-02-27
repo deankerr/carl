@@ -22,7 +22,7 @@ export const terrain = {
     },
   },
 
-  dungeonPool: {
+  dungeonWell: {
     name: 'well',
     tag: ['terrain', 'blocksMovement'],
     sprite: {
@@ -41,7 +41,7 @@ export const terrain = {
     },
   },
 
-  cavePool: {
+  caveWell: {
     name: 'well',
     tag: ['terrain', 'blocksMovement'],
     sprite: {
@@ -60,7 +60,7 @@ export const terrain = {
     },
   },
 
-  cryptPool: {
+  cryptWell: {
     name: 'well',
     tag: ['terrain', 'blocksMovement'],
     sprite: {
@@ -79,7 +79,7 @@ export const terrain = {
     },
   },
 
-  cavernPool: {
+  cavernWell: {
     name: 'well',
     tag: ['terrain', 'blocksMovement'],
     sprite: {
@@ -90,7 +90,6 @@ export const terrain = {
   // Floor
   stoneFloor: {
     name: 'floor',
-
     tag: ['terrain', 'floor'],
     sprite: {
       base: [

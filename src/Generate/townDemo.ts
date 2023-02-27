@@ -101,7 +101,7 @@ export function townDemo(
 
   const wellPt = bPt1.east(5)
   O3.clear(Rect.atC(wellPt, 3, 3))
-  O3.add(wellPt, 'cavePool')
+  O3.add(wellPt, 'caveWell')
 
   O3.add(bPt2.add(-1, 1), 'guy')
 

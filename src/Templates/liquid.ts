@@ -41,12 +41,12 @@ export const liquid = {
     },
   },
 
-  blood: {
-    name: 'blood',
+  lava: {
+    name: 'lava',
     tag: ['terrain', 'liquid'],
     sprite: {
-      base: ['blood1', 'blood2', 'bloodClear'],
-      ledge: ['bloodLedge1', 'bloodLedge2', 'bloodClearLedge'],
+      base: ['lava1', 'lava2', 'lavaClear'],
+      ledge: ['lavaLedge1', 'lavaLedge2', 'lavaClearLedge'],
       animate: ['random', 1000],
     },
   },

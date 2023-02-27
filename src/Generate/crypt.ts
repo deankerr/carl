@@ -28,7 +28,7 @@ export function crypt(
     BSP.splitLargest('best', 1, 1)
   }
 
-  const liquidKey = pick(['sludge', 'blood', 'oil', 'slime', 'acid']) as EntityKey
+  const liquidKey = pick(['sludge', 'lava', 'oil', 'slime', 'acid']) as EntityKey
   BSP.rectGaps.forEach(g => O3.add(g.rect, liquidKey))
 
   BSP.splitN(rnd(3, 7))
