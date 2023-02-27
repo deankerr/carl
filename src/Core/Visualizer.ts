@@ -8,6 +8,8 @@ export class Visualizer {
   mirror: Region
 
   speed = 750
+  speedFast = 50
+
   index = 0
   playing = false
   timeout = 0
@@ -58,7 +60,7 @@ export class Visualizer {
     this.index++
     this.next()
 
-    const speed = this.mirror.name.includes('CSP - Invalid') ? 50 : this.speed
+    const speed = this.history[this.index].speed === 'fast' ? this.speedFast : this.speed
     this.timeout = setTimeout(this.play.bind(this), speed)
   }
 

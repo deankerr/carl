@@ -10,8 +10,9 @@ export type Snapshot = {
   terrainMap: Map<Point, Entity>
   debugSymbolMap: Map<Point, [string, string, string]>
   entityList: Entity[]
-  message: string
   ghostMap: Map<Point, EntityKey[]>
+  message: string
+  speed: string
 }
 
 export type RegionTheme = {
@@ -48,13 +49,14 @@ export class Overseer3 {
     window.O3Debug = this
   }
 
-  snap(message = '') {
+  snap(message = '', speed?: string) {
     this.history.push({
       terrainMap: new Map([...this.region.terrainMap]),
       debugSymbolMap: new Map([...this.region.debugSymbolMap]),
       entityList: [...this.region.entityList],
-      message: message,
       ghostMap: this.ghostMap,
+      message: message,
+      speed: speed ?? 'normal',
     })
     this.ghostMap = new Map<Point, EntityKey[]>()
   }

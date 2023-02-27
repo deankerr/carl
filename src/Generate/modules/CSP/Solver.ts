@@ -13,7 +13,9 @@ export class Solver {
 
   originPtCache = new Map<VariableKey, Point[]>()
 
-  debugShowOrigins = true
+  debugShowOrigins = false
+  debugSuccessSnapSpeed = 'normal'
+  debugFailSnapSpeed = 'fast'
 
   constructor(
     readonly region: Region,
@@ -30,6 +32,7 @@ export class Solver {
   solve(keys: VariableKey[]) {
     this.timer = Date.now()
     const t = logTimer('solve')
+    this.debugSuccessSnapSpeed = 'normal'
 
     const problems = this.buildProblems(keys)
 
@@ -48,6 +51,7 @@ export class Solver {
 
   solveOptional(keys: VariableKey[]) {
     this.timer = Date.now()
+    this.debugSuccessSnapSpeed = 'normal'
 
     const problems = this.buildProblems(keys)
 
@@ -64,6 +68,7 @@ export class Solver {
   fill(keys: VariableKey[], percent = 1) {
     if (percent < 0 || percent > 1) throw new Error('percent must be between 0 to 1')
     this.timer = Date.now()
+    this.debugSuccessSnapSpeed = 'fast'
 
     const problems = this.buildProblems(keys)
 
@@ -92,14 +97,14 @@ export class Solver {
       if (!this.satisfies(problem, relMap)) {
         // failure
         this.O3.addObjectGhost(relMap, 'fogRed')
-        this.O3.snap('CSP - Invalid')
+        this.O3.snap(`Invalid: ${problem.key}`, this.debugFailSnapSpeed)
         continue
       }
 
       // success
       const revert = this.O3.addObjectRevertible(relMap)
       relPts.forEach(pt => this.O3.addGhost(pt, ['fogGreen']))
-      this.O3.snap(`Success - ${problem.key}`)
+      this.O3.snap(`Success: ${problem.key}`, this.debugSuccessSnapSpeed)
 
       // next
       if (this.solveNext(problems, n + 1)) return true
@@ -107,7 +112,7 @@ export class Solver {
         // next problem failed, revert and try more points
         this.O3.revertObject(revert)
         console.warn('revert:', problem.key)
-        this.O3.snap('Revert - ' + problem.key)
+        this.O3.snap('Revert - ' + problem.key, this.debugSuccessSnapSpeed)
       }
     }
 
@@ -186,6 +191,7 @@ export class Solver {
     return shuffle(origins)
   }
 
+  // convert JSON object definition to spatial Map
   private buildObjectMap(vKey: VariableKey) {
     const { keys, map } = Variables[vKey]
     const zeroMap = new Map<Point, number[]>()
@@ -201,13 +207,6 @@ export class Solver {
           if (cell !== ' ') {
             const n = parseInt(cell)
             if (isNaN(n)) throw new Error(`CSP keyRef is NaN: ${cell}`)
-            // const entityKeys = keys[n]
-
-            // if (Array.isArray(entityKeys)) {
-            //   objectCell.push(pick(entityKeys))
-            // } else {
-            //   objectCell.push(entityKeys)
-            // }
             objectCell.push(n)
           }
 
