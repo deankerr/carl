@@ -134,6 +134,4 @@ export const Variables = {
       cells: ['empty', 'floor'],
     },
   },
-
-  // * npcs
 } satisfies Record<string, Variable>

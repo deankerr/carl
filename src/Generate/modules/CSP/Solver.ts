@@ -6,14 +6,14 @@ import { Overseer3 } from '../../Overseer3'
 import { ConstraintKey, Constraints } from './Constraints'
 import { Variable, VariableKey, Variables } from './Variables'
 
-const spaceConstraints: ConstraintKey[] = ['floor', 'walkable']
-
 export class Solver {
   domain = new Set<Point>()
   timer = 0
   readonly timeout = 1000
 
-  originPtCache = new Map<VariableKey, Set<Point>>()
+  originPtCache = new Map<VariableKey, Point[]>()
+
+  debugShowOrigins = true
 
   constructor(
     readonly region: Region,
@@ -27,46 +27,31 @@ export class Solver {
     console.log('Solver - Domain: ', this.domain.size)
   }
 
-  solve(vKeys: VariableKey[]) {
+  solve(keys: VariableKey[]) {
     this.timer = Date.now()
     const t = logTimer('solve')
-    const originPtCache = new Map<VariableKey, Set<Point>>()
     const problems: Problem[] = []
 
-    const tPre = logTimer('build domain cache')
-    for (const vKey of vKeys) {
-      const variable = Variables[vKey] as Variable
-      const { constraints } = variable
-      const object = this.buildObject(vKey)
-
-      const origins = originPtCache.get(vKey) ?? this.buildOriginPtSet(object, constraints.domain)
-      originPtCache.set(vKey, origins)
+    for (const key of keys) {
+      const variable = Variables[key] as Variable
 
       const problem: Problem = {
         region: this.region,
         domain: this.domain,
-        key: vKey,
-        constraints: constraints.cells,
-        object,
-        origins,
+        key,
+        constraints: { ...variable.constraints, space: ['floor', 'walkable'] },
+        object: this.buildObjectMap(key),
       }
       problems.push(problem)
-    }
-    tPre.stop()
-
-    // debug - display origin pts in visualizer
-    for (const [key, pts] of originPtCache) {
-      pts.forEach(pt => this.O3.addGhost(pt, ['horse']))
-      this.O3.snap(key)
     }
 
     if (!this.solveNext(problems)) {
       if (Date.now() - this.timer > this.timeout) {
         console.error('CSP Failed - Timeout')
-        console.error(vKeys)
+        console.error(keys)
       } else {
         console.error('CSP Failed')
-        console.error(vKeys)
+        console.error(keys)
       }
     }
     t.stop()
@@ -77,7 +62,7 @@ export class Solver {
     if (n >= problems.length) return true
 
     const problem = problems[n]
-    const origins = shuffle([...problem.origins])
+    const origins = this.findOriginPts(problem)
 
     for (const originPt of origins) {
       const relMap = this.localizeObjectMap(originPt, problem.object.map)
@@ -101,7 +86,7 @@ export class Solver {
         // next problem failed, revert and try more points
         this.O3.revertObject(revert)
         console.warn('revert:', problem.key)
-        this.O3.snap('revert')
+        this.O3.snap('Revert - ' + problem.key)
       }
     }
 
@@ -109,43 +94,58 @@ export class Solver {
     return false
   }
 
-  satisfies(problem: Problem, relMap: Map<Point, EntityKey[]>) {
+  private satisfies(problem: Problem, relMap: Map<Point, EntityKey[]>) {
     for (const [pt, keys] of relMap) {
-      const constraints = keys.length > 0 ? problem.constraints : spaceConstraints
-      for (const cKey of constraints) {
-        if (!Constraints[cKey]({ ...problem, pt })) return false
+      const constraints = keys.length > 0 ? problem.constraints.cells : problem.constraints.space
+      for (const key of constraints) {
+        if (!Constraints[key](problem, pt)) return false
       }
     }
     return true
   }
 
-  private buildOriginPtSet(object: ProblemObject, constraints: ConstraintKey[]) {
-    const origins = new Set<Point>([...this.domain])
-    const problem = { region: this.region, domain: this.domain, object }
+  private findOriginPts(problem: Problem) {
+    const cached = this.originPtCache.get(problem.key)
+    if (cached) return shuffle(cached)
+
+    const timer = logTimer('build origin cache - ' + problem.key)
+    const originSet = new Set<Point>([...this.domain])
 
     for (const pt of this.domain) {
       // last point
-      const pt2 = pt.add(object.width - 1, object.height - 1)
+      const pt2 = pt.add(problem.object.width - 1, problem.object.height - 1)
 
-      // fast invalid if lastPt is OOB
+      // fast invalid if lastPt is out of domain bounds
       if (!this.domain.has(pt2)) {
-        origins.delete(pt)
+        originSet.delete(pt)
         continue
       }
 
       // check constraints for origin/last point
-      for (const cKey of constraints) {
-        if (!Constraints[cKey]({ ...problem, pt })) {
-          origins.delete(pt)
+      for (const cKey of problem.constraints.domain) {
+        if (!Constraints[cKey](problem, pt)) {
+          originSet.delete(pt)
           break
         }
       }
     }
 
-    return origins
+    // debug - display origin pts in visualizer
+    if (this.debugShowOrigins) {
+      for (const pt of originSet) {
+        this.O3.addGhost(pt, ['horse'])
+      }
+      this.O3.snap('Origins - ' + problem.key)
+    }
+
+    const origins = [...originSet]
+    this.originPtCache.set(problem.key, origins)
+
+    timer.stop()
+    return shuffle(origins)
   }
 
-  private buildObject(vKey: VariableKey) {
+  private buildObjectMap(vKey: VariableKey) {
     const { keys, map } = Variables[vKey]
     const zeroMap = new Map<Point, EntityKey[]>()
     let xMax = 0
@@ -181,7 +181,7 @@ export class Solver {
     return { map: zeroMap, width, height }
   }
 
-  localizeObjectMap(pt: Point, map: Map<Point, EntityKey[]>) {
+  private localizeObjectMap(pt: Point, map: Map<Point, EntityKey[]>) {
     const localMap = new Map<Point, EntityKey[]>()
     for (const [zeroPt, keys] of map) {
       localMap.set(zeroPt.add(pt), keys)
@@ -194,12 +194,9 @@ export type Problem = {
   region: Region
   domain: Set<Point>
   key: VariableKey
-  constraints: ConstraintKey[]
-  origins: Set<Point>
+  constraints: Record<'domain' | 'cells' | 'space', ConstraintKey[]>
   object: ProblemObject
 }
-
-export type CProblem = Omit<Problem, 'origins' | 'constraints' | 'key'> & { pt: Point }
 
 export type ProblemObject = {
   map: Map<Point, EntityKey[]>

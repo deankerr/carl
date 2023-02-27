@@ -7,7 +7,7 @@ import { CellDish } from './modules/cellular'
 import { Solver } from './modules/CSP/Solver'
 import { Overseer3 } from './Overseer3'
 
-const mapScale = 2
+const mapScale = 1
 
 export function cave(
   isTopLevel: boolean,
@@ -69,21 +69,21 @@ export function cave(
     'cornerWebNorthWest',
     'cornerWebSouthEast',
     'cornerWebSouthWest',
-    'mushroom',
-    'mushroom',
-    'mushroom',
-    'mushroom',
-    'sconceOpen',
-    'sconceOpen',
-    'sconceOpen',
-    'sconceOpen',
-    'batPack',
-    'beholder',
-    'bigDesk',
-    'gelCube',
-    'goblinPackStrong',
-    'ratPack',
-    'smallDirtPitPlatformItem',
+    // 'mushroom',
+    // 'mushroom',
+    // 'mushroom',
+    // 'mushroom',
+    // 'sconceOpen',
+    // 'sconceOpen',
+    // 'sconceOpen',
+    // 'sconceOpen',
+    // 'batPack',
+    // 'beholder',
+    // 'bigDesk',
+    // 'gelCube',
+    // 'goblinPackStrong',
+    // 'ratPack',
+    // 'smallDirtPitPlatformItem',
   ])
 
   O3.clearDebug()

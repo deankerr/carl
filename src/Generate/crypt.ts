@@ -73,24 +73,25 @@ export function crypt(
     if (i === stairsDownRoom) csp.solve(['stairsDown'])
 
     csp.solve([
-      // 'cornerWebNorthWest',
-      // 'cornerWebSouthWest',
-      // 'cornerWebSouthEast',
-      // 'cornerWebNorthEast',
+      'cornerWebNorthWest',
+      'cornerWebSouthWest',
+      'cornerWebSouthEast',
+      'cornerWebNorthEast',
       'sconceTop',
-      // 'sconce',
-      // pick(['smallStonePitPlatformItem', 'smallSludgePond', 'smallWaterPond', 'statueAltar']),
-      // pick([
-      //   'goblinPackWeak',
-      //   'goblinPackStrong',
-      //   'skeletonPackWeak',
-      //   'skeletonPackStrong',
-      //   'spiderPack',
-      //   'batPack',
-      //   'ratPack',
-      //   'gelCube',
-      //   'beholder',
-      // ]),
+      'sconceTop',
+      pick(['smallStonePitPlatformItem', 'smallSludgePond', 'smallWaterPond', 'statueAltar']),
+      'randomItem',
+      pick([
+        'goblinPackWeak',
+        'goblinPackStrong',
+        'skeletonPackWeak',
+        'skeletonPackStrong',
+        'spiderPack',
+        'batPack',
+        'ratPack',
+        'gelCube',
+        'beholder',
+      ]),
     ])
 
     // const itemN = rnd(4)
