@@ -30,20 +30,8 @@ export class Solver {
   solve(keys: VariableKey[]) {
     this.timer = Date.now()
     const t = logTimer('solve')
-    const problems: Problem[] = []
 
-    for (const key of keys) {
-      const variable = Variables[key] as Variable
-
-      const problem: Problem = {
-        region: this.region,
-        domain: this.domain,
-        key,
-        constraints: { ...variable.constraints, space: ['floor', 'walkable'] },
-        object: this.buildObjectMap(key),
-      }
-      problems.push(problem)
-    }
+    const problems = this.buildProblems(keys)
 
     if (!this.solveNext(problems)) {
       if (Date.now() - this.timer > this.timeout) {
@@ -54,7 +42,18 @@ export class Solver {
         console.error(keys)
       }
     }
+
     t.stop()
+  }
+
+  solveOptional(keys: VariableKey[]) {
+    this.timer = Date.now()
+
+    const problems = this.buildProblems(keys)
+
+    for (const problem of shuffle(problems)) {
+      this.solveNext([problem])
+    }
   }
 
   private solveNext(problems: Problem[], n = 0) {
@@ -102,6 +101,25 @@ export class Solver {
       }
     }
     return true
+  }
+
+  private buildProblems(keys: VariableKey[]) {
+    const problems: Problem[] = []
+
+    for (const key of keys) {
+      const variable = Variables[key] as Variable
+
+      const problem: Problem = {
+        region: this.region,
+        domain: this.domain,
+        key,
+        constraints: { ...variable.constraints, space: ['floor', 'walkable'] },
+        object: this.buildObjectMap(key),
+      }
+      problems.push(problem)
+    }
+
+    return problems
   }
 
   private findOriginPts(problem: Problem) {

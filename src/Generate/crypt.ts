@@ -68,15 +68,19 @@ export function crypt(
 
   console.groupCollapsed('CSP')
   rooms.forEach((room, i) => {
-    const csp = new Solver(region, room, O3)
-    if (i === stairsUpRoom) csp.solve(['stairsUp']) // todo portals
-    if (i === stairsDownRoom) csp.solve(['stairsDown'])
+    const CSP = new Solver(region, room, O3)
+    if (i === stairsUpRoom) CSP.solve(['stairsUp']) // todo portals
+    if (i === stairsDownRoom) CSP.solve(['stairsDown'])
 
-    csp.solve([
-      'cornerWebNorthWest',
-      'cornerWebSouthWest',
-      'cornerWebSouthEast',
+    CSP.solveOptional([
+      'cornerCandle',
       'cornerWebNorthEast',
+      'cornerWebNorthWest',
+      'cornerWebSouthEast',
+      'cornerWebSouthWest',
+    ])
+
+    CSP.solveOptional([
       'sconceTop',
       'sconceTop',
       pick(['smallStonePitPlatformItem', 'smallSludgePond', 'smallWaterPond', 'statueAltar']),
