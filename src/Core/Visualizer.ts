@@ -17,11 +17,12 @@ export class Visualizer {
   constructor(targetRegion: Region, readonly history: Snapshot[]) {
     const { width, height } = targetRegion
 
-    const r = new Region(width, height)
-    r.revealAll = true
-    r.name = 'mirror world'
+    const mirror = new Region(width, height)
+    mirror.revealAll = true
+    mirror.name = 'mirror world'
+    mirror.noise = targetRegion.noise
 
-    this.mirror = r
+    this.mirror = mirror
     console.log('visualizer created')
   }
 
@@ -69,7 +70,11 @@ export class Visualizer {
 
     const ghosts: Entity[] = []
     for (const [pt, keys] of ghostMap) {
-      keys.forEach(key => ghosts.push(this.mirror.pool.spawn(key, pt)))
+      for (const key of keys) {
+        const ghost = this.mirror.pool.spawn(key, pt)
+        ghost.renderLevelHigh = true
+        ghosts.push(ghost)
+      }
     }
 
     this.mirror.name = `[${this.index}/${this.history.length - 1}] ${message}`

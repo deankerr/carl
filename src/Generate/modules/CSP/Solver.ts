@@ -185,9 +185,9 @@ export class Solver {
     // debug - display origin pts in visualizer
     if (this.debugShowOrigins) {
       for (const pt of originSet) {
-        this.O3.addGhost(pt, ['auraWhite'])
+        this.O3.addGhost(pt, ['horse'])
       }
-      this.O3.snap('Origins: ' + problem.key, this.debugSuccessSnapSpeed)
+      this.O3.snap('Origins: ' + problem.key, this.debugFailSnapSpeed)
     }
 
     const origins = [...originSet]

@@ -24,18 +24,18 @@ export const utility = {
     name: 'themed stairs up',
     tag: ['feature'],
     sprite: {
-      base: ['?'],
+      base: ['cryptStairsUp'],
     },
-    color: ['pink', 'transparent'],
+    // color: ['pink', 'transparent'],
   },
 
   stairsDown: {
     name: 'themed stairs down',
     tag: ['feature'],
     sprite: {
-      base: ['?'],
+      base: ['cryptStairsDown'],
     },
-    color: ['pink', 'transparent'],
+    // color: ['pink', 'transparent'],
   },
 
   door: {

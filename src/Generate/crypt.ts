@@ -72,16 +72,16 @@ export function crypt(
     if (i === stairsUpRoom) CSP.solve(['stairsUp']) // todo portals
     if (i === stairsDownRoom) CSP.solve(['stairsDown'])
 
-    CSP.solveOptional([
-      'cryptWallTomb',
-      'cornerCandle',
-      'cornerWebNorthEast',
-      'cornerWebNorthWest',
-      'cornerWebSouthEast',
-      'cornerWebSouthWest',
-    ])
+    // CSP.solveOptional([
+    //   'cryptWallTomb',
+    //   'cornerCandle',
+    //   'cornerWebNorthEast',
+    //   'cornerWebNorthWest',
+    //   'cornerWebSouthEast',
+    //   'cornerWebSouthWest',
+    // ])
 
-    // CSP.fill(['mushroom'], 0.5)
+    CSP.fill(['mushroom'], 0.1)
 
     CSP.solveOptional([
       'sconceTop',

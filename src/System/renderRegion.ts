@@ -58,28 +58,19 @@ export function renderRegion(engine: Engine) {
     const visible = local.revealAll || (areaVisible.get(pt) ?? false)
     const shrouded = local.revealAll || local.recallAll || (areaKnown.get(pt) ?? false)
 
-    const stack: Entity[] = []
     const here = entities.filter(e => e.position === pt && !e.invisible)
-
     const terrain = local.terrainAt(pt)
-    const features = here.filter(e => e.feature)
-    const items = here.filter(e => e.item)
+
+    const stack: Entity[] = [terrain]
 
     if (visible) {
-      const beings = here.filter(e => e.being)
-      if (terrain) stack.push(terrain)
-      stack.push(...features)
-      stack.push(...items)
-      stack.push(...beings)
+      // render all entities here
+      stack.push(...here)
     } else if (shrouded) {
-      // area previously seen, render terrain and features
-      stack.push(terrain)
-      stack.push(...features)
-      stack.push(...items)
-      stack.push(shroudedFog)
+      // area mapped but not currently visible
+      stack.push(...here.filter(e => !e.being), shroudedFog)
     } else {
       // unrevealed area
-      stack.push(terrain)
       stack.push(unrevealedFog)
     }
 
