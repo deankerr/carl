@@ -8,6 +8,8 @@ import { Variable, VariableKey, Variables } from './Variables'
 
 export class Solver {
   domain = new Set<Point>()
+  rect: Rect | undefined
+
   timer = 0
   readonly maxTime = 1000
 
@@ -23,18 +25,20 @@ export class Solver {
     readonly O3: Overseer3
   ) {
     if (Array.isArray(domain)) domain.forEach(pt => this.domain.add(pt))
-    else if (domain instanceof Rect) [...domain.each()].forEach(pt => this.domain.add(pt))
-    else [...domain.values()].forEach(pt => this.domain.add(pt))
+    else if (domain instanceof Rect) {
+      ;[...domain.each()].forEach(pt => this.domain.add(pt))
+      this.rect = domain
+    } else [...domain.values()].forEach(pt => this.domain.add(pt))
 
     console.log('Solver - Domain: ', this.domain.size)
   }
 
-  solve(keys: VariableKey[]) {
+  solve(keys: VariableKey[], addConstraints?: ConstraintKey[]) {
     this.timer = Date.now()
     const t = logTimer('solve')
     this.debugSuccessSnapSpeed = 'normal'
 
-    const problems = this.buildProblems(keys)
+    const problems = this.buildProblems(keys, addConstraints)
 
     if (!this.solveNext(problems)) {
       if (this.timeout()) {
@@ -49,12 +53,12 @@ export class Solver {
     t.stop()
   }
 
-  solveOptional(keys: VariableKey[]) {
+  solveOptional(keys: VariableKey[], addConstraints?: ConstraintKey[]) {
     this.timer = Date.now()
     const timer = logTimer('solve optional')
     this.debugSuccessSnapSpeed = 'normal'
 
-    const problems = this.buildProblems(keys)
+    const problems = this.buildProblems(keys, addConstraints)
 
     for (const problem of shuffle(problems)) {
       this.solveNext([problem])
@@ -130,23 +134,33 @@ export class Solver {
     for (const [pt, keys] of relMap) {
       const constraints = keys.length > 0 ? problem.constraints.cells : problem.constraints.space
       for (const key of constraints) {
+        console.log('c:', key)
+        // debugger
         if (!Constraints[key](problem, pt)) return false
       }
     }
     return true
   }
 
-  private buildProblems(keys: VariableKey[]) {
+  private buildProblems(keys: VariableKey[], addConstraints?: ConstraintKey[]) {
     const problems: Problem[] = []
 
     for (const key of keys) {
       const variable = Variables[key] as Variable
 
+      const constraints = {
+        ...variable.constraints,
+        space: ['floor', 'walkable'] as ConstraintKey[],
+      }
+
+      if (addConstraints) constraints.domain.push(...addConstraints)
+      console.log('constraints:', key, constraints)
       const problem: Problem = {
         region: this.region,
         domain: this.domain,
+        rect: this.rect,
         key,
-        constraints: { ...variable.constraints, space: ['floor', 'walkable'] },
+        constraints,
         object: this.buildObjectMap(key),
       }
 
@@ -248,6 +262,7 @@ export class Solver {
 export type Problem = {
   region: Region
   domain: Set<Point>
+  rect?: Rect
   key: VariableKey
   constraints: Record<'domain' | 'cells' | 'space', ConstraintKey[]>
   object: ProblemObject

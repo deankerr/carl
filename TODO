@@ -2,29 +2,17 @@
 
 ### CSP:
 
-- Backtracking
 - Room tags -> apply CSP (random?) template
-- Visualizer - success/failed tries, domain state highlighting (w/ debug symbols)
 
 #### Variables
 
-- Bounding box
-- Margin box (ie. adjacent space considered "full")
-- Multi-layer structures
+- Auto margin box
 - Variable structures (eg, 3 objects anywhere in bounding box, cellular?)
 - Select appropriate structure from list (eg. sconce/wall deco structure that fits/aligns)
 
 #### Constraints
 
-- Better support for domain level constraints - eg. center alignment
 - Parameters - eg. place x within min/max distance of y
-
-#### Domain
-
-- Formalise domain instantiation
-- Irregular shape domains
-- Initialize cells as full/empty/margin based on region queries/tags
-- eg, shrubs considered "full" despite not blocking movement
 
 ## Soon
 
@@ -43,7 +31,6 @@
 
 - Usability/consistency pass (esp. Systems)
 - Reduce System boilerplate - pass in object with common requirements (local, currentActing etc.)
-- Maintain consistent object reference for entities - just replace components
 - Automatic mapping of template data to correct component without hardcoding (if possible)
 - Basic AI module
 
@@ -51,12 +38,10 @@
 
 - Add more beings
 - Describe entity color for messages
-- Recategorise template files by theme rather than terrain/feature/being
 - Spatial indexing of entities? (ECS - automate marking cells as dirty re: render data)
 - Memoize cell render data
 - Exception handling
 - (W)alk/autoexplore
-- Unify function declaration style
 - Viewport doesn't move until you are closer to the side
 - Dev/Prod Configs
 
@@ -64,7 +49,6 @@
 
 - vignette/player position effects luminance level wide
 - level: voronoi map - bee hive/crystal cavern
-- Add more decoration terrain/items/void decor - reeds
 - Level: create walkable pt list during generate for spawning
 - Patch ROT.JS to handle drawOver tiles?
 - Test ROT-JS patch, submit PR

@@ -1,7 +1,7 @@
 import { CONFIG } from '../config'
 import { Region } from '../Core'
 import { Rect } from '../lib/Shape/Rectangle'
-import { logTimer, range } from '../lib/util'
+import { logTimer, shuffle } from '../lib/util'
 import { Solver } from './modules/CSP/Solver'
 import { Overseer3 } from './Overseer3'
 
@@ -16,45 +16,35 @@ export function tinyCrypt(
   O3.snap('Begin')
 
   // const room = Rect.atC(region.rect.center, 33, 15)
-  const room = Rect.atC(region.rect.center, 20, 15)
+  const room = Rect.atC(region.rect.center.add(-9, 0), 13, 10)
+  const room2 = Rect.atC(region.rect.center.add(9, 0), 14, 11)
   O3.room(room)
-  const xStart = region.rect.center.add(-5, 0)
-  for (const i of range(8)) {
-    O3.wall(xStart.add(i, 1))
-    O3.wall(region.rect.center.add(0, i))
-  }
-  O3.snap('a room')
+  O3.room(room2)
+  // const xStart = region.rect.center.add(-5, 0)
+  // for (const i of range(8)) {
+  //   O3.wall(xStart.add(i, 1))
+  //   O3.wall(region.rect.center.add(0, i))
+  // }
+  // O3.snap('a room')
 
+  console.groupCollapsed('CSP1')
   const CSP = new Solver(region, room, O3)
   const t = logTimer('Timer CSP')
-  CSP.solve([
-    // 'statueAltar',
-    // 'cornerCandle',
-    // 'bigDesk',
-    // 'bookshelfEmpty',
-    // 'bookshelf',
-    // 'cornerWebNorthEast',
-    // 'cornerWebNorthWest',
-    // 'cornerWebSouthEast',
-    // 'cornerWebSouthWest',
-    'statueAltar',
-    'smallDirtPitPlatformItem',
-    'smallSludgePond',
-    'smallWaterPond',
-    'mushroom',
+  // CSP.solveOptional(shuffle(['smallSludgePond', 'statueAltar', 'smallDirtPitPlatformItem']), [
+  //   'centerY',
+  // ])
+  CSP.solveOptional(shuffle(['statueAltar']), ['centerY'])
 
-    'bigDesk',
-    'statue',
-    'goblinPackWeak',
-    'goblinPackStrong',
-    'skeletonPackWeak',
-    'skeletonPackStrong',
-    'spiderPack',
-    'ratPack',
-    'batPack',
-    'beholder',
-    'gelCube',
-  ])
+  console.groupEnd()
+
+  console.groupCollapsed('CSP2')
+  const CSP2 = new Solver(region, room2, O3)
+  // CSP2.solveOptional(shuffle(['smallSludgePond', 'statueAltar', 'smallDirtPitPlatformItem']), [
+  //   'centerY',
+  // ])
+  CSP.solveOptional(shuffle(['statueAltar']), ['centerY'])
+  console.groupEnd()
+
   t.stop()
   O3.finalize()
   // console.log(O3.history)
