@@ -15,7 +15,7 @@ export class Solver {
 
   originPtCache = new Map<VariableKey, Point[]>()
 
-  debugShowOrigins = true
+  debugShowOrigins = false
   debugSuccessSnapSpeed = 'normal'
   debugFailSnapSpeed = 'fast'
 

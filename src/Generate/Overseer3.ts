@@ -166,6 +166,7 @@ export class Overseer3 {
     const pt4 = pt.add(0, 1)
 
     this.add(pt1.west(1), 'buildingChimney')
+    if (rnd(1)) this.add(pt1.west(1), 'smoke')
     this.add(pt1, 'buildingRoof')
     this.add(pt1.east(1), 'buildingRoof')
 
