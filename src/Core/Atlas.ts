@@ -1,9 +1,11 @@
 import * as Generate from '../Generate'
+
 import { Region } from './'
 
 export class Atlas {
   zones: Zone[] = [
-    { label: 'town', generator: Generate.townDemo, regions: [], regionIndex: 0 },
+    { label: 'townDemo', generator: Generate.townDemo, regions: [], regionIndex: 0 },
+    { label: 'town', generator: Generate.town, regions: [], regionIndex: 0 },
     { label: 'crypt', generator: Generate.crypt, regions: [], regionIndex: 0 },
     { label: 'cave', generator: Generate.cave, regions: [], regionIndex: 0 },
     { label: 'dungeon', generator: Generate.dungeon, regions: [], regionIndex: 0 },
