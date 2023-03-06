@@ -67,6 +67,10 @@ export const Constraints = {
     return !neighbours.some(e => e.wall)
   },
 
+  adjacentBuilding: function (p: Problem, pt: Point) {
+    return p.region.terrainAt(pt.west()).key === 'buildingWindow'
+  },
+
   centerX: function (p: Problem, pt: Point) {
     if (!p.rect) return false
     const domainCenterX = p.rect.x + p.rect.width / 2

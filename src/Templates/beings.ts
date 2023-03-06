@@ -62,6 +62,16 @@ export const beings = {
     },
   },
 
+  rogue: {
+    name: 'rogue',
+    tag: ['being', 'actor', 'blocksMovement', 'friendly'],
+    bumpMessage: ['Party time.'],
+    sprite: {
+      build: 'rogue',
+      animate: ['cycle', 750],
+    },
+  },
+
   dog: {
     name: 'lil pupper',
     tag: ['being', 'actor', 'blocksMovement', 'friendly'],

@@ -125,38 +125,6 @@ export const features = {
     },
   },
 
-  signBlank: {
-    name: 'sign',
-    tag: ['feature', 'blocksMovement'],
-    sprite: {
-      base: ['signBlank'],
-    },
-  },
-
-  signWeapon: {
-    name: 'sign',
-    tag: ['feature', 'blocksMovement'],
-    sprite: {
-      base: ['signWeapon'],
-    },
-  },
-
-  signPotion: {
-    name: 'sign',
-    tag: ['feature', 'blocksMovement'],
-    sprite: {
-      base: ['signPotion'],
-    },
-  },
-
-  signInn: {
-    name: 'sign',
-    tag: ['feature', 'blocksMovement'],
-    sprite: {
-      base: ['signInn'],
-    },
-  },
-
   dirtLedge: {
     name: 'dirtLedge',
     tag: ['feature', 'blocksMovement'],

@@ -51,4 +51,36 @@ export const building = {
       animate: ['cycle', 500],
     },
   },
+
+  signBlank: {
+    name: 'sign',
+    tag: ['feature', 'blocksMovement'],
+    sprite: {
+      base: ['signBlank'],
+    },
+  },
+
+  signWeapon: {
+    name: 'sign',
+    tag: ['feature', 'blocksMovement'],
+    sprite: {
+      base: ['signWeapon'],
+    },
+  },
+
+  signPotion: {
+    name: 'sign',
+    tag: ['feature', 'blocksMovement'],
+    sprite: {
+      base: ['signPotion'],
+    },
+  },
+
+  signInn: {
+    name: 'sign',
+    tag: ['feature', 'blocksMovement'],
+    sprite: {
+      base: ['signInn'],
+    },
+  },
 } satisfies Record<string, EntityTemplate>

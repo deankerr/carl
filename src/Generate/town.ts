@@ -19,7 +19,7 @@ export function town(
 
   const dish = new CellDish(region.rect)
   dish.addAlways(region.rect.edgePoints())
-  dish.randomize(40).current((pt, alive) => (alive ? O3.add(pt, 'shrub') : O3.clear(pt)))
+  dish.randomize(35).current((pt, alive) => (alive ? O3.add(pt, 'shrub') : O3.clear(pt)))
   O3.snap('cell init')
   dish.generation(4, 5)((pt, alive) => (alive ? O3.add(pt, 'shrub') : O3.clear(pt)))
   O3.snap('cell 1')
@@ -38,7 +38,20 @@ export function town(
 
   const CSP = new Solver(region, region.rect, O3)
 
-  CSP.solve(['house', 'house', 'house', 'house'])
+  CSP.solve([
+    'house',
+    'weaponSign',
+    'house',
+    'potionSign',
+    'house',
+    'innSign',
+    'house',
+    'house',
+    'house',
+    'house',
+    'well',
+    'campParty',
+  ])
 
   O3.finalize()
   return region
