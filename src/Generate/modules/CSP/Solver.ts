@@ -94,39 +94,37 @@ export class Solver {
   }
 
   private solveNext(problems: Problem[], n = 0) {
-    if (this.timeout()) return false
     if (n >= problems.length) return true
 
     const problem = problems[n]
     const origins = this.findOriginPts(problem)
 
     for (const originPt of origins) {
+      if (this.timeout()) return false
       const relMap = this.localizeObjectMap(originPt, problem.object)
       const relPts = [...relMap.keys()]
 
       if (!this.satisfies(problem, relMap)) {
         // failure
         this.O3.addObjectGhost(relMap, 'fogRed')
-        this.O3.snap(`Invalid: ${problem.key}`, this.debugFailSnapSpeed)
+        this.O3.snap(`Invalid: ${problem.key} ${n}`, this.debugFailSnapSpeed)
         continue
       }
 
       // success
       const revert = this.O3.addObjectRevertible(relMap)
       relPts.forEach(pt => this.O3.addGhost(pt, ['fogGreen']))
-      this.O3.snap(`Success: ${problem.key}`, this.debugSuccessSnapSpeed)
+      this.O3.snap(`Success: ${problem.key} ${n}`, this.debugSuccessSnapSpeed)
 
       // next
       if (this.solveNext(problems, n + 1)) return true
       else {
         // next problem failed, revert and try more points
         this.O3.revertObject(revert)
-        console.warn('revert:', problem.key)
-        this.O3.snap('Revert - ' + problem.key, this.debugSuccessSnapSpeed)
+        this.O3.snap(`Revert: ${problem.key} ${n}`, this.debugSuccessSnapSpeed)
       }
     }
 
-    console.error('Unable to place', problem.key)
     return false
   }
 
@@ -134,8 +132,6 @@ export class Solver {
     for (const [pt, keys] of relMap) {
       const constraints = keys.length > 0 ? problem.constraints.cells : problem.constraints.space
       for (const key of constraints) {
-        console.log('c:', key)
-        // debugger
         if (!Constraints[key](problem, pt)) return false
       }
     }
