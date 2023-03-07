@@ -1,9 +1,8 @@
 import { CONFIG } from '../config'
 import { Region } from '../Core'
 import { createHues } from '../lib/color'
-import { logTimer, range } from '../lib/util'
 import { connectSectors, findSectors } from './modules'
-import { CellDish } from './modules/cellular'
+import { cellularAutomata } from './modules/cellular'
 import { Solver } from './modules/CSP/Solver'
 import { Overseer3 } from './Overseer3'
 
@@ -22,18 +21,20 @@ export function cave(
   O3.floor(region.rect)
 
   // * cave generation
-  const tCell = logTimer('cave gen')
-  const caveDish = new CellDish(region.rect)
-  caveDish.addAlways(region.rect.edgePoints())
-  caveDish
-    .randomize(45 + 2 * (mapScale - 1))
-    .current((pt, alive) => (alive ? O3.wall(pt) : O3.floor(pt)))
-  O3.snap()
-  for (const _ of range(5)) {
-    caveDish.generation(4, 5)((pt, alive) => (alive ? O3.wall(pt) : O3.floor(pt)))
-    // O3.snap()
-  }
-  tCell.stop()
+  const cells = cellularAutomata(region.rect, {
+    initialChance: 45 + 2 * (mapScale - 1),
+    survival: 4,
+    birth: 5,
+    iterations: 5,
+  })
+
+  cells.forEach((grid, i) => {
+    for (const [pt, state] of grid) {
+      if (region.rect.isEdgePt(pt)) O3.wall(pt)
+      else state ? O3.wall(pt) : O3.floor(pt)
+    }
+    O3.snap('Cellular Automata - ' + i)
+  })
 
   // * connect caves
   const sectors = findSectors(region.rect, pt => !region.terrainAt(pt).blocksMovement)
