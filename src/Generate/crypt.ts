@@ -1,8 +1,9 @@
 import { CONFIG } from '../config'
 import { EntityKey, Region } from '../Core'
+import { connectAll } from '../lib/search'
 import { Rect } from '../lib/Shape/Rectangle'
 import { pick, rnd, shuffle } from '../lib/util'
-import { BinarySpacePartition, connectSectors, findSectors } from './modules'
+import { BinarySpacePartition } from './modules'
 import { Solver } from './modules/CSP/Solver'
 import { Overseer3 } from './Overseer3'
 
@@ -32,25 +33,17 @@ export function crypt(
   BSP.rectGaps.forEach(g => O3.add(g.rect, liquidKey))
 
   BSP.splitN(rnd(3, 7))
-  const roomRects: Rect[] = []
+  const rooms: Rect[] = []
   BSP.leaves(r => {
     O3.room(r)
-    roomRects.push(r)
+    rooms.push(r)
   })
 
-  // const rooms = new Rooms(region, O3, roomRects, O3.theme)
-  // rooms.debugNumberRooms()
-  const rooms = roomRects
-  const sectors = findSectors(region.rect, pt => region.terrainAt(pt).floor == true)
-  // const sectorColors = createHues(sectors.length)
-  // sectors.forEach((sec, i) => O3.debug([...sec], i, sectorColors[i]))
-  // O3.snap('sectors')
-
-  connectSectors(
+  const roomFloors = rooms.map(rect => [...rect.scale(-1).each()])
+  connectAll(
     region.rect,
-    sectors,
-    // rooms.map(r => new Set(r.each())),
-    pt => region.terrainAt(pt).floor === true,
+    roomFloors,
+    () => true,
     pt => {
       const here = region.terrainAt(pt)
       if (here.wall) {
@@ -60,7 +53,7 @@ export function crypt(
       else O3.floor(pt)
     }
   )
-  O3.snap('Caves connected')
+  O3.snap('Rooms connected')
 
   const [stairsUpRoom, stairsDownRoom] = shuffle(rooms)
 

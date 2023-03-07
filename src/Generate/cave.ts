@@ -1,7 +1,6 @@
 import { CONFIG } from '../config'
 import { Region } from '../Core'
-import { createHues } from '../lib/color'
-import { connectSectors, findSectors } from './modules'
+import { connectAll, select } from '../lib/search'
 import { cellularAutomata } from './modules/cellular'
 import { Solver } from './modules/CSP/Solver'
 import { Overseer3 } from './Overseer3'
@@ -37,21 +36,17 @@ export function cave(
   })
 
   // * connect caves
-  const sectors = findSectors(region.rect, pt => !region.terrainAt(pt).blocksMovement)
-  const secColors = createHues(sectors.length)
-  sectors.forEach((sec, i) => O3.debug([...sec], i, secColors[i]))
-  // O3.snap()
-
-  connectSectors(
+  const open = select(region.rect, pt => !region.terrainAt(pt).blocksMovement)
+  connectAll(
     region.rect,
-    sectors,
-    pt => !region.terrainAt(pt).blocksMovement,
+    open,
+    () => true,
     pt => O3.floor(pt)
   )
-  // O3.snap('Caves connected')
+  O3.snap('Caves connected')
 
-  // * remove inner walls
-  const inner = findSectors(region.rect, pt => {
+  // * remove hidden walls
+  const hiddenWalls = select(region.rect, pt => {
     if (region.terrainAt(pt).blocksMovement) {
       const walls = pt
         .neighbours()
@@ -60,11 +55,8 @@ export function cave(
       return walls.length === 8
     } else return false
   })
-  inner.forEach(wal => O3.add([...wal], 'abyss'))
-  // O3.snap('remove inner')
-  O3.clearDebug()
+  hiddenWalls.forEach(wall => O3.add([...wall], 'abyss'))
 
-  // console.log('sectors:', sectors)
   const CSP = new Solver(region, region.rect, O3)
   CSP.fill(
     ['cornerWebNorthEast', 'cornerWebNorthWest', 'cornerWebSouthEast', 'cornerWebSouthWest'],
