@@ -154,7 +154,7 @@ export class Overseer3 {
     const pathFn = new ROT.Path.AStar(pt2.x, pt2.y, passFn, { topology: 8 })
     pathFn.compute(pt1.x, pt1.y, (x, y) => {
       const pPt = point(x, y)
-      this.clear(pPt)
+      // this.clear(pPt)
       this.add(pPt, key)
     })
   }

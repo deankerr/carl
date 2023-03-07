@@ -70,11 +70,15 @@ export function town(
   )
 
   const pathBetween = [...doorStepPts, ...wellPt].sort((a, b) => a.x - b.x)
+  const passFn = (x: number, y: number) => {
+    const terrainKey = region.terrainAt(point(x, y)).key
+    return terrainKey === 'grassFloor' || terrainKey === 'grassPath'
+  }
 
   pathBetween.forEach((pt, i) => {
     if (i === 0) return
     const prevPt = doorStepPts[i - 1]
-    O3.path(prevPt, pt, 'grassPath')
+    O3.path(prevPt, pt, 'grassPath', passFn)
     O3.snap('Connect paths')
   })
 

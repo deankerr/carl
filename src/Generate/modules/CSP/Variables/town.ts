@@ -79,7 +79,13 @@ export const building = {
       'dirtBoulder',
       ['bones1', 'bones2', 'bones3'],
     ],
-    map: [['00000', '4   3'], ['00200', '4   5'], ['00100', '   5 '], ['     ']],
+    map: [
+      ['       '],
+      [' 00000 ', ' 4   3 '],
+      [' 00200 ', ' 4   5 '],
+      [' 00100 ', '    5  '],
+      ['       '],
+    ],
     constraints: {
       domain: ['walkable'],
       cells: ['empty', 'floor'],
