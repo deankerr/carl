@@ -9,13 +9,14 @@ export const building = {
       ['buildingRoof'],
       ['buildingChimney'],
       ['smoke'],
+      ['grassPath'],
     ],
     map: [
       ['     ', '     '],
       [' 433 ', ' 5   '],
       [' 222 ', '     '],
       [' 101 ', '     '],
-      ['     ', '     '],
+      [' 666 ', '     '],
       ['     ', '     '],
     ],
     constraints: {

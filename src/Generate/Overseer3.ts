@@ -151,7 +151,7 @@ export class Overseer3 {
 
   path(pt1: Point, pt2: Point, key: EntityKey, customPassFn?: (x: number, y: number) => boolean) {
     const passFn = customPassFn?.bind(this.region) ?? this.region.ROTisPassable.bind(this.region)
-    const pathFn = new ROT.Path.AStar(pt2.x, pt2.y, passFn, { topology: rnd(2) ? 8 : 4 })
+    const pathFn = new ROT.Path.AStar(pt2.x, pt2.y, passFn, { topology: 8 })
     pathFn.compute(pt1.x, pt1.y, (x, y) => {
       const pPt = point(x, y)
       this.clear(pPt)
