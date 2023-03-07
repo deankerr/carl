@@ -1,15 +1,15 @@
 import { CONFIG } from '../config'
-import { EntityKey, Region } from '../Core'
-import { Rect } from '../lib/Shape/Rectangle'
-import { pick, rnd } from '../lib/util'
-import { BinarySpacePartition } from './modules'
-import { Rooms } from './modules/Rooms'
+import { Region } from '../Core'
+import { logTimer } from '../lib/util'
+import { cellularAutomata } from './modules'
 import { Overseer3 } from './Overseer3'
+
+const scale = 2
 
 export function cavern(
   isTopLevel: boolean,
-  width = CONFIG.generateWidth * 3,
-  height = CONFIG.generateHeight * 3
+  width = CONFIG.generateWidth * scale,
+  height = CONFIG.generateHeight * scale
 ) {
   const region = new Region(width, height)
   region.name = 'cavern'
@@ -18,33 +18,22 @@ export function cavern(
   O3.theme.wall = 'cavernWall'
   O3.theme.floor = 'stonePebbleFloor'
 
-  const drawRoom = (rect: Rect) => {
-    O3.room(rect)
-  }
-
-  const BSP = new BinarySpacePartition(region.rect)
-
-  const liquidKey = pick(['sludge', 'blood', 'oil', 'slime', 'acid']) as EntityKey
-  if (rnd(1)) {
-    BSP.splitLargest('vertical', rnd(3, 7), rnd(1, 2))
-    BSP.splitLargest('horizontal', rnd(1, 3), 1)
-    BSP.splitLargest('best', 1, 1)
-  } else {
-    BSP.splitLargest('horizontal', rnd(1, 3), 2)
-    BSP.splitLargest('vertical', rnd(3, 5), 1)
-    BSP.splitLargest('best', 1, 1)
-  }
-  BSP.rectGaps.forEach(g => O3.add(g.rect, liquidKey))
-
-  BSP.splitN(48)
-  const roomRects: Rect[] = []
-  BSP.leaves(r => {
-    O3.room(r)
-    roomRects.push(r)
+  const cellTimer = logTimer('cave gen')
+  const cells = cellularAutomata(region.rect, {
+    initialChance: 45,
+    survival: 4,
+    birth: 5,
+    iterations: 4,
   })
+  cellTimer.stop()
 
-  const rooms = new Rooms(region, O3, roomRects, O3.theme)
-  rooms.debugNumberRooms()
+  cells.forEach(grid => {
+    for (const [pt, state] of grid) {
+      if (region.rect.isEdgePt(pt)) O3.wall(pt)
+      else state ? O3.wall(pt) : O3.floor(pt)
+    }
+    O3.snap()
+  })
 
   O3.finalize()
   return region
