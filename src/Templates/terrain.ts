@@ -127,7 +127,7 @@ export const terrain = {
     sprite: { base: ['dirtFloorHole'] },
   },
 
-  dirtFloorOutdoor: {
+  dirtFloorOutdoorLedge: {
     name: 'dirt',
     tag: ['terrain', 'floor'],
     sprite: {
@@ -139,6 +139,21 @@ export const terrain = {
         'dirtFloorOutdoor6',
       ],
       ledgeOverlay: ['dirtLedge'],
+      noise: [0],
+    },
+  },
+
+  dirtFloorOutdoor: {
+    name: 'dirt',
+    tag: ['terrain', 'floor'],
+    sprite: {
+      base: [
+        'dirtFloorOutdoor2',
+        'dirtFloorOutdoor3',
+        'dirtFloorOutdoor4',
+        'dirtFloorOutdoor5',
+        'dirtFloorOutdoor6',
+      ],
       noise: [0],
     },
   },

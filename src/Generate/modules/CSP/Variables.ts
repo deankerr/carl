@@ -1,10 +1,10 @@
 import { EntityKey } from '../../../Core'
 import { itemKeys } from '../../../Templates'
 import { ConstraintKey } from './Constraints'
-import { building } from './Variables/building'
 import { decoration } from './Variables/decoration'
 import { enemy } from './Variables/enemy'
 import { furniture } from './Variables/furniture'
+import { building } from './Variables/town'
 
 export type Variable = {
   keys: (EntityKey | EntityKey[])[]

@@ -57,6 +57,7 @@ export function town(
     'house',
     'well',
     'campParty',
+    'caveEntrance',
   ])
 
   const doorStepPts = findSectors(
@@ -73,7 +74,7 @@ export function town(
   pathBetween.forEach((pt, i) => {
     if (i === 0) return
     const prevPt = doorStepPts[i - 1]
-    O3.path(pt, prevPt, 'grassPath')
+    O3.path(prevPt, pt, 'grassPath')
     O3.snap('Connect paths')
   })
 
