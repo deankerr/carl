@@ -1,6 +1,6 @@
 import * as ROT from 'rot-js'
-import { Point } from '../lib/Shape/Point'
 import { Direction, DIRECTIONS } from '../lib/direction'
+import { Point } from '../lib/Shape/Point'
 
 export type ActionTypes =
   | Move
@@ -15,6 +15,12 @@ export type ActionTypes =
   | UsePortal
   | Visualize
   | None
+  | AI
+
+export type AI = { ai: true }
+export const AI = (): AI => {
+  return { ai: true }
+}
 
 export type Bump = { bump: Point }
 export const Bump = (pt: Point): Bump => {
