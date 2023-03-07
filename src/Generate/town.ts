@@ -1,8 +1,9 @@
 import { CONFIG } from '../config'
 import { Region } from '../Core'
-import { point } from '../lib/Shape/Point'
+import { connectAll, select } from '../lib/search'
+import { Point, point } from '../lib/Shape/Point'
 import { Rect } from '../lib/Shape/Rectangle'
-import { cellularAutomata, findSectors } from './modules'
+import { cellularAutomata } from './modules'
 import { Solver } from './modules/CSP/Solver'
 import { Overseer3 } from './Overseer3'
 
@@ -60,26 +61,16 @@ export function town(
     'caveEntrance',
   ])
 
-  const doorStepPts = findSectors(
-    region.rect,
-    pt => region.terrainAt(pt.north()).key === 'buildingEntry'
-  ).map(set => [...set][0])
+  const townPaths = select(region.rect, pt => region.terrainAt(pt).key === 'grassPath')
 
-  const wellPt = findSectors(region.rect, pt => region.terrainAt(pt).key === 'caveWell').map(
-    set => [...set][0]
-  )
-
-  const pathBetween = [...doorStepPts, ...wellPt].sort((a, b) => a.x - b.x)
-  const passFn = (x: number, y: number) => {
-    const terrainKey = region.terrainAt(point(x, y)).key
-    return terrainKey === 'grassFloor' || terrainKey === 'grassPath'
+  const pathThrough = (pt: Point) => {
+    const terrainKey = region.terrainAt(pt).key
+    return terrainKey === 'grassPath' || terrainKey === 'grassFloor'
   }
 
-  pathBetween.forEach((pt, i) => {
-    if (i === 0) return
-    const prevPt = doorStepPts[i - 1]
-    O3.path(prevPt, pt, 'grassPath', passFn)
-    O3.snap('Connect paths')
+  connectAll(region.rect, townPaths, pathThrough, pt => {
+    O3.add(pt, 'grassPath')
+    O3.snap('path', 'fast')
   })
 
   O3.finalize()

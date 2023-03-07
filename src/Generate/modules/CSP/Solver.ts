@@ -150,7 +150,7 @@ export class Solver {
       }
 
       if (addConstraints) constraints.domain.push(...addConstraints)
-      console.log('constraints:', key, constraints)
+      // console.log('constraints:', key, constraints)
       const problem: Problem = {
         region: this.region,
         domain: this.domain,
