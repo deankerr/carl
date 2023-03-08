@@ -2,6 +2,7 @@ import { CONFIG } from '../config'
 import { Region } from '../Core'
 import { logTimer } from '../lib/util'
 import { cellularAutomata } from './modules'
+import { fill, solve } from './modules/CSP/solve'
 import { Overseer3 } from './Overseer3'
 
 const scale = 2
@@ -34,6 +35,32 @@ export function cavern(
     }
     O3.snap()
   })
+
+  fill(
+    {
+      region,
+      domain: region.rect,
+      variables: [
+        'cornerWebNorthEast',
+        'cornerWebNorthWest',
+        'cornerWebSouthEast',
+        'cornerWebSouthWest',
+      ],
+      optional: true,
+    },
+    O3,
+    0.1
+  )
+
+  solve(
+    {
+      region,
+      domain: region.rect,
+      variables: ['batPack', 'beholder', 'gelCube', 'goblinPackStrong', 'ratPack'],
+      optional: true,
+    },
+    O3
+  )
 
   O3.finalize()
   return region
