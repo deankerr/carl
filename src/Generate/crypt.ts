@@ -4,7 +4,7 @@ import { connectAll } from '../lib/search'
 import { Rect } from '../lib/Shape/Rectangle'
 import { pick, rnd, shuffle } from '../lib/util'
 import { BinarySpacePartition } from './modules'
-import { Solver } from './modules/CSP/Solver'
+import { solve } from './modules/CSP/solve'
 import { Overseer3 } from './Overseer3'
 
 const scale = 1
@@ -57,63 +57,84 @@ export function crypt(
 
   const [stairsUpRoom, stairsDownRoom] = shuffle(rooms)
 
-  console.groupCollapsed('CSP')
+  // console.groupCollapsed('CSP')
+  // rooms.forEach((room, i) => {
+  //   const CSP = new Solver(region, room, O3)
+  //   if (room === stairsUpRoom) CSP.solve(['stairsUp']) // todo portals
+  //   if (room === stairsDownRoom) CSP.solve(['stairsDown'])
+
+  //   CSP.solveOptional(
+  //     [
+  //       pick([
+  //         'smallStonePitPlatformItem',
+  //         'smallSludgePond',
+  //         'smallWaterPond',
+  //         'statueAltar',
+  //         'dirtFloorHoleSquare',
+  //       ]),
+  //     ],
+  //     ['centerX']
+  //   )
   rooms.forEach((room, i) => {
-    const CSP = new Solver(region, room, O3)
-    if (room === stairsUpRoom) CSP.solve(['stairsUp']) // todo portals
-    if (room === stairsDownRoom) CSP.solve(['stairsDown'])
-
-    CSP.solveOptional(
-      [
-        pick([
-          'smallStonePitPlatformItem',
-          'smallSludgePond',
-          'smallWaterPond',
-          'statueAltar',
-          'dirtFloorHoleSquare',
-        ]),
-      ],
-      ['centerX']
+    solve(
+      {
+        region,
+        domain: room,
+        variables: [
+          pick([
+            'smallStonePitPlatformItem',
+            'smallSludgePond',
+            'smallWaterPond',
+            'statueAltar',
+            'dirtFloorHoleSquare',
+          ]),
+          // 'smallWaterPond',
+        ],
+        optional: true,
+        addConstraints: ['centerX'],
+      },
+      O3
     )
-
-    // CSP.solveOptional([
-    //   'cryptWallTomb',
-    //   'cornerCandle',
-    //   'cornerWebNorthEast',
-    //   'cornerWebNorthWest',
-    //   'cornerWebSouthEast',
-    //   'cornerWebSouthWest',
-    // ])
-
-    // CSP.fill(['mushroom'], 0.1)
-
-    // CSP.solveOptional([
-    //   'sconceTop',
-    //   'sconceTop',
-    //   pick([
-    //     'smallStonePitPlatformItem',
-    //     'smallSludgePond',
-    //     'smallWaterPond',
-    //     'statueAltar',
-    //     'dirtFloorHoleSquare',
-    //   ]),
-    //   'randomItem',
-    //   'pots',
-    //   'trap',
-    //   pick([
-    //     'goblinPackWeak',
-    //     'goblinPackStrong',
-    //     'skeletonPackWeak',
-    //     'skeletonPackStrong',
-    //     'spiderPack',
-    //     'batPack',
-    //     'ratPack',
-    //     'gelCube',
-    //     'beholder',
-    //   ]),
-    // ])
   })
-  console.groupEnd()
+
+  // CSP.solveOptional([
+  //   'cryptWallTomb',
+  //   'cornerCandle',
+  //   'cornerWebNorthEast',
+  //   'cornerWebNorthWest',
+  //   'cornerWebSouthEast',
+  //   'cornerWebSouthWest',
+  // ])
+
+  // CSP.fill(['mushroom'], 0.1)
+
+  // CSP.solveOptional([
+  //   'sconceTop',
+  //   'sconceTop',
+  //   pick([
+  //     'smallStonePitPlatformItem',
+  //     'smallSludgePond',
+  //     'smallWaterPond',
+  //     'statueAltar',
+  //     'dirtFloorHoleSquare',
+  //   ]),
+  //   'randomItem',
+  //   'pots',
+  //   'trap',
+  //   pick([
+  //     'goblinPackWeak',
+  //     'goblinPackStrong',
+  //     'skeletonPackWeak',
+  //     'skeletonPackStrong',
+  //     'spiderPack',
+  //     'batPack',
+  //     'ratPack',
+  //     'gelCube',
+  //     'beholder',
+  //   ]),
+  // ])
+  // })
+  // console.groupEnd()
 
   // O3.portal(
   //   rooms.rooms[0].rect.center.west(),

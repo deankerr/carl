@@ -1,8 +1,6 @@
 import { CONFIG } from '../config'
 import { Region } from '../Core'
 import { Rect } from '../lib/Shape/Rectangle'
-import { logTimer, shuffle } from '../lib/util'
-import { Solver } from './modules/CSP/Solver'
 import { Overseer3 } from './Overseer3'
 
 export function tinyCrypt(
@@ -27,25 +25,6 @@ export function tinyCrypt(
   // }
   // O3.snap('a room')
 
-  console.groupCollapsed('CSP1')
-  const CSP = new Solver(region, room, O3)
-  const t = logTimer('Timer CSP')
-  // CSP.solveOptional(shuffle(['smallSludgePond', 'statueAltar', 'smallDirtPitPlatformItem']), [
-  //   'centerY',
-  // ])
-  CSP.solveOptional(shuffle(['statueAltar']), ['centerY'])
-
-  console.groupEnd()
-
-  console.groupCollapsed('CSP2')
-  const CSP2 = new Solver(region, room2, O3)
-  // CSP2.solveOptional(shuffle(['smallSludgePond', 'statueAltar', 'smallDirtPitPlatformItem']), [
-  //   'centerY',
-  // ])
-  CSP.solveOptional(shuffle(['statueAltar']), ['centerY'])
-  console.groupEnd()
-
-  t.stop()
   O3.finalize()
   // console.log(O3.history)
   return region

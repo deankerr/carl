@@ -4,7 +4,7 @@ import { connectAll, select } from '../lib/search'
 import { Point, point } from '../lib/Shape/Point'
 import { Rect } from '../lib/Shape/Rectangle'
 import { cellularAutomata } from './modules'
-import { Solver } from './modules/CSP/Solver'
+import { solve } from './modules/CSP/solve'
 import { Overseer3 } from './Overseer3'
 
 export function town(
@@ -43,23 +43,25 @@ export function town(
   O3.add(bridge, 'bridgeFloor')
   O3.snap('river')
 
-  const CSP = new Solver(region, region.rect, O3)
-
-  CSP.solve([
-    'house',
-    'weaponSign',
-    'house',
-    'potionSign',
-    'house',
-    'innSign',
-    'house',
-    'house',
-    'house',
-    'house',
-    'well',
-    'campParty',
-    'caveEntrance',
-  ])
+  solve(
+    {
+      region,
+      domain: region.rect,
+      variables: [
+        'caveEntrance',
+        'campParty',
+        'weaponShop',
+        'potionShop',
+        'inn',
+        'house',
+        'house',
+        'house',
+        'well',
+      ],
+      optional: false,
+    },
+    O3
+  )
 
   const townPaths = select(region.rect, pt => region.terrainAt(pt).key === 'grassPath')
 

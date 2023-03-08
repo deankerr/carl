@@ -2,7 +2,7 @@ import { CONFIG } from '../config'
 import { Region } from '../Core'
 import { connectAll, select } from '../lib/search'
 import { cellularAutomata } from './modules/cellular'
-import { Solver } from './modules/CSP/Solver'
+import { fill, solve } from './modules/CSP/solve'
 import { Overseer3 } from './Overseer3'
 
 const mapScale = 2
@@ -57,26 +57,64 @@ export function cave(
   })
   hiddenWalls.forEach(wall => O3.add([...wall], 'abyss'))
 
-  const CSP = new Solver(region, region.rect, O3)
-  CSP.fill(
-    ['cornerWebNorthEast', 'cornerWebNorthWest', 'cornerWebSouthEast', 'cornerWebSouthWest'],
+  // const CSP = new Solver(region, region.rect, O3)
+  // CSP.fill(
+  //   ['cornerWebNorthEast', 'cornerWebNorthWest', 'cornerWebSouthEast', 'cornerWebSouthWest'],
+  //   0.1
+  // )
+
+  // CSP.fill(['mushroom'], 0.01)
+  // CSP.fill(['dirtBoulder'], 0.01)
+  // CSP.fill(['stoneBoulder'], 0.01)
+  // CSP.fill(['sconceOpen'], 0.1)
+
+  // CSP.solve([
+  //   'batPack',
+  //   'beholder',
+  //   // 'bigDesk',
+  //   'gelCube',
+  //   'goblinPackStrong',
+  //   'ratPack',
+  //   // 'smallDirtPitPlatformItem',
+  // ])
+
+  fill(
+    {
+      region,
+      domain: region.rect,
+      variables: [
+        'cornerWebNorthEast',
+        'cornerWebNorthWest',
+        'cornerWebSouthEast',
+        'cornerWebSouthWest',
+        'sconceOpen',
+      ],
+      optional: true,
+    },
+    O3,
     0.1
   )
 
-  CSP.fill(['mushroom'], 0.01)
-  CSP.fill(['dirtBoulder'], 0.01)
-  CSP.fill(['stoneBoulder'], 0.01)
-  CSP.fill(['sconceOpen'], 0.1)
+  fill(
+    {
+      region,
+      domain: region.rect,
+      variables: ['mushroom', 'dirtBoulder', 'stoneBoulder'],
+      optional: true,
+    },
+    O3,
+    0.01
+  )
 
-  CSP.solve([
-    'batPack',
-    'beholder',
-    // 'bigDesk',
-    'gelCube',
-    'goblinPackStrong',
-    'ratPack',
-    // 'smallDirtPitPlatformItem',
-  ])
+  solve(
+    {
+      region,
+      domain: region.rect,
+      variables: ['batPack', 'beholder', 'gelCube', 'goblinPackStrong', 'ratPack'],
+      optional: true,
+    },
+    O3
+  )
 
   O3.clearDebug()
   O3.finalize()

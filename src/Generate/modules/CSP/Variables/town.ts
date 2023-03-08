@@ -25,30 +25,78 @@ export const building = {
     },
   },
 
-  weaponSign: {
-    keys: ['signWeapon'],
-    map: [['0']],
+  weaponShop: {
+    keys: [
+      ['buildingEntry'],
+      ['buildingWindow'],
+      ['buildingRoofFront'],
+      ['buildingRoof'],
+      ['buildingChimney'],
+      ['smoke'],
+      ['grassPath'],
+      ['signWeapon'],
+    ],
+    map: [
+      ['     ', '     '],
+      [' 433 ', ' 5   '],
+      [' 222 ', '     '],
+      [' 1017', '     '],
+      [' 666 ', '     '],
+      ['     ', '     '],
+    ],
     constraints: {
-      domain: ['adjacentBuilding'],
-      cells: ['empty', 'walkable'],
+      domain: ['walkable'],
+      cells: ['empty', 'floor'],
     },
   },
 
-  potionSign: {
-    keys: ['signPotion'],
-    map: [['0']],
+  potionShop: {
+    keys: [
+      ['buildingEntry'],
+      ['buildingWindow'],
+      ['buildingRoofFront'],
+      ['buildingRoof'],
+      ['buildingChimney'],
+      ['smoke'],
+      ['grassPath'],
+      ['signPotion'],
+    ],
+    map: [
+      ['     ', '     '],
+      [' 433 ', ' 5   '],
+      [' 222 ', '     '],
+      [' 1017', '     '],
+      [' 666 ', '     '],
+      ['     ', '     '],
+    ],
     constraints: {
-      domain: ['adjacentBuilding'],
-      cells: ['empty', 'walkable'],
+      domain: ['walkable'],
+      cells: ['empty', 'floor'],
     },
   },
 
-  innSign: {
-    keys: ['signInn'],
-    map: [['0']],
+  inn: {
+    keys: [
+      ['buildingEntry'],
+      ['buildingWindow'],
+      ['buildingRoofFront'],
+      ['buildingRoof'],
+      ['buildingChimney'],
+      ['smoke'],
+      ['grassPath'],
+      ['signInn'],
+    ],
+    map: [
+      ['     ', '     '],
+      [' 433 ', ' 5   '],
+      [' 222 ', '     '],
+      [' 1017', '     '],
+      [' 666 ', '     '],
+      ['     ', '     '],
+    ],
     constraints: {
-      domain: ['adjacentBuilding'],
-      cells: ['empty', 'walkable'],
+      domain: ['walkable'],
+      cells: ['empty', 'floor'],
     },
   },
 

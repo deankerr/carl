@@ -1,9 +1,7 @@
 import { CONFIG } from '../config'
 import { Region } from '../Core'
 import { Rect } from '../lib/Shape/Rectangle'
-import { pick } from '../lib/util'
 import { BinarySpacePartition, Rooms } from './modules'
-import { Solver } from './modules/CSP/Solver'
 import { Overseer3 } from './Overseer3'
 
 export function dungeon(
@@ -29,25 +27,25 @@ export function dungeon(
 
   const crooms = new Rooms(region, O3, rooms, O3.theme)
 
-  for (const room of rooms) {
-    const csp = new Solver(region, room, O3)
-    csp.solve([
-      'cornerWebNorthWest',
-      'cornerWebSouthWest',
-      'cornerWebSouthEast',
-      'cornerWebNorthEast',
-      'smallStonePitPlatformItem',
-      pick([
-        'goblinPackWeak',
-        'goblinPackStrong',
-        'skeletonPackWeak',
-        'skeletonPackStrong',
-        'spiderPack',
-        'gelCube',
-        'beholder',
-      ]),
-    ])
-  }
+  // for (const room of rooms) {
+  //   const csp = new Solver(region, room, O3)
+  //   csp.solve([
+  //     'cornerWebNorthWest',
+  //     'cornerWebSouthWest',
+  //     'cornerWebSouthEast',
+  //     'cornerWebNorthEast',
+  //     'smallStonePitPlatformItem',
+  //     pick([
+  //       'goblinPackWeak',
+  //       'goblinPackStrong',
+  //       'skeletonPackWeak',
+  //       'skeletonPackStrong',
+  //       'spiderPack',
+  //       'gelCube',
+  //       'beholder',
+  //     ]),
+  //   ])
+  // }
 
   // const csp = new Solver(region, rooms[0])
   // csp.solve([

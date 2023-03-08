@@ -73,7 +73,10 @@ function solveNext(assignments: Assignment[], origins: Record<VariableKey, Point
   const { O3 } = assignment
 
   for (const originPt of shuffle(origins[assignment.key])) {
-    if (Date.now() > assignment.timeout) return false
+    if (Date.now() > assignment.timeout) {
+      console.error('timeout')
+      return false
+    }
 
     const object = localizeObject(originPt, assignment.object)
 
@@ -98,7 +101,7 @@ function solveNext(assignments: Assignment[], origins: Record<VariableKey, Point
     }
   }
 
-  return assignment.optional
+  return false
 }
 
 function satisfies(assignment: Assignment, map: Map<Point, EntityKey[]>) {
@@ -106,7 +109,9 @@ function satisfies(assignment: Assignment, map: Map<Point, EntityKey[]>) {
     const constraints =
       keys.length > 0 ? assignment.constraints.cells : assignment.constraints.space
     for (const key of constraints) {
-      if (!Constraints[key](assignment, pt)) return false
+      if (!Constraints[key](assignment, pt)) {
+        return false
+      }
     }
   }
   return true
