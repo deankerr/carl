@@ -99,18 +99,27 @@ export function cave(
     {
       region,
       domain: region.rect,
-      variables: ['mushroom', 'dirtBoulder', 'stoneBoulder'],
+      variables: ['mushroom', 'dirtBoulder', 'stoneBoulder', 'randomItem'],
       optional: true,
     },
     O3,
-    0.01
+    0.02
   )
 
   solve(
     {
       region,
       domain: region.rect,
-      variables: ['batPack', 'beholder', 'gelCube', 'goblinPackStrong', 'ratPack'],
+      variables: [
+        'batPack',
+        'beholder',
+        'gelCube',
+        'goblinPackWeak',
+        'goblinPackStrong',
+        'ratPack',
+        'skeletonPackWeak',
+        'spiderPack',
+      ],
       optional: true,
     },
     O3

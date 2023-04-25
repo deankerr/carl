@@ -101,7 +101,7 @@ function solveNext(assignments: Assignment[], origins: Record<VariableKey, Point
     }
   }
 
-  return false
+  return assignment.optional
 }
 
 function satisfies(assignment: Assignment, map: Map<Point, EntityKey[]>) {

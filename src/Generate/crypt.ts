@@ -57,39 +57,18 @@ export function crypt(
 
   const [stairsUpRoom, stairsDownRoom] = shuffle(rooms)
 
-  // console.groupCollapsed('CSP')
-  // rooms.forEach((room, i) => {
-  //   const CSP = new Solver(region, room, O3)
-  //   if (room === stairsUpRoom) CSP.solve(['stairsUp']) // todo portals
-  //   if (room === stairsDownRoom) CSP.solve(['stairsDown'])
-
-  //   CSP.solveOptional(
-  //     [
-  //       pick([
-  //         'smallStonePitPlatformItem',
-  //         'smallSludgePond',
-  //         'smallWaterPond',
-  //         'statueAltar',
-  //         'dirtFloorHoleSquare',
-  //       ]),
-  //     ],
-  //     ['centerX']
-  //   )
   rooms.forEach((room, i) => {
     solve(
       {
         region,
         domain: room,
-        variables: [
-          pick([
-            'smallStonePitPlatformItem',
-            'smallSludgePond',
-            'smallWaterPond',
-            'statueAltar',
-            'dirtFloorHoleSquare',
-          ]),
-          // 'smallWaterPond',
-        ],
+        variables: shuffle([
+          'smallStonePitPlatformItem',
+          'smallSludgePond',
+          'smallWaterPond',
+          'statueAltar',
+          'dirtFloorHoleSquare',
+        ]),
         optional: true,
         addConstraints: ['centerX'],
       },
