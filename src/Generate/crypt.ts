@@ -5,6 +5,7 @@ import { Rect } from '../lib/Shape/Rectangle'
 import { pick, rnd, shuffle } from '../lib/util'
 import { BinarySpacePartition } from './modules'
 import { solve } from './modules/CSP/solve'
+import { VariableKey } from './modules/CSP/Variables'
 import { Overseer3 } from './Overseer3'
 
 const scale = 1
@@ -55,22 +56,50 @@ export function crypt(
   )
   O3.snap('Rooms connected')
 
+  // stairs
   const [stairsUpRoom, stairsDownRoom] = shuffle(rooms)
+  solve({ region, domain: stairsUpRoom, variables: ['stairsUp'], optional: false }, O3)
+  solve({ region, domain: stairsDownRoom, variables: ['stairsDown'], optional: false }, O3)
 
+  const bigRoomFeatures = shuffle([
+    'smallStonePitPlatformItem',
+    'smallSludgePond',
+    'smallWaterPond',
+    'statueAltar',
+    'dirtFloorHoleSquare',
+  ]) satisfies VariableKey[]
+
+  const smallRoomFeatures = shuffle([
+    'cornerWebNorthEast',
+    'cornerWebNorthWest',
+    'cornerWebSouthEast',
+    'cornerWebSouthWest',
+    'sconceTop',
+  ]) satisfies VariableKey[]
+
+  const enemies = shuffle([
+    'goblinPackWeak',
+    'goblinPackStrong',
+    'skeletonPackWeak',
+    'skeletonPackStrong',
+    'spiderPack',
+    'ratPack',
+    'batPack',
+    'gelCube',
+    'beholder',
+  ]) satisfies VariableKey[]
   rooms.forEach((room, i) => {
     solve(
       {
         region,
         domain: room,
-        variables: shuffle([
-          'smallStonePitPlatformItem',
-          'smallSludgePond',
-          'smallWaterPond',
-          'statueAltar',
-          'dirtFloorHoleSquare',
-        ]),
+        variables: [
+          bigRoomFeatures[i] ?? 'randomItem',
+          ...smallRoomFeatures,
+          enemies[i] ?? 'randomItem',
+        ],
         optional: true,
-        addConstraints: ['centerX'],
+        // addConstraints: ['centerX', 'centerY'],
       },
       O3
     )
