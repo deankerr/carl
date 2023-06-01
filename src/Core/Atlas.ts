@@ -23,18 +23,24 @@ export class Atlas {
 
   descend() {
     console.log('atlas descend')
-    const index = ++this.zone.regionIndex
-    this.region = this.zone.regions[index]
+    // ! temp - descend to next zone
+    // const index = ++this.zone.regionIndex
+    // this.region = this.zone.regions[index]
+    const index = this.zoneIndex + 1
+    this.setZone(index)
 
     if (!this.region) this.generate(index)
   }
 
   ascend() {
-    if (this.zone.regionIndex < 1) return console.log(`You can't go there.`)
+    // ! temp - ascend to prev zone
+    // if (this.zone.regionIndex < 1) return console.log(`You can't go there.`)
     console.log('atlas ascend')
 
-    const index = --this.zone.regionIndex
-    this.region = this.zone.regions[index]
+    // const index = --this.zone.regionIndex
+    // this.region = this.zone.regions[index]
+    const index = this.zoneIndex - 1
+    this.setZone(index)
 
     if (!this.region) this.generate(index)
   }
