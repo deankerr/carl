@@ -44,8 +44,10 @@ export function handle(event: KeyboardEvent, context: GameContext): ActionTypes 
 
   const gameKeys: KeyMap = {
     KeyP: PickUp(),
-    'shift Comma': ChangeRegion('up'),
-    'shift Period': ChangeRegion('down'),
+    'ctrl Comma': ChangeRegion('up'),
+    'ctrl Period': ChangeRegion('down'),
+    'shift Comma': UsePortal(),
+    'shift Period': UsePortal(),
     Comma: UsePortal(),
     Period: UsePortal(),
     KeyV: Visualize('init'),
