@@ -30,8 +30,8 @@ export function crypt(
     BSP.splitLargest('best', 1, 1)
   }
 
-  const liquidKey = pick(['sludge', 'lava', 'oil', 'slime', 'acid']) as EntityKey
-  BSP.rectGaps.forEach(g => O3.add(g.rect, liquidKey))
+  // const liquidKey = pick(['sludge', 'lava', 'oil', 'slime', 'acid']) as EntityKey
+  BSP.rectGaps.forEach(g => O3.add(g.rect, 'acid'))
 
   BSP.splitN(rnd(3, 7))
   const rooms: Rect[] = []
