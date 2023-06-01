@@ -57,6 +57,7 @@ export function town(
         'house',
         // 'house',
         'well',
+        'townsfolk',
       ],
       optional: false,
     },

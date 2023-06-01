@@ -118,6 +118,15 @@ export const building = {
     },
   },
 
+  townsfolk: {
+    keys: [['girl'], ['guy'], ['catTan'], ['dog'], ['thief']],
+    map: [['01'], ['23'], ['4']],
+    constraints: {
+      domain: ['walkable'],
+      cells: ['empty', 'floor'],
+    },
+  },
+
   caveEntrance: {
     keys: [
       'dirtFloorOutdoorLedge',
