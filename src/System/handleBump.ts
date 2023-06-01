@@ -45,7 +45,7 @@ export const handleBump = (engine: Engine, isPlayerTurn: boolean) => {
       }
 
       // * hostile - attack
-      if (eBumped.hostile) {
+      else if (eBumped.hostile) {
         local.modify(eBumped).define('tag', 'meleeAttackTarget')
 
         // update acting component
