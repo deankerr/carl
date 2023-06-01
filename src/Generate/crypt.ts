@@ -93,13 +93,19 @@ export function crypt(
       {
         region,
         domain: room,
-        variables: [
-          bigRoomFeatures[i] ?? 'randomItem',
-          ...smallRoomFeatures,
-          enemies[i] ?? 'randomItem',
-        ],
+        variables: [bigRoomFeatures[i] ?? 'randomItem'],
         optional: true,
         // addConstraints: ['centerX', 'centerY'],
+      },
+      O3
+    )
+
+    solve(
+      {
+        region,
+        domain: room,
+        variables: [...smallRoomFeatures, enemies[i] ?? 'randomItem'],
+        optional: true,
       },
       O3
     )

@@ -55,7 +55,7 @@ export function town(
         'inn',
         'house',
         'house',
-        'house',
+        // 'house',
         'well',
       ],
       optional: false,
